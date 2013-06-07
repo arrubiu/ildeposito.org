@@ -1691,3 +1691,7 @@ form#user-login-form label {
 .front .panel-pane.elenco-contenuti a {
   font-size: 1.1em;
 }
+
+.node-type-articolo .field-name-body  ul li {
+  margin-left:14px;
+}
