@@ -1,0 +1,35 @@
+name = contact_entityform
+description = Provides Site and personal contact forms using Entityform. Replaces core Contact module
+core = 7.x
+package = Entityforms
+php = 5.2.4
+project = contact_entityform
+dependencies[] = email
+dependencies[] = entity
+dependencies[] = entityform
+dependencies[] = entityform_notifications
+dependencies[] = entityreference
+dependencies[] = features
+dependencies[] = rules
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[entityform_type][] = personal_contact_form
+features[entityform_type][] = site_contact_form
+features[features_api][] = api:1
+features[field][] = entityform-personal_contact_form-field_contacted_user
+features[field][] = entityform-personal_contact_form-field_email
+features[field][] = entityform-personal_contact_form-field_message
+features[field][] = entityform-site_contact_form-field_email
+features[field][] = entityform-site_contact_form-field_message
+features[field][] = entityform-site_contact_form-field_subject
+features[rules_config][] = rules_entitiyform_email_site_admin_
+features[rules_config][] = rules_personal_contact_form
+features[variable][] = contact_entityform_roles
+features[variable][] = contact_entityform_site_form
+
+; Information added by drupal.org packaging script on 2012-09-19
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "contact_entityform"
+datestamp = "1348069612"
+

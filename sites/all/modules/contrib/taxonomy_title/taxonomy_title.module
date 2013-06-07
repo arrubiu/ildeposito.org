@@ -1,0 +1,263 @@
+<?php
+
+/**
+ * @file
+ * Enhanced control over the heading tag for the taxonomy term list pages.
+ *
+ * This module gives you control over the page heading. It gives you the 
+ * chance to provide custom titles for all of your taxonomy term list
+ * pages, and tokens for use with the Page title module.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function taxonomy_title_menu(){
+  $items['admin/config/search/taxonomy_title'] = array(
+    'title' => 'Taxonomy title', 
+    'description' => 'Settings for the taxonomy title module.', 
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_title_admin_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer taxonomy'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'taxonomy_title.admin.inc',
+  );
+  
+  return $items;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function taxonomy_title_form_taxonomy_form_term_alter(&$form, &$form_state) {
+  if (!(isset($_POST['op']) && $_POST['op'] == t('Delete')) || isset($_POST['confirm'])) {
+    $title = _taxonomy_title_get_title($form['tid']['#value']);
+    $form['identification']['taxonomy_title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Term page heading'),
+      '#default_value' => $title,
+      '#description' => t('This is the title you will see in the heading tag on your taxonomy term page. If left blank, the term name will be used.'),
+      '#weight' => 0,
+      );
+  }
+}
+
+/**
+ * Implements hook_taxonomy_term_delete().
+ */
+function taxonomy_title_taxonomy_term_delete($term) {
+  _taxonomy_title_delete_title($term->tid);
+}
+
+/**
+ * Implements hook_taxonomy_term_update().
+ */
+function taxonomy_title_taxonomy_term_update($term) {
+  if (isset($term->taxonomy_title)) {
+    _taxonomy_title_update($term->tid, $term->taxonomy_title);
+  }
+  else {
+    _taxonomy_title_delete_title($term->tid);
+  }
+}
+
+/**
+ * Implements hook_taxonomy_term_insert().
+ */
+function taxonomy_title_taxonomy_term_insert($term) {
+  if (isset($term->taxonomy_title)) {
+    _taxonomy_title_insert_title($term->tid, $term->taxonomy_title);
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Overrides variables sent to template_preprocess.
+ */
+function taxonomy_title_process_page(&$variables) {
+  if (arg(0) == 'taxonomy' && arg(1) == 'term' && is_numeric(arg(2)) && arg(2) > 0) {
+    $tid = arg(2);
+  }
+  
+  // Add support for Ubercart catalog too.
+  elseif (module_exists('uc_catalog') && arg(0) == 'catalog') {
+    $tids = explode(' ', arg(1));
+    if (is_numeric($tids[0]) && $tids[0] > 0) {
+      $tid = $tids[0];
+    }
+  }
+  
+  if (!empty($tid)) {
+    // Retrieve the title based on tid.
+    $title = _taxonomy_title_get_title($tid);
+    
+    if (!empty($title)){
+      $term = taxonomy_term_load($tid);
+      $settings = taxonomy_title_get_settings();
+      $heading_settings = $settings['taxonomy_title_headings'];
+      $page_title_settings = $settings['taxonomy_title_page_titles'];
+      
+      drupal_set_title($title);
+      if ($new_title = drupal_get_title()) {
+        
+        // Assure the page title (heading) is set.
+        if ($heading_settings[$term->vid] != 0) {
+          $variables['title'] = $new_title;
+        }
+
+        // Set the HTML title tag.
+        if (($page_title_settings[$term->vid] != 0) && (!module_exists('page_title'))){
+          $head_title = array(strip_tags($new_title), variable_get('site_name', 'Drupal'));
+          $variables['head_title'] = implode(' | ', $head_title);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Retrieves the term title.
+ *
+ * @param $tid
+ *   The taxonomy term id of the term to delete.
+ * @return
+ *   The taxonomy term title for the term.
+ */
+function _taxonomy_title_get_title($tid) {
+  $title = db_query("SELECT title FROM {taxonomy_title} WHERE tid = :tid", array(':tid' => $tid))->fetchField();
+
+  return $title;
+}
+
+/**
+ * Inserts the term title.
+ *
+ * @param $tid
+ *   The taxonomy term id of the term.
+ * @param $title
+ *   The taxonomy term title to use for this term.
+ */
+function _taxonomy_title_insert_title($tid, $title) {
+  if (!empty($title)) {
+    $id = db_insert('taxonomy_title')
+      ->fields(array(
+        'tid' => $tid,
+        'title' => $title,
+      ))
+      ->execute();
+  }
+}
+
+/**
+ * Updates the term title.
+ *
+ * @param $tid
+ *   The taxonomy term id of the term.
+ * @param $title
+ *   The taxonomy term title to use for this term.
+ */
+function _taxonomy_title_update($tid, $title) {
+  db_merge('taxonomy_title')
+    ->key(array(
+      'tid'=>$tid
+    ))
+    ->fields(array(
+      'title' => $title
+    ))
+    ->execute();
+
+  // Add Suppot for i18nstrings.
+  if (function_exists('i18nstrings_update')) {
+    i18nstrings_update("taxonomy_title:term:$tid:title", $title);
+  }
+}
+
+/**
+ * Deletes the term title.
+ *
+ * @param $tid
+ *   The taxonomy term id of the term to delete.
+ */
+function _taxonomy_title_delete_title($tid) {
+  db_delete('taxonomy_title')
+    ->condition('tid', $tid)
+    ->execute();
+}
+
+/**
+ * Helper function: sets all default usage to ON.
+ */
+function taxonomy_title_get_settings() {
+  $vocabs = taxonomy_get_vocabularies();
+
+  $heading_defaults = variable_get('taxonomy_title_headings', array());
+  $page_title_defaults = variable_get('taxonomy_title_page_titles', array());
+
+  foreach ($vocabs as $vid => $vocab) {
+    if (!isset($heading_defaults[$vid])) {
+      $heading_defaults[$vid] = $vid;
+    }
+    if (!isset($page_title_defaults[$vid])) {
+      $page_title_defaults[$vid] = $vid;
+    }
+  }
+
+  $settings = array(
+    'taxonomy_title_headings' => $heading_defaults, 
+    'taxonomy_title_page_titles' => $page_title_defaults,
+  );
+
+  return $settings;
+}
+ 
+/**
+ * Translate user defined string. Wrapper function for tt() if i18nstrings enabled.
+ * 
+ * @param $name
+ *   String id in the form taxonomy_title:term:[tid]:title
+ */
+function taxonomy_title_tt($name, $string, $langcode = NULL) {
+  return function_exists('i18nstrings') ? i18nstrings($name, $string, $langcode) : $string;
+}
+
+/**
+ * Implementation of hook_locale().
+ */
+function taxonomy_title_locale($op = 'groups', $group = NULL) {
+  switch ($op) {
+    case 'groups':
+      return array('taxonomy_title' => t('Taxonomy title'));
+    case 'info':
+      $info['taxonomy_title']['refresh callback'] = 'taxonomy_title_locale_refresh';
+      return $info;
+  }
+}
+
+/**
+ * Refresh callback for locale strings.
+ */
+function taxonomy_title_locale_refresh() {
+  $results = db_query("SELECT tid, title FROM {taxonomy_title}");
+  while ($row = db_fetch_object($results)) {
+    i18nstrings_update("taxonomy_title:term:$row->tid:title", $row->title);
+  }
+
+  // Meaning it completed with no issues. @see i18nmenu_locale_refresh().
+  return TRUE;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function taxonomy_title_theme($existing, $type, $theme, $path) {
+  $theme = array(
+    'taxonomy_title_admin_settings' => array(
+      'render element' => 'form',
+      'file' => 'taxonomy_title.theme.inc',
+    ),
+  );
+
+  return $theme;
+}

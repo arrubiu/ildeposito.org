@@ -1,0 +1,12 @@
+name = Date Repeat Presets
+description = Adds repeating date rule presets for a simplified UI.
+package = Date/Time
+dependencies[] = date_repeat
+core = 7.x
+
+; Information added by drupal.org packaging script on 2011-07-25
+version = "7.x-1.2"
+core = "7.x"
+project = "date_repeat_presets"
+datestamp = "1311601615"
+

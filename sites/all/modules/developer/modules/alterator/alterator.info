@@ -1,0 +1,5 @@
+name = Alterator
+description = Hook vari ed eventuali
+core = 7.x
+package = ilDeposito
+

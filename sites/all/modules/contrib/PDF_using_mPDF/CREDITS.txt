@@ -1,0 +1,4 @@
+This module is sponsered by OSSCube Solutions Pvt Ltd <www dot osscube dot com>
+Guided by Sudhanshu Kumar Singh <sudhanshu at osscube dot com>
+Developed by Abhijeet Singh Kalsi <abhijeet at osscube dot com> and
+Gauravjeet Singh Pahuja <gauravjeet at osscube dot com>

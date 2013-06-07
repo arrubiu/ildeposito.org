@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the QA Checklist module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function qa_checklist_uninstall() {
+  variable_del('checklistapi_checklist_qa_checklist');
+}

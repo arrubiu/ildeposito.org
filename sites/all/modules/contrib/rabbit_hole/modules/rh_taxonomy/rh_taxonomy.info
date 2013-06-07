@@ -1,0 +1,10 @@
+name = Rabbit Hole taxonomy terms
+description = Adds Rabbit Hole functionality for taxonomy terms.
+core = 7.x
+dependencies[] = rabbit_hole
+; Information added by drupal.org packaging script on 2013-01-12
+version = "7.x-2.21"
+core = "7.x"
+project = "rabbit_hole"
+datestamp = "1357986495"
+

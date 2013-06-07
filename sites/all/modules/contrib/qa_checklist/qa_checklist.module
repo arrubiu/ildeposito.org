@@ -1,0 +1,237 @@
+<?php
+
+/**
+ * @file
+ * A quality assurance checklist.
+ */
+
+/**
+ * Implements hook_checklistapi_checklist_info().
+ */
+function qa_checklist_checklistapi_checklist_info() {
+  $checklists = array();
+  $checklists['qa_checklist'] = array(
+    '#title' => t('QA checklist'),
+    '#description' => t('Keep track of your Drupal QA tasks.'),
+    '#path' => 'admin/config/development/qa-checklist',
+    '#help' => t(''),
+
+    'other_checklists' => array(
+      '#title' => t('Other checklists'),
+      '#description' => t('<p>Install and complete other Drupal checklists.</p>'),
+      'install_security_review_module' => array(
+        '#title' => t('Security Review'),
+        '#default_value' => module_exists('security_review'),
+        'project_page' => array(
+          '#text' => t('Download'),
+          '#path' => 'http://drupal.org/project/security_review',
+        ),
+        'modules_page' => $modules_page = array('#text' => t('Enable'), '#path' => 'admin/modules'),
+      ),
+      'install_seo_checklist_module' => array(
+        '#title' => t('SEO Checklist'),
+        '#default_value' => module_exists('seo_checklist'),
+        'project_page' => array(
+          '#text' => t('Download'),
+          '#path' => 'http://drupal.org/project/seo_checklist',
+        ),
+        'modules_page' => $modules_page,
+      ),
+    ),
+
+    'other_modules' => array(
+      '#title' => t('Other modules'),
+      '#description' => t('<p>Other important Drupal modules.</p>'),
+      'install_backup_migrate_module' => array(
+        '#title' => t('Backup and Migrate'),
+        '#default_value' => module_exists('backup_migrate'),
+        'project_page' => array(
+          '#text' => t('Download'),
+          '#path' => 'http://drupal.org/project/backup_migrate',
+        ),
+        'modules_page' => $modules_page,
+      ),
+      'install_backup_migrate_files_module' => array(
+        '#title' => t('Backup and Migrate Files'),
+        '#default_value' => module_exists('backup_migrate_files'),
+        'project_page' => array(
+          '#text' => t('Download'),
+          '#path' => 'http://drupal.org/project/backup_migrate_files',
+        ),
+        'modules_page' => $modules_page,
+      ),
+      'install_db_maintenance_module' => array(
+        '#title' => t('DB Maintenance'),
+        '#default_value' => module_exists('db_maintenance'),
+        'project_page' => array(
+          '#text' => t('Download'),
+          '#path' => 'http://drupal.org/project/db_maintenance',
+        ),
+        'modules_page' => $modules_page,
+      ),
+    ),
+
+    'server_optimization' => array(
+      '#title' => t('Server optimization'),
+      '#description' => t('<p>Make sure your server is running Drupal the best it can.</p>'),
+      'review_web_server_config' => array(
+        '#title' => t('Review web server configuration.'),
+        '#description' => t('For Apache, check max clients settings and enabled modules.'),
+      ),
+      'review_db_config' => array(
+        '#title' => t('Review database configuration.'),
+        '#description' => t('For MySQL, adjust cache size and other settings as necessary.'),
+      ),
+      'review_php_config' => array(
+        '#title' => t('Review PHP configuration.'),
+        '#description' => t('Adjust max memory and max execution as necessary.'),
+      ),
+      'install_opcode_cache' => array(
+        '#title' => t('Install and configure PHP opcode cache.'),
+      ),
+      'install_reverse_proxy_cache' => array(
+        '#title' => t('OPTIONAL: Install and configure reverse proxy cache.'),
+      ),
+    ),
+
+    'drupal_optimization' => array(
+      '#title' => t('Drupal optimization'),
+      '#description' => t('<p>Configure Drupal to run at top speed.</p>'),
+      'enable_drupal_caching' => array(
+        '#title' => t('Enable caching.'),
+        '#default_value' => variable_get('cache', FALSE) && variable_get('block_cache', FALSE),
+        'config_page' => array(
+          '#text' => t('Performance page'),
+          '#path' => 'admin/config/development/performance',
+        ),
+      ),
+      'enable_drupal_bandwidth_optimizations' => array(
+        '#title' => t('Enable bandwidth optimizations.'),
+        '#default_value' => variable_get('preprocess_css', FALSE) && variable_get('preprocess_js', FALSE),
+        'config_page' => array(
+          '#text' => t('Performance page'),
+          '#path' => 'admin/config/development/performance',
+        ),
+      ),
+    ),
+
+    'user_settings' => array(
+      '#title' => t('User settings'),
+      '#description' => t('<p>Review user settings.</p>'),
+      'set_admin_role' => array(
+        '#title' => t('Set administrator role.'),
+        'account_settings' => array(
+          '#text' => t('Account settings'),
+          '#path' => 'admin/config/people/accounts',
+        ),
+      ),
+      'confirm_user_registration_settings' => array(
+        '#title' => t('Confirm user registration settings.'),
+        'account_settings' => array(
+          '#text' => t('Account settings'),
+          '#path' => 'admin/config/people/accounts',
+        ),
+      ),
+      'confirm_email_settings' => array(
+        '#title' => t('Confirm email settings.'),
+        'account_settings' => array(
+          '#text' => t('Account settings'),
+          '#path' => 'admin/config/people/accounts',
+        ),
+      ),
+    ),
+
+    'user_permissions' => array(
+      '#title' => t('User permissions'),
+      '#description' => t('<p>Review user permissions.</p>'),
+      'install_filter_perms_module' => array(
+        '#title' => t('OPTIONAL: Install Filter Permissions module'),
+        '#default_value' => module_exists('filter_perms'),
+        'project_page' => array(
+          '#text' => t('Download'),
+          '#path' => 'http://drupal.org/project/filter_perms',
+        ),
+        'modules_page' => $modules_page,
+      ),
+      'read_drupal_perms_handbook_page' => array(
+        '#title' => t('Read <a href="http://drupal.org/node/22275">Managing access control with permissions and user roles</a> handbook page.'),
+      ),
+      'review_user_perms' => $review_user_perms = array(
+        '#title' => t('Review and revise user permissions.'),
+        'permissions_page' => array(
+          '#text' => t('Permissions page'),
+          '#path' => 'admin/people/permissions',
+        ),
+      ),
+    ),
+
+    'in_case_you_forgot' => array(
+      '#title' => t('In case you forgot'),
+      '#description' => t('<p>A few tasks to remember:</p>'),
+      'review_user_perms_again' => $review_user_perms,
+      'check_drupal_logs' => array(
+        '#title' => t('Check Drupal logs for issues.'),
+        '#description' => t('Make sure Database logging (dblog) module is enabled.'),
+        'dblog_report' => array(
+          '#text' => t('Recent log messages'),
+          '#path' => 'admin/reports/dblog',
+        ),
+      ),
+      'check_for_updates' => array(
+        '#title' => t('Check for updates to Drupal core and contributed modules.'),
+        '#description' => t('Make sure Update manager (update) module is enabled.'),
+        'available_updates_report' => array(
+          '#text' => t('Available updates report'),
+          '#path' => 'admin/reports/updates',
+        ),
+      ),
+    ),
+
+    'getting_ready' => array(
+      '#title' => t('Getting ready'),
+      '#description' => t('<p>A few things to do before deployment:</p>'),
+      'disable_devel_modules' => array(
+        '#title' => t('Disable devel modules.'),
+      ),
+      'set_maintenance_theme' => array(
+        '#title' => t('Set a maintenance theme.'),
+        'handbook_page' => array(
+          '#text' => t('Theming the Drupal maintenance page'),
+          '#path' => 'http://drupal.org/node/195435',
+        ),
+      ),
+      'clean_css_files_with_css_tidy' => array(
+        '#title' => t('Clean CSS files with CSS tidy.'),
+        '#description' => t('Recommended for future development.'),
+      ),
+      'disable_theme_registry_rebuild' => array(
+        '#title' => t('Disable theme registry rebuild.'),
+      ),
+      'turn_off_php_error_display' => array(
+        '#title' => t('Turn off PHP error display.'),
+      ),
+      'change_passwords' => array(
+        '#title' => t('Change all necessary Drupal/MySQL/SSH passwords.'),
+      ),
+      'remove_temp_users_and_content' => array(
+        '#title' => t('Remove temporary users and content.'),
+      ),
+      'set_up_site_emails' => array(
+        '#title' => t('Set up site emails.'),
+      ),
+    ),
+
+    'deployment' => array(
+      '#title' => t('Deployment'),
+      '#description' => t('<p>Tasks to be done when launching the site.</p>'),
+      'set_up_settings_php_redirect' => array(
+        '#title' => t('Set up HTTP redirect in settings.php'),
+      ),
+      'set_up_cron_job' => array(
+        '#title' => t('Set up cron job.'),
+      ),
+    ),
+
+  );
+  return $checklists;
+}

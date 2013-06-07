@@ -1,0 +1,12 @@
+name = "Features Orphans"
+description = "An administration tool that lists all Features-exportable components that do NOT belong to a feature module"
+core = 7.x
+package = "Features"
+dependencies[] = features
+
+; Information added by drupal.org packaging script on 2013-01-26
+version = "7.x-1.2"
+core = "7.x"
+project = "features_orphans"
+datestamp = "1359217921"
+

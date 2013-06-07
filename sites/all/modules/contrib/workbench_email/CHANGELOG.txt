@@ -1,0 +1,36 @@
+Workbench Email 7.x-2.1, 2013-01-05
+-----------------------------------
+by teknic Issue 2003040: fixed issue with ajax error being thrown
+by teknic Issue 1998854: fixed issue with rid being exported.
+by teknic Issue 1980512: fixed issue of error when no recipient selected
+
+Workbench Email 7.x-2.1, 2013-01-05
+-----------------------------------
+by teknic: Issue #1880238: fixed issue with null constraint on
+           subject / message db fields
+
+Workbench Email 7.x-2.0, 2012-12-21
+-----------------------------------
+by teknic: removed workbench_email_transitions table from code and db
+by frosev: Issue #1852334: fixed an issue where the `wid`
+           field was not being added to the schema through
+           hook_update_N implementation.
+by frosev: Issue #1868902: fix an issue where role id's were not being
+           imported from exported features.
+
+Workbench Email 7.x-1.0, 2012-11-09
+-----------------------------------
+by teknic: added t(), added module_implements_alter, removed hook_install
+           and uninstall
+by teknic: fixed issue with #tree in form, removed  in submit
+by teknic: changed the way we determine valid permissions (ie: roles
+           that have access to moderate content)
+by teknic: corrected function call and parameters to valid_roles()
+by teknic: replaced submit handler with hook_node_submit, giving access
+           to the node created, for token replacement
+by teknic: removed #submit handler, added form[actions][submit][#submit][]
+           submit handler so that the node was available, this resolves
+           the issue of no NID in emails when first saved.
+by teknic: renamed workbench_email.features.inc function names, fixed
+           issue with role being loaded by name instead of rid
+

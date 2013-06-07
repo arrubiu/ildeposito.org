@@ -1,0 +1,6 @@
+Linkit_views x.x-x.x, xxxx-xx-xx
+
+
+Linkit_views 7.x-2.0, xxxx-xx-xx
+------------------------------
+Stable release for 7.x-2.0.

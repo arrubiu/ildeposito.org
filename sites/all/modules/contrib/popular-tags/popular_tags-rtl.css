@@ -1,0 +1,8 @@
+.popular-tags .show-popular-terms,
+.popular-tags .show-all-terms {
+  margin-right: 0.5em;
+}
+
+.popular-tags .tag-terms .term {
+  margin-left: 0.5em;
+}

@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall functions for Mail signature.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function mail_signature_uninstall() {
+  variable_del('mail_signature_enabled');
+  variable_del('mail_signature_text');
+  variable_del('mail_signature_mail');
+}

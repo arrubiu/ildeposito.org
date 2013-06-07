@@ -1,0 +1,16 @@
+/**
+ * Float images found in the body text alternately right and left.
+ */
+
+/* Adjust the id or class if your theme uses another to target the node body.*/
+.content span.autofloat-odd,
+#content span.autofloat-odd {
+  float: right; /* LTR */
+  margin: 5px 0 0 10px; /* LTR */
+}
+
+.content span.autofloat-even,
+#content span.autofloat-even {
+  float: left; /* LTR */
+  margin: 5px 5px 0 0; /* LTR */
+}

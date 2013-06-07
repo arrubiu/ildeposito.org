@@ -1,0 +1,12 @@
+name = Production monitor
+description = Monitors sites which make use of the Production check module.
+package = Monitoring
+core = 7.x
+configure = admin/reports/prod-monitor
+
+; Information added by drupal.org packaging script on 2013-04-29
+version = "7.x-1.7"
+core = "7.x"
+project = "prod_check"
+datestamp = "1367223317"
+

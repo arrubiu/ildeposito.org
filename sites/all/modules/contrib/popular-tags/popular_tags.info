@@ -1,0 +1,13 @@
+name = Popular Tags
+description = Allows the users to select taxonomy terms/tags by just clicking on them rather than typing them (auto-complete) or selecting them from a select box/checkbox/radio etc. It shows them a list of tag links, sorted by popularity (defined as how many nodes are tagged with it), up to a configurable maximum number.
+core = 7.x
+package = Taxonomy
+
+dependencies[] = taxonomy
+
+; Information added by drupal.org packaging script on 2013-02-07
+version = "7.x-1.0-alpha2"
+core = "7.x"
+project = "popular-tags"
+datestamp = "1360195598"
+

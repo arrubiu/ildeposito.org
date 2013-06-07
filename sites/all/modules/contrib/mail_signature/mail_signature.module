@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Basic functions for Mail Signature module.
+ */
+
+/**
+ * Implements  hook_menu().
+ *
+ * Create menu entry to administer signature.
+ */
+function mail_signature_menu() {
+  $items = array();
+
+  $items['admin/config/system/mail-signature'] = array(
+    'title' => ('Mail Signature'),
+    'description' => ('Set signature to mails.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mail_signature_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'mail_signature.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Add signature to every mail.
+ */
+function mail_signature_mail_alter(&$message) {
+  if (variable_get('mail_signature_enabled') && variable_get('mail_signature_text') != '') {
+    $message['body'][] = '--<br />' . token_replace(variable_get('mail_signature_text'));
+  }
+}

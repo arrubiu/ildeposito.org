@@ -1,0 +1,9 @@
+/*
+ * @file date_repeat_presets.css
+ *   CSS for date_repeat_presets.
+ */
+
+/* hide the update type button when not degrading to non-javascript browser */
+html.js .drp-update-type-button {
+  display: none;
+}

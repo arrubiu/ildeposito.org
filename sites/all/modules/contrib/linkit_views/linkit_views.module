@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Extend Linkit with views links.
+ */
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function linkit_views_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'linkit' && !empty($plugin)) {
+    return "plugins/" . $plugin;
+  }
+}

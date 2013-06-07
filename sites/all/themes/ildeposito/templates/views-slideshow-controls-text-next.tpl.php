@@ -1,0 +1,1 @@
+<span id="views_slideshow_controls_text_next_<?php print $variables['vss_id']; ?>" class="<?php print $classes; ?>"><a href="#" title="Successiva"><img src="/sites/all/themes/ildeposito/images/slide-next.png" /></a></span>

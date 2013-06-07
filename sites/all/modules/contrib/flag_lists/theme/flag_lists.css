@@ -1,0 +1,9 @@
+.block-flag_lists .flag-message {
+  position: relative;
+  clear: both;
+  top:0;
+  left:0;
+  line-height: normal;
+  width: auto;
+  font-size: .8em;
+}

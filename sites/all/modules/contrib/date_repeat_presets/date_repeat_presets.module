@@ -1,0 +1,146 @@
+<?php
+// $Id$
+
+module_load_include('inc', 'date', 'date_admin');
+
+/**
+ * @file
+ * This module enhances the standard repeating date functionality offered by
+ * the Date and Date Repeat API modules by providing preset date repeat rules.
+ *
+ * The module supports two types of preset:
+ * - Select a preset repeat from a list. (E.g. every year, every month, every week).
+ *   Up to 5 configurable preset repeat rules are allowed as well as the options
+ *   to not repeat or, if configured, to specify a custom repeat rule via the
+ *   standard form. This is similar to the way Apple's iCal does it.
+ * - A single configurable preset rule which is either applied automatically
+ *   for a specialised date field (e.g. your birthday, anniversary etc) or via
+ *   a checkbox for a more general "is this an annual event" type field.
+ */
+
+/**
+ * Implementation of hook_theme().
+ */
+function date_repeat_presets_theme() {
+  return array(
+    'date_repeat_presets_presets' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Gets the set of field instances that are configured to use date repeat presets.
+ */
+function date_repeat_presets_get_field_instances() {
+  $repeat_date_field_instances = &drupal_static(__FUNCTION__);
+
+  if (!isset($repeat_date_field_instances)) {
+    $field_instances = field_info_instances();
+    $repeat_date_field_instances = array();
+    foreach ($field_instances as $entity_type => $bundles) {
+      foreach ($bundles as $bundle_name => $bundle_field_instances) {
+        foreach ($bundle_field_instances as $field_name => $field_instance) {
+          // note field_name (field?) parameter is not currently used
+          if (date_is_repeat_field($field_name, $field_instance)) {
+            if (!empty($field_instance['widget']['settings']['repeat_presets']) && $field_instance['widget']['settings']['repeat_presets'] != 'standard') {
+              $repeat_date_field_instances[$entity_type][$bundle_name][$field_name] = $field_instance;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return $repeat_date_field_instances;
+}
+
+/**
+ * Recursively search through elements and their descendents for a entity/bundle form element
+ * that is a drp repeat field instance and alter it.
+ */
+function date_repeat_presets_alter_drp_form_fields(&$element) {
+  $repeat_field_instances = date_repeat_presets_get_field_instances();
+
+  if (isset($element['#field_name']) && isset($element['#entity_type']) && isset($element['#bundle'])) {
+    if (isset($repeat_field_instances[$element['#entity_type']][$element['#bundle']][$element['#field_name']])) {
+      _date_repeat_presets_alter_entity_form($element);
+    }
+  }
+
+  if ($child_elements_keys = element_get_visible_children($element)) {
+    foreach ($child_elements_keys as $child_element_key) {
+
+      $child_element =& $element[$child_element_key];
+      if (isset($element[$child_element_key])) {
+        date_repeat_presets_alter_drp_form_fields($child_element);
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_form_alter(). Alter node forms and the date widget admin form.
+ */
+function date_repeat_presets_form_alter(&$form, $form_state, $form_id) {
+  if (isset($form['#node_edit_form'])) {
+    module_load_include('inc', 'date_repeat_presets', 'date_repeat_presets');
+    date_repeat_presets_alter_drp_form_fields($form);
+  }
+  elseif ($form_id == 'field_ui_field_edit_form') {
+    // only alter date forms that have the repeat date flag set
+    if (date_is_repeat_field($form['#field'], $form['instance'])) {
+      module_load_include('inc', 'date_repeat_presets', 'date_repeat_presets.admin');
+      _date_repeat_presets_admin_form_alter($form, $form_state, $form_id);
+    }
+  }
+  elseif (!$form_id == 'profile2_form') {
+    module_load_include('inc', 'date_repeat_presets', 'date_repeat_presets');
+    $form_elements_containing_drp_field = date_repeat_presets_alter_drp_form_fields($form);
+  }
+}
+
+/**
+ * Implementation of hook_form_profile2_form_alter() to some after profile form has been attached.
+ */
+function date_repeat_presets_form_profile2_form_alter(&$form, $form_state) {
+  module_load_include('inc', 'date_repeat_presets', 'date_repeat_presets');
+  $form_elements_containing_drp_field = date_repeat_presets_alter_drp_form_fields($form);
+}
+
+/**
+ * An after_build callback for the node form.
+ */
+function date_repeat_presets_after_build($form, &$form_state) {
+  module_load_include('inc', 'date_repeat_presets', 'date_repeat_presets');
+  return _date_repeat_presets_after_build($form, $form_state);
+}
+
+/**
+ * Friendly version of date_widget_validate() in date_elements.inc. See the after_build callback above.
+ */
+function date_repeat_presets_validate($element, &$form_state) {
+  module_load_include('inc', 'date_repeat_presets', 'date_repeat_presets');
+  return _date_repeat_presets_validate($element, $form_state);
+}
+
+/**
+ * Extra validation for the rrule on the node form. See the after_build callback.
+ */
+function date_repeat_presets_rrule_validate($element, &$form_state) {
+  module_load_include('inc', 'date_repeat_presets', 'date_repeat_presets');
+  return _date_repeat_presets_rrule_validate($element, $form_state);
+}
+
+/**
+ * #after_build function used in admin form.
+ */
+function date_repeat_presets_admin_repeat_collapsed_after_build($form, &$form_state) {
+  module_load_include('inc', 'date_repeat_presets', 'date_repeat_presets.admin');
+  return _date_repeat_presets_admin_repeat_collapsed_after_build($form, $form_state);
+}
+
+function date_repeat_presets_admin_ajax_callback($form, &$form_state) {
+  module_load_include('inc', 'date', 'date_admin');
+  return drupal_render($form['instance']['widget']['settings']['repeat_presets']);
+}

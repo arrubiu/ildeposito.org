@@ -1,0 +1,20 @@
+name = PDF using mPDF
+description = HTML to PDF conversion using mPDF Library.
+core = 7.x
+package = "PDF Conversion"
+dependencies[] = libraries
+configure = admin/config/user-interface/mpdf
+
+; Information added by drupal.org packaging script on 2013-01-11
+version = "7.x-1.1"
+core = "7.x"
+project = "PDF_using_mPDF"
+datestamp = "1357883896"
+
+
+; Information added by drupal.org packaging script on 2013-03-04
+version = "7.x-2.1"
+core = "7.x"
+project = "PDF_using_mPDF"
+datestamp = "1362381014"
+

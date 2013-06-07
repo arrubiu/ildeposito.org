@@ -1,0 +1,691 @@
+<?php
+
+/**
+ * @file
+ * Tests for Simplenews Scheduler.
+ */
+
+/**
+ * Class with common setup.
+ *
+ * Declares the module dependencies for the test.
+ *
+ * We need to use DrupalWebTestCase as our base class even for functional
+ * testing, as the functions that we test rely on variable_get() which requires
+ * a bootstrapped database.
+ */
+class SimpleNewsSchedulerWebTestCase extends DrupalWebTestCase {
+
+  /**
+   * Overrides DrupalWebTestCase::setUp().
+   *
+   * @param $modules
+   *   Additional modules to enable for the test. simplenews_scheduler and
+   *   the dependencies are always enabled.
+   */
+  function setUp($modules = array()) {
+    // Add our dependencies to the module list.
+    $modules = array_merge(array('simplenews_scheduler'), $modules);
+    parent::setUp($modules);
+
+    // Set the site timezone to something visibly different from UTC, which
+    // has daylight saving changes.
+    variable_set('date_default_timezone', 'Europe/Kiev');
+    date_default_timezone_set(drupal_get_user_timezone());
+  }
+}
+
+/**
+ * Test scheduled edition creation.
+ */
+class SimpleNewsSchedulerNodeCreationTest extends SimpleNewsSchedulerWebTestCase {
+  protected $privileged_user;
+
+  /**
+   * Provides information about this test.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Newsletter generation test',
+      'description' => 'Testing generation of newsletters',
+      'group' => 'Simplenews Scheduler',
+    );
+  }
+
+  /**
+   * Declares the module dependencies for the test.
+   */
+  function setUp() {
+    parent::setUp();
+
+    $this->privileged_user = $this->drupalCreateUser(array(
+      'access content',
+      'administer nodes',
+      'create simplenews content',
+      'edit own simplenews content',
+      'send newsletter',
+      'send scheduled newsletters',
+      'overview scheduled newsletters',
+      ));
+    $this->drupalLogin($this->privileged_user);
+
+    // Subscribe a user to simplenews.
+    $categories = simplenews_categories_load_multiple();
+    $this->mail = 'test@example.org';
+    simplenews_subscribe_user($this->mail, key($categories), FALSE, 'test');
+  }
+
+  /**
+   * Basic simplenews newsletter generation test
+   * create a simplenews node,
+   */
+  function testNewsletterGeneration() {
+    $edit = array();
+    $title ="newsletter " . $this->randomName(8);
+
+    $edit = array();
+    $edit['title'] = $title;
+    $edit["body[und][0][value]"] = $this->randomName(16);
+    $this->drupalPost('node/add/simplenews', $edit, t('Save'));
+    $this->assertText($title);
+
+    preg_match('|node/(\d+)$|', $this->getUrl(), $matches);
+    $node = node_load($matches[1]);
+
+    // Make sure that the editions tab is not visible as long as it's not a
+    // scheduled newsletter.
+    $this->drupalGet("node/{$node->nid}/editions");
+    $this->assertResponse(403, t('Editions tab not accessible'));
+
+    // Now create the simplenews schedule configuration.
+    $this->drupalGet("node/{$node->nid}/simplenews");
+    $this->assertText(t("Send newsletter according to schedule"));
+
+    $edit = array();
+    $edit["simplenews[send]"] = '4';
+    $edit["simplenews[scheduler][interval]"] = "hour";
+
+    // Specify a start time 30 minutes in the past to be able to have a known
+    // edition creation time that can be checked.
+    $date = new DateTime();
+    $date->sub(new DateInterval('PT30M'));
+    $edit["simplenews[scheduler][start_date][year]"]    = $date->format('Y');
+    $edit["simplenews[scheduler][start_date][month]"]   = $date->format('n');
+    $edit["simplenews[scheduler][start_date][day]"]     = $date->format('j');
+    $edit["simplenews[scheduler][start_date][hour]"]    = $date->format('G');
+    $edit["simplenews[scheduler][start_date][minute]"]  = $date->format('i');
+    $edit["simplenews[scheduler][title]"]  = "Custom title [site:name]";
+
+    $this->drupalPost("node/{$node->nid}/simplenews", $edit, t('Submit'));
+
+
+    // Make sure it knows no editions created yet.
+    $this->drupalGet("node/{$node->nid}/editions");
+    $this->assertText(t("No scheduled newsletter editions have been sent."));
+
+    // Execute cron.
+    drupal_cron_run();
+
+    // See if it was created.
+    $this->drupalGet("node/{$node->nid}/editions");
+    $this->assertText("Custom title");
+    $this->assertNoText(t("No scheduled newsletter editions have been sent."));
+
+    $this->assertText($title); // original real node title
+
+    // Go to node and verify creation time and token for custom title
+    // @todo: make this real token integration
+    $this->clickLink("Custom title ". variable_get('site_name', 'Drupal'));
+
+    $this->assertText(t('This is a newsletter edititon. View the the master template of this newsletter here'));
+    $this->assertText(t('Submitted by @name on @date', array('@name' => format_username($this->privileged_user), '@date' => format_date($date->getTimestamp()))));
+
+    // Check sent mails.
+    $mails = $this->drupalGetMails();
+    $this->assertEqual(1, count($mails), t('Newsletter mail has been sent.'));
+
+    $this->clickLink(t('Newsletter'));
+    $this->assertText(t('This node is part of a scheduled newsletter configuration.'));
+    $this->clickLink(t('here'));
+    $this->assertEqual(url('node/' . $node->nid, array('absolute' => TRUE)), $this->getUrl());
+
+    // Test the tab on a sent newsletter, schedule details should not be shown.
+    $title ="newsletter " . $this->randomName(8);
+
+    $edit = array();
+    $edit['title'] = $title;
+    $edit["body[und][0][value]"] = $this->randomName(16);
+    $this->drupalPost('node/add/simplenews', $edit, t('Save'));
+    $this->assertText($title);
+
+    preg_match('|node/(\d+)$|', $this->getUrl(), $matches);
+    $node = node_load($matches[1]);
+
+    $edit = array();
+    $edit["simplenews[send]"] = SIMPLENEWS_COMMAND_SEND_NOW;
+    $this->drupalPost("node/{$node->nid}/simplenews", $edit, t('Submit'));
+    $this->assertNoText(t('Schedule details'));
+
+    // Check sent mails.
+    $mails = $this->drupalGetMails();
+    $this->assertEqual(1, count($mails), t('Newsletter mail has been sent.'));
+  }
+}
+
+
+/**
+ * Unit testing for monthly newsletter next run times.
+ */
+class SimpleNewsSchedulerNextRunTimeTest extends SimpleNewsSchedulerWebTestCase {
+
+  /**
+   * Provides information about this test.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Next run time: monthly',
+      'description' => 'Testing edition times for newsletters due every month and every 2 months.',
+      'group' => 'Simplenews Scheduler',
+    );
+  }
+
+  /**
+   * Test a frequency of 1 month.
+   */
+  function testNextRunTimeOneMonth() {
+    // The start date of the edition.
+    $this->edition_day = '05';
+    $start_date = new DateTime("2012-01-{$this->edition_day} 12:00:00");
+
+    // Fake newsletter parent data: sets the interval, start date, and frequency.
+    $newsletter_parent_data = (object) array(
+      'nid' => 1,
+      'last_run' => 0,
+      'activated' => '1',
+      'send_interval' => 'month',
+      'interval_frequency' => '1',
+      'start_date' => $start_date->getTimestamp(),
+      'next_run' => $start_date->getTimestamp(), // Needs to be set manually when creating new records programmatically.
+      'stop_type' => '0',
+      'stop_date' => '0',
+      'stop_edition' => '0',
+      'php_eval' => '',
+      'title' => '[node:title] for [current-date:long]',
+    );
+
+    // Number of days to run for.
+    $days = 370;
+    // Index of the days we've done so far.
+    $added_days = 0;
+    // Iterate over days.
+    $last_run_time = $start_date->getTimestamp();
+    while ($added_days <= $days) {
+      // Create today's date at noon and get the timestamp.
+      $date = clone($start_date);
+      $date->add(new DateInterval("P{$added_days}D"));
+      $timestamp_noon = $date->getTimestamp();
+
+      // Get the next run time from the API function we're testing.
+      $next_run_time = simplenews_scheduler_calculate_next_run_time($newsletter_parent_data, $timestamp_noon);
+      //debug($edition_time);
+
+      if ($next_run_time != $last_run_time) {
+        $offset = _simplenews_scheduler_make_time_offset($newsletter_parent_data->send_interval, $newsletter_parent_data->interval_frequency);
+
+        $next_run_date = date_add(date_create(date('Y-m-d H:i:s', $last_run_time)), date_interval_create_from_date_string($offset));
+        $this->assertEqual($next_run_date->getTimestamp(), $next_run_time, t('New next run timestamp has advanced by the expected offset of !offset.', array(
+          '!offset' => $offset,
+        )));
+
+        $last_run_time = $next_run_time;
+      }
+
+      $this->assertTrue($timestamp_noon < $next_run_time, t('Next run time of !next-run is in the future relative to current time of !now.', array(
+        '!next-run' => date("Y-n-d H:i:s", $next_run_time),
+        '!now'      => date("Y-n-d H:i:s", $timestamp_noon),
+      )));
+
+      $interval = $newsletter_parent_data->interval_frequency * 31 * 24 * 60 * 60;
+      //$this->assertTrue($next_run_time - $timestamp_noon <= $interval, t('Next run timestamp is less than or exactly one month in the future.'));
+
+      // Create a date object from the timestamp. The '@' makes the constructor
+      // consider the string as a timestamp.
+      $next_run_date = new DateTime(date('Y-m-d H:i:s', $last_run_time));
+      $d = date_format($next_run_date, 'd');
+      $this->assertEqual($next_run_date->format('d'), $this->edition_day, t('Next run timestamp is on same day of the month as the start date.'));
+      $this->assertEqual($next_run_date->format('H:i:s'), '12:00:00', t('Next run timestamp is at the same time.'));
+
+      $added_days++;
+    } // while days
+  }
+
+  /**
+   * Test a frequency of 2 months.
+   */
+  function testNextRunTimeTwoMonths() {
+    // The start date of the edition.
+    $this->edition_day = '05';
+    $start_date = new DateTime("2012-01-{$this->edition_day} 12:00:00");
+
+    // Fake newsletter parent data: sets the interval, start date, and frequency.
+    $newsletter_parent_data = (object) array(
+      'nid' => 1,
+      'last_run' => 0,
+      'activated' => '1',
+      'send_interval' => 'month',
+      'interval_frequency' => '2',
+      'start_date' => $start_date->getTimestamp(),
+      'next_run' => $start_date->getTimestamp(), // Needs to be set manually when creating new records programmatically.
+      'stop_type' => '0',
+      'stop_date' => '0',
+      'stop_edition' => '0',
+      'php_eval' => '',
+      'title' => '[node:title] for [current-date:long]',
+    );
+
+    // Number of days to run for.
+    $days = 370;
+    // Index of the days we've done so far.
+    $added_days = 0;
+    // Iterate over days.
+    while ($added_days <= $days) {
+      // Create today's date at noon and get the timestamp.
+      $date = clone($start_date);
+      $date->add(new DateInterval("P{$added_days}D"));
+      $timestamp_noon = $date->getTimestamp();
+
+      // Get the next run time from the API function we're testing.
+      $next_run_time = simplenews_scheduler_calculate_next_run_time($newsletter_parent_data, $timestamp_noon);
+      //debug($edition_time);
+
+      $this->assertTrue($timestamp_noon < $next_run_time, t('Next run time of !next-run is in the future relative to current time of !now.', array(
+        '!next-run' => date("Y-n-d H:i:s", $next_run_time),
+        '!now'      => date("Y-n-d H:i:s", $timestamp_noon),
+      )));
+
+      $interval = $newsletter_parent_data->interval_frequency * 31 * 24 * 60 * 60;
+      $this->assertTrue($next_run_time - $timestamp_noon <= $interval, t('Next run timestamp is less than or exactly two months in the future.'));
+
+      // Create a date object from the timestamp. The '@' makes the constructor
+      // consider the string as a timestamp.
+      $next_run_date = new DateTime("@$next_run_time");
+      $d = date_format($next_run_date, 'd');
+      $this->assertEqual($next_run_date->format('d'), $this->edition_day, t('Next run timestamp is on same day of the month as the start date.'));
+
+      $added_days++;
+    } // while days
+  }
+}
+
+/**
+ * Unit testing for monthly newsletter edition times.
+ */
+class SimpleNewsSchedulerEditionTimeTest extends SimpleNewsSchedulerWebTestCase {
+
+  /**
+   * Provides information about this test.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Edition time: monthly',
+      'description' => 'Testing edition times for newsletters due every month and every 2 months.',
+      'group' => 'Simplenews Scheduler',
+    );
+  }
+
+  /**
+   * Test a frequency of 1 month.
+   */
+  function testEditionTimeOneMonth() {
+    // The start date of the edition.
+    $this->edition_day = '01';
+    $start_date = new DateTime("2012-01-{$this->edition_day} 12:00:00");
+
+    // Fake newsletter parent data: sets the interval, start date, and frequency.
+    $newsletter_parent_data = (object) array(
+      'nid' => 1,
+      'last_run' => 0,
+      'activated' => '1',
+      'send_interval' => 'month',
+      'interval_frequency' => '1',
+      'start_date' => $start_date->getTimestamp(),
+      'stop_type' => '0',
+      'stop_date' => '0',
+      'stop_edition' => '0',
+      'php_eval' => '',
+      'title' => '[node:title] for [current-date:long]',
+    );
+
+    // Number of days to run for. Go just over one year.
+    $days = 370;
+    // Index of the days we've done so far.
+    $added_days = 0;
+    // Iterate over days.
+    while ($added_days <= $days) {
+      // Create today's date at noon and get the timestamp.
+      $date = clone($start_date);
+      $date->add(new DateInterval("P{$added_days}D"));
+      $timestamp_noon = $date->getTimestamp();
+
+      $edition_time = simplenews_scheduler_calculate_edition_time($newsletter_parent_data, $timestamp_noon);
+      //debug($edition_time);
+
+      // Expected edition time is always the {$this->edition_day}th of the month
+      // at noon.
+      $edition_time_formatted = date("Y-m-d H:i:s", $edition_time);
+      $this_month = $date->format('Y-m');
+      $expected_time_formatted = "{$this_month}-{$this->edition_day} 12:00:00";
+
+      $this->assertEqual($edition_time_formatted, $expected_time_formatted, t("Edition time of !edition-time matches expected time of !edition-time-expected at time !now.", array(
+        '!edition-time' => $edition_time_formatted,
+        '!edition-time-expected' => $expected_time_formatted,
+        '!now' => $date->format("Y-m-d H:i:s"),
+      )));
+
+      $added_days++;
+    } // while days
+  }
+
+  /**
+   * Test a frequency of 2 months.
+   */
+  function testEditionTimeTwoMonths() {
+    // The start date of the edition.
+    $this->edition_day = '01';
+    $start_date = new DateTime("2012-01-{$this->edition_day} 12:00:00");
+
+    // Fake newsletter parent data: sets the interval, start date, and frequency.
+    $newsletter_parent_data = (object) array(
+      'nid' => 1,
+      'last_run' => 0,
+      'activated' => '1',
+      'send_interval' => 'month',
+      'interval_frequency' => '2',
+      'start_date' => $start_date->getTimestamp(),
+      'stop_type' => '0',
+      'stop_date' => '0',
+      'stop_edition' => '0',
+      'php_eval' => '',
+      'title' => '[node:title] for [current-date:long]',
+    );
+
+    // Number of days to run for. Go just over one year.
+    $days = 370;
+    // Index of the days we've done so far.
+    $added_days = 0;
+    // Iterate over days.
+    while ($added_days <= $days) {
+      // Create today's date at noon and get the timestamp.
+      $date = clone($start_date);
+      $date->add(new DateInterval("P{$added_days}D"));
+      $timestamp_noon = $date->getTimestamp();
+
+      $edition_time = simplenews_scheduler_calculate_edition_time($newsletter_parent_data, $timestamp_noon);
+      //debug($edition_time);
+
+      // Expected edition time is always the {$this->edition_day}th of the month
+      // at noon.
+      // Note here we use 'n' for the month to avoid having to pad.
+      $edition_time_formatted = date("Y-n-d H:i:s", $edition_time);
+      $this_year = $date->format('Y');
+      $this_month = $date->format('n');
+      // We start in January and run 2-monthly.
+      // We want the number of elapsed months, module 2 (the frequency), to know
+      // the remainder to subtract.
+      $elapsed_mod = ($this_month - 1) % 2;
+      $expected_month = $this_month - $elapsed_mod;
+      $expected_time_formatted = "{$this_year}-{$expected_month}-{$this->edition_day} 12:00:00";
+
+      $this->assertEqual($edition_time_formatted, $expected_time_formatted, t("Edition time of !edition-time matches expected time of !edition-time-expected at time !now.", array(
+        '!edition-time' => $edition_time_formatted,
+        '!edition-time-expected' => $expected_time_formatted,
+        '!now' => $date->format("Y-m-d H:i:s"),
+      )));
+
+      $added_days++;
+    } // while days
+  }
+}
+
+/**
+ * Unit testing for simplenews_scheduler_get_newsletters_due().
+ */
+class SimpleNewsSchedulerEditionDueTest extends SimpleNewsSchedulerWebTestCase {
+  protected $privileged_user;
+
+  /**
+   * Provides information about this test.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Edition due test',
+      'description' => 'Functional tests for simplenews_scheduler_get_newsletters_due().',
+      'group' => 'Simplenews Scheduler',
+    );
+  }
+
+  /**
+   * Declares the module dependencies and create data for the test.
+   */
+  function setUp() {
+    parent::setUp();
+
+    $this->privileged_user = $this->drupalCreateUser(array(
+      'access content',
+      'administer nodes',
+      'create simplenews content',
+      'edit own simplenews content',
+      'send newsletter',
+      'send scheduled newsletters',
+      'overview scheduled newsletters',
+      ));
+    $this->drupalLogin($this->privileged_user);
+
+    // The start date of the edition. This is on 5 January so that we get some
+    // days in either month, and at at noon to keep things simple.
+    $this->edition_day = '05';
+    $start_date = new DateTime("2012-01-{$this->edition_day} 12:00:00");
+
+    // Create a parent newsletter node.
+    $node = (object) NULL;
+    $node->type = 'simplenews';
+    $node->title = 'Parent';
+    $node->uid = 1;
+    $node->status = 1;
+    $node->language = 'und';
+    // Safe to assume there is only one taxonomy term and it's the newsletter.
+    $node->field_simplenews_term['und'][0]['tid'] = 1;
+
+    // Workaround for http://drupal.org/node/1480258
+    $node->nid = NULL;
+
+    node_save($node);
+
+    // Grumble grumble there's no node saving API in our module!
+    // @see http://drupal.org/node/1480328 to clean this up.
+    $node->simplenews_scheduler = (object) array(
+      'nid' => $node->nid,
+      'last_run' => 0,
+      'activated' => '1',
+      'send_interval' => 'month',
+      'interval_frequency' => '1',
+      'start_date' => $start_date->getTimestamp(),
+      'next_run' => $start_date->getTimestamp(), // Needs to be set manually when creating new records programmatically.
+      'stop_type' => '0',
+      'stop_date' => '0',
+      'stop_edition' => '0',
+      'php_eval' => '',
+      'title' => '[node:title] for [current-date:long]',
+    );
+    $record = (array) $node->simplenews_scheduler;
+    $query = db_merge('simplenews_scheduler');
+    $query->key(array(
+        'nid' => $record['nid'],
+      ))
+      ->fields($record)
+      ->execute();
+
+    // Store the node ID for the test to use.
+    $this->parent_nid = $node->nid;
+  }
+
+  /**
+   * Test simplenews_scheduler_get_newsletters_due().
+   */
+  function testEditionsDue() {
+    // Get the node id of the parent newsletter node.
+    $parent_nid = $this->parent_nid ;
+
+    // But just check it exists for sanity.
+    $this->drupalGet("node/$parent_nid");
+
+    // Simulate cron running daily at half past 12 so that an edition due at
+    // 12 noon should be picked up.
+    $start_date = new DateTime("2012-01-01 12:00:00");
+    $time_offsets = array(
+      'before' => "-1 hour",
+      'after'  => "+1 hour",
+    );
+
+    // Number of days to run cron for.
+    $days = 150;
+    // Index of the days we've done so far.
+    $added_days = 0;
+    // Iterate over days.
+    while ($added_days <= $days) {
+      // Create today's date at noon and get the timestamp.
+      $date = clone($start_date);
+      $date->add(new DateInterval("P{$added_days}D"));
+      $timestamp_noon = $date->getTimestamp();
+
+      // We simulate running cron one hour before and one hour after noon.
+      foreach ($time_offsets as $offset_key => $offset) {
+        // Create a timestamp based on noon + the offset.
+        // This gives us either 11:00 or 13:00 on the current day.
+        $timestamp = strtotime($offset, $timestamp_noon);
+        // debug("base: $timestamp_noon, off: $offset, result: $timestamp");
+
+        // Get the list of newsletters due.
+        $due = simplenews_scheduler_get_newsletters_due($timestamp);
+
+        // An edition is due if it's 13:00 on the edition day.
+        $formatted = date(DATE_RFC850, $timestamp);
+        if ($offset_key == 'after' && date('d', $timestamp) == $this->edition_day) {
+          $this->assertTrue(isset($due[$parent_nid]), "Edition due at day $added_days, $formatted, $timestamp");
+        }
+        else {
+          $this->assertFalse(isset($due[$parent_nid]), "Edition not due at day $added_days, $formatted, $timestamp");
+        }
+
+        // Get some debug output to figure out what is going on in
+        // simplenews_scheduler_get_newsletters_due().
+        $intervals['hour'] = 3600;
+        $intervals['day'] = 86400;
+        $intervals['week'] = $intervals['day'] * 7;
+        $intervals['month'] = $intervals['day'] * date_days_in_month(date('Y', $timestamp), date('m', $timestamp));
+
+        if (isset($due[$parent_nid])) {
+          // Output what we got back from the function.
+          // debug($due);
+
+          $newsletter_parent_data = $due[$parent_nid];
+          $edition_time = simplenews_scheduler_calculate_edition_time($newsletter_parent_data, $timestamp);
+          $eid = _simplenews_scheduler_new_edition($newsletter_parent_data->nid, $timestamp);
+
+          // Output the last_run as a sanity check.
+          $result = db_query("SELECT last_run FROM {simplenews_scheduler} WHERE nid = :nid", array(':nid' => $parent_nid));
+          $last_run = $result->fetchField();
+          $formatted = date(DATE_RFC850, $last_run);
+          // debug("Last run: $formatted, $last_run");
+
+          // Output the calculated edition time.
+          $formatted = date(DATE_RFC850, $edition_time);
+          // debug("Edition time: $formatted, $edition_time");
+
+          // Check the edition time is 12:00.
+          $this->assertEqual(date('H:i', $edition_time), '12:00', t('Edition time is at 12:00.'));
+
+          // Fake sending it: update the 'last_run' for subsequent iterations.
+          db_update('simplenews_scheduler')
+            ->fields(array('last_run' => $timestamp))
+            ->condition('nid', $parent_nid)
+            ->execute();
+
+          // Update the edition record.
+          simplenews_scheduler_scheduler_update($newsletter_parent_data, $timestamp);
+
+
+          // Check the node exists.
+          $this->drupalGet("node/$eid");
+        } // handling the request for a new edition
+      } // foreach offset timestamp
+
+      // Increment our counter.
+      $added_days++;
+    } // foreach day
+  }
+}
+
+/**
+ * Test edition time around DST changes.
+ *
+ * Test that simplenews_scheduler_calculate_edition_time() returns an edition
+ * timestamp whose time in the local timezone remains the same after the
+ * timezone changes over to Daylight Saving Time.
+ */
+class SimpleNewsSchedulerDaylightSavingSwitchTest extends SimpleNewsSchedulerWebTestCase {
+  protected $privileged_user;
+
+  /**
+   * Provides information about this test.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Daylight Saving Time',
+      'description' => 'Functional tests for DST changes.',
+      'group' => 'Simplenews Scheduler',
+    );
+  }
+
+  /**
+   * Test edition time after DST changes for a monthly newsletter.
+   *
+   * @todo: generalize this for other intervals.
+   */
+  function testDSTMonthly() {
+    $timezone_name = date_default_timezone();
+    //debug($timezone_name);
+
+    // Create a last run time before DST begins, and a now time after.
+    // Use date_create() rather than strtotime so that we create a date at the
+    // given time *in the current timezone* rather than UTC.
+    $last_run_date = new DateTime("01-Mar-12 12:00:00");
+    $now_date = date_create("05-Apr-12 12:00:00");
+
+    //debug('last run date TZ: ' . $last_run_date->getTimezone()->getName());
+    //debug('now date TZ: ' . $now_date->getTimezone()->getName());
+
+    // Fake up newsletter data.
+    $newsletter_parent_data = (object) array(
+      'last_run' => $last_run_date->getTimestamp(),
+      'send_interval' => 'month',
+      'interval_frequency' => 1,
+    );
+
+    // Get the edition time.
+    $edition_time = simplenews_scheduler_calculate_edition_time($newsletter_parent_data, $now_date->getTimestamp());
+
+    $edition_date = date_create('@' . $edition_time);
+    //debug($edition_date->format(DATE_ATOM));
+
+    // Format the edition time.
+    $edition_time_formatted = format_date($edition_time, 'custom', DATE_ATOM);
+    $edition_hour_formatted = format_date($edition_time, 'custom', 'H:i');
+
+    $this->assertEqual($edition_hour_formatted, '12:00', t('Edition time is at 12:00 in the local timezone; full edition time is %time.', array(
+      '%time' => $edition_time_formatted,
+    )));
+  }
+}
+
+

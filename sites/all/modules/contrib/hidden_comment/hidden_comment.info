@@ -1,0 +1,17 @@
+name = Hidden Comment
+description = This module allows site admin to hide certain comments contents, without unpublish or delete them
+core = 7.x
+
+
+files[] = hidden_comment.install
+files[] = hidden_comment.module
+files[] = hidden_comment.pages.inc
+files[] = hidden_comment.views.inc
+files[] = hidden_comment_views_handler_filter.inc
+
+; Information added by drupal.org packaging script on 2011-07-03
+version = "7.x-1.7"
+core = "7.x"
+project = "hidden_comment"
+datestamp = "1309723317"
+

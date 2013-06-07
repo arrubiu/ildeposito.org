@@ -1,0 +1,280 @@
+<?php
+/**
+ * @file
+ * Analytics UI provides an admin interface to manage message-queue pools.
+ */
+
+/**
+ * Implementation of hook_ctools_plugin_directory().
+ */
+function analytics_ui_ctools_plugin_directory($module, $type) {
+  // Register the location of our plugins with Chaos tools.
+  if ($type == 'export_ui') {
+    return 'plugins/export_ui';
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function analytics_ui_permission() {
+  return array(
+    'view analytics configuration' => array(
+      'title' => t('View analytics configuration'),
+      'description' => t('View the configuration of the analytics module.'),
+      'restrict access' => TRUE,
+    ),
+    'configure analytics' => array(
+      'title' => t('Configure analytics'),
+      'description' => t('Change the configuration of the analytics module '),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu_alter().
+ *
+ * Alter the menu item created by the Chaos tools export ui plugin so that we
+ * have Services and Pools tabs.
+ */
+function analytics_ui_menu_alter(&$items) {
+  $items['admin/config/search/analytics'] = $items['admin/config/search/analytics/tags'];
+  $items['admin/config/search/analytics']['title'] = 'Analytics';
+
+  $items['admin/config/search/analytics/tags'] = array(
+    'title' => 'Tags',
+    'description' => 'Configure analytics tags and providers.',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
+  $items['admin/config/search/analytics/providers']['type'] = MENU_LOCAL_TASK;
+}
+
+/**
+ * Form constructor for the message queue pool form.
+ *
+ * @param optional Object $pool
+ *   The message queue pool (when editing a pool).
+ *
+ * @see analytics_ui_pool_form_validate().
+ * @see analytics_ui_pool_form_submit().
+ * @ingroup forms
+ */
+function analytics_ui_tag_form(&$form, &$form_state) {
+  $tag = $form_state['item'];
+  $form['description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Description'),
+    '#default_value' => $tag->description,
+    '#description' => t('Human readable description of this tag.'),
+    '#required' => TRUE,
+  );
+
+  $form['machine_name'] = array(
+    '#type' => 'machine_name',
+    '#title' => t('Tag machine name'),
+    '#default_value' => $tag->machine_name,
+    '#description' => t('A unique machine name for your tag.'),
+    '#machine_name' => array(
+      'exists' => 'analytics_ui_provider_machine_name_exists',
+      'source' => array('description'),
+      'label' => t('Machine name'),
+      'replace_pattern' => '[^a-z0-9_]+',
+      'replace' => '_',
+    ),
+  );
+
+  // Once set, machine name cannot be changed.
+  if ($tag->machine_name) {
+    $form['machine_name']['#access'] = FALSE;
+  }
+
+  $provider_options = array();
+  if ($providers = analytics_provider_load_all()) {
+    foreach($providers as $provider) {
+      $provider_options[$provider->machine_name] = $provider->machine_name . ' - ' . $provider->description;
+    }
+  }
+
+  $form['provider'] = array(
+    '#type' => 'select',
+    '#title' => t('Provider'),
+    '#default_value' => $tag->provider,
+    '#description' => t('Provider this is associated with.'),
+    '#options' => $provider_options,
+    '#required' => TRUE,
+  );
+  
+  $form['tag_code'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Tag code'),
+    '#default_value' => $tag->tag_code,
+    '#description' => t('Code that this tag should produce.'),
+    '#required' => TRUE,
+  );
+  
+  
+  $form['replacement_patterns'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Replacement tokens'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE
+  );
+  $form['replacement_patterns']['auto_include_tokens'] = array(
+    '#type' => 'markup',
+    '#markup' => theme('token_tree'),
+  );
+
+  $roles = user_roles(TRUE);
+  
+  $form['auto_include'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Auto include'),
+    '#default_value' => $tag->auto_include,
+    '#description' => t('Include on given URLs only. Wildcards can be used; other tag names can be used (i.e. &#60;&#60;prop_8&#62;&#62; include only if prop_8 is set as well); &#60;front&#62;, &#60;404&#62; and &#60;403&#62; can be used too.'),
+    '#required' => FALSE,
+  );
+  
+  $form['roles'] = array(
+    '#type' => 'checkboxes',
+    '#multiple' => TRUE,
+    '#title' => t('Roles'),
+    '#options' => $roles,
+    '#default_value' => $tag->roles,
+    '#description' => t('Roles allowed to report this tag. Please leave empty if tag should be reported for all roles.'),
+    '#required' => FALSE,
+  );
+  
+  // Get rid of default rubbish from export_ui.
+  unset($form['info']['machine_name']);
+}
+
+/**
+ * Validate handler for analytics_ui_pool_form.
+ *
+ * @see analytics_ui_pool_form()
+ * @ingroup forms
+ */
+function analytics_ui_tag_form_validate(&$form, &$form_state) {
+
+}
+
+/**
+ * Submit handler for analytics_ui_pool_form.
+ *
+ * @see analytics_ui_pool_form()
+ * @ingroup forms
+ */
+function analytics_ui_tag_form_submit(&$form, &$form_state) {
+
+}
+
+/**
+ * Form constructor for the message queue pool form.
+ *
+ * @param optional Object $pool
+ *   The message queue pool (when editing a pool).
+ *
+ * @see analytics_ui_pool_form_validate().
+ * @see analytics_ui_pool_form_submit().
+ * @ingroup forms
+ */
+function analytics_ui_provider_form(&$form, &$form_state) {
+  $provider = $form_state['item'];
+
+  $form['description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Description'),
+    '#default_value' => $provider->description,
+    '#description' => t('Human readable description of this pool.'),
+    '#required' => TRUE,
+  );
+
+  $form['machine_name'] = array(
+    '#type' => 'machine_name',
+    '#title' => t('Provider machine name'),
+    '#default_value' => $provider->machine_name,
+    '#description' => t('A unique machine name for your provider.'),
+    '#machine_name' => array(
+      'exists' => 'analytics_ui_provider_machine_name_exists',
+      'source' => array('description'),
+      'label' => t('Machine name'),
+      'replace_pattern' => '[^a-z0-9_]+',
+      'replace' => '_',
+    ),
+  );
+
+  // Once set, machine name cannot be changed .
+  if ($provider->machine_name) {
+    $form['machine_name']['#access'] = FALSE;
+  }
+  
+  $form['libraries'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Libraries to include'),
+    '#default_value' => $provider->libraries,
+    '#description' => t('JavaScript libraries to include for this provider. Please use one per line.'),
+    '#required' => FALSE,
+  );
+  
+  $form['header_code'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Header code'),
+    '#default_value' => $provider->header_code,
+    '#description' => t('Code to include before tags generated by the API.'),
+    '#required' => FALSE,
+  );
+  
+  $form['footer_code'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Footer code'),
+    '#default_value' => $provider->footer_code,
+    '#description' => t('Code to include after tags generated by the API.'),
+    '#required' => FALSE,
+  );
+
+  // Get rid of default rubbish from export_ui
+  unset($form['info']['machine_name']);
+}
+
+/**
+ * Validate handler for analytics_ui_pool_form.
+ *
+ * @see analytics_ui_pool_form()
+ * @ingroup forms
+ */
+function analytics_ui_provider_form_validate(&$form, &$form_state) {
+
+}
+
+/**
+ * Submit handler for analytics_ui_pool_form.
+ *
+ * @see analytics_ui_pool_form()
+ * @ingroup forms
+ */
+function analytics_ui_provider_form_submit(&$form, &$form_state) {
+
+}
+ 
+/**
+ * Returns whether a pool with given machine name exists.
+ *
+ * @see analytics_ui_pool_form()
+ */
+function analytics_ui_tag_machine_name_exists($machine_name) {
+  $exists = (bool) db_query_range('SELECT 1 FROM {analytics_tag} WHERE machine_name = :machine_name', 0, 1, array(':machine_name' => $machine_name))->fetchField();
+  return $exists; 
+} 
+
+/**
+ * Returns whether a service with given machine name exists.
+ *
+ * @see analytics_ui_service_form()
+ */
+function analytics_ui_provider_machine_name_exists($machine_name) {
+  $exists = db_query_range('SELECT 1 FROM {analytics_provider} WHERE machine_name = :machine_name', 0, 1, array(':machine_name' => $machine_name))->fetchField(); 
+  return $exists;
+}

@@ -1,0 +1,12 @@
+<?php
+/**
+ * @file
+ * This is the .install file for entity reference feeds.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function entityreference_feeds_uninstall() {
+  variable_del('entityreference_feeds_entity_default_values');
+}

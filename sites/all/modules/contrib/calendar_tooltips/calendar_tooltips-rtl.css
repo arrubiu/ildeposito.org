@@ -1,0 +1,4 @@
+/* workaround for misalignment when using RTL languages */
+.bt-wrapper canvas {
+   left: 0; /* RTL */
+}

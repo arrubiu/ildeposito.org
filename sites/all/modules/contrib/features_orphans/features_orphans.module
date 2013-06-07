@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * Module file for Features Orphans, an administration tool that lists all
+ * Features-exportable components that do NOT belong to a feature module
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function features_orphans_menu() {
+  $items = array();
+  $items['admin/structure/features/orphans'] = array(
+    'title' => 'Orphans',
+    'description' => 'List all exportable components that are NOT included in a feature module.',
+    'page callback' => 'features_orphans_page',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer features'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
+  );
+  return $items;
+}
+
+/**
+ * Page Callback
+ */
+function features_orphans_page() {
+  module_load_include('export.inc', 'features');
+
+  $build['orphans'] = array(
+    '#type' => 'vertical_tabs',
+  );
+  // User-selected feature source components.
+  $components = features_get_components();
+  ksort($components);
+  unset($components['dependencies']);
+// Add required JavaScript and Stylesheet.
+  drupal_add_library('system', 'drupal.vertical-tabs');
+
+  $options = array();
+  foreach ($components as $component => $component_info) {
+    $options[$component] = features_invoke($component, 'features_export_options');
+    $options_count = count($options[$component]);
+    if ($options_count) {
+      $counts[$component] = array();
+      $counts[$component]['total'] = $options_count;
+      $counts[$component]['exported'] = 0;
+
+      // Find all default components that are not provided by this feature and
+      // strip them out of the possible options.
+      if ($map = features_get_default_map($component)) {
+        foreach ($map as $k => $v) {
+          if (isset($options[$component][$k])) {
+            unset($options[$component][$k]);
+            $counts[$component]['exported']++;
+          }
+        }
+      }
+
+      //Count remaining components
+      $counts[$component]['orphans'] = count($options[$component]);
+
+      //Generate info strings
+      $items_output = '';
+      foreach ($options[$component] as $key => $option){
+        $items_output .= "features[$component][] = \"$key\"\n";
+      }
+
+      $title = t('!name (!orphans orphans)', array(
+        '!name' => $component_info['name'],
+        '!orphans' => $counts[$component]['orphans'],
+      ));
+
+      $description = t('!exported of !total exported', array(
+        '!exported' => $counts[$component]['exported'],
+        '!total' => $counts[$component]['total'],
+      ));
+      $build[$component] = array(
+        '#type' => 'fieldset',
+        '#title' => $title,
+        '#description' => $description,
+        '#tree' => FALSE,
+        '#group' => 'orphans',
+      );
+      $build[$component]['items'] = array(
+        '#theme' => 'html_tag',
+        '#value' => $items_output,
+        '#tag' => 'pre',
+      );
+
+    }
+  }
+
+  return array(
+    '#markup' => theme('vertical_tabs', array(
+      'element' => array(
+        '#children' => render($build),
+      ),
+    )));
+  return $build;
+}

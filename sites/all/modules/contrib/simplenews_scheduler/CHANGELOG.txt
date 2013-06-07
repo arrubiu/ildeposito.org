@@ -1,0 +1,41 @@
+
+Simplenews Scheduler 6.x-1.x-dev, 2010-06-03
+--------------------------------------------
+- Fixed #796160 by sgabe, sfyn, dispa: Settings not saved, multiple sends of newsletter
+- Added #764122 by sgabe, catofcheshir: How to find scheduled issue?
+- Additional minor bug fixes.
+
+Simplenews Scheduler 6.x-1.x-dev, 2010-04-03
+--------------------------------------------
+- Major changes according to Date 2 API.
+- Additional code cleanup.
+- Added scheduled newsletter overview page.
+- Fixed a variety of bugs:
+    * #713414 by sgabe: Settings are reset on node preview.
+    * #728994 by sgabe: Newsletter sent immediately as created.
+    * #738318 by sgabe: Attachments are lost in new editions.
+
+Simplenews Scheduler 6.x-1.x-dev, 2009-10-27
+--------------------------------------------
+- Fixed illegal choice detected bug.
+- Better cron interval.
+
+Simplenews Scheduler 6.x-1.x-dev, 2009-10-16
+--------------------------------------------
+- Fixed missing update procedure.
+- Simpler date selection.
+
+Simplenews Scheduler 6.x-1.x-dev, 2009-09-16
+--------------------------------------------
+- Better code formatting and reviewed code with Coder module.
+- Modified taxonomy term saving with taxonomy_node_save() function.
+- New features: stop sending based on given date or number of editions.
+- Better multilingual support with included translation template.
+
+Simplenews Scheduler 7.x-1.x-dev, 2011-12-15
+--------------------------------------------
+- Code port do D7 API. I.e. DB queries were rewritten, hook_node_api replaced by different hook_node_OP hooks.
+- Process to create a newsletter edition is now done by cloning the node completely
+- JS file was removed since most effects can be achieved by using the #states property of the Drupal Form API
+- New DB field and form widget for interval frequency. It allows to schedule all 2 weeks, all 5 days etc.
+- Overview page is now a view. Views integration provides this by implementing hook_views_default_view().

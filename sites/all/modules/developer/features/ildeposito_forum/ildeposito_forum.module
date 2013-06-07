@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Forum feature.
+ */
+
+include_once 'ildeposito_forum.features.inc';

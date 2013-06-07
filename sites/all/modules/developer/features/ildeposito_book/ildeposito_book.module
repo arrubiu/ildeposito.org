@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Book feature.
+ */
+
+include_once 'ildeposito_book.features.inc';

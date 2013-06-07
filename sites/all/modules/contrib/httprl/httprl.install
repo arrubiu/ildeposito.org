@@ -1,0 +1,229 @@
+<?php
+
+/**
+ * @file
+ * Handle HTTP Parallel Request Library installation and upgrade tasks.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function httprl_enable() {
+}
+
+/**
+ * Implements hook_disable().
+ */
+function httprl_disable() {
+}
+
+/**
+ * Implements hook_install().
+ */
+function httprl_install() {
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function httprl_uninstall() {
+  variable_del('httprl_server_addr');
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function httprl_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break at install time
+  $t = get_t();
+
+  if ($phase == 'runtime' || $phase == 'install') {
+    $function_list = array(
+      'stream_socket_client',
+      'stream_select',
+      'stream_set_blocking',
+      'stream_get_meta_data',
+      'stream_socket_get_name',
+    );
+    // Check each function to make sure it exists.
+    foreach ($function_list as $function_name) {
+      if (!function_exists($function_name)) {
+        $requirements['httprl_function_' . $function_name] = array(
+          'title' => $t('HTTPRL'),
+          'value' => $phase == 'install' ? FALSE : $function_name,
+          'severity' => REQUIREMENT_ERROR,
+          'description' => $t('<a href="!url">%name()</a> is disabled on this server. Please contact your hosting provider and see if they can re-enable this function for you.', array(
+            '!url' => 'http://php.net/' . str_replace('_', '-', $function_name),
+            '%name' => $function_name,
+          )),
+        );
+      }
+    }
+  }
+  if ($phase == 'runtime') {
+    // Check that the menu router item is working. If it is not working, the
+    // rest of the tests below will be pointless.
+    $item = menu_get_item('admin/httprl-test');
+    if (empty($item['page_callback']) || strpos($item['page_callback'], 'httprl') === FALSE) {
+      $requirements['httprl_callback'] = array(
+        'title'       => $t('HTTPRL - Menu Callback'),
+        'severity'    => REQUIREMENT_WARNING,
+        'value'       => $t('Flush your caches'),
+        'description' => $t('You need to flush your menu cache. The test callback for httprl is not there.'),
+      );
+      return $requirements;
+    }
+
+    if ((defined('VERSION') && substr(VERSION, 0, 1) >= 7 && variable_get('maintenance_mode', 0)) || variable_get('site_offline', 0)) {
+      if (empty($requirements)) {
+        $requirements['httprl'] = array(
+          'title'     => $t('HTTPRL'),
+          'severity'  => REQUIREMENT_INFO,
+          'value'     => $phase == 'install' ? TRUE : $t('All the required functions are enabled, but non blocking requests can not be tested while the site is in maintenance mode.'),
+        );
+      }
+      return $requirements;
+    }
+
+    global $_httprl;
+    // Test the non-blocking url.
+    if (!httprl_install_http_test(2, FALSE)) {
+      // Test the blocking url.
+      if (!httprl_install_http_test(2, TRUE)) {
+        // Test that drupal_http_request() works.
+        if (!httprl_install_http_test(1)) {
+          $requirements['httprl_callback'] = array(
+            'title'       => $t('HTTPRL - Core'),
+            'severity'    => REQUIREMENT_ERROR,
+            'value'       => $t('drupal_http_request()'),
+            'description' => $t('Your system or network configuration does not allow Drupal to access web pages. This could be due to your webserver configuration or PHP settings. Debug info: !debug <br />For more info go here: <a href="!link">"HTTP request status Fails" error</a>', array(
+                '!link' => 'http://drupal.org/node/588186',
+                '!debug' => '<pre>' . print_r($_httprl['install']['debug'], TRUE) . '</pre>',
+              )
+            ),
+          );
+          return $requirements;
+        }
+        $requirements['httprl_blocking'] = array(
+          'title'       => $t('HTTPRL - Blocking'),
+          'severity'    => REQUIREMENT_ERROR,
+          'value'       => $t('Problem with stream_select()'),
+          'description' => $t('This server can not issue self http requests with stream_select(). Debug info: !debug <br />', array(
+              '!debug' => '<pre>' . print_r($_httprl['install']['debug'], TRUE) . '</pre>',
+            )
+          ),
+        );
+        return $requirements;
+      }
+      $requirements['httprl_nonblocking'] = array(
+        'title'       => $t('HTTPRL - Non Blocking'),
+        'severity'    => REQUIREMENT_WARNING,
+        'value'       => $t('This server does not handle hanging connections.'),
+        'description' => $t('Using non blocking mode on this server may not work correctly. Debug info: !debug <br />', array(
+            '!debug' => '<pre>' . print_r($_httprl['install']['debug'], TRUE) . '</pre>',
+          )
+        ),
+      );
+    }
+
+    // If request worked when using the hostname and not the ip then switch to
+    // hostname.
+    $ip = variable_get('httprl_server_addr', FALSE);
+    if (!empty($ip)) {
+      if (defined('VERSION') && substr(VERSION, 0, 1) >= 7) {
+        $x = @unserialize(db_query("SELECT value FROM {variable} WHERE name = :name", array(':name' => 'httprl_server_addr'))->fetchField());
+      }
+      else {
+        $x = @unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name = 'httprl_server_addr'")));
+      }
+      if ($ip != $x && $ip == -1) {
+        variable_set('httprl_server_addr', -1);
+      }
+    }
+  }
+
+  if (empty($requirements)) {
+    $requirements['httprl'] = array(
+      'title'     => $t('HTTPRL'),
+      'severity'  => REQUIREMENT_OK,
+      'value'     => $phase == 'install' ? TRUE : $t('All the required functions are enabled and non blocking requests are working.'),
+    );
+  }
+
+  return $requirements;
+}
+
+/**
+ * Issue a HTTP request to admin/httprl-test, verifying that the server got it.
+ *
+ * @param $mode
+ *   1: use drupal_http_request()
+ *   2: use httprl_request()
+ * @param $blocking
+ *   (Optional) HTTPRL blocking mode.
+ */
+function httprl_install_http_test($mode, $blocking = FALSE) {
+  global $base_root, $base_path, $conf, $_httprl;
+  $url_path = 'admin/httprl-test';
+  $id = 'httprl_' . md5(mt_rand() . time());
+  // Build URL to point to admin/httprl-test on this server.
+  $url = httprl_build_url_self($url_path . '?key=' . md5(drupal_get_private_key()) . '&id=' . $id, TRUE);
+
+  // Set the headers to point to this hostname.
+  $headers = array(
+    'Host' => $_SERVER['HTTP_HOST'],
+  );
+
+  // Add in the headers and set the blocking mode.
+  $options = array(
+    'headers' => $headers,
+    'blocking' => $blocking,
+    'timeout' => 6.0,
+  );
+
+  // Start the timer & get a lock.
+  timer_start($id);
+  lock_acquire($id, 6);
+
+  // Choose how to issue the HTTP request.
+  if ($mode == 1) {
+    // Execute the request using core.
+    if (defined('VERSION') && substr(VERSION, 0, 1) >= 7) {
+      drupal_http_request($url, $options);
+    }
+    else {
+      drupal_http_request($url, $headers);
+    }
+  }
+  elseif ($mode == 2) {
+    // Execute the request using httprl.
+    httprl_request($url, $options);
+    $requests = httprl_send_request();
+  }
+
+  // Wait for the lock and stop the timer.
+  lock_wait($id);
+  $time = timer_stop($id);
+
+  // Add in debugging info.
+  $time['mode'] = $mode;
+  $time['blocking'] = $blocking;
+  $time['url'] = $url;
+  $_httprl['install']['debug'][] = $time;
+
+  // See if the request came back in under 5 seconds, or if it timed out.
+  if (($time['time'] / 1000) > 5) {
+    $ip = variable_get('httprl_server_addr', FALSE);
+    if (empty($ip)) {
+      $conf['httprl_server_addr'] = -1;
+      return httprl_install_http_test($mode, $blocking);
+    }
+    else {
+      return FALSE;
+    }
+  }
+  else {
+    return TRUE;
+  }
+}

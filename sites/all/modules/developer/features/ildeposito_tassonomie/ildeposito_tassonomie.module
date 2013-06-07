@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Tassonomie feature.
+ */
+
+include_once 'ildeposito_tassonomie.features.inc';

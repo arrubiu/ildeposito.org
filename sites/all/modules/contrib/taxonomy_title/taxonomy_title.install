@@ -1,0 +1,41 @@
+<?php 
+/**
+ * @file
+ * Database set up and clean-up for taxonomy title module.
+ */
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function taxonomy_title_uninstall() {
+  // Remove additional variables.
+  variable_del('taxonomy_title_headings');
+  variable_del('taxonomy_title_page_titles');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function taxonomy_title_schema() {
+  $schema['taxonomy_title'] = array(
+    'description' => 'Records separate titles/headings for taxonomy term pages',
+    'fields' => array(
+      'tid' => array(
+        'type' => 'int',
+        'length' => '11',
+        'unsigned' => TRUE,
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'default' => '',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('tid'),
+  );
+
+  return $schema;
+}

@@ -1,0 +1,42 @@
+<?php
+/**
+ * Implements hook_schema().
+ * 
+ * Should I use this instead of entityreference?
+ */
+/*
+function contact_entityform_schema() {
+  $schema['contact_entityform_user'] = array(
+    'description' => '',
+    'fields' => array(
+      'entityform_id' => array(
+        'description' => 'Primary Key: Identifier for a entityform.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => FALSE,
+            'default' => NULL,
+            'description' => "The {users}.uid of account being contacted.",
+        ),
+    ),
+    'primary key' => array('entityform_id'),
+    'unique keys' => array('entityform_id'
+    ),
+    'foreign keys' => array(
+      'uid' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+      'entityform_id' => array(
+        'table' => 'entityform',
+        'columns' => array('entityform' => 'entityform'),
+      ),
+    ),
+  );
+  return $schema;
+}
+*/

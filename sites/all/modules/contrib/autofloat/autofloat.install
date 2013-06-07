@@ -1,0 +1,29 @@
+<?php
+/**
+ * @file
+ * Sets post-install messages and deletes variables when uninstalled.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function autofloat_install() {
+  $t = get_t();
+  $text = $t('Add the AutoFloat filter to a text format under !formats_link. Move it below other image related filters in the filter processing order. AutoFloat settings are available under !config_link.', array(
+    '!formats_link' => l($t('Configuration > Content authoring > Text formats'), 'admin/config/content/formats'),
+    '!config_link' => l($t('Configuration > Content authoring > AutoFloat'), 'admin/config/content/autofloat'),
+    )
+  );
+  drupal_set_message($text);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function autofloat_uninstall() {
+  // Delete all variables set in variable table.
+  db_delete('variable')
+  ->condition('name', 'autofloat_%', 'LIKE')
+  ->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
+}

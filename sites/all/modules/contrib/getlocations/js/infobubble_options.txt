@@ -1,0 +1,28 @@
+
+/**
+ * copy infobubble_options.txt to infobubble_options.js to override infobubble settings
+ *
+ */
+
+// defaults
+var infoBubbleOptions = {
+  backgroundColor: '#fff',
+  borderColor: '#ccc',
+  borderRadius: 10,
+  borderWidth: 1,
+  padding: 10,
+  arrowPosition: 50,
+  disableAutoPan: false,
+  disableAnimation: false,
+  minWidth: 50,
+  shadowStyle: 1,
+  arrowSize: 15,
+  arrowStyle: 0
+};
+// example overrides
+//infoBubbleOptions.backgroundColor = '#FFFFE0';
+//infoBubbleOptions.borderColor = '#DADADA';
+//infoBubbleOptions.minWidth = 250;
+//infoBubbleOptions.minHeight = 200;
+//infoBubbleOptions.maxWidth = 350;
+//infoBubbleOptions.maxHeight = 300;

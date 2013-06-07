@@ -1,0 +1,338 @@
+/* This file will hold styles for all layouts using the alpha grid (i.e. not the mobile layout). */
+
+/* gestione colonne grid */
+.col-first {
+  margin-left: 0px !important;
+  margin-right: 20px !important;
+}
+
+.col-second {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+#zone-content {
+  overflow: hidden;
+}
+
+h1#page-title {
+  font-size: 2em;
+  font-weight: normal;
+  letter-spacing: 0;
+  margin-top: 0px;
+}
+
+.ildeposito-col.views-row-odd,
+.ildeposito-col.odd {
+  margin-left: 0px !important;
+  margin-right: 20px !important;
+  clear: none;
+}
+
+.ildeposito-col.views-row-even,
+.ildeposito-col.even {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  clear:  none;
+}
+
+/* menu */
+#region-branding .region-inner {
+  margin-top: 0px;
+  position: relative;
+}
+
+#region-branding {
+ background-color: transparent;
+    height: auto;
+    margin-top: 5px;
+}
+
+#block-superfish-1 {
+  background-color: #aa0000;
+  margin-left: 0px;
+}
+
+#block-views-header-images-header-block {
+  opacity: 0.8;
+}
+
+#zone-header {
+  overflow: hidden;
+}
+
+#region-sidebar-second {
+  background: #eeeeee;
+  clear: none;
+}
+
+#block-system-main .block{
+  margin-top: 0px;
+}
+
+#region-header-second {
+  background: #eeeeee;
+}
+
+#region-header-second .region-inner {
+  border-left: 1px solid #CCCCCC;
+  margin-bottom: -20000px;
+  padding: 10px 10px 20000px;
+  background: #eeeeee;
+}
+
+#region-sidebar-second .region-inner {
+  border-left: 1px solid #CCCCCC;
+  margin-bottom: -20000px;
+  padding: 10px 10px 20000px;
+  background: #eeeeee;
+}
+#region-branding #block-superfish-1 {
+  bottom: 0;
+  width: 100%;
+  position: static;
+  /*margin-top: 15px;*/
+}
+
+ul#superfish-1 {
+  margin-bottom: 0px;
+}
+
+ul#superfish-1 li {
+  background-color: #aa0000 !important;
+}
+
+ul#superfish-1 li:hover a{
+  background-color: #aa0000 !important;
+}
+
+#region-branding #block-superfish-1 ul li:hover {
+  background-color: #aa0000 !important;
+}
+
+ul#superfish-1 li ul li a {
+  font-weight: normal;
+  font-size: 0.8em;
+  padding-left: 13px
+}
+
+ul#superfish-1 li ul li a:hover {
+  text-decoration: underline;
+}
+
+ul.menu li {
+  margin: 0px !important
+}
+
+.sf-menu li:hover > ul,
+.sf-menu li.sfHover > ul {
+  left: 0;
+  top: 25px;
+}
+
+.sf-menu.sf-horizontal.sf-shadow ul, 
+.sf-menu.sf-vertical.sf-shadow ul, 
+.sf-menu.sf-navbar.sf-shadow ul ul {
+  border-left: 0px !important;
+  padding-left: 0px !important;
+}
+
+ul#superfish-1 li a {
+  border: medium none;
+  color: #FFFFFF;
+  font-weight: bold;
+  padding-bottom: 6px;
+  padding-top: 6px;
+  text-decoration: none;
+}
+
+a > .sf-sub-indicator {
+  background-position: 0 -102px;
+  top: 0.8em;
+}
+
+#region-menu .region-inner {
+  background: #505050;
+  height: 23px;
+}
+
+#region-menu #block-menu-menu-ildeposito-utente {
+  float: left;
+}
+
+#region-menu #block-system-user-menu {
+  float: right;
+}
+
+#region-menu ul {
+  list-style-type: none;
+}
+
+#region-menu ul li {
+  display: inline;
+}
+
+#region-menu ul li a {
+  color: #ffffff;
+  font-size: 0.8em;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#region-menu ul li a:hover {
+  border-bottom: 1px solid #ffffff;
+}
+
+
+
+
+/* colonna destra contenuto*/
+
+.group-right .block-inner {
+  margin-bottom: 20px;
+}
+
+#breadcrumb {
+  margin-top: 15px;
+  font-size: 0.85em;
+  text-transform: lowercase;
+}
+
+#breadcrumb img {
+  vertical-align: middle;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+#breadcrumb a {
+  text-decoration: none;
+}
+
+#block-views-header-images-header-block {
+  display: block;
+  margin-top: 10px;
+}
+
+#breadcrumb {
+  display: block;
+}
+
+#block-views-exp-ricerca-ricerca-page .views-exposed-form {
+  background: none repeat scroll 0 0 #ffffff;
+  margin-top: 10px;
+  width: 100%;
+}
+
+#block-views-exp-ricerca-ricerca-page .views-exposed-widgets {
+  margin-bottom: 0px;
+  border: 1px solid #dddddd;
+}
+#block-views-exp-ricerca-ricerca-page #edit-chiave-wrapper {
+  margin: 0;
+  padding: 0;
+  width: 77%;
+  float: left;
+}
+
+#block-views-exp-ricerca-ricerca-page .views-exposed-widget {
+  float: right;
+  padding: 0;
+}
+
+#block-views-exp-ricerca-ricerca-page #edit-submit-ricerca {
+  height: 30px;
+  margin-top: 0;
+  position: absolute;
+  right: 13px;
+  padding: 0px;
+}
+
+#block-views-exp-ricerca-ricerca-page .form-item-chiave input {
+  background: none repeat scroll 0 0 #ffffff;
+  border: 0 none;
+  height: 30px;
+  padding: 0px 0px 0px 6px;
+  width: 100%;
+  float: left;
+  font-size: 1em;
+}
+
+.ds-2col-stacked > .group-left {
+  float: left;
+  width: 50%;
+}
+
+.ds-2col-stacked > .group-right {
+  float: right;
+  width: 50%;
+}
+
+#block-boxes-social-top {
+  float: right;
+  margin-top: 40px;
+  display: block;
+}
+
+#block-boxes-social-top span {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+
+#block-boxes-social-top p {
+  margin-bottom: 0px;
+}
+
+
+#block-boxes-social-top img{
+  margin-left: 8px;
+}
+
+#zone-menu {
+  display: none;
+}
+
+#block-system-user-menu {
+  margin-bottom: 20px;
+}
+
+#block-system-user-menu ul {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+#block-system-user-menu li {
+  list-style-image: none;
+  margin-left: 15px;
+}
+
+#block-system-user-menu li a {
+  text-decoration: none;
+}
+
+#block-alterator-logo-deposito img.sottotitolo,
+#block-alterator-logo-deposito img.logo {
+  display: inline;
+  margin-right: 8px;
+}
+
+#block-superfish-2,
+#block-superfish-3 {
+  display: none;
+}
+
+#region-branding .block-superfish .content  {
+    background-color: transparent;
+    overflow: visible;
+    width: 100%;
+}
+
+#block-alterator-logo-deposito img.titolo {
+  width: auto;
+}
+
+#block-views-exp-ricerca-ricerca-page .views-exposed-form {
+  background: none repeat scroll 0 0 #ffffff;
+  margin-top: 10px;
+  width: 100%;
+}
+

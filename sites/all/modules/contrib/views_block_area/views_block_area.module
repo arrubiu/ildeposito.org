@@ -1,0 +1,24 @@
+<?php
+/**
+ * @file
+ * Exposes all blocks as a views area.
+ *
+ * @author Zuuperman - http://drupal.org/user/361625 - http://www.menhir.be
+ *
+ */
+
+/**
+ * Implements hook_views_api().
+ */
+function views_block_area_views_api() {
+
+  if (!module_exists('block')) {
+    return;
+  }
+
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'views_block_area') . '/views',
+  );
+
+}

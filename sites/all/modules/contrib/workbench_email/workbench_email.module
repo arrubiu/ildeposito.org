@@ -1,0 +1,568 @@
+<?php
+/**
+ * @file
+ * Code for the Workbench Email Module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function workbench_email_menu() {
+  $items = array();
+
+  $items['admin/config/workbench/moderation/emails'] = array(
+    'title' => 'Emails',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('workbench_email_form'),
+    'access arguments' => array('administer workbench emails'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'workbench_email.admin.inc',
+  );
+
+  $items['admin/config/workbench/moderation/email-transitions'] = array(
+    'title' => 'Email Transitions',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('workbench_email_transitions_form'),
+    'access arguments' => array('administer workbench emails'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'workbench_email.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implments hook_module_implements_alter().
+ *
+ * Make sure workbench_email form_alter fires after workbench_moderation
+ * form_alter.
+ */
+function workbench_email_module_implements_alter(&$implementations, $hook) {
+  if (strpos($hook, 'form') !== FALSE) {
+    if (isset($implementations['workbench_moderation'], $implementations['workbench_email'])) {
+      $workbench_email = $implementations['workbench_email'];
+      unset($implementations['workbench_email']);
+
+      $workbench_moderation = $implementations['workbench_moderation'];
+      unset($implementations['workbench_moderation']);
+
+      $implementations['workbench_moderation'] = $workbench_moderation;
+      $implementations['workbench_email'] = $workbench_email;
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function workbench_email_theme() {
+  return array(
+    'workbench_email_transitions_form' => array(
+      'file' => 'workbench_email.admin.inc',
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Implements hook_help().
+ */
+function workbench_email_help($path, $arg) {
+  switch ($path) {
+    case 'admin/config/workbench/moderation/email-transitions':
+      return '<p>' . t("The Workbench Moderation Email module keeps track of
+                       when a node moves from one state to another. This admin
+                       page can help you manage who gets emailed when those
+                       transitions happen.") . '</p>';
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function workbench_email_permission() {
+  $permissions = array();
+  $permissions['administer workbench emails'] = array(
+    'title' => t('Administer Workbench Emails'),
+    'description' => t('Perform administration tasks
+                       related to Workbench Emails.'),
+  );
+  return $permissions;
+}
+
+/**
+ * Implements hook_node_form_alter().
+ *
+ * Determines the current state and next state. Depending on that criteria
+ * builds a form element(s) to allow the user to select users to send
+ * an email to.
+ *
+ * @param array $form
+ *   The form array
+ *
+ * @param array $form_state
+ *   The form_state array
+ */
+function workbench_email_form_node_form_alter(&$form, $form_state) {
+  if (workbench_moderation_node_type_moderated($form['type']['#value'])) {
+    $available = FALSE;
+    // Workbench Moderation uses "options" fieldset in favor of "revision information"
+    // if "administer roles" perm is given to content moderator.
+    if (isset($form['revision_information']['workbench_moderation_state_new'])) {
+      $wrapper_id = 'revision_information';
+      $available = TRUE;
+    }
+    else if (isset($form['options']['workbench_moderation_state_new'])) {
+      $wrapper_id = 'options';
+      $available = TRUE;
+    }
+
+    if (!$available) {
+      return;
+    }
+
+    $form[$wrapper_id]['workbench_moderation_state_new']['#ajax'] = array(
+      'callback' => 'workbench_email_form_node_callback',
+      'wrapper' => 'wv-workflow-form-node',
+      'effect' => 'fade',
+      'event' => 'change',
+    );
+
+    $form[$wrapper_id]['workflow_email'] = array(
+      '#prefix' => '<div id="wv-workflow-form-node">',
+      '#suffix' => '</div>',
+      '#tree' => TRUE,
+    );
+
+    // Determine current state.
+    if (isset($form['#node']->workbench_moderation['current']->state)) {
+      $current_from_state = $form['#node']->workbench_moderation['current']->state;
+    }
+    else {
+      $current_from_state = variable_get('workbench_moderation_default_state_' . $form['type']['#value'], workbench_moderation_state_none());
+    }
+    if ($current_from_state == workbench_moderation_state_published()) {
+      $current_from_state = workbench_moderation_state_none();
+    }
+
+    // Initialize to the current state.
+    $form_moderation_state = $current_from_state;
+    if (empty($form_state['values'])) {
+      $form_moderation_state = $current_from_state;
+    }
+    if (!empty($form_state['values']) &&
+        isset($form_state['values']['workbench_moderation_state_new'])) {
+      $form_moderation_state = $form_state['values']['workbench_moderation_state_new'];
+    }
+    if (!empty($form_state['values']) &&
+        isset($form_state['values'][$wrapper_id]['workbench_moderation_state_new'])) {
+      $form_moderation_state = $form_state['values'][$wrapper_id]['workbench_moderation_state_new'];
+    }
+
+    $workbench_emails = workbench_email_get();
+    foreach ($workbench_emails as $transition => $email_roles) {
+      foreach ($email_roles as $rid => $email_transition) {
+        if ($email_transition->from_name == $current_from_state
+            && $email_transition->to_name == $form_moderation_state) {
+          workbench_email_create_form_element($form, $email_transition);
+        }
+      }
+    }
+
+    $form['actions']['submit']['#submit'][] = 'workbench_email_notification_submit';
+  }
+}
+
+/**
+ *  Ajax callback function, targets the workflow_email container.
+ *
+ * @param array $form
+ *   The form array
+ *
+ * @param array $form_state
+ *   The form_state array
+ */
+function workbench_email_form_node_callback($form, $form_state) {
+  if ($form['options']['#access']) {
+    return $form['options']['workflow_email'];
+  }
+  return $form['revision_information']['workflow_email'];
+}
+
+
+/**
+ * Submit handler for the workflow_email form element.
+ *
+ * Sends emails to the specific users selected in the form element.
+ *
+ * @param array $form
+ *   The form array
+ *
+ * @param array $form_state
+ *   The form_state array
+ *
+ */
+function workbench_email_notification_submit($form, &$form_state) {
+  if (isset($form_state['values']['workflow_email'])) {
+    ($form['options']['#access'] ? $wrapper_id = 'options' : $wrapper_id = 'revision_information');
+    foreach ($form_state['values']['workflow_email'] as $rid => $role_emails) {
+      foreach ($role_emails as $email) {
+        $email_transition = $form[$wrapper_id]['workflow_email'][$rid]['#hidden'];
+        workbench_email_mail_send($email, $email_transition, $form_state['node']);
+      }
+    }
+  }
+}
+
+/**
+ * Determines the emails attributes.
+ *
+ * Sets the emails subject / message and sends the email.
+ *
+ * @param string $email
+ *   The send to email address
+ *
+ * @param object $email_transition
+ *   The email transition used for determining the subject / message
+ *   to retrieve
+ *
+ * @param object $node
+ *   The node returned from node_save
+ */
+function workbench_email_mail_send($email, $email_transition, $node) {
+  $module = 'workbench_email';
+  $key = 'workflow_email';
+
+  $to = $email;
+  $from = variable_get('site_mail', 'admin@example.com');
+
+  if (empty($email_transition->subject) && empty($email_transition->message)) {
+    drupal_set_message(t('No email template is set, so no email was sent.
+                       Contact your system admin to resolve this issue.'));
+    return;
+  }
+
+  global $user;
+  $params['subject'] = $email_transition->subject;
+  $params['message'] = $email_transition->message;
+  $params['node'] = $node;
+  $params['user'] = $user;
+  $language = language_default();
+  $send = TRUE;
+  $result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
+  if ($result['result'] == TRUE) {
+    drupal_set_message(t('Your message has been sent.'));
+  }
+  else {
+    drupal_set_message(t('There was a problem sending your
+                         message and it was not sent.'), 'error');
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function workbench_email_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'workflow_email':
+      $message['subject'] = t(token_replace($params['subject'], $params));
+      $message['body'][] = t(token_replace($params['message'], $params));
+      break;
+  }
+}
+
+/**
+ * Retrieves only the moderation permission tasks.
+ *
+ * @return permission
+ *  Returns the permissions for moderating content
+ */
+function wv_workflow_determine_moderation_permissions() {
+  // Per-node-type, per-transition permissions.
+  // Used by workbench_moderation_state_allowed().
+  $permissions = array();
+  $node_types = workbench_moderation_moderate_node_types();
+  $transitions = workbench_moderation_transitions();
+
+  foreach ($transitions as $transition) {
+    $from_state = $transition->from_name;
+    $to_state = $transition->to_name;
+
+    // Always set a permission to perform all moderation states.
+    $permissions["moderate content from $from_state to $to_state"] = TRUE;
+
+    // Per-node type permissions are very complex, and should only be used if
+    // absolutely needed. For right now, this is hardcoded to OFF. To enable it,
+    // Add this line to settings.php and then reset permissions.
+    //   $conf['workbench_moderation_per_node_type'] = TRUE;
+    if (variable_get('workbench_moderation_per_node_type', FALSE)) {
+      foreach ($node_types as $node_type) {
+        $permissions["moderate $node_type state from $from_state to $to_state"] = TRUE;
+      }
+    }
+  }
+  return $permissions;
+}
+
+/**
+ * Determines the valid roles for a given moderation task and content type(s).
+ *
+ * @return valid_roles
+ *   Returns the valid roles or an empty array
+ */
+function workbench_email_determine_valid_roles() {
+  $valid_roles = array();
+  $types = drupal_map_assoc(workbench_moderation_moderate_node_types());
+  $all_types = node_type_get_types();
+  foreach ($types as $type) {
+    $types[$type] = $all_types[$type]->name;
+  }
+
+  $moderation_permissions = wv_workflow_determine_moderation_permissions();
+  $roles = user_roles();
+  foreach ($roles AS $rid => $role) {
+    // Get a full list of this role's permissions.
+    $actual_permissions_set = array();
+    $actual_permissions_set = user_role_permissions(array_filter(array(
+      $rid => TRUE,
+      DRUPAL_AUTHENTICATED_RID => ($rid != DRUPAL_ANONYMOUS_RID),
+    )));
+
+    $valid_permissions = array();
+    foreach ($actual_permissions_set AS $role_rid => $actual_permissions) {
+      foreach ($actual_permissions AS $permission => $value) {
+        if (array_key_exists($permission, $moderation_permissions)) {
+          $valid_permissions[] = $permission;
+        }
+      }
+    }
+
+    if ($valid_permissions) {
+      $valid_roles[$rid] = $role;
+    }
+  }
+  return $valid_roles;
+}
+
+/**
+ * Determines the valid roles for a given transition.
+ *
+ * @param string $from_state
+ *   The transition from_state
+ *
+ * @param string $to_state
+ *   The transition to_state
+ *
+ * @param string $node_type
+ *   The node type used to determine valid roles.
+ *
+ * @return valid_roles
+ *   Returns the valid roles or an empty array
+ */
+function workbench_email_determine_valid_roles_per_transition($from_state, $to_state, $node_type = NULL) {
+  $roles = user_roles();
+  $valid_roles = array();
+  if ($node_type == NULL) {
+    $transition = "moderate content from " . $from_state . " to " . $to_state;
+  }
+
+  foreach ($roles as $rid => $role) {
+    if ($role == "administrator") {
+      continue;
+    }
+    // Get a full list of this role's permissions.
+    $actual_permissions = array();
+    $actual_permissions = user_role_permissions(array_filter(array(
+      $rid => TRUE,
+      DRUPAL_AUTHENTICATED_RID => ($rid != DRUPAL_ANONYMOUS_RID),
+    )));
+
+    foreach ($actual_permissions as $permissions) {
+      if (isset($permissions[$transition])) {
+        $valid_roles[$rid] = $role;
+      }
+    }
+  }
+  return $valid_roles;
+}
+
+/**
+ * Determines the email attributes to retrieve.
+ *
+ * @param object $transition
+ *   The transtion object
+ *
+ * @param int $rid
+ *   The role ID
+ *
+ * @return email
+ *   Returns the workbench_email object or FALSE
+ */
+function workbench_email_get($transition = NULL, $rid = NULL) {
+  $emails = array();
+  $query = db_select('workbench_emails', 'wve')
+    ->fields('wve', array('rid', 'from_name', 'to_name', 'subject', 'message'));
+  if ($transition) {
+    $query->condition('wve.from_name', $transition->from_name);
+    $query->condition('wve.to_name', $transition->to_name);
+  }
+  if ($rid) {
+    $query->condition('wve.rid', $rid);
+  }
+  $result = $query->execute();
+  foreach ($result as $row) {
+    $emails[$row->from_name . '_to_' . $row->to_name][$row->rid] = $row;
+  }
+  return $emails;
+}
+
+/**
+ * Saves the email into the table.
+ *
+ * @param object $transition
+ *   The transtion object
+ *
+ * @param int $rid
+ *   The role ID
+ *
+ * @param string $subject
+ *   The email subject to save
+ *
+ * @param string $message
+ *   The email message to save
+ *
+ * @return db_merge
+ *   Returns the TRUE or FALSE
+ */
+function workbench_email_save($transition, $rid, $subject = NULL, $message = NULL) {
+  $query = db_merge('workbench_emails');
+  $query->key(
+    array(
+      'from_name' => $transition->from_name,
+      'to_name' => $transition->to_name,
+      'rid' => $rid
+    )
+  );
+
+  $query->fields(
+    array(
+      'from_name' => $transition->from_name,
+      'to_name' => $transition->to_name,
+      'rid' => $rid
+    )
+  );
+
+  if ($subject) {
+    $query->fields(array('subject' => $subject));
+  }
+
+  if ($message) {
+    $query->fields(array('message' => $message));
+  }
+
+  $query->execute();
+}
+
+/**
+ * Deletes the email from the table.
+ *
+ * @param object $transition
+ *   The transition object
+ *
+ * @param int $rid
+ *   The role ID
+ *
+ * @return db_delete
+ *   Returns TRUE or FALSE
+ */
+function workbench_email_delete($transition, $rid) {
+  db_delete('workbench_emails')
+    ->condition('from_name', $transition->from_name)
+    ->condition('to_name', $transition->to_name)
+    ->condition('rid', $rid)
+    ->execute();
+}
+
+/**
+ * Deletes all emails from the table
+ *
+ * @return db_delete
+ *   Returns TRUE or FALSE
+ */
+function workbench_email_delete_all() {
+  db_delete('workbench_emails')->execute();
+}
+
+/**
+ * Create the email selection form element.
+ *
+ * Creates the appropriate multi select list for a given role and stores
+ * some email transition information into the form element.
+ *
+ * @param array $form
+ *   The form array passed by reference
+ *
+ * @param object $params
+ *   A object containing information relating to the email transition
+ */
+function workbench_email_create_form_element(&$form, $email_transition) {
+  $users = workbench_email_get_users($email_transition->rid);
+  if ($users) {
+    global $user;
+    $emails = array('0' => '- None -');
+    foreach ($users as $uid => $account) {
+      if ($user->mail != $account->mail) {
+        $emails[$account->mail] = $account->name;
+      }
+    }
+    $role = user_role_load($email_transition->rid);
+    ($form['options']['#access'] ? $wrapper_id = 'options' : $wrapper_id = 'revision_information');
+    $form[$wrapper_id]['workflow_email'][$role->rid] = array(
+      '#type' => 'select',
+      '#title' => t("@role_name", array('@role_name' => ucwords($role->name))),
+      '#options' => $emails,
+      '#description' => t('Select one or more users to notify'),
+      '#multiple' => TRUE,
+      '#hidden' => $email_transition,
+    );
+  }
+}
+
+/**
+ * Returns user array if they have a certain role.
+ *
+ * @param int $rid
+ *   The role ID
+ *
+ * @return users
+ *   Returns an array of users or an empty array
+ */
+function workbench_email_get_users($rid) {
+  $uids = array();
+  $query = db_select('users_roles', 'ur')
+    ->fields('ur', array('uid'))
+    ->condition('ur.rid', $rid);
+  $query->distinct();
+  $result = $query->execute();
+  foreach ($result as $row) {
+    $uids[] = $row->uid;
+  }
+  $users = array();
+  $users = user_load_multiple($uids);
+  return $users;
+}
+
+/**
+ * Implements hook_features_api().
+ */
+function workbench_email_features_api() {
+  return array(
+    'workbench_email' => array(
+      'name' => t('Workbench Email'),
+      'default_hook' => 'workbench_email_export',
+      'feature_source' => TRUE,
+      'default_file' => FEATURES_DEFAULTS_INCLUDED,
+      'file' => drupal_get_path('module', 'workbench_email') . '/workbench_email.features.inc',
+    ),
+  );
+}

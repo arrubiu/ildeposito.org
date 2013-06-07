@@ -1,0 +1,11 @@
+name = "Image Captcha Refresh"
+description = "Adds link for refreshing image captcha."
+package = "Spam control"
+dependencies[] = image_captcha
+core = 7.x
+; Information added by drupal.org packaging script on 2012-09-26
+version = "7.x-1.5"
+core = "7.x"
+project = "image_captcha_refresh"
+datestamp = "1348671042"
+

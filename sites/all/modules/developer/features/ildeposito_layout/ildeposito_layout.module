@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Layout feature.
+ */
+
+include_once 'ildeposito_layout.features.inc';

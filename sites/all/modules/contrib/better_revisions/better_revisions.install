@@ -1,0 +1,15 @@
+<?php
+/**
+ * @file
+ * Uninstall for the better_revisions system variables.
+ */
+
+/* Implements hook_uninstall. */
+function better_revisions_uninstall() {
+  variable_del('br_list_title');
+  variable_del('br_list_options');
+  variable_del('br_list_help');
+  variable_del('br_add_txt');
+  variable_del('br_area_title');
+  variable_del('br_require');
+}

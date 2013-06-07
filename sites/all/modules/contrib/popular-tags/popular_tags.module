@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @file
+ * Main module implementation of (clickable) popular tags.
+ */
+
+/**
+ * Implements hook_form_field_ui_field_edit_form_alter().
+ *
+ * Which allows us to inject a checkbox in the field instance's settings form.
+ * This chekcbox, when checked, will add clickable popular tags to any tag
+ * autocomplete widget.
+ *
+ * @param array $form
+ *   form to alter
+ * @param array $form_state
+ *   not used
+ * @param string $form_id
+ *   not used
+ */
+function popular_tags_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  // Field instance.
+  $instance = $form['#instance'];
+  if ($instance['widget']['type'] == 'taxonomy_autocomplete' ||
+      $instance['widget']['type'] == 'active_tags_taxonomy_autocomplete') {
+    /* If this is a taxonomy_autocomplete widget then add the popular_tags
+     * checkbox to the field edit form. We don't have to do anything to save
+     * this setting since the form element path is instance/widget/settings/... */
+    $form['instance']['widget']['settings']['popular_tags'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Popular Tags'),
+      '#description' => t('Present the users with most popular terms and allow them to select tags by clicking on them.'),
+    );
+    $form['instance']['widget']['settings']['popular_tags']['use'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Use Clickable Popular Tags?'),
+      '#default_value' => @$instance['widget']['settings']['popular_tags']['use'],
+    );
+    $form['instance']['widget']['settings']['popular_tags']['limit'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Limit'),
+      '#description' => t('How many (at most) to show? Leave empty if no limit.'),
+      '#default_value' => @$instance['widget']['settings']['popular_tags']['limit'],
+      '#states' => array(
+        'visible' => array(
+          ':input[name="instance[widget][settings][popular_tags][use]"]' => array('checked' => TRUE),
+        ),
+      ),
+    );
+    $form['instance']['widget']['settings']['popular_tags']['showhide'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show/Hide Links?'),
+      '#description' => t('Should the user be presented with "Show All" and "Show Popular" links? These links allow the user to view only the popular tags, or view all tags.'),
+      '#default_value' => @$instance['widget']['settings']['popular_tags']['showhide'],
+      '#states' => array(
+        'visible' => array(
+          ':input[name="instance[widget][settings][popular_tags][use]"]' => array('checked' => TRUE),
+          ':input[name="instance[widget][settings][popular_tags][limit]"]' => array('!value' => ''),
+        ),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ *
+ * Alters any form where a taxonomy_autocomplete widget is used with
+ * popular_tags setting ON.
+ *
+ * @param array $element
+ *   form element to alter
+ * @param array $form_state
+ *   not used
+ * @param array $context
+ *   form element context
+ */
+function popular_tags_field_widget_form_alter(&$element, &$form_state, $context) {
+  if (($context['instance']['widget']['type'] == 'taxonomy_autocomplete' ||
+       $context['instance']['widget']['type'] == 'active_tags_taxonomy_autocomplete')
+     && !empty($context['instance']['widget']['settings']['popular_tags']['use'])) {
+    module_load_include('inc', 'popular_tags', 'popular_tags.widget');
+    _popular_tags_inject($element, $context);
+  }
+}

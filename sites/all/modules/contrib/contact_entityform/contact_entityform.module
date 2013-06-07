@@ -1,0 +1,223 @@
+<?php
+include_once 'contact_entityform.features.inc';
+/**
+ * Implements hook_menu().
+ */
+function contact_entityform_menu() {
+  $items = array();
+
+  $items['admin/config/people/contact-entityform'] = array(
+      'title' => 'Contact Forms',
+      'description' => 'Administer site-wide and personal contact forms',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('contact_entityform_site_settings'),
+      'access arguments' => array('administer contact entitforms'),
+      'file' => 'contact_entityform.admin.inc',
+      'weight' => 10,
+  );
+  $items['admin/config/people/contact-entityform/site'] = array(
+      'title' => 'Site Wide Form',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'weight' => -10,
+  );
+  $items['admin/config/people/contact-entityform/users'] = array(
+      'title' => 'User Forms',
+      'type' => MENU_LOCAL_TASK,
+      'description' => 'Administer user ',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('contact_entityform_role_settings'),
+      'access arguments' => array('administer contact entitforms'),
+      'file' => 'contact_entityform.admin.inc',
+      'weight' => 10,
+  );
+  $items['contact'] = array(
+      'title' => 'Contact',
+      'description' => 'Site-wide contact form',
+      'page callback' => 'contact_entityform_site_form',
+      'access callback' => 'contact_entityform_access',
+      'access arguments' => array('site'),
+      'file' => 'contact_entityform.pages.inc',
+      'weight' => 10,
+  );
+  $items['user/%user/contact'] = array(
+      'title' => 'Contact',
+      'page callback' => 'contact_entityform_user_form',
+      'page arguments' => array(1),
+      'type' => MENU_LOCAL_TASK,
+      'access callback' => 'contact_entityform_access',
+      'access arguments' => array('user', 1),
+      'weight' => 2,
+      'file' => 'contact_entityform.pages.inc',
+  );
+  return $items;
+}
+function contact_entityform_access($mode, $account = NULL) {
+
+  $enityform_type_name = NULL;
+  if ($mode == 'site') {
+    $enityform_type_name =_contact_entityform_get_site_form();
+  }
+  if ($mode == 'user') {
+    global $user;
+
+    // Anonymous users cannot have contact forms.
+    if (!$account->uid) {
+      return FALSE;
+    }
+
+    // Users may not contact themselves.
+    if ($user->uid == $account->uid) {
+      return FALSE;
+    }
+
+    // These conditions should not affect users with 'administer users' permission
+    if (!user_access('administer users')) {
+      // If the requested user has disabled their contact form, or this preference
+      // has not yet been saved, do not allow users to contact them.
+      // Unless current user can administer users
+      if (empty($account->data['contact_entityform'])) {
+        return FALSE;
+      }
+
+      // If requested user has been blocked, do not allow users to contact them.
+      if (empty($account->status)) {
+        return FALSE;
+      }
+    }
+    $enityform_type_name = _contact_entityform_get_form_for_account($account);
+  }
+  if (!empty($enityform_type_name)) {
+    // The entityform_type itself determines if the current user can submit it
+    return entityform_access('submit', $enityform_type_name);
+  }
+  else {
+    if (user_access('administer contact entityforms')) {
+      drupal_set_message('No site contact form has been specified.');
+      drupal_goto('admin/config/people/contact-entityform');
+      
+    }
+  }
+  //No Form was found
+  return FALSE;
+
+}
+function _contact_entityform_get_form_for_account($account) {
+  $role_settings = variable_get('contact_entityform_roles', array());
+  $account_form = '';
+  // First check all roles except athenicated user
+  foreach ($role_settings as $rid => $entityform_type_name) {
+    if ($rid != 2 && !empty($entityform_type_name) && isset($account->roles[$rid])) {
+      //The account has this role and a form has been set
+      $account_form = $entityform_type_name;
+      //Break because roles are ordered by weight
+      break;
+    }
+  }
+  if (empty($account_form)) {
+    $account_form = isset($role_settings)?$role_settings[2]:'';
+  }
+  return $account_form;
+
+}
+function _contact_entityform_get_site_form() {
+  $enityform_type_name = variable_get('contact_entityform_site_form', 'site_contact_form');
+  //make sure form still exists
+  return _contact_entityform_default_value($enityform_type_name);
+}
+function _contact_entityform_default_value($entityform_type_name) {
+  $entityform_type = entityform_type_load($entityform_type_name);
+
+  if (empty($entityform_type)) {
+    return '';
+  }
+  return $entityform_type_name;
+}
+/**
+ * Implements hook_permission().
+ */
+function contact_entityform_permission() {
+  return array(
+      'administer contact entityforms' => array(
+          'title' => t('Administer contact forms and contact form settings'),
+      ),
+  );
+}
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add the enable personal contact form to an individual user's account page.
+ *
+ * @see user_profile_form()
+ */
+function contact_entityform_form_user_profile_form_alter(&$form, &$form_state) {
+  if ($form['#user_category'] == 'account') {
+    $account = $form['#user'];
+    $form['contact_entityform_set'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Contact settings'),
+        '#weight' => 5,
+        '#collapsible' => TRUE,
+    );
+    $form['contact_entityform_set']['contact_entityform'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Personal contact form'),
+        '#default_value' => !empty($account->data['contact']) ? $account->data['contact'] : FALSE,
+        '#description' => t('Allow other users to contact you via a <a href="@url">personal contact form</a> which keeps your e-mail address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.', array('@url' => url("user/$account->uid/contact"))),
+    );
+  }
+}
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function contact_entityform_form_entityform_edit_form_alter(&$form, &$form_state, $form_id) {
+  if (_contact_entityform_is_user_contact_form($form)) {
+    $menu_item = menu_get_item();
+    if ($menu_item['path'] == 'user/%/contact') {
+      $form['field_contacted_user']['#access'] = FALSE;
+      array_unshift($form['#submit'], 'contact_entityform_form_user_form_submit');
+      array_unshift($form['actions']['submit']['#submit'], 'contact_entityform_form_user_form_submit');
+    }
+    else {
+      $form['#access'] = FALSE;
+      drupal_set_message('This form can only be accessed as a user contact form.', 'warning');
+    }
+    
+  }
+}
+/**
+ * Form submit function for contact_entityform_form_user_form.
+ * 
+ * Adds field_contacted_user value
+ */
+function contact_entityform_form_user_form_submit(&$form, &$form_state) {
+  drupal_get_messages('status', TRUE);
+  $uid = arg(1);
+  $form_state['values']['field_contacted_user']['und']['0']['target_id'] = $uid;
+}
+/**
+ * Determines if the $form is currently selected as a user contact form
+ * @param array $form
+ * @return boolean
+ */
+function _contact_entityform_is_user_contact_form($form) {
+  $contact_forms = variable_get('contact_entityform_roles', array());
+  return in_array($form['#bundle'], $contact_forms);
+}
+/**
+ * Implements hook_user_presave().
+ */
+function contact_entityform_user_presave(&$edit, $account, $category) {
+  $edit['data']['contact_entityform'] = isset($edit['contact_entityform']) ? $edit['contact_entityform'] : variable_get('contact_entityform_default_status', 1);
+}
+/**
+ * Implements hook_help().
+ */
+function contact_entityform_help($path, $arg) {
+  $output = '';
+  switch ($path) {
+    case 'admin/config/people/contact-entityform/users':
+      $output = 'Select the contact form for each role. This is the role of the person being contacted not the contactee. The \'authenticated user\' will be used for any user that does not have another role with a form set.';
+      break;
+  }
+  return $output;
+}

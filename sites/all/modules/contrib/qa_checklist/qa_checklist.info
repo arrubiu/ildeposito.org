@@ -1,0 +1,13 @@
+name = QA Checklist
+description = Provides a quality assurance checklist.
+core = 7.x
+package = Other
+dependencies[] = checklistapi
+configure = admin/config/development/qa-checklist
+
+; Information added by drupal.org packaging script on 2012-06-18
+version = "7.x-1.0-rc1"
+core = "7.x"
+project = "qa_checklist"
+datestamp = "1340056013"
+

@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * Implement hook_ctools_plugin_api().
+ */
+function analytics_omniture_ctools_plugin_api($module, $api) {
+  if ($module == 'analytics') {
+    return array('version' => 1);
+  }
+}

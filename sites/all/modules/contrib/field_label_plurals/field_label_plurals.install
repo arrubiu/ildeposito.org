@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Shows a message how to use the module when enabling.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function field_label_plurals_enable() {
+  if (module_exists('field_ui')) {
+    drupal_set_message(t('You can now give fields a different label for singular and plural on all field edit pages.'));
+  }
+  else {
+    drupal_set_message(t('Enable the Field UI module if you want to adjust singular and plural labels of fields.'));
+  }
+}

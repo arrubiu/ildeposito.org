@@ -1,0 +1,23 @@
+from 6.x-2.x Simplenews Scheduler can additionally only send a newsletter if the provided PHP Eval code returns true.
+
+Some examples to follow.
+
+
+Check the current forecast using weather underground, if the weather for the next week is going to be warmer than a threshold,
+then allow the newsletter to be sent. (Hey come to my place, it's going to be warm this week!, and use the insert_views module
+to include a list of fun things you have planned)
+
+
+  $threshold=20;
+  $total = 0;
+  $i=1;
+  $xml = new SimpleXMLElement(file_get_contents('http://api.wunderground.com/auto/wui/geo/ForecastXML/index.xml?query=Tallinn,Estonia'));
+  foreach($xml->simpleforecast->forecastday as $forecast) {
+    $i++;
+    $total+=(string)$forecast->high->celsius;
+  }
+  if($total > $threshold) {
+    return true;
+  }
+  return false;
+

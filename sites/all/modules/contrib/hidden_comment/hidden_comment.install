@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @file
+ * This module allows site admin to hide certain comments contents, without unpublish or delete them
+ * By jcisio
+ */
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function hidden_comment_schema() {
+  $schema['comment_hide'] = array(
+    'description' => 'Table for hidden comments.',
+    'fields' => array(
+      'cid' => array(
+        'description' => 'The identifier of comment.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => 'The identifier of node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'Last time when comment was hidden/unhidden.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'uid' => array(
+        'description' => 'User in action.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'reason' => array(
+        'description' => 'Reason why comment was hidden.',
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'nid' => array('nid'),
+    ),
+    'primary key' => array('cid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function hidden_comment_update_6100() {
+  $ret = array();
+  db_change_field('comments_hide', 'user', 'uid', array('description' => t('User in action.'), 'type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  // hook_update_N() no longer returns a $ret array. Instead, return
+  // nothing or a translated string indicating the update ran successfully.
+  // See http://drupal.org/node/224333#update_sql.
+  return t('TODO Add a descriptive string here to show in the UI.') /* $ret */;
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function hidden_comment_update_7000() {
+  db_rename_table('comments_hide', 'comment_hide');
+  return t('Successfully renamed the comments_hide table to comment_hide.');
+}

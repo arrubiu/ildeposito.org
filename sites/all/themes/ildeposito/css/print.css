@@ -1,0 +1,78 @@
+/* 
+    Document   : print
+    Created on : 21-apr-2013, 8.56.04
+    Author     : sergej
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+* {
+  font-family:sans-serif;
+}
+
+
+.content .field {
+  margin: 20px 0px;
+}
+
+.canto .field {
+  margin: 0px 0px !important;
+}
+
+
+.field-name-field-testo {
+  white-space: pre-line;
+}
+
+.field-name-field-accordi {
+  white-space: pre-wrap;
+}
+
+.view-display-id-canzoniere_pdf {
+  font-size: 1em;
+}
+
+.view-display-id-canzoniere_pdf .content .field {
+  margin: 0;
+}
+
+.view-display-id-canzoniere_pdf #edit-actions {
+  display: none;
+}
+
+.view-display-id-canzoniere_pdf .testo {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  -moz-column-count:2; /* Firefox */
+  -webkit-column-count:2; /* Safari and Chrome */
+  column-count:2;
+  font-family: monospace;
+}
+
+.view-display-id-canzoniere_pdf h2 {
+  margin-top: 40px;
+  padding-top: 40px;
+}
+
+.view-display-id-canzoniere_pdf hr {
+  display: none;
+}
+
+div.titolo.canzoniere {
+  text-align: center;
+  padding-top: 100px;
+  font-weight: normal !important;
+  font-size: 1.8em;
+
+}
+
+.view-display-id-canzoniere_pdf .view-header {
+  text-align: center;
+  padding: 30px;
+}
+
+
+
+.field-name-field-accordi {
+ 
+}

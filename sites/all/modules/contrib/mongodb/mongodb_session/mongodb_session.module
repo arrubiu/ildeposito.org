@@ -1,0 +1,73 @@
+<?php
+/**
+ * @file
+ * MongoDB Session implementation.
+ */
+
+/**
+ * Implements hook_simpletest_alter().
+ */
+function mongodb_session_simpletest_alter(&$groups) {
+  // An alternative session handler module would not want to run the original
+  // Session https handling test because it checks the sessions table in the
+  // database.
+  unset($groups['Session']);
+}
+
+/**
+ * Implements hook_user_update().
+ */
+function mongodb_session_user_update($edit, $account) {
+  // Update field values for changed values of the user.
+  $roles = _mongodb_session_get_roles($account);
+  // If mongodb_field_storage is enabled it will take care of creating
+  // initial user entry just add roles to it.
+  if (module_exists('mongodb_field_storage')) {
+    $save = array(
+      '$set' => array('roles' => $roles)
+    );
+  }
+  else {
+    $save = array(
+      '$set' => (array) $account + array(
+        '_id' => (int) $account->uid,
+        '_bundle' => 'user',
+        'roles' => $roles,
+      ),
+    );
+    foreach (array('uid', 'created', 'access', 'login', 'status', 'picture') as $key) {
+      $save['$set'][$key] = (int) $save['$set'][$key];
+    }
+  }
+  mongodb_collection('fields_current', 'user')->update(array('_id' => (int) $account->uid), $save, array('upsert' => TRUE));
+  return $roles;
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function mongodb_session_user_insert($edit, $account) {
+  return mongodb_session_user_update($edit, $account);
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function mongodb_session_user_login($edit, $account) {
+  $save = array(
+    '$set' => array(
+      'login' => (int) $account->login,
+    ),
+  );
+  mongodb_collection('fields_current', 'user')->update(array('_id' => (int) $account->uid), $save);
+}
+
+function _mongodb_session_get_roles($account) {
+  $roles = array();
+  $roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
+  $result = db_query("SELECT r.rid, r.name, ur.uid FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid IN (:uids)", array(':uids' => array($account->uid)));
+  foreach ($result as $role) {
+    $roles[(int) $role->rid] = $role->name;
+  }
+  return $roles;
+}

@@ -1,0 +1,207 @@
+<?php
+
+/**
+ * @file
+ * The Flag lists module install file.
+ */
+
+ /**
+ * Implementation of hook_install().
+ */
+function flag_lists_schema() {
+  $schema = array();
+  $schema['flag_lists_flags'] = array(
+    'fields' => array(
+      'fid' => array(
+        'type' => 'serial',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'pfid' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'content_type' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'options' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('fid'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+  );
+  $schema['flag_lists_content'] = array(
+    'fields' => array(
+      'fcid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'fid' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'content_type' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'content_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'sid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-size' => 11,
+      )
+    ),
+    'primary key' => array('fcid'),
+    'unique keys' => array(
+      'fid_content_id_uid_sid' => array('fid', 'content_id', 'uid', 'sid'),
+    ),
+    'indexes' => array(
+      'content_type_content_id' => array('content_type', 'content_id'),
+      'content_type_uid_sid' => array('content_type', 'uid', 'sid'),
+    ),
+  );
+  $schema['flag_lists_counts'] = array(
+    'fields' => array(
+      'fid' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'content_type' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'content_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-width' => '10',
+      ),
+      'count' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-width' => '10',
+      )
+    ),
+    'primary key' => array('fid', 'content_id'),
+    'indexes' => array(
+      'fid_content_type' => array('fid', 'content_type'),
+      'content_type_content_id' => array('content_type', 'content_id'),
+      'count' => array('count'),
+    ),
+  );
+  $schema['flag_lists_types'] = array(
+    'fields' => array(
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => FALSE,
+        'default' => '')
+    ),
+    'primary key' => array('name', 'type'),
+    'indexes' => array(
+      'name' => array('name'),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function flag_lists_install() {
+  // Set up our default template.
+  db_insert('flag_lists_types')
+    ->fields(array(
+      'name' => 'fl_template',
+    ))
+    ->execute();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function flag_lists_uninstall() {
+  // Remove our template flags.
+  $query = db_select('flag_lists_types', 'fl');
+  $query->leftJoin('flags', 'f', 'fl.name = f.name');
+  $query->addField('fl', 'fid', 'fid');
+  $query->distinct();
+  $fids = $query->execute();
+
+  foreach ($fids as $fid) {
+    db_delete('flags')->condition('fid', $fid->fid);
+    db_delete('flag_content')->condition('fid', $fid->fid);
+    db_delete('flag_types')->condition('fid', $fid->fid);
+    db_delete('flag_counts')->condition('fid', $fid->fid);
+  }
+
+  db_delete('variable')->condition('name', 'flag_lists%', 'LIKE');
+  drupal_set_message(t('Flag lists has been uninstalled.'));
+}

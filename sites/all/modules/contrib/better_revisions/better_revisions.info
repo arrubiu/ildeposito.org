@@ -1,0 +1,13 @@
+name = Better Revisions
+description = Changes the built-in revisions system to a less confusing drop-down.
+core = 7.x
+package = Other
+configure = admin/config/content/better-revisions
+files[] = better_revisions.module
+
+; Information added by drupal.org packaging script on 2013-02-18
+version = "7.x-1.2"
+core = "7.x"
+project = "better_revisions"
+datestamp = "1361222841"
+

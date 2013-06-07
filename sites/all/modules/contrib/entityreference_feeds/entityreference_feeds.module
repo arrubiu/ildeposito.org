@@ -1,0 +1,472 @@
+<?php
+/**
+ * @file
+ * This is the main module file for entity reference feeds.
+ */
+
+function _entityreference_feeds_get_targets($field_name, $target_type, $target_bundle) {
+  $targets_cache = &drupal_static('entityreference_feeds_feeds_processor_targets', array());
+
+  $entity_info = entity_get_info($target_type);
+  if(isset($targets_cache[$target_type][$target_bundle])) {
+    return $targets_cache[$target_type][$target_bundle];
+  }
+  else {
+    $info = array('bundle' => $target_bundle);
+    $_targets = array();
+    $target_key = $field_name . ':' . $target_bundle;
+    $wrapper = entity_metadata_wrapper($target_type, NULL, $info);
+
+    // @todo: maybe restrict to data types feeds can deal with.
+    foreach ($wrapper->getPropertyInfo() as $name => $property) {
+      if (!empty($property['setter callback'])) {
+        $_targets[$target_key . ':entityreference_feeds:' . $name] = array(
+          'name' => t('@field_name (@bundle: @target)', array(
+            '@field_name' => $field_name,
+            '@target' => $property['label'],
+            '@bundle' => $target_bundle,
+          )),
+          'description' => isset($property['description']) ?
+          t('@field_name: @target in @type type @bundle',
+            array(
+              '@field_name' => $field_name,
+              '@target' => $property['label'],
+              '@type' => $target_type,
+              '@bundle' => $target_bundle,
+            )
+          ) : NULL,
+          'callback' => 'entityreference_feeds_feeds_set_target',
+        );
+      }
+    }
+
+    // Add general GUID target.
+    $_targets[$target_key . ':entityreference_feeds:guid'] = array(
+      'name' => t('@field_name (@bundle: @target)', array(
+        '@field_name' => $field_name,
+        '@target' => t('GUID'),
+        '@bundle' => $target_bundle,
+      )),
+      'description' => t(
+        'The globally unique identifier of the item. E. g. the feed item GUID in the case of a syndication feed. May be unique.'
+      ),
+      //'real_target' => $field_name,
+      //'optional_unique' => FALSE, //@todo set this to false?
+      'callback' => 'entityreference_feeds_feeds_set_target',
+    );
+
+    // @todo: this is ugly as hell, but needed because of limitations of drupal_alter
+    // (taking a maximum of 3 parameters). Should do the job though, hopefully with
+    // no side-effects
+    $entity_targets = array('entityreference_feeds_processed' => array());
+
+    // Let other modules expose mapping targets.
+    drupal_alter('feeds_processor_targets', $entity_targets, $target_type, $target_bundle);
+    foreach ($entity_targets as $target_target => $entity_target) {
+      if (isset($entity_target['name'])) {
+        $entity_target['name'] = t('@field_name (@bundle: @target)', array(
+          '@field_name' => $field_name,
+          '@target' => $target_target,
+          '@bundle' => $target_bundle,
+        ));
+      }
+      if (isset($entity_target['description'])) {
+        $entity_target['description'] = t('@field_name: @target in @type type @bundle', array(
+          '@label' => $field_instance['label'],
+          '@field_name' => $field_name,
+          '@target' => $target_target,
+          '@type' => $target_type,
+          '@bundle' => $target_bundle,
+        ));
+      }
+      $callback = isset($entity_target['callback']) ?
+        $entity_target['callback'] : 'entityreference_feeds';
+      $entity_target['callback'] = 'entityreference_feeds_feeds_set_target';
+      $_targets[$target_key . ':' . $callback . ':' . $target_target] = $entity_target;
+    }
+
+    if(!isset($targets_cache[$target_type])) {
+      $targets_cache[$target_type] = array();
+    }
+    $targets_cache[$target_type][$target_bundle] = $_targets;
+    return $_targets;
+  }
+}
+
+/**
+ * Implements hook_feeds_processor_targets_alter().
+ *
+ * @see FeedsNodeProcessor::getMappingTargets()
+ */
+function entityreference_feeds_feeds_processor_targets_alter(&$targets, $entity_type, $bundle_name) {
+  // Prevent infinite function call cycle.
+  if (isset($targets['entityreference_feeds_processed'])) {
+    unset($targets['entityreference_feeds_processed']);
+    return;
+  }
+  foreach (field_info_instances($entity_type, $bundle_name) as $field_name => $field_instance) {
+    $info = field_info_field($field_name);
+    if ($info['type'] == 'entityreference') {
+      $target_type = $info['settings']['target_type'];
+      $target_bundles = $info['settings']['handler_settings']['target_bundles'];
+      foreach ($target_bundles as $target_bundle) {
+        $targets += _entityreference_feeds_get_targets($field_name, $target_type, $target_bundle);
+      }
+    }
+  }
+}
+
+function entityreference_feeds_processor_mapped_targets($id) {
+  $static_cache = &drupal_static(__FUNCTION__, array());
+  if(isset($static_cache[$id])) {
+    return $static_cache[$id];
+  }
+  else {
+    $static_cache[$id] = array();
+  }
+  $importer = feeds_importer($id);
+  $mappings = $importer->processor->getMappings();
+  foreach($mappings as $mapping) {
+    $static_cache[$id][] = $mapping['target'];
+  }
+  return $static_cache[$id];
+}
+
+/**
+ * Callback for mapping.
+ *
+ * @param FeedsSource $source
+ *   A FeedsSource object.
+ * @param Entity $entity
+ *   The entity to map to.
+ * @param string $target
+ *   The target key on $entity to map to.
+ * @param array $value
+ *   The value to map. Should be an array.
+ */
+function entityreference_feeds_feeds_set_target($source, $entity, $target, $value, $mapping) {
+
+  $entity->entityreference_feeds_source_id = $source->id;
+
+  // Don't do anything if we weren't given any data.
+  if (empty($value)) {
+    return;
+  }
+
+  // Assume that the passed in value could really be any number of values.
+  if (is_array($value)) {
+    $values = $value;
+  }
+  else {
+    $values = array($value);
+  }
+
+  list($field_name, $target_bundle, $target_callback, $target_target) = explode(':', $target, 4);
+
+  // Get some useful field information.
+  $field_info = field_info_field($field_name);
+  $target_type = $field_info['settings']['target_type'];
+
+
+  if (!isset($entity->entityreference_feeds_items)) {
+    $entity->entityreference_feeds_items = array();
+  }
+  if (!isset($entity->entityreference_feeds_items[$field_name])) {
+    $entity->entityreference_feeds_items[$field_name] = array();
+  }
+  if (!isset($entity->entityreference_feeds_items[$field_name][$target_bundle])) {
+    $entity->entityreference_feeds_items[$field_name][$target_bundle] = array();
+  }
+
+  $bundle_items = &$entity->entityreference_feeds_items[$field_name][$target_bundle];
+
+  foreach ($values as $delta => $target_value) {
+
+    if (!isset($bundle_items[$delta])) {
+      $target_entity_info = entity_get_info($target_type);
+      $target_entity = new stdClass();
+
+      if (!empty($target_entity_info['entity keys']['bundle'])) {
+        $target_entity->{$target_entity_info['entity keys']['bundle']} = $target_bundle;
+      }
+
+      $bundle_items[$delta]['target_entity'] = $target_entity;
+      $bundle_items[$delta]['creation_values'] = array();
+    }
+    else {
+      $target_entity =& $bundle_items[$delta]['target_entity'];
+    }
+
+    if (!isset($target_entity->feeds_item)) {
+      entityreference_feeds_newItemInfo($target_entity, $target_type);
+    }
+
+    if ($target_callback !== 'entityreference_feeds' && function_exists($target_callback)) {
+      //$real_target = isset($targets[$target]['real_target']) ? $targets[$target]['real_target'] : $target_target;
+      //$bundle_items[$delta]['real_targets'][$real_target] = $real_target;
+      $target_callback($source, $target_entity, $target_target, $target_value, $mapping);
+    }
+    else {
+      switch ($target_target) {
+        case 'url':
+        case 'guid':
+          $target_entity->feeds_item->$target_target = $target_value;
+          break;
+
+        default:
+          $bundle_items[$delta]['creation_values'][$target_target] = $target_value;
+          break;
+
+      }
+    }
+  }
+}
+
+/**
+ * Helper function for creating entityreference_feeds entities.
+ *
+ * @param string $entity_type
+ *   The entity type of the entity to be created.
+ * @param string $bundle
+ *   (optional) Name of the bundle of the entity to be created.
+ * @param array $values
+ *   (optional) An array of values as described by the entity's property info. All entity
+ *   properties of the given entity type that are marked as required, must be
+ *   present.
+ *   If the passed values have no matching property, their value will be
+ *   assigned to the entity directly, without the use of the metadata-wrapper
+ *   property.
+ *
+ * @return Entity
+ *   The created entity or FALSE if the entity could not be created.
+ */
+function _entityreference_feeds_create_entity($entity_type, $bundle = FALSE, $values = array()) {
+  $info = entity_get_info($entity_type);
+  $default_values = variable_get('entityreference_feeds_entity_default_values', array());
+  $creation_values = $values + (isset($default_values[$entity_type]['values']) ?
+    array_filter($default_values[$entity_type]['values']) : array());
+
+  if (!empty($info['entity keys']['bundle']) && $bundle) {
+    $creation_values += array($info['entity keys']['bundle'] => $bundle);
+  }
+
+  $entity_wrapper = entity_property_values_create_entity($entity_type, $creation_values);
+  return $entity_wrapper ? $entity_wrapper->value() : FALSE;
+}
+
+// This function is from FeedsProcessor.inc.
+/**
+ * Adds Feeds specific information on $entity->feeds_item.
+ *
+ * @param Entity $entity
+ *   The entity object to be populated with new item info.
+ * @param string $entity_type
+ *   The type of the entity, for example 'node'.
+ * @param int $feed_nid
+ *   (optional) The feed nid of the source that produces this entity.
+ * @param string $hash
+ *   (optional) The fingerprint of the source item.
+ */
+function entityreference_feeds_newItemInfo($entity, $entity_type, $feed_nid = 0, $hash = '') {
+  $entity->feeds_item = new stdClass();
+  $entity->feeds_item->entity_id = 0;
+  $entity->feeds_item->entity_type = $entity_type;
+  $entity->feeds_item->id = 'entityreference_feeds';
+  $entity->feeds_item->feed_nid = $feed_nid;
+  $entity->feeds_item->imported = REQUEST_TIME;
+  $entity->feeds_item->hash = $hash;
+  $entity->feeds_item->url = '';
+  $entity->feeds_item->guid = '';
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function entityreference_feeds_entity_presave($entity, $type) {
+  // @todo: job queue integration for async batching?
+  if (isset($entity->entityreference_feeds_items)) {
+
+    $mapped_targets = entityreference_feeds_processor_mapped_targets($entity->entityreference_feeds_source_id);
+
+    foreach ($entity->entityreference_feeds_items as $field_name => $target_bundles) {
+
+      // Get some useful field information.
+      $info = field_info_field($field_name);
+      $target_type = $info['settings']['target_type'];
+
+      $field = array();
+      foreach ($target_bundles as $target_bundle => $values) {
+        $targets = _entityreference_feeds_get_targets($field_name, $type, $target_bundle);
+        foreach ($values as $value) {
+          $item = $value['target_entity'];
+
+          // @todo load multiple?
+          // @todo support other unique fields?
+          // GUID is a requirement, else we will keep adding new entities on every update.
+          if (isset($item->feeds_item->guid)) {
+            // Set aside feeds_item.
+            $feeds_item = $item->feeds_item;
+            unset($item->feeds_item);
+
+            // Fetch the entity ID resulting from the mapping table look-up.
+            $entity_id = db_query(
+              'SELECT entity_id FROM {feeds_item} WHERE guid = :guid',
+              array(':guid' => $feeds_item->guid)
+            )->fetchField();
+
+            // @todo try catch?
+            if ($entity_id) {
+              $target_entity = entity_load_single($target_type, $entity_id);
+              foreach($mapped_targets as $target) {
+                if(isset($targets[$target])) {
+                  $real_target = NULL;
+                  if(isset($targets[$target]['real_target'])) {
+                    $real_target = $targets[$target]['real_target'];
+                  }
+                  else {
+                    list($real_target) = explode(':', $target, 2);
+                  }
+                  // @todo Well this sucks
+                  if(strpos($real_target, 'field_') === 0) {
+                    // is a field
+                    $target_entity->{$real_target} = array('und' => array());
+                  }
+                  else {
+                    unset($target_entity->{$real_target});
+                  }
+                }
+              }
+              $wrapper = entity_metadata_wrapper($target_type, $target_entity);
+              foreach ($value['creation_values'] as $target_element => $value) {
+                $wrapper->$target_element->set($value);
+              }
+            }
+            else {
+              $target_entity = _entityreference_feeds_create_entity($target_type, $target_bundle, $value['creation_values']);
+            }
+
+            foreach (get_object_vars($item) as $target_element => $target_value) {
+              $target_entity->$target_element = $target_value;
+            }
+
+            entity_save($target_type, $target_entity);
+
+            list($entity_id) = entity_extract_ids($target_type, $target_entity);
+
+            // Restore and save feeds_item.
+            $target_entity->feeds_item = $feeds_item;
+            feeds_item_info_save($target_entity, $entity_id);
+
+            // Assign the target type and the target ID.
+            $field_item = array(
+              'target_type' => $target_type,
+              'target_id' => $entity_id,
+            );
+
+            // Set the language of the field depending on entity language.
+            $language = isset($item->language) ? $item->language : LANGUAGE_NONE;
+
+            if (!isset($field[$language])) {
+              $field[$language] = array();
+            }
+            $field[$language][] = $field_item;
+          }
+        }
+      }
+      $entity->$field_name = $field;
+    }
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function entityreference_feeds_menu() {
+  $items = array();
+  $items['admin/config/content/entityreference_feeds'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('entityreference_feeds_settings_form'),
+    'title' => 'Entityreference feeds',
+    'description' => 'Configure Entityreference feeds settings',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+
+}
+
+/**
+ * Settings form callback.
+ */
+function entityreference_feeds_settings_form() {
+  $info = entity_get_info();
+  $default_values = variable_get('entityreference_feeds_entity_default_values', array());
+  $form['entityreference_feeds_entity_default_values'] = array(
+    '#title' => t('Default values'),
+    '#type' => 'fieldset',
+    '#tree' => TRUE,
+  );
+
+  foreach ($info as $entity_type => $entity_type_info) {
+    if (entity_type_supports($entity_type, 'create')) {
+      $wrapper = entity_metadata_wrapper($entity_type);
+
+      if (!is_object($wrapper)) {
+        continue;
+      }
+
+      $form['entityreference_feeds_entity_default_values'][$entity_type] = array(
+        '#title' => $entity_type,
+        '#type' => 'fieldset',
+      );
+
+      $entity_type_settings = &$form['entityreference_feeds_entity_default_values'][$entity_type];
+
+      global $user;
+      $formats = filter_formats($user);
+      foreach ($formats as $format) {
+        $format_options[$format->format] = check_plain($format->name);
+      }
+
+      $entity_type_settings['input_format'] = array(
+        '#type' => 'select',
+        '#title' => t('Text format'),
+        '#description' => t('Select the input format for the body field of the nodes to be created.'),
+        '#options' => $format_options,
+        '#default_value' => isset($default_values[$entity_type]['input_format']) ?
+        $default_values[$entity_type]['input_format'] :
+        'plain_text',
+      );
+
+      $bundle_key = $entity_type_info['entity keys']['bundle'];
+
+      foreach ($wrapper->getPropertyInfo() as $name => $property) {
+        if (!empty($property['required']) && $name != $bundle_key) {
+          $entity_type_settings['values'][$name] = array(
+            '#type' => 'textfield',
+            '#title' => $property['label'],
+            '#description' => isset($property['description']) ? $property['description'] : '',
+            '#default_value' => isset($default_values[$entity_type]['values'][$name]) ?
+            $default_values[$entity_type]['values'][$name] : NULL,
+          );
+
+          if (!empty($property['options list'])) {
+            $entity_type_settings['values'][$name]['#type'] = 'select';
+            $entity_type_settings['values'][$name]['#options'] = $wrapper->$name->optionsList();
+          }
+
+          // @todo: Maybe implement per data-type forms like Rules does?
+          $entity_type_settings['values'][$name]['#description'] .=
+            ' ' . t('Expected data type: %type.', array('%type' => $wrapper->$name->type()));
+          if ($wrapper->$name instanceof EntityDrupalWrapper) {
+            $info = $wrapper->$name->entityInfo();
+            $id_info = $wrapper->$name->get($info['entity keys']['id'])->info();
+            $entity_type_settings['values'][$name]['#description'] .=
+              ' ' . t('Just enter the identifier of the entity, i.e. %id', array('%id' => $id_info['label']));
+          }
+        }
+      }
+    }
+  }
+  return system_settings_form($form);
+}

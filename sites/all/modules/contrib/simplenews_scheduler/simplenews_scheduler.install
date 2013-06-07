@@ -1,0 +1,214 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall functions for the Simplenews Scheduler module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function simplenews_scheduler_schema() {
+  $schema['simplenews_scheduler'] = array(
+    'description' => 'Scheduled newsletter data.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The node id for a scheduled newsletter.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'last_run' => array(
+        'description' => 'The timestamp the scheduled newsletter was last sent.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'next_run' => array(
+        'description' => 'The future timestamp the next scheduled newsletter is due to be sent.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'activated' => array(
+        'description' => 'Whether the schedule is active.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'send_interval' => array(
+        'description' => 'The interval at which to send, as a text string.',
+        'type' => 'varchar',
+        'length' => 10,
+      ),
+      'interval_frequency' => array(
+        'description' => 'The number of intervals between newsletter transmission.',
+        'type' => 'int',
+        'default' => 1,
+        'not null' => TRUE,
+      ),
+      'start_date' => array(
+        'description' => 'The timestamp at which to start sending editions.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'stop_type' => array(
+        'description' => 'How to determine when to stop sending editions.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'stop_date' => array(
+        'description' => 'The timestamp at which to stop sending editions.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1388447999,
+      ),
+      'stop_edition' => array(
+        'description' => 'The edition count at which to stop sending editions.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'php_eval' => array(
+        'description' => 'PHP code to evaluate to determine whether to send an edition.',
+        'type' => 'blob',
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'The title of new edition nodes.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('nid'),
+  );
+
+  $schema['simplenews_scheduler_editions'] = array(
+    'description' => 'Stores data for each edition of a scheduled newsletter.',
+    'fields' => array(
+      'eid' => array(
+        'description' => 'The node id for the edition.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'pid' => array(
+        'description' => 'The node id for the parent scheduled newsletter node.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'date_issued' => array(
+        'description' => 'The timestamp on which this edition was sent.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('eid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function simplenews_scheduler_uninstall() {
+  drupal_uninstall_schema('simplenews_scheduler');
+  drupal_uninstall_schema('simplenews_scheduler_editions');
+}
+
+/**
+ * Implements hook_install().
+ */
+function simplenews_scheduler_install() {
+  // Update the module weight to run before simplenews.
+  db_update('system')
+    ->condition('name', 'simplenews_scheduler')
+    ->fields(array(
+      'weight' => -1,
+    ))
+    ->execute();
+}
+
+/*
+ * Implements hook_update_last_removed().
+ */
+function simplenews_scheduler_update_last_removed() {
+  return 6005;
+}
+
+/**
+ * Add the title field to the scheduler table.
+ */
+function simplenews_scheduler_update_7000() {
+
+  if (!db_field_exists('simplenews_scheduler', 'title')) {
+    $field = array(
+      'description' => 'The title of new edition nodes.',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+      'initial' => '[node:title]',
+    );
+    db_add_field('simplenews_scheduler', 'title', $field);
+  }
+}
+
+/**
+ * Add the next_run field to the scheduler table and populate it.
+ */
+function simplenews_scheduler_update_7001() {
+  // Only act if the field doesn't exist yet: this accounts for the possibility
+  // it's been added in a 62xx update.
+  if (!db_field_exists('simplenews_scheduler', 'next_run')) {
+    // Add the field.
+    $field = array(
+      'description' => 'The future timestamp the next scheduled newsletter is due to be sent.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'initial' => 0,
+    );
+    db_add_field('simplenews_scheduler', 'next_run', $field);
+
+    // Populate the new field with each schedule's next run time.
+    // Retrieve all records into an associative array keyed by nid.
+    $schedules = db_query("SELECT * FROM {simplenews_scheduler}")->fetchAllAssoc('nid');
+    foreach ($schedules as $nid => $schedule) {
+      // Clear last_run to force the next_run calculation to work from the
+      // start_date. This ensures that any error in previous edition dates due to
+      // bugs with month length is ignored.
+      // @see http://drupal.org/node/1364784
+      $schedule->last_run = 0;
+
+      // Get the next run time relative to the request time.
+      $next_run = simplenews_scheduler_calculate_next_run_time($schedule, REQUEST_TIME);
+
+      // Don't use drupal_write_record() in a hook_update_N().
+      db_update('simplenews_scheduler')
+        ->fields(array('next_run' => $next_run))
+        ->condition('nid', $nid)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Update the module weight if it has not been customized.
+ */
+function simplenews_scheduler_update_7002() {
+  // Update the module weight to run before simplenews.
+  db_update('system')
+    ->condition('name', 'simplenews_scheduler')
+    // Only change the existing value if it has not been customized.
+    ->condition('weight', 0)
+    ->fields(array(
+      'weight' => -1,
+    ))
+    ->execute();
+}

@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Removing all PDF set variables and checks for mPDF library existence.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function pdf_using_mpdf_install() {
+  // Default value of some custom varibles.
+  variable_set('pdf_using_mpdf_pdf_page_size', 'A4');
+  variable_set('pdf_using_mpdf_pdf_font_size', 10);
+  variable_set('pdf_using_mpdf_pdf_filename', '[site:name] - [node:title] - [node:changed:custom:Y-m-d]');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function pdf_using_mpdf_uninstall() {
+  // Removing all custom varible.
+  db_query("DELETE FROM {variable} WHERE name LIKE 'pdf_using_mpdf_%'");
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function pdf_using_mpdf_requirements($phase) {
+  $requirements = array();
+
+  // Ensure translations do not break at install time.
+  $t = get_t();
+
+  if (module_exists('libraries') == TRUE) {
+    // Search for mpdf tool first.
+    $pattern = '/^mpdf.php$/';
+    // Libraries module to detect mPDF library in case of multisite installation.
+    $tools = array_keys(file_scan_directory(libraries_get_path('mpdf'), $pattern));
+    // mPDF library looked for in the module directory itself.
+    $tools = array_merge($tools, array_keys(file_scan_directory(drupal_get_path('module', 'pdf_using_mpdf'), $pattern)));
+  }
+  if (isset($tools[0])) {
+    $requirements['pdf_using_mpdf_library_exist'] = array(
+      'title' => $t('PDF using mPDF Library'),
+      'value' => $t('Installed'),
+      'severity' => REQUIREMENT_OK,
+    );
+  }
+  else {
+    $requirements['pdf_using_mpdf_library_exist'] = array(
+      'title' => $t('PDF using mPDF Library'),
+      'value' => $t('Not found !'),
+      'severity' => REQUIREMENT_WARNING,
+      'description' => $t('<p>No mPDF Library Found in "sites/all/libraries" or "!default_module_path". Please download the PHP mPDF Library API from <a href="http://www.mpdf1.com/">mPDF1.com</a> </p>', array(
+        '!default_module_path' => drupal_get_path('module', 'pdf_using_mpdf'),
+        )),
+    );
+  }
+  return $requirements;
+}

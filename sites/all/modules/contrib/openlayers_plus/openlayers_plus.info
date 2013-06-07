@@ -1,0 +1,19 @@
+core = 7.x
+name = "OpenLayers Plus"
+dependencies[] = "openlayers"
+description = "Additional tools and behaviors for OpenLayers"
+package = "OpenLayers"
+
+files[] = behaviors/openlayers_plus_behavior_blockswitcher.inc
+files[] = behaviors/openlayers_plus_behavior_blocktoggle.inc
+files[] = behaviors/openlayers_plus_behavior_permalink.inc
+files[] = behaviors/openlayers_plus_behavior_popup.inc
+files[] = behaviors/openlayers_plus_behavior_scalepoints.inc
+files[] = behaviors/openlayers_plus_behavior_tooltips.inc
+
+; Information added by drupal.org packaging script on 2013-04-04
+version = "7.x-2.0"
+core = "7.x"
+project = "openlayers_plus"
+datestamp = "1365081312"
+

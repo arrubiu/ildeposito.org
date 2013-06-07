@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @file
+ * Alter the field settings form to add a textfield for the singular and use
+ * those settings when preprocessing fields.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function field_label_plurals_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#field_label_plurals':
+      $output = '<h3>' . t('Field label plurals') . '</h3>';
+      $output .= '<p>' . t('Some fields can have multiple values. See the "Number of values" setting when editing a field. If that is set, then the <em>Field label plurals</em> module shows a "Label to use for a single value" setting right below the "Label" textfield.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Add a textfield to the field instance settings form.
+ *
+ * Implements hook_form_FORM_ID_alter().
+ */
+function field_label_plurals_form_field_ui_field_edit_form_alter(&$form, $form_state) {
+  // Get the currently selected cardinality.
+  if (isset($form_state['values'])) {
+    $cardinality = $form_state['values']['field']['cardinality'];
+  } else {
+    $cardinality = $form['#field']['cardinality'];
+  }
+
+  // Decide whether or not to show the singular field.
+  $show_singular = $cardinality > 1 || $cardinality == FIELD_CARDINALITY_UNLIMITED;
+
+  // Add the textfield if it should be shown.
+  // Also add it for graceful degradation, if it could be shown in the future.
+  if ($show_singular || empty($form['field']['cardinality']['disabled'])) {
+    // Textfield, wrapped in the field_label_plurals_singular div.
+    $form['instance']['field_label_plurals_singular'] = array(
+      '#prefix' => '<div id="field_label_plurals_singular">',
+      '#type' => 'textfield',
+      '#title' => t('Label to use for a single value'),
+      '#description' => t('Useful if a field can have one or more values and you want to change the label accordingly.'),
+      '#weight' => -15,
+      '#default_value' => isset($form['#instance']['field_label_plurals_singular']) ? $form['#instance']['field_label_plurals_singular'] : '',
+      '#suffix' => '</div>',
+    );
+
+    // Use js-hide to hide it, if it shouldn't be visible.
+    if (!$show_singular) {
+      $form['instance']['field_label_plurals_singular']['#prefix'] = '<div id="field_label_plurals_singular" class="js-hide">';
+    }
+
+    // Add an #ajax callback to the cardinality selectbox to dynamically hide
+    // and show the singular textfield.
+    $form['field']['cardinality']['#ajax'] = array(
+      'callback' => 'field_label_plurals_cardinality_callback',
+      'wrapper' => 'field_label_plurals_singular',
+    );
+  }
+}
+
+/**
+ * FAPI #ajax callback.
+ *
+ * Returns a fresh field_label_plurals_singular, hidden or shown, depending on
+ * the selected cardinality.
+ */
+function field_label_plurals_cardinality_callback($form, $form_state) {
+  if (isset($form['instance']['field_label_plurals_singular'])) {
+    return $form['instance']['field_label_plurals_singular'];
+  } else {
+    return array(
+      '#markup' => '<div id="field_label_plurals_singular"></div>',
+    );
+  }
+}
+
+/**
+ * Alter the label before displaying it.
+ *
+ * Implements hook_preprocess_field().
+ */
+function field_label_plurals_preprocess_field(&$vars) {
+  if (count($vars['items']) === 1) {
+    $instance = field_info_instance($vars['element']['#entity_type'], $vars['element']['#field_name'], $vars['element']['#bundle']);
+    if (isset($instance['field_label_plurals_singular']) && trim($instance['field_label_plurals_singular']) != '') {
+      $vars['label'] = check_plain($instance['field_label_plurals_singular']);
+      $vars['element']['#title'] = $instance['field_label_plurals_singular'];
+    }
+  }
+}

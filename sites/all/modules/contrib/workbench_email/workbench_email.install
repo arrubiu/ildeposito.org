@@ -1,0 +1,154 @@
+<?php
+/**
+ * @file
+ * Install file for the Workbench Email module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function workbench_email_schema() {
+  $schema = array();
+  $schema['workbench_emails'] = array(
+    'description' => 'Custom table to hold moderation emails',
+    'fields' => array(
+      'wid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'An auto increment id',
+      ),
+      'from_name'  => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The from state that the email exists',
+      ),
+      'to_name'  => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The to state that this email exists',
+      ),
+      'rid'  => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The role id',
+      ),
+      'subject'  => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'The subject of the email',
+      ),
+      'message'  => array(
+        'description' => 'The message of the email',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'translatable' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'rid'        => array('rid'),
+    ),
+    'primary key' => array('wid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Removes string indexes from the 'workbench_emails' and
+ * 'workbench_email_transitions' tables. Also adds the 'rid' index
+ * to the 'workbench_email_transitions' table.
+ */
+function workbench_email_update_7001() {
+  // Remove the transition index from the 'workbench_emails' table.
+  db_drop_index('workbench_emails', 'transition');
+
+  // Remove the set index from the 'workbench_emails' table.
+  db_drop_index('workbench_emails', 'set');
+
+  // Remove old primary key on 'workbench_emails' table.
+  db_drop_primary_key('workbench_emails');
+
+  // Add the wid field to the 'workbench_emails' table.
+  $field_definition = array(
+    'type' => 'serial',
+    'not null' => TRUE,
+    'description' => 'An auto increment id',
+  );
+  db_add_field('workbench_emails', 'wid', $field_definition, array('primary key' => array('wid')));
+}
+
+/**
+ * Removes the not null constraint from the fields
+ * subject and message within workbench_emails. Also,
+ * removes the workbench_email_transitions table from
+ * the schema.
+ */
+function workbench_email_update_7002() {
+  db_change_field('workbench_emails', 'subject', 'subject',
+    array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+      'description' => 'The subject of the email',
+    )
+  );
+
+  db_change_field('workbench_emails', 'message', 'message',
+    array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+      'description' => 'The message of the email',
+    )
+  );
+
+  db_drop_table('workbench_email_transitions');
+}
+
+/**
+ * Adds the wid field properly.
+ */
+function workbench_email_update_7003() {
+  if (!db_field_exists('workbench_emails', 'wid')) {
+    // Add the wid field to the 'workbench_emails' table.
+    $field_definition = array(
+      'type' => 'serial',
+      'not null' => TRUE,
+      'description' => 'An auto increment id',
+    );
+    db_add_field('workbench_emails', 'wid', $field_definition, array('primary key' => array('wid')));
+  }
+}
+
+/**
+ * Fixes issue with NULL constraint on subject / message
+ * fields.
+ */
+function workbench_email_update_7004() {
+  db_change_field('workbench_emails', 'subject', 'subject',
+    array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+      'description' => 'The subject of the email',
+    )
+  );
+
+  db_change_field('workbench_emails', 'message', 'message',
+    array(
+      'description' => 'The message of the email',
+      'type' => 'text',
+      'not null' => FALSE,
+      'size' => 'big',
+      'translatable' => TRUE,
+    )
+  );
+
+  db_drop_table('workbench_email_transitions');
+}

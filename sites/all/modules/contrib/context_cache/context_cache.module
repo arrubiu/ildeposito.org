@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * @file
+ * Configures context_cache for Context 3 and supporting functions.
+ */
+
+/**
+ * Implements hook_ctools_plugin_api().
+ *
+ * Make module compatible with context 3.
+ */
+function context_cache_ctools_plugin_api($module, $api) {
+  if ($module == 'context' && $api == 'plugins') {
+    return array('version' => 3);
+  }
+}
+
+/**
+ * Implements hook_context_plugins().
+ *
+ * Register plugin with context 3.
+ */
+function context_cache_context_plugins() {
+  $plugins = array();
+  $plugins['context_reaction_cache'] = array(
+    'handler' => array(
+      'path' => drupal_get_path('module', 'context_cache'),
+      'file' => 'context_reaction_cache.inc',
+      'class' => 'ContextReactionCache',
+      'parent' => 'context_reaction',
+    ),
+  );
+
+  return $plugins;
+}
+
+/**
+ * Implements hook_context_registry().
+ *
+ * Register cache reaction with context 3.
+ */
+function context_cache_context_registry() {
+  $registry['reactions'] = array(
+    'cache' => array(
+      'title' => t('Cache'),
+      'plugin' => 'context_reaction_cache',
+    ),
+  );
+  return $registry;
+}
+
+/**
+ * Implements hook_context_page_reaction().
+ *
+ * Execute cache reaction.
+ */
+function context_cache_context_page_reaction() {
+  if ($plugin = context_get_plugin('reaction', 'cache')) {
+    $plugin->execute();
+  }
+}
+
+/**
+ * Sets a custom expire headers based on lifetime passed in.
+ *
+ * @param int $seconds
+ *   Number of seconds which represent the lifetime of the cache.
+ */
+function context_cache_expire_header($seconds = 7200) {
+  drupal_add_http_header('Cache-Control', 'maxage=' . $seconds);
+  drupal_add_http_header('Expires', gmdate('D, d M Y H:i:s', REQUEST_TIME + $seconds) . ' GMT');
+}
+
+/**
+ * Sets a strict no-cache header.
+ */
+function context_cache_nocache_header() {
+  drupal_add_http_header('Cache-Control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+  drupal_add_http_header('Expires', 'Sun, 19 Nov 1978 05:00:00 GMT');
+}

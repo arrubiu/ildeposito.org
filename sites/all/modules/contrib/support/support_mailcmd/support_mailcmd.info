@@ -1,0 +1,12 @@
+name = Support Mail Commands
+package = Support
+description = Advanced support ticket editing via emil.
+dependencies[] = support
+core = 7.x
+
+; Information added by drupal.org packaging script on 2012-09-22
+version = "7.x-1.0-rc2"
+core = "7.x"
+project = "support"
+datestamp = "1348346701"
+

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Social feature.
+ */
+
+include_once 'ildeposito_social.features.inc';

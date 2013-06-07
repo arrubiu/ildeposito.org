@@ -1,0 +1,16 @@
+/**
+ * Float images alternately in right-to-left content.
+ */
+
+/* Adjust the id or class if your theme uses another to target the node body.*/
+.content span.autofloat-odd,
+#content span.autofloat-odd {
+  float: left;
+  margin: 5px 5px 0 0;
+}
+
+.content span.autofloat-even,
+#content span.autofloat-even {
+  float: right;
+  margin: 5px 0 0 10px;
+}

@@ -1,0 +1,183 @@
+<?php
+/**
+ * @file
+ * Main enhanced revisions module file.
+ */
+
+define('BF_DEFAULT_OPTS', t("New input\nCopy changes\nCorrecting missing/wrong information"));
+define('BF_DEFAULT_TITLE', t('Revision type'));
+define('BF_DEFAULT_AREA_TITLE', t('Explanation of revision'));
+
+/* Implements hook_help */
+function better_revisions_help($path, $arg) {
+  switch ($path) {
+    // Main module help for the block module
+    case 'admin/help#better_revisions':
+      return t('<p>Changes the built-in revisions system to a less confusing drop-down.</p>');
+  }
+}
+
+/* Implements hook_menu */
+function better_revisions_menu() {
+  $items = array();
+  $items['admin/config/content/better-revisions'] = array(
+    'title' => 'Better revisions',
+    'description' => 'Configure style and behavior settings for the Better Revisions module.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('better_revisions_admin'),
+    'access arguments' => array('administer better revisions'),
+    'type' => MENU_NORMAL_ITEM
+  );
+  return $items;
+}
+
+/* Implements hook_permission */
+function better_revisions_permission() {
+  return array(
+    'administer better revisions' => array(
+      'title' => t('Administer better revisions'), 
+      'description' => t('Configure better revisions settings.'),
+    ),
+  );
+}
+
+/* Implements hook_form_alter */
+function better_revisions_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['revision_information']['log'])):
+    $form['revision_information']['#attached']['js'][] = drupal_get_path('module', 'better_revisions') . '/better_revisions.js';
+    $req = variable_get('br_require', FALSE);
+    $condition = array(':input[name="revision"]' => array('checked' => TRUE));
+    $form['revision_information']['log']['#title'] = variable_get('br_list_title', BF_DEFAULT_TITLE);
+    if ($desc = variable_get('br_list_help', NULL)) {
+      $form['revision_information']['log']['#description'] = filter_xss_admin($desc);
+    }
+    $form['revision_information']['log']['#type'] = 'select';
+    $form['revision_information']['log']['#options'] = _better_revisions_options();
+    $form['revision_information']['log']['#states'] = array(
+      'visible' => $condition
+    );
+    $area = variable_get('br_add_txt', 0);
+    if ($area != 0) {
+      $fset = 'revision_information';
+      if (module_exists('workbench_moderation')) {
+        if (workbench_moderation_node_type_moderated($form['#node']->type)) {
+          $fset = 'options';
+        }
+      }
+      $form[$fset]['log_extra'] = array(
+        '#type' => 'textarea',
+        '#default_value' => '',
+        '#title' => variable_get('br_area_title', BF_DEFAULT_AREA_TITLE),
+        '#states' => array(
+          'visible' => $condition
+        ),
+        '#weight' => 1
+      );
+      $form['#submit'][] = 'better_revisions_log_combine';
+    }
+    if ($req || $area == 2) {
+      $form['#validate'][] = '_better_revisions_validate';
+    }
+  endif;
+}
+
+/* Custom submit handler to combine list and text area values */
+function better_revisions_log_combine($form, &$form_state) {
+  if (!empty($form_state['values']['log_extra'])) {
+    $form_state['values']['log'] .= ': ' . check_markup($form_state['values']['log_extra'], 'filtered_html');
+    unset($form_state['values']['log_extra']);
+  }
+}
+
+/* Custom validate function */
+function _better_revisions_validate($form, &$form_state) {
+  if (!$form_state['values']['revision']) {
+    return;
+  }
+  $req = variable_get('br_require', FALSE);
+  $area = (variable_get('br_add_txt', 0) == 2);
+  if ($req) {
+    if (empty($form_state['values']['log'])) {
+      $msg = variable_get('br_list_title', BF_DEFAULT_TITLE) . ' is required';
+      form_set_error('log', t($msg));
+    }
+  }
+  if ($area) {
+    if (empty($form_state['values']['log_extra'])) {
+      $msg = variable_get('br_area_title', BF_DEFAULT_AREA_TITLE) . ' is required';
+      form_set_error('log_extra', t($msg));
+    }
+  }
+}
+
+
+/* Module settings form */
+function better_revisions_admin() {
+  $form = array();
+  $form['br_require'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Require revision type selection'),
+    '#default_value' => variable_get('br_require', FALSE),
+    '#description' => t('Will only be required if <em>Create new revision</em> is checked.')
+  );
+  $form['br_list_title'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Revision list title',
+    '#default_value' => variable_get('br_list_title', BF_DEFAULT_TITLE),
+    '#required' => TRUE
+  );
+  $form['br_list_options'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Revision list options',
+    '#default_value' => variable_get('br_list_options', BF_DEFAULT_OPTS),
+    '#required' => TRUE,
+    '#description' => 'Enter options, one per line'
+  );
+  $form['br_list_help'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Revision list help text',
+    '#default_value' => variable_get('br_list_help', '')
+  );
+  $form['br_add_txt'] = array(
+    '#type' => 'radios',
+    '#title' => t('Add an open text area for revision notes'),
+    '#default_value' => variable_get('br_add_txt', 0),
+    '#options' => array(
+      0 => t('No'),
+      1 => t('Yes (optional)'),
+      2 => t('Yes (required)')
+    )
+  );
+  $form['br_area_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title for the revision notes box'),
+    '#default_value' => variable_get('br_area_title', BF_DEFAULT_AREA_TITLE),
+    '#states' => array(
+      'visible' => array(
+      array(':input[name="br_add_txt"]' => array('value' => 1)),
+      array(':input[name="br_add_txt"]' => array('value' => 2)),
+      )
+    )
+  );
+  return system_settings_form($form);
+}
+
+/* Custom list options */
+function _better_revisions_options() {
+  $opts = variable_get('br_list_options', BF_DEFAULT_OPTS);
+  $options = explode("\n", $opts);
+  $options_array = array(
+    '' => t('Please select')
+  );
+  foreach ($options as $option) {
+    $option = trim($option);
+    $matches = array();
+    if (preg_match('/(.*)\|(.*)/', $option, $matches)) {
+      $options_array[$matches[1]] = $matches[2];
+    } 
+    else {
+      $options_array[$option] = $option;
+    }
+  }
+  return $options_array;
+}
