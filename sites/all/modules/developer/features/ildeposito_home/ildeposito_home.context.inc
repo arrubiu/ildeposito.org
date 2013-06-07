@@ -58,6 +58,10 @@ function ildeposito_home_context_default_contexts() {
         ),
       ),
     ),
+    'cache' => array(
+      'type' => 'internal',
+      'lifetime' => '900',
+    ),
   );
   $context->condition_mode = 1;
   $export['homepage'] = $context;

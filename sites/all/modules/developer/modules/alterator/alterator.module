@@ -386,7 +386,7 @@ function exec_redirect($url, $move) {
   if ($move == 'REMOVED') {
     $google_code = 'HTTP/1.1 301 Moved Permanently';
   }
-  //header('HTTP/1.1 301 Moved Permanently');
+  header('HTTP/1.1 301 Moved Permanently');
   header('Location: ' . $url); // perform calculations here,
 }
 

@@ -13,7 +13,7 @@ function ildeposito_forum_taxonomy_default_vocabularies() {
       'name' => 'Forum',
       'machine_name' => 'forums',
       'description' => 'Vocabolario per la navigazione del forum',
-      'hierarchy' => 1,
+      'hierarchy' => 0,
       'module' => 'forum',
       'weight' => -10,
       'rdf_mapping' => array(

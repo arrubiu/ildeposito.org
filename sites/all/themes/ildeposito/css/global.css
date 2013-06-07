@@ -452,7 +452,7 @@ ul.facetapi-facetapi-links li {
 .taxonomy-term .field-name-field-immagine {
   float: left;
   margin-right: 6px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .taxonomy-term .field-name-field-periodo {
@@ -1614,7 +1614,7 @@ input.form-submit,
 }
 
 .front .panel-pane.ribelle p.testo {
-  padding: 22px;
+  padding-top: 5px;
 }
 
 
