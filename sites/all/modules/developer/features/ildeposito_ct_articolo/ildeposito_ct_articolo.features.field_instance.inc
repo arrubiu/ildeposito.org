@@ -237,7 +237,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 5,
       ),
       'elenco_archivio' => array(
         'label' => 'hidden',
@@ -335,8 +335,11 @@ function ildeposito_ct_articolo_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'file_entity',
+        'settings' => array(
+          'file_view_mode' => 'articolo',
+        ),
+        'type' => 'file_rendered',
         'weight' => 1,
       ),
       'print' => array(

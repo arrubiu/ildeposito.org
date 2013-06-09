@@ -493,3 +493,13 @@ function _print_user($uid) {
   }
   
 }
+
+/**
+ * Alter dei tempi della sitemap
+ */
+function alterator_xmlsitemap_link_alter(&$link) {
+  //if ( $link['subtype'] == 'canto' ) {
+    $link['lastmod'] = 0;
+    $link['changefreq'] = XMLSITEMAP_FREQUENCY_DAILY;
+  //}
+}
