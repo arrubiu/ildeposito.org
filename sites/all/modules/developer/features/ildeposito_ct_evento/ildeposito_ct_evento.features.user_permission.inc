@@ -42,7 +42,6 @@ function ildeposito_ct_evento_user_default_permissions() {
     'name' => 'edit any evento content',
     'roles' => array(
       'staff' => 'staff',
-      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );

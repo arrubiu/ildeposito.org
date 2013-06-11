@@ -17,7 +17,7 @@
 
     <div class="grid-12 col-first">
 
-     <?php print render($content['field_immagine']); ?>
+      <?php print render($content['field_immagine']); ?>
      <?php print render($content['body']); ?>
       
      <?php print render($content['field_collegamenti']); ?>

@@ -55,10 +55,7 @@ function ildeposito_ricerca_default_search_api_index() {
         "search_api_alter_bundle_filter" : {
           "status" : 1,
           "weight" : "-10",
-          "settings" : {
-            "default" : "1",
-            "bundles" : { "custom_content" : "custom_content", "simplenews" : "simplenews" }
-          }
+          "settings" : { "default" : "1", "bundles" : { "custom_content" : "custom_content" } }
         },
         "search_api_alter_node_access" : { "status" : 1, "weight" : "0", "settings" : [] },
         "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
@@ -91,15 +88,15 @@ function ildeposito_ricerca_default_search_api_index() {
           "weight" : "0",
           "settings" : { "fields" : {
               "title" : true,
+              "field_altri_nomi" : true,
+              "field_cognome" : true,
+              "field_nome" : true,
               "field_testo" : true,
               "field_accordi" : true,
               "field_capoverso" : true,
               "field_titolo_alt" : true,
               "field_autore_biblio" : true,
               "field_editore" : true,
-              "field_altri_nomi" : true,
-              "field_cognome" : true,
-              "field_nome" : true,
               "body:value" : true,
               "body:summary" : true
             }
@@ -111,15 +108,15 @@ function ildeposito_ricerca_default_search_api_index() {
           "settings" : {
             "fields" : {
               "title" : true,
+              "field_altri_nomi" : true,
+              "field_cognome" : true,
+              "field_nome" : true,
               "field_testo" : true,
               "field_accordi" : true,
               "field_capoverso" : true,
               "field_titolo_alt" : true,
               "field_autore_biblio" : true,
               "field_editore" : true,
-              "field_altri_nomi" : true,
-              "field_cognome" : true,
-              "field_nome" : true,
               "body:value" : true,
               "body:summary" : true
             },
@@ -134,15 +131,15 @@ function ildeposito_ricerca_default_search_api_index() {
           "settings" : {
             "fields" : {
               "title" : true,
+              "field_altri_nomi" : true,
+              "field_cognome" : true,
+              "field_nome" : true,
               "field_testo" : true,
               "field_accordi" : true,
               "field_capoverso" : true,
               "field_titolo_alt" : true,
               "field_autore_biblio" : true,
               "field_editore" : true,
-              "field_altri_nomi" : true,
-              "field_cognome" : true,
-              "field_nome" : true,
               "body:value" : true,
               "body:summary" : true
             },
@@ -156,15 +153,15 @@ function ildeposito_ricerca_default_search_api_index() {
           "settings" : {
             "fields" : {
               "title" : true,
+              "field_altri_nomi" : true,
+              "field_cognome" : true,
+              "field_nome" : true,
               "field_testo" : true,
               "field_accordi" : true,
               "field_capoverso" : true,
               "field_titolo_alt" : true,
               "field_autore_biblio" : true,
               "field_editore" : true,
-              "field_altri_nomi" : true,
-              "field_cognome" : true,
-              "field_nome" : true,
               "body:value" : true,
               "body:summary" : true
             },

@@ -177,15 +177,16 @@ h2.top {
 
 }
 
-#tabs-testo p, #tabs-accordi p,
-#tabs-testo {
+#tabs-testo, 
+#tabs-accordi
+ {
   background-image: url("../images/canto_virgolette.png");
   background-position: 0 4px;
   background-repeat: no-repeat;
   font-family: monospace !important;
   font-size: 0.9em;
   margin-bottom: 20px;
-  padding: 0 0 0 31px;
+  padding: 0 0 0 31px !important;
   white-space: pre;
   word-wrap: normal;
 }
@@ -452,7 +453,7 @@ ul.facetapi-facetapi-links li {
 .taxonomy-term .field-name-field-immagine {
   float: left;
   margin-right: 6px;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .taxonomy-term .field-name-field-periodo {
@@ -1614,7 +1615,7 @@ input.form-submit,
 }
 
 .front .panel-pane.ribelle p.testo {
-  padding-top: 5px;
+  padding: 22px;
 }
 
 
@@ -1692,6 +1693,6 @@ form#user-login-form label {
   font-size: 1.1em;
 }
 
-.node-type-articolo .field-name-body  ul li {
-  margin-left:14px;
+.not-logged-in .view-percorsi-eventi .node-links {
+  display: none;
 }

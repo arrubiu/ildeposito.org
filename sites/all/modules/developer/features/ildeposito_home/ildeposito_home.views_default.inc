@@ -43,13 +43,33 @@ function ildeposito_home_views_default_views() {
   $handler->display->display_options['relationships']['nid']['table'] = 'comment';
   $handler->display->display_options['relationships']['nid']['field'] = 'nid';
   $handler->display->display_options['relationships']['nid']['required'] = TRUE;
+  /* Campo: Commento: ID */
+  $handler->display->display_options['fields']['cid']['id'] = 'cid';
+  $handler->display->display_options['fields']['cid']['table'] = 'comment';
+  $handler->display->display_options['fields']['cid']['field'] = 'cid';
+  $handler->display->display_options['fields']['cid']['label'] = '';
+  $handler->display->display_options['fields']['cid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['cid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['cid']['link_to_comment'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['relationship'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
   /* Campo: Commento: Titolo */
   $handler->display->display_options['fields']['subject']['id'] = 'subject';
   $handler->display->display_options['fields']['subject']['table'] = 'comment';
   $handler->display->display_options['fields']['subject']['field'] = 'subject';
   $handler->display->display_options['fields']['subject']['label'] = '';
+  $handler->display->display_options['fields']['subject']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['subject']['alter']['path'] = 'node/[nid]';
   $handler->display->display_options['fields']['subject']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['subject']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['subject']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['subject']['link_to_comment'] = FALSE;
   /* Criterio di ordinamento: Commento: Data di inserimento */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'comment';

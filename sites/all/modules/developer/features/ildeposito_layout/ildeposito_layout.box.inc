@@ -22,7 +22,6 @@ function ildeposito_layout_default_box() {
       'value' => '<p>Per contattarci potete usare i seguenti modi:</p><ul><li>mandare un\'email all\'indirizzo &nbsp;<strong>info _at_ ildeposito.org</strong></li><li>utilizzare il nostro account <a href="http://www.facebook.com/ildeposito.org">Facebook</a></li><li>utilizzare il nostro account <a href="http://twitter.com/ildeposito">Twitter</a></li></ul><p>In alternativa potete utilizzare il seguente modulo di contatto.</p>',
       'format' => 'full_html',
     ),
-    'additional_classes' => '',
   );
   $export['box_contatti'] = $box;
 
@@ -55,7 +54,6 @@ function ildeposito_layout_default_box() {
 Tecnicaglie',
       'format' => 'filtered_html',
     ),
-    'additional_classes' => '',
   );
   $export['footer_right'] = $box;
 

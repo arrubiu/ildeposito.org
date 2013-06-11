@@ -339,8 +339,6 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['css_class'] = 'search-results calendario-eventi-mese';
   $handler->display->display_options['defaults']['use_ajax'] = FALSE;
   $handler->display->display_options['use_ajax'] = TRUE;
-  $handler->display->display_options['defaults']['cache'] = FALSE;
-  $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'date_views_pager';
   $handler->display->display_options['pager']['options']['date_id'] = 'mini';
@@ -389,7 +387,6 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['date_argument']['date_fields'] = array(
     'field_data_field_data_evento.field_data_evento_value' => 'field_data_field_data_evento.field_data_evento_value',
   );
-  $handler->display->display_options['block_caching'] = '4';
 
   /* Display: Upcoming */
   $handler = $view->new_display('block', 'Upcoming', 'block_2');
@@ -817,12 +814,6 @@ function ildeposito_ct_evento_views_default_views() {
   /* Display: Mappa singolo */
   $handler = $view->new_display('block', 'Mappa singolo', 'mappa_singolo');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['defaults']['cache'] = FALSE;
-  $handler->display->display_options['cache']['type'] = 'time';
-  $handler->display->display_options['cache']['results_lifespan'] = '3600';
-  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
-  $handler->display->display_options['cache']['output_lifespan'] = '3600';
-  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'openlayers_map';
   $handler->display->display_options['style_options']['map'] = 'evento_singolo';
@@ -841,17 +832,10 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'node';
   $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['nid']['break_phrase'] = 0;
-  $handler->display->display_options['block_caching'] = '4';
 
   /* Display: Overlay Singolo */
   $handler = $view->new_display('openlayers', 'Overlay Singolo', 'overlay_singolo_evento');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['defaults']['cache'] = FALSE;
-  $handler->display->display_options['cache']['type'] = 'time';
-  $handler->display->display_options['cache']['results_lifespan'] = '3600';
-  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
-  $handler->display->display_options['cache']['output_lifespan'] = '3600';
-  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'openlayers_data';
   $handler->display->display_options['style_options']['data_source'] = array(
@@ -1109,13 +1093,6 @@ function ildeposito_ct_evento_views_default_views() {
 
   /* Display: Mappa evento */
   $handler = $view->new_display('block', 'Mappa evento', 'evento');
-  $handler->display->display_options['defaults']['cache'] = FALSE;
-  $handler->display->display_options['cache']['type'] = 'time';
-  $handler->display->display_options['cache']['results_lifespan'] = '3600';
-  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
-  $handler->display->display_options['cache']['output_lifespan'] = '3600';
-  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
-  $handler->display->display_options['block_caching'] = '8';
 
   /* Display: Mappa Evento Overlay */
   $handler = $view->new_display('openlayers', 'Mappa Evento Overlay', 'mappa_evento_overlay');

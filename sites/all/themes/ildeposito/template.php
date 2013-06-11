@@ -106,7 +106,7 @@ function ildeposito_preprocess_node(&$vars) {
       $vars['tabs'] = _get_canto_tab($vars);
     }
     else {
-      $vars['tabs'] = '<div id="contenuti-tab"><div id="tabs-testo"><p>' . $vars['node']->field_testo['und'][0]['value'] . '</p></div></div';
+      $vars['tabs'] = '<div id="contenuti-tab"><div id="tabs-testo"><p>' . $vars['node']->field_testo['und'][0]['value'] . '</p></div></div>';
     }
 
     if ((isset($vars['field_autore_testo'][0]))) {

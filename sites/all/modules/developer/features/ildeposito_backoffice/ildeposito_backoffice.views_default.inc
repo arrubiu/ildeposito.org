@@ -667,10 +667,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Ordina per';
   $handler->display->display_options['exposed_form']['options']['sort_desc_label'] = 'Disc';
   $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '200';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '0';
-  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['expose']['items_per_page_label'] = 'Voci per pagina';
   $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all_label'] = '- Tutto -';
   $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Scostamento';
@@ -855,18 +852,6 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'canto' => 'canto',
   );
-  $handler->display->display_options['filters']['type']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
-  $handler->display->display_options['filters']['type']['expose']['label'] = 'Tipo';
-  $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
-  $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
-  $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    4 => 0,
-    5 => 0,
-  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -888,7 +873,6 @@ function ildeposito_backoffice_views_default_views() {
     t('seguente ›'),
     t('ultima »'),
     t('Contenuto'),
-    t('Tipo'),
     t('Page'),
   );
   $export['bulk'] = $view;

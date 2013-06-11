@@ -194,9 +194,6 @@ function ildeposito_ct_articolo_strongarm() {
       'percorso' => array(
         'custom_settings' => FALSE,
       ),
-      'canti_capoversi' => array(
-        'custom_settings' => FALSE,
-      ),
     ),
     'extra_fields' => array(
       'form' => array(

@@ -89,14 +89,13 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_registrazione_utente'] = entity_import('rules_config', '{ "rules_registrazione_utente" : {
       "LABEL" : "Registrazione utente",
       "PLUGIN" : "reaction rule",
-      "REQUIRES" : [ "rules" ],
-      "ON" : [ "user_insert" ],
+      "REQUIRES" : [ "rules", "hybridauth" ],
+      "ON" : [ "user_insert", "hybridauth_user_insert" ],
       "DO" : [
-        { "mail" : {
-            "to" : "info@ildeposito.org",
-            "subject" : "[ilDeposito.org] nuovo  utente: [account:name]",
-            "message" : "Ciao,\\r\\nsi appena registrato un nuovo utente: [account:name]",
-            "language" : [ "account:language" ]
+        { "mail_to_users_of_role" : {
+            "roles" : { "value" : { "4" : "4" } },
+            "subject" : "[ilDeposito.org] Si \\u00e8 registrato un nuovo utente",
+            "message" : "Occhio, si \\u00e8 registrato un nuovo utente!"
           }
         }
       ]
