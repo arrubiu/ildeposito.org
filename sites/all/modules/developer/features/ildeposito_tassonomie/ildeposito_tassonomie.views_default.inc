@@ -25,7 +25,11 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['use_more_text'] = 'altro';
   $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'time';
+  $handler->display->display_options['cache']['results_lifespan'] = '21600';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Applica';
@@ -84,6 +88,7 @@ function ildeposito_tassonomie_views_default_views() {
 
   /* Display: Mappa percorso */
   $handler = $view->new_display('block', 'Mappa percorso', 'block');
+  $handler->display->display_options['block_caching'] = '8';
 
   /* Display: Mappa Overlay Percorso */
   $handler = $view->new_display('openlayers', 'Mappa Overlay Percorso', 'mappa_overlay_percorso');
@@ -137,7 +142,11 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['use_more_text'] = 'altro';
   $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'time';
+  $handler->display->display_options['cache']['results_lifespan'] = '21600';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['query']['options']['pure_distinct'] = TRUE;
@@ -195,6 +204,7 @@ function ildeposito_tassonomie_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
+  $handler->display->display_options['block_caching'] = '8';
   $translatables['percorsi_eventi'] = array(
     t('Master'),
     t('altro'),
@@ -223,7 +233,11 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['use_more_text'] = 'altro';
   $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'time';
+  $handler->display->display_options['cache']['results_lifespan'] = '21600';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Applica';
@@ -356,6 +370,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_sezione']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['field_sezione']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_sezione']['break_phrase'] = 0;
+  $handler->display->display_options['block_caching'] = '-1';
 
   /* Display: Tematiche */
   $handler = $view->new_display('block', 'Tematiche', 'contenuti_tematica');
@@ -406,6 +421,12 @@ function ildeposito_tassonomie_views_default_views() {
   $handler = $view->new_display('block', 'Percorsi', 'contenuti_percorsi');
   $handler->display->display_options['defaults']['css_class'] = FALSE;
   $handler->display->display_options['css_class'] = 'search-results percorso';
+  $handler->display->display_options['defaults']['cache'] = FALSE;
+  $handler->display->display_options['cache']['type'] = 'time';
+  $handler->display->display_options['cache']['results_lifespan'] = '21600';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -435,6 +456,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_percorso']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['field_percorso']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_percorso']['break_phrase'] = 0;
+  $handler->display->display_options['block_caching'] = '4';
 
   /* Display: Tags */
   $handler = $view->new_display('block', 'Tags', 'contenuti_tags');
@@ -499,7 +521,11 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['use_more_text'] = 'altro';
   $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'time';
+  $handler->display->display_options['cache']['results_lifespan'] = '21600';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Applica';
