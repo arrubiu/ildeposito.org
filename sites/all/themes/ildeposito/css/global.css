@@ -1696,3 +1696,7 @@ form#user-login-form label {
 .not-logged-in .view-percorsi-eventi .node-links {
   display: none;
 }
+
+.field-name-body ul {
+  margin-left: 20px;
+}
