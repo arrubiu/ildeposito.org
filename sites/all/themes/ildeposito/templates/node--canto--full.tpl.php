@@ -72,7 +72,6 @@
     print render($content['field_anno']);
     print render($content['field_tags']);
     print render($content['field_lingua']);
-    print render($content['field_localizzazione']);
     print '<div>Inserito da: ' . _print_user($node->uid) . '</div>';
     ?>
 

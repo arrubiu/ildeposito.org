@@ -336,3 +336,6 @@ a > .sf-sub-indicator {
   width: 100%;
 }
 
+.front .pane-views-home-sezioni-block { 
+  display: block;
+}

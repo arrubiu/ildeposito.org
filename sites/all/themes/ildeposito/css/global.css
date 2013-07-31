@@ -1700,3 +1700,13 @@ form#user-login-form label {
 .field-name-body ul {
   margin-left: 20px;
 }
+
+.node-autore .group-header {
+  clear: left;
+  margin-top: 15px;
+}
+
+
+.front .pane-views-home-sezioni-block {
+  display: none;
+}
