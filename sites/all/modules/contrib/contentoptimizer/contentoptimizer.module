@@ -1,0 +1,995 @@
+<?php
+
+/**
+ * @file
+ * Analyzes content for search engine optimization recommendations
+ */
+
+/**
+ *  Implementation of hook_contentalalysis_analyzer_info()
+ *  
+ */
+function contentoptimizer_contentanalysis_analyzer_info() {
+  $analyzers['seo'] = array(
+    'title' => t('Quick SEO'),
+    'callback' => 'contentoptimizer_analyzer',
+    'settings form elements callback' => 'contentoptimizer_settings_form_elements', 
+    'form elements callback' => 'contentoptimizer_analyzer_form_elements', 
+    'analysis delete callback' => 'contentoptimizer_contentanalysis_delete',
+    'weight' => -5,
+  );
+  $analyzers['seo']['settings'] = array(
+    'seo_meta_title_length' => array(6, 12),
+    'seo_meta_title_length_warning' => array(4, 15),
+    'seo_meta_title_length_chars' => array(50, 75),
+    'seo_meta_title_length_chars_warning' => array(30, 100),
+    'seo_body_length' => array(200 , 800),
+    'seo_body_length_warning' => array(100, 1200),
+    'seo_meta_description_dont_inherit_status' => 1,
+    'seo_meta_description_length_chars' => array(60, 160),
+    'seo_meta_description_length_chars_warning' => array(0, 1000),
+    'seo_meta_keywords_dont_inherit_status' => 1,
+    'seo_meta_keywords_length' => array(5, 50),
+    'seo_meta_keywords_length_warning' => array(0, 100),
+    'seo_meta_keywords_length_phrases' => array(1, 15),
+    'seo_meta_keywords_length_phrases_warning' => array(0, 40),
+    'seo_keyword_not_set' => 1,
+    'seo_keyword_meta_title_freq' => array(1, 1),
+    'seo_keyword_meta_title_freq_warning' => array(1, 2),
+    'seo_keyword_meta_title_prominence' => 50,
+    'seo_keyword_meta_title_prominence_warning' => 25,
+    'seo_keyword_body_freq' => array(2, 4),
+    'seo_keyword_body_freq_warning' => array(1, 8),
+    'seo_keyword_body_prominence' => 50,
+    'seo_keyword_body_prominence_warning' => 25,
+    'seo_keyword_meta_description_freq' => array(0, 10),
+    'seo_keyword_meta_description_freq_warning' => array(0, 10),
+    'seo_keyword_meta_keywords_freq' => array(0, 8),
+    'seo_keyword_meta_keywords_freq_warning' => array(0, 8),
+  );
+  
+  return $analyzers;  
+}
+
+function contentoptimizer_insight_analyzer_info() {
+  
+  $analyzers['seo'] = array(
+    'title' => t('Content Optimizer'),
+    'type' => 'content',
+    'contentanalyzer' => 'seo',
+    'settings form elements callback' => 'contentoptimizer_alerts_settings', //? settings form callback
+  );
+  $reports['quick_seo'] = array(
+    'title' => t('Quick SEO'),
+    'short title' => t('SEO'),
+    'score type' => 'value',
+    'alerts' => array(
+      'seo_meta_title_length',
+      'seo_body_length',
+      'seo_keyword_not_set',
+      'seo_keyword_meta_title_freq',
+      'seo_keyword_body_freq',
+    ),     
+  );
+
+  $analyzers['seo']['reports'] = $reports;
+  
+  return $analyzers;
+}
+
+// TODO write good field descriptions
+function contentoptimizer_settings_form_elements($settings, $analyzer_def) {
+  $defaults = $analyzer_def['settings'];
+  
+  $inst = t('You can use the below settings to affect when content warnings and errors are triggered.');
+  $inst .= ' ' . t('Each content test has two settings, normal and warning.');
+  $inst .= ' ' . t('Any content stat that falls in the normal range will be graded as passing.');
+  $inst .= ' ' . t('Any stat outside of the normal range, but within the warning range will trigger a warning.');
+  $inst .= ' ' . t('Any stat outside of the warning range will trigger an error.');
+  $inst .= '<br /><br />' . t('To disable any test, set the normal range to the full minimum and maximum values.'); 
+  $inst .= '<br /><br />'; 
+  
+  $form['instructions'] = array(
+    '#markup' => $inst,
+  );
+  
+  $name = 'seo_meta_title_length';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Meta title word count'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 25,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_meta_title_length_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    //'#title' => t('Meta title length (warning range)'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 25,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper word count ranges for the meta/page title.'),
+  );
+  
+  $name = 'seo_meta_title_length_chars';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Meta title character count'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 150,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_meta_title_length_chars_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 150,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper character count ranges for the meta/page title.'),
+  );
+
+  $name = 'seo_body_length';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Body word count'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 2000,
+    '#step' => 5,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_body_length_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 2000,
+    '#step' => 5,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper word count ranges for the body content.'),
+  );
+  
+  $name = 'seo_meta_description_dont_inherit_status';
+  $form[$name] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Meta description status should not affect overall content status'),
+    '#default_value' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#description' => t("Check this box if you want don't want meta description warnings and errors to cause the overall content status warning and errors."),
+  );
+
+  $name = 'seo_meta_description_length_chars';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Meta description character count'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 1000,
+    '#step' => 5,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_meta_description_length_chars_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 1000,
+    '#step' => 5,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper word count ranges for the meta description value.'),
+  );
+  
+  $name = 'seo_meta_keywords_dont_inherit_status';
+  $form[$name] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Meta keywords status should not affect overall content status'),
+    '#default_value' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#description' => t("Check this box if you want don't want meta keyword warnings and errors to cause the overall content status warning and errors."),
+  );
+  
+  $name = 'seo_meta_keywords_length';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Meta keywords word count'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 100,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_meta_keywords_length_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 100,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper word count ranges for the meta keywords value.'),
+  );
+  
+  $name = 'seo_meta_keywords_length_phrases';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Meta keywords phrase count'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 40,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_meta_keywords_length_phrases_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 40,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper phrase count ranges for the meta keyword value. Phrases are seperated by commas.'),
+  );
+  
+
+  
+  $options = array(
+  	-1 => t('Do nothing'),
+  	2 => t('Trigger message alert'),
+  	1 => t('Trigger warnings'),
+  	0 => t('Trigger errors'),
+  );
+  $name = 'seo_keyword_not_set';
+  $form[$name] = array(
+    '#type' => 'select',
+    '#title' => t('If targeted keyword not available'),
+    '#default_value' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#options' => $options,
+    '#description' => t('Used to set status and/or alerts if the targeted keyword phrase is not provided for a page.'),
+  );
+  
+  $name = 'seo_keyword_meta_title_freq';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Meta title targeted keyword frequency'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 4,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_keyword_meta_title_freq_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 4,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper ranges for the number of occurances of the targeted keyword phrase in the meta/page title.'),  );
+  
+  $name = 'seo_keyword_meta_title_prominence';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_value',
+    '#title' => t('Meta title targeted keyword prominence'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 100,
+    '#value_suffix' => '%',
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_keyword_meta_title_prominence_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_value',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 100,
+    '#value_suffix' => '%',
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set a minimal prominence threshold for the meta/page title.'),
+  );
+
+  $name = 'seo_keyword_body_freq';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Body targeted keyword frequency'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 10,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_keyword_body_freq_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 10,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper ranges for the number of occurances of the targeted keyword phrase in the body content.'),
+  );
+
+  $name = 'seo_keyword_body_prominence';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_value',
+    '#title' => t('Body targeted keyword prominence'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 100,
+    '#value_suffix' => '%',
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_keyword_body_prominence_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_value',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 100,
+    '#value_suffix' => '%',
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set a minimal prominence threshold for the body content.'),
+  );
+  
+  $name = 'seo_keyword_meta_description_freq';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Meta description targeted keyword frequency'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 10,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_keyword_meta_description_freq_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 10,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper ranges for the number of occurances of the targeted keyword phrase in the meta description value.'),
+  );
+  
+  $name = 'seo_keyword_meta_keywords_freq';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#title' => t('Meta keywords targeted keyword frequency'),
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 10,
+    '#slider_suffix' => t('normal: '),
+  );
+  $name = 'seo_keyword_meta_keywords_freq_warning';
+  $form[$name] = array(
+    '#type' => 'contentanalysis_slider_range',
+    '#default' => isset($settings[$name]) ? $settings[$name] : $defaults[$name],
+    '#min' => 0,
+    '#max' => 10,
+    '#slider_suffix' => t('warning: '),
+    '#description' => t('Used to set the acceptable lower and upper ranges for the number of occurances of the targeted keyword phrase in the meta keywords value.'),
+  );
+  
+  return $form;
+}
+
+/**
+ * Implementation of hook_contentanalysis_analyzer_form_elements() via custom define callback
+ */
+function contentoptimizer_analyzer_form_elements($form_state, $analysis='', $node=0) {
+  drupal_add_js(drupal_get_path('module', 'contentoptimizer') . '/contentoptimizer.js');
+  
+  $default_value = isset($analysis['#context']['inputs']['analyzer_options']['seo']['keyword']) ? $analysis['#context']['inputs']['analyzer_options']['seo']['keyword'] : '';
+  
+  $aid = FALSE;
+
+  if ((arg(0) == 'node') && (is_numeric(arg(1)))) {
+    $aid = contentanalysis_get_aid_by_nid(arg(1));
+  }
+
+  if (isset($aid) && $aid) {
+    $query = db_select('contentoptimizer', 'co')
+      ->fields('co', array('keyword'))
+      ->condition('aid', $aid);
+    $default_value = $query->execute()->fetchField();   
+  }
+  $form['keyword'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Targeted keyword phrase'),
+      '#default_value' => $default_value,
+    ); 
+//print_r($form);
+    return $form;
+}
+
+/**
+ * implements hook_node_insert
+ * @param $node
+ */
+function contentoptimizer_node_insert($node) {
+	contentoptimizer_node_update($node);
+}
+
+/**
+ * implements hook_node_insert
+ * @param $node
+ */
+function contentoptimizer_node_update($node) {
+	if (isset($node->seo['keyword']) && $node->seo['keyword']) {
+		$aid = contentanalysis_get_aid_by_nid($node->nid);
+    contentoptimizer_set_keyword($aid, $node->seo['keyword']);
+	}
+}
+
+function contentoptimizer_contentanalysis_delete($aid) {
+  $query = db_delete('contentoptimizer')
+    ->condition('aid', $aid);
+  $query->execute();   	
+}
+
+/**
+ * Saves keyword to databse
+ * 
+ * @param int $aid
+ *   analysis id of analysis keyword is associated with
+ * @param str $keyword
+ *   keyword to save
+ */
+function contentoptimizer_set_keyword($aid, $keyword) {
+	if(isset($aid) && $aid) {
+	  $query = db_merge('contentoptimizer')
+	    ->fields(array('keyword' => $keyword))
+	    ->key(array('aid' => $aid));
+	  $query->execute();
+	}
+}
+
+/**
+ * Fetches the node keywords from the database
+ * 
+ * @param int $aid
+ *   analysis id the keyword is associated with
+ * @return str
+ *   keyword
+ */
+function contentoptimizer_get_keyword($aid) {
+  $query = db_select('contentoptimizer', 'co')
+    ->fields('co', array('keyword'))
+    ->condition('aid', $aid);
+  return $query->execute()->fetchField(); 
+}
+
+/**
+ * Implementation of hook_contentanalysis_analyzer() via custom define callback
+ * 
+ * Analyzes body, title, meta keywords and descriptions. 
+ * Calculates stats for each section, e.g. char count, word count, etc.
+ * Compares stats with SEO guidelines
+ * 
+ * @rerturn array
+ *   SEO analysis
+ */
+function contentoptimizer_analyzer($context, $analysis, $params) {
+//dsm($context);
+  $settings = $context['analyzers']['seo']['settings'];
+  $a = contentoptimizer_contentanalysis_analyzer_info();
+  $form = contentoptimizer_settings_form_elements($settings, $a['seo']);
+
+  $a = array();
+  $stats = array();
+  $keyword = '';
+  $analysis['#status'] = 'complete';
+  if (isset($context['inputs']['analyzer_options']['seo']['keyword'])) {
+    $keyword = check_plain(strtolower($context['inputs']['analyzer_options']['seo']['keyword']));
+  }
+  if ($context['aid']) {
+    if ($keyword) {
+      contentoptimizer_set_keyword($context['aid'], $keyword);
+    } 
+    else {
+      $keyword = contentoptimizer_get_keyword($context['aid']);
+    }
+  }
+  $msg = '<div>Keyword: <span class="kwresearch_keyword">@keyword</span></div>';
+  $analysis['content'][] = contentanalysis_format_content(t($msg, array('@keyword' => $keyword)), -5);
+  if (!$keyword) {
+  	$msg = t('No targeted keyword phrase was submitted for analysis. Input a keyword for more targeted recommendations.');    
+    if ($settings['seo_keyword_not_set'] >= 0) {
+    	$severity = 'status';
+    	if ($settings['seo_keyword_not_set'] == 1) {
+    		$severity = 'warning';
+    	}
+    	elseif ($settings['seo_keyword_not_set'] == 0) {
+    		$severity = 'error';
+    	}
+      
+      $analysis['messages'][] = contentoptimizer_format_message($msg, $severity, $analysis, 'seo_keyword_not_set'); 
+      if ($settings['seo_keyword_not_set'] <= 1) {
+        $analysis['#status'] = $severity;
+      }
+    }
+    else {
+    	$analysis['messages'][] = contentanalysis_format_message($msg, 'warning'); 
+    }
+  }  
+
+  // analyze body
+  $body = strtolower($context['body']);
+  $body_notags = strtolower($context['body_notags']);
+  $stats['body'] = contentoptimizer_calc_stats($body_notags, $keyword);
+  $analysis['body']['stats'] = contentoptimizer_format_stats($stats['body']);
+//dsm($settings);  
+  $body_words_min = $settings['seo_body_length'][0];
+  $body_words_max = $settings['seo_body_length'][1];
+  $body_words_min_warning = $settings['seo_body_length_warning'][0];
+  $body_words_max_warning = $settings['seo_body_length_warning'][1];
+  $body_freq_min = $settings['seo_keyword_body_freq'][0];
+  $body_freq_max = $settings['seo_keyword_body_freq'][1];
+  $body_freq_min_warning = $settings['seo_keyword_body_freq_warning'][0];
+  $body_freq_max_warning = $settings['seo_keyword_body_freq_warning'][1];
+  $body_prominence_min = $settings['seo_keyword_body_prominence'][0];
+  $body_prominence_min_warning = $settings['seo_keyword_body_prominence_warning'][0];
+  
+  $words = $stats['body']['word_count'];
+  $freq = $stats['body']['keyword_count'];
+  $prominence = $stats['body']['keyword_prominence'];
+  $params = array(
+    '%min_words' => $body_words_min,
+    '%max_words' => $body_words_max, 
+    '%min_words_pluralized' => format_plural($body_words_min, '1 word', '@count words'),
+    '%max_words_pluralized' => format_plural($body_words_max, '1 word', '@count words'),
+    '%min_freq' => $body_freq_min,
+    '%max_freq' => $body_freq_max,
+    '%min_freq_pluralized' => format_plural($body_freq_min, '1 time', '@count times'),
+    '%max_freq_pluralized' => format_plural($body_freq_max, '1 time', '@count times'),
+    '%min_prominence' => $body_prominence_min,
+    '%words' => $words,
+    '%words_pluralized' => format_plural($words, '1 word', '@count words'),
+    '%freq' => $freq,
+    '%freq_pluralized' => format_plural($freq, '1 time', '@count times'),
+    '%prominence' => $prominence,
+    '@keyword' => $keyword,
+  );
+
+  $analysis['body']['messages'] = array();
+  // turn off analysis if settings range at max
+  if (($body_words_min != $form['seo_body_length']['#min']) || ($body_words_max != $form['seo_body_length']['#max'])) {
+	  if ($words < $body_words_min) {
+	  	$msg = t('You body contains %words_pluralized. At least %min_words to %max_words words is recommended. Consider increasing the number of words.', $params);
+	    $analysis['body']['messages'][] = contentoptimizer_format_message($msg, ($words < $body_words_min_warning) ? 'error' : 'warning', $analysis, 'seo_body_length'); 
+	  } 
+	  elseif ($words > $body_words_max) {
+	  	$msg = t('You body contains %words_pluralized. No more than %min_words to %max_words words is recommended. Consider reducing the number of words.', $params);
+	    $analysis['body']['messages'][] = contentoptimizer_format_message($msg, ($words > $body_words_max_warning) ? 'error' : 'warning', $analysis, 'seo_body_length'); 
+	  }
+	}
+  if ($keyword) {
+  	if (($body_freq_min != $form['seo_keyword_body_freq']['#min']) || ($body_freq_max != $form['seo_keyword_body_freq']['#max'])) {
+	    if ($freq < $body_freq_min) {
+	      $msg = t('The targed keyword "@keyword" occurs in the body %freq_pluralized. At least %min_freq to %max_freq times is recommended. Consider increasing the number of keyword occurences in your body copy.', $params);
+	      $analysis['body']['messages'][] = contentoptimizer_format_message($msg, ($freq < $body_freq_min_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_body_freq'); 
+	    } 
+	    elseif ($freq > $body_freq_max) {
+	    	$msg = t('The targed keyword "@keyword" occurs in the body %freq_pluralized. No more than %min_freq to %max_freq times is recommended. Consider reducing the number of keyword occurences in your body copy.', $params);
+	      $analysis['body']['messages'][] = contentoptimizer_format_message($msg, ($freq > $body_freq_max_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_body_freq'); 
+	    }
+  	}
+    if ($freq && ($prominence < $body_prominence_min)) {
+    	$msg = t('Your keyword prominence is less that %prominence% in the body. Consider increasing your keyword\'s prominence by moving occurences closer to the beginning of your copy.');
+      $analysis['body']['messages'][] = contentoptimizer_format_message($msg, ($prominence < $body_prominence_min_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_body_prominence'); 
+    }
+  } 
+  
+  if (count($analysis['body']['messages']) > 0) {
+  	foreach ($analysis['body']['messages'] AS $msg) {
+      $analysis['body']['#status'] = ($analysis['body']['#status'] != 'error') ? $msg['#status'] : 'error';
+      $analysis['#status'] = ($analysis['#status'] != 'error') ? $msg['#status'] : 'error';
+  	}
+  } 
+  else {
+    if ($keyword) {
+      $analysis['body']['messages'][] = contentanalysis_format_message(t('Optimized'), 'complete');  
+      $analysis['body']['#status'] = 'complete';
+      $analysis['#status'] = 'complete';
+    } 
+    else {
+      $analysis['body']['#status'] = 'status';
+    }
+  }
+  // only analyze body if content is directly inputed without a full page
+  if (is_null($context['aid']) && ($context['form_id'] == 'contentanalysis_page_analyzer')) {
+    return $analysis;
+  }
+  
+  // Analyze page title
+  
+  $check_meta = TRUE;
+  if (!module_exists('metatag')) {
+    $check_meta = FALSE;
+    $msg = t('The !link module is not installed. We recommend installing it to enable editing of page meta information.',
+      array(
+        '!link' => l(t('Meta tags'), 'http://drupal.org/project/metatag', array('attributes' => array('target' => '_blank'))),
+      )
+    );
+    $analysis['messages'][] = contentanalysis_format_message($msg, 'warning');  
+  }
+  /*
+  if (!$check_meta && !module_exists('page_title')) {    
+    $msg = t('The !link module is not installed. We recommend installing it to enable editing of page meta information.',
+      array(
+        '!link' => l(t('Page title'), 'http://drupal.org/project/page_title', array('attributes' => array('target' => '_blank'))),
+      )
+    );  	
+    $analysis['messages'][] = contentanalysis_format_message($msg, 'warning');
+  } 
+  */
+  
+  $title_chars_min = $settings['seo_meta_title_length_chars'][0];
+  $title_chars_max = $settings['seo_meta_title_length_chars'][1];
+  $title_chars_min_warning = $settings['seo_meta_title_length_chars_warning'][0];
+  $title_chars_max_warning = $settings['seo_meta_title_length_chars_warning'][1];
+  $title_words_min = $settings['seo_meta_title_length'][0];
+  $title_words_max = $settings['seo_meta_title_length'][1];
+  $title_words_min_warning = $settings['seo_meta_title_length_warning'][0];
+  $title_words_max_warning = $settings['seo_meta_title_length_warning'][1];
+  $title_freq_min = $settings['seo_keyword_meta_title_freq'][0];
+  $title_freq_max = $settings['seo_keyword_meta_title_freq'][1];
+  $title_freq_min_warning = $settings['seo_keyword_meta_title_freq_warning'][0];
+  $title_freq_max_warning = $settings['seo_keyword_meta_title_freq_warning'][1];
+  
+  $page_title_raw = $context['meta_title'] ? $context['meta_title'] : $context['page_title'];
+  $page_title = strtolower($page_title_raw);
+
+  $analysis['page_title']['messages'] = array();
+  if (isset($context['inputs']['title']) && ($page_title_raw != $context['inputs']['title'])) {
+    $msg = '<strong>' . t('Page title: ') . '</strong>' . $page_title_raw;
+    //$msg .= '<br/>' . t('Node title: ') . $context['inputs']['title'];
+    //$msg .= '<br/>' . t('Meta title: ') . $context['inputs']['meta_title'];
+    $analysis['page_title']['content'][] = contentanalysis_format_content($msg, -5);
+  }
+  
+  $stats['page_title'] = contentoptimizer_calc_stats($page_title, $keyword);
+  $analysis['page_title']['stats'] = contentoptimizer_format_stats($stats['page_title']);
+  
+  $chars = $stats['page_title']['char_count'];
+  $words = $stats['page_title']['word_count'];
+  $freq = $stats['page_title']['keyword_count']; 
+  $prominence = $stats['body']['keyword_prominence'];
+  $params = array(
+    '%min_words' => $title_words_min,
+    '%max_words' => $title_words_max, 
+    '%min_words_pluralized' => format_plural($title_words_min, '1 word', '@count words'),
+    '%max_words_pluralized' => format_plural($title_words_max, '1 word', '@count words'),
+    '%min_chars' => $title_chars_min,
+    '%max_chars' => $title_chars_max, 
+    '%min_chars_pluralized' => format_plural($title_chars_min, '1 character', '@count characters'),
+    '%max_chars_pluralized' => format_plural($title_chars_max, '1 character', '@count characters'),
+    '%min_freq' => $title_freq_min,
+    '%max_freq' => $title_freq_max,
+    '%min_freq_pluralized' => format_plural($title_freq_min, '1 time', '@count times'),
+    '%max_freq_pluralized' => format_plural($title_freq_max, '1 time', '@count times'),
+    '%words' => $words,
+    '%words_pluralized' =>format_plural($words, '1 word', '@count words'),
+    '%chars' => $chars,
+    '%chars_pluralized' => format_plural($chars, '1 character', '@count characters'),
+    '%freq' => $freq,
+    '%freq_pluralized' => format_plural($freq, '1 time', '@count times'),
+    '%prominence' => $prominence,
+    '@keyword' => $keyword,
+  );  
+  $words_enabled = (($title_words_min != $form['seo_meta_title_length']['#min']) || ($title_words_max != $form['seo_meta_title_length']['#max']));
+  $chars_enabled = (($title_chars_min != $form['seo_meta_title_length_chars']['#min']) || ($title_chars_max != $form['seo_meta_title_length_chars']['#max']));
+//dsm("$title_chars_min != " . $form['seo_meta_title_length_chars']['#min'] . " || $title_chars_max != " . $form['seo_meta_title_length_chars']['#max']);
+//dsm("$title_words_min != " . $form['seo_meta_title_length']['#min'] . " || $title_words_max != " . $form['seo_meta_title_length']['#max']);
+//dsm("$words_enable $chars_enable && ($words > $title_words_max)");
+  if ($chars_enabled && ($chars > $title_chars_max)) {
+    $msg = t('Your page title contains %chars_pluralized. No more than %min_chars_pluralized to %max_chars_pluralized is recommended. Consider reducing the length of your page title.', $params);
+    $analysis['page_title']['messages'][] = contentoptimizer_format_message($msg, ($chars > $title_chars_max_warning) ? 'error' : 'warning', $analysis, 'seo_meta_title_length');
+  }
+  elseif ($words_enabled && ($words > $title_words_max)) {
+    $msg = t('Your page title contains %words_pluralized. No more than %min_words_pluralized to %max_words_pluralized is recommended. Consider reducing the number of words in your page title.', $params);
+    $analysis['page_title']['messages'][] = contentoptimizer_format_message($msg, ($words > $title_words_max_warning) ? 'error' : 'warning', $analysis, 'seo_meta_title_length');
+  } 
+  elseif (($words_enabled && ($words < $title_words_min)) || ($chars_enabled && ($chars < $title_chars_min))) {
+    $msg = t('Your page title contains %chars_pluralized. It can be up to %max_chars_pluralized. Consider adding more keyword rich content to your title.', $params);
+    $analysis['page_title']['messages'][] = contentoptimizer_format_message($msg, (($words < $title_words_min_warning) || ($chars < $title_chars_min_warning)) ? 'error' : 'warning', $analysis, 'seo_meta_title_length');
+  }
+  if ($keyword) {
+  	if (($title_freq_min != $form['seo_keyword_meta_title_freq']['#min']) || ($title_freq_max != $form['seo_keyword_meta_title_freq']['#max'])) {
+	    if ($freq < $title_freq_min) {
+	      $msg = t('The targed keyword "@keyword" occurs in the page title %freq_pluralized. At least %min_freq_pluralized is recommended. Consider adding targeted keywords to your title.', $params);
+	      $analysis['page_title']['messages'][] = contentoptimizer_format_message($msg, ($freq < $title_freq_min_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_meta_title_freq');
+	    } 
+	    elseif ($freq > $title_freq_max) {
+	      $msg = t('The targed keyword "@keyword" occurs in the page title %freq_pluralized. No more than %max_freq_pluralized is recommended. Consider reducing the number of times the targeted keywords in your title.', $params);
+	      $analysis['page_title']['messages'][] = contentoptimizer_format_message($msg, ($freq < $title_freq_max_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_meta_title_freq');      
+	    }
+  	}
+    if ($freq && ($prominence < $body_prominence_min)) {
+      $msg = t('Your keyword prominence is less that %prominence% in the page title. Consider increasing your keyword\'s prominence by moving occurences closer to the beginning of your title.');
+      $analysis['body']['messages'][] = contentoptimizer_format_message($msg, ($prominence < $body_prominence_min_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_meta_title_prominence'); 
+    }
+  } 
+
+  if (count($analysis['page_title']['messages']) > 0) {
+    foreach ($analysis['page_title']['messages'] AS $msg) {
+      $analysis['page_title']['#status'] = ($analysis['page_title']['#status'] != 'error') ? $msg['#status'] : 'error';
+      $analysis['#status'] = ($analysis['#status'] != 'error') ? $msg['#status'] : 'error';
+    }
+  } 
+  else {
+    if ($keyword) {
+      $analysis['page_title']['messages'][] = contentanalysis_format_message(t('Optimized'), 'complete');   
+      $analysis['page_title']['#status'] = 'complete';
+      if (($analysis['#status'] != 'warning') && ($analysis['#status'] != 'error')) {
+        $analysis['#status'] = 'complete';
+      }
+    } 
+    else {
+      $analysis['page_title']['#status'] = 'status';
+    }  
+  }
+
+  // analyze meta description
+
+  
+  if ($check_meta && ($context['meta_description'] != -1)) {
+    $meta_description = strtolower(strip_tags($context['meta_description'])); 
+    $stats['meta_description'] = contentoptimizer_calc_stats($meta_description, $keyword);
+    $analysis['meta_description']['stats'] = contentoptimizer_format_stats($stats['meta_description']);
+    
+    //$meta_description_words_min = $settings['seo_meta_description_length'][0];
+    //$meta_description_words_max = $settings['seo_meta_description_length'][0];
+    $meta_description_chars_min = $settings['seo_meta_description_length_chars'][0];
+    $meta_description_chars_max = $settings['seo_meta_description_length_chars'][1];
+    $meta_description_chars_min_warning = $settings['seo_meta_description_length_chars_warning'][0];
+    $meta_description_chars_max_warning = $settings['seo_meta_description_length_chars_warning'][1];
+    $meta_description_freq_min = $settings['seo_keyword_meta_description_freq'][0];
+    $meta_description_freq_max = $settings['seo_keyword_meta_description_freq'][1];
+    $meta_description_freq_min_warning = $settings['seo_keyword_meta_description_freq_warning'][0];
+    $meta_description_freq_max_warning = $settings['seo_keyword_meta_description_freq_warning'][1];
+
+    $chars = $stats['meta_description']['char_count'];
+    $words = $stats['meta_description']['word_count'];
+    $freq = $stats['meta_description']['keyword_count'];    
+    
+    $params = array(
+      //'%min_words' => $meta_description_words_min,
+      //'%max_words' => $meta_description_words_max, 
+      //'%min_words_pluralized' => format_plural($meta_description_words_min, '1 word', '@count words'),
+      //'%max_words_pluralized' => format_plural($meta_description_words_max, '1 word', '@count words'),
+      '%min_chars' => $meta_description_chars_min,
+      '%max_chars' => $meta_description_chars_max, 
+      '%min_chars_pluralized' => format_plural($meta_description_chars_min, '1 character', '@count characters'),
+      '%max_chars_pluralized' => format_plural($meta_description_chars_max, '1 character', '@count characters'),
+      '%min_freq' => $meta_description_freq_min,
+      '%max_freq' => $meta_description_freq_max,
+      '%min_freq_pluralized' => format_plural($meta_description_freq_min, '1 time', '@count times'),
+      '%max_freq_pluralized' => format_plural($meta_description_freq_max, '1 time', '@count times'),
+      '%words' => $words,
+      '%words_pluralized' =>format_plural($words, '1 word', '@count words'),
+      '%chars' => $chars,
+      '%chars_pluralized' => format_plural($chars, '1 character', '@count characters'),
+      '%freq' => $freq,
+      '%freq_pluralized' => format_plural($freq, '1 time', '@count times'),
+      '@keyword' => $keyword,
+    ); 
+
+    $ret['meta_description']['messages'] = array();
+    if (($meta_description_chars_min != $form['seo_meta_description_length_chars']['#min']) || ($meta_description_chars_max != $form['seo_meta_description_length_chars']['#max'])) {
+      if ($chars < $meta_description_chars_min) {
+        $msg = t('You meta description contains %chars_pluralized. At least %min_chars to %max_chars characters is recommended. Consider increasing the length.', $params);
+        $analysis['meta_description']['messages'][] = contentoptimizer_format_message($msg, ($chars < $meta_description_chars_min_warning) ? 'error' : 'warning', $analysis, 'seo_meta_description_length'); 
+      } 
+      elseif ($chars > $meta_description_chars_max) {
+        $msg = t('You meta description contains %chars_pluralized. No more than %min_chars to %max_chars characters is recommended. Consider reducing the length.', $params);
+        $analysis['meta_description']['messages'][] = contentoptimizer_format_message($msg, ($chars < $meta_description_chars_min_warning) ? 'error' : 'warning', $analysis, 'seo_meta_description_length'); 
+      }
+    }
+    if ($keyword) {
+    	if (($meta_description_freq_min != $form['seo_keyword_meta_description_freq']['#min']) || ($meta_description_freq_max != $form['seo_keyword_meta_description_freq']['#max'])) {
+        if ($freq < $meta_description_freq_min) {
+          $msg = t('The targed keyword "@keyword" occurs in the meta description %freq_pluralized. At least %min_freq to %max_freq times is recommended. Consider increasing the number of keyword occurences in your meta description list.', $params);
+          $analysis['meta_description']['messages'][] = contentoptimizer_format_message($msg, ($freq < $meta_description_freq_min_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_meta_description_freq'); 
+        } 
+        elseif ($freq > $meta_description_freq_max) {
+          $msg = t('The targed keyword "@keyword" occurs in the meta description %freq_pluralized. No more than %min_freq to %max_freq times is recommended. Consider reducing the number of keyword occurences in your meta description list.', $params);
+          $analysis['meta_description']['messages'][] = contentoptimizer_format_message($msg, ($freq > $meta_description_freq_max_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_meta_description_freq'); 
+        }
+      }
+    }  
+    if (!$settings['seo_meta_description_dont_inherit_status']) {
+	    if (count($analysis['meta_description']['messages']) > 0) {
+		    foreach ($analysis['meta_description']['messages'] AS $msg) {
+		      $analysis['meta_description']['#status'] = ($analysis['meta_description']['#status'] != 'error') ? $msg['#status'] : 'error';
+		      $analysis['#status'] = ($analysis['#status'] != 'error') ? $msg['#status'] : 'error';
+		    }
+	    } 
+	    else {
+	      $analysis['meta_description']['messages'][] = contentanalysis_format_message(t('Optimized'), 'complete'); 
+	      $analysis['meta_description']['#status'] = 'complete';      
+	    } 
+    }
+  }
+
+  // analyze meta keywords
+  if ($check_meta && ($context['meta_keywords'] != -1)) {
+    $meta_keywords = strtolower($context['meta_keywords']); 
+    $stats['meta_keywords'] = contentoptimizer_calc_stats($meta_keywords, $keyword);
+    
+    if (!$meta_keywords) {
+      $stats['meta_keywords']['phrase_count'] = 0;
+    }
+    else {
+      $meta_keyword_segs = explode(',', $meta_keywords);
+      $stats['meta_keywords']['phrase_count'] = count($meta_keyword_segs);
+    }
+    
+    $analysis['meta_keywords']['stats'] = contentoptimizer_format_stats($stats['meta_keywords']);
+    
+    $words = format_plural($stats['meta_keywords']['word_count'], '1 word', '@count words');
+    $phrases = format_plural($stats['meta_keywords']['phrase_count'], '1 phrase', '@count phrases');
+    $freq = format_plural($stats['meta_keywords']['keyword_count'], '1 time', '@count times');
+    
+    $meta_keywords_words_min = $settings['seo_meta_keywords_length'][0];
+    $meta_keywords_words_max = $settings['seo_meta_keywords_length'][1];
+    $meta_keywords_words_min_warning = $settings['seo_meta_keywords_length_warning'][0];
+    $meta_keywords_words_max_warning = $settings['seo_meta_keywords_length_warning'][1];
+    $meta_keywords_phrases_min = $settings['seo_meta_keywords_length_phrases'][0];
+    $meta_keywords_phrases_max = $settings['seo_meta_keywords_length_phrases'][1];
+    $meta_keywords_phrases_min_warning = $settings['seo_meta_keywords_length_phrases_warning'][0];
+    $meta_keywords_phrases_max_warning = $settings['seo_meta_keywords_length_phrases_warning'][1];
+    $meta_keywords_freq_min = $settings['seo_keyword_meta_keywords_freq'][0];
+    $meta_keywords_freq_max = $settings['seo_keyword_meta_keywords_freq'][1]; 
+    $meta_keywords_freq_min_warning = $settings['seo_keyword_meta_keywords_freq_warning'][0];
+    $meta_keywords_freq_max_warning = $settings['seo_keyword_meta_keywords_freq_warning'][1];     
+	  
+	  $words = $stats['meta_keywords']['word_count'];
+	  $phrases = $stats['meta_keywords']['phrase_count'];
+	  $freq = $stats['meta_keywords']['keyword_count']; 
+	  $params = array(
+	    '%min_words' => $meta_keywords_words_min,
+	    '%max_words' => $meta_keywords_words_max, 
+	    '%min_words_pluralized' => format_plural($meta_keywords_words_min, '1 word', '@count words'),
+	    '%max_words_pluralized' => format_plural($meta_keywords_words_max, '1 word', '@count words'),
+	    '%min_phrases' => $meta_keywords_phrases_min,
+	    '%max_phrases' => $meta_keywords_phrases_max, 
+	    '%min_phrases_pluralized' => format_plural($meta_keywords_phrases_min, '1 character', '@count characters'),
+	    '%max_phrases_pluralized' => format_plural($meta_keywords_phrases_max, '1 character', '@count characters'),
+	    '%min_freq' => $meta_keywords_freq_min,
+	    '%max_freq' => $meta_keywords_freq_max,
+	    '%min_freq_pluralized' => format_plural($meta_keywords_freq_min, '1 time', '@count times'),
+	    '%max_freq_pluralized' => format_plural($meta_keywords_freq_max, '1 time', '@count times'),
+	    '%words' => $words,
+	    '%words_pluralized' =>format_plural($words, '1 word', '@count words'),
+	    '%phrases' => $chars,
+	    '%phrases_pluralized' => format_plural($phrases, '1 phrase', '@count phrases'),
+	    '%freq' => $freq,
+	    '%freq_pluralized' => format_plural($freq, '1 time', '@count times'),
+	    '@keyword' => $keyword,
+	  ); 
+    
+	  $length_alert = FALSE;
+    $analysis['meta_keywords']['messages'] = array();
+    if (($meta_keywords_words_min != $form['seo_meta_keywords_length']['#min']) || ($meta_keywords_words_max != $form['seo_meta_keywords_length']['#max'])) {
+      if ($words < $meta_keywords_words_min) {
+	      $msg = t('You meta keywords contains %words_pluralized. At least %min_words to %max_words words is recommended. Consider increasing the number of words.', $params);
+	      $analysis['meta_keywords']['messages'][] = contentoptimizer_format_message($msg, ($words < $meta_keywords_words_min_warning) ? 'error' : 'warning', $analysis, 'seo_meta_keywords_length'); 
+	      $length_alert = TRUE;
+      } 
+	    elseif ($words > $meta_keywords_words_max) {
+	      $msg = t('You meta keywords contains %words_pluralized. No more than %min_words to %max_words words is recommended. Consider reducing the number of words.', $params);
+	      $analysis['meta_keywords']['messages'][] = contentoptimizer_format_message($msg, ($words > $meta_keywords_words_max_warning) ? 'error' : 'warning', $analysis, 'seo_meta_keywords_length'); 
+	      $length_alert = TRUE;
+	    }
+	  }
+	  if (!$length_alert && (($meta_keywords_phrases_min != $form['seo_meta_keywords_length_phrases']['#min']) || ($meta_keywords_phrases_max != $form['seo_meta_keywords_length_phrases']['#max']))) {
+      if ($phrases < $meta_keywords_phrases_min) {
+        $msg = t('You meta keywords contains %phrases_pluralized. At least %min_phrases to %max_phrases phrases is recommended. Consider increasing the number of phrases.', $params);
+        $analysis['meta_keywords']['messages'][] = contentoptimizer_format_message($msg, ($phrases < $meta_keywords_phrases_min_warning) ? 'error' : 'warning', $analysis, 'seo_meta_keywords_length_phrases'); 
+      } 
+      elseif ($phrases > $meta_keywords_phrases_max) {
+        $msg = t('You meta keywords contains %phrases_pluralized. No more than %min_phrases to %max_phrases phrases is recommended. Consider reducing the number of phrases.', $params);
+        $analysis['meta_keywords']['messages'][] = contentoptimizer_format_message($msg, ($phrases > $meta_keywords_phrases_max_warning) ? 'error' : 'warning', $analysis, 'seo_meta_keywords_length_phrases'); 
+      }
+    }
+	  if ($keyword) {
+      if (($meta_keywords_freq_min != $form['seo_keyword_meta_keywords_freq']['#min']) || ($meta_keywords_freq_max != $form['seo_keyword_meta_keywords_freq']['#max'])) {
+	  	  if ($freq < $meta_keywords_freq_min) {
+	        $msg = t('The targed keyword "@keyword" occurs in the meta keywords %freq_pluralized. At least %min_freq to %max_freq times is recommended. Consider increasing the number of keyword occurences in your meta keywords list.', $params);
+	        $analysis['meta_keywords']['messages'][] = contentoptimizer_format_message($msg, ($freq < $meta_keywords_freq_min_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_meta_keywords_freq'); 
+	      } 
+	      elseif ($freq > $meta_keywords_freq_max) {
+	        $msg = t('The targed keyword "@keyword" occurs in the meta keywords %freq_pluralized. No more than %min_freq to %max_freq times is recommended. Consider reducing the number of keyword occurences in your meta keywords list.', $params);
+	        $analysis['meta_keywords']['messages'][] = contentoptimizer_format_message($msg, ($freq > $meta_keywords_freq_max_warning) ? 'error' : 'warning', $analysis, 'seo_keyword_meta_keywords_freq'); 
+	      }
+	    }
+	  } 
+    if(!$settings['seo_meta_keywords_dont_inherit_status']) {
+	    if (count($analysis['meta_keywords']['messages']) > 0) {
+	      foreach ($analysis['meta_keywords']['messages'] AS $msg) {
+	        $analysis['meta_keywords']['#status'] = ($analysis['meta_keywords']['#status'] != 'error') ? $msg['#status'] : 'error';
+	        $analysis['#status'] = ($analysis['#status'] != 'error') ? $msg['#status'] : 'error';
+	      }
+	    } 
+	    else {
+	      $analysis['meta_keywords']['messages'][] = contentanalysis_format_message(t('Optimized'), 'complete');  
+	      $analysis['meta_keywords']['#status'] = 'complete';      
+	    }
+    }
+  }
+  return $analysis;
+}
+
+function contentoptimizer_format_message($msg, $status, &$analysis, $alert = NULL) {
+  if ($alert) {
+	  $status_code = 2;
+	  if ($status == 'warning') {
+	  	$status_code = 1;
+	  }
+	  elseif ($status == 'error') {
+	  	$status_code = 0;
+	  }
+	  $analysis['#insight']['alerts'][$alert] = array(
+      'message' => $msg,
+      'status' => $status_code,
+      'report' => 'seo',
+    );	
+  }
+  return contentanalysis_format_message($msg, $status); 
+}
+
+/**
+ * Calculates content stats
+ * 
+ * @param string $content
+ *   Subject to be have stats calculated on
+ * @param string $keyword
+ *   Keyword target
+ * @return array
+ *   Asscociated array of various content statistics
+ */
+function contentoptimizer_calc_stats($content, $keyword) {
+  $ret = array();
+  
+  $ret['char_count'] = strlen($content);
+  $ret['word_count'] = str_word_count($content);
+  $ret['keyword_count'] = 0;
+  $ret['keyword_density'] = 0;
+  $ret['keyword_prominence'] = 0;
+  if ($keyword) {
+    $content_segs = explode($keyword, $content);
+    $ret['keyword_count'] = count($content_segs)-1;
+    $ret['keyword_density'] = 0;
+    if ($ret['word_count']) {
+      $ret['keyword_density'] = 100 * $ret['keyword_count'] / $ret['word_count'];
+    }
+    $ret['keyword_positionsum'] = 0;
+    $i = 0;
+    foreach ($content_segs as $seg) {
+      if ($i >= $ret['keyword_count']) {
+        break;
+      }
+      $wordpos = str_word_count($seg)+1;
+      $ret['keyword_positionsum'] += $wordpos;
+      $i++;
+    }
+    
+    // prominence = ($totalwords - (($positionsum - 1) / $positionsnum)) * (100 / $totalwords)    
+    if ($ret['keyword_count']) {
+      $ret['keyword_prominence'] = ($ret['word_count'] - (($ret['keyword_positionsum'] - 1) / $ret['keyword_count'])) * (100 / $ret['word_count']);
+    }
+  }
+  
+  return $ret;
+}
+
+/**
+ * Formats stats into standard contentanalysis elements
+ * 
+ * @param array $stats
+ *   Stats array formated by contentoptimizer_calc_stats()
+ */
+function contentoptimizer_format_stats($stats) {
+  $ret['char_count'] = contentanalysis_format_stat(t('Char count'), $stats['char_count']); 
+  $ret['word_count'] = contentanalysis_format_stat(t('Word count'), $stats['word_count']); 
+  if (isset($stats['keyword_count'])) {
+    $ret['keyword_count'] = contentanalysis_format_stat(t('Keyword count'), $stats['keyword_count']); 
+    $ret['keyword_density'] = contentanalysis_format_stat(t('Keyword density'), $stats['keyword_density'], 1); 
+    $ret['keyword_prominence'] = contentanalysis_format_stat(t('Keyword prominence'), $stats['keyword_prominence'], 1); 
+  }
+  
+  return $ret;
+}

@@ -1,0 +1,365 @@
+<?php
+// $Id: alchemy.module,v 1.1.2.3 2010/11/17 21:17:48 tomdude48 Exp $
+
+
+/**
+ * @file
+ *
+ */
+
+define('ALCHEMY_DEBUG', FALSE); // set to true for debug mode, false for production 
+
+
+/**
+ * Implements hook_menu().().
+ */
+function alchemy_menu() {
+  $items = array();
+  $items['alchemy/util'] = array(
+    'title' => t('Alchemy Util'),
+    'page callback' => 'alchemy_util',
+    'access callback' => 'user_access',
+    'access arguments' => array('access alchemy'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['alchemy'] = array(
+    'title' => t('Alchemy Keywords'),
+    'page callback' => 'alchemy_get_elements_from_node',
+    'access callback' => 'user_access',
+    'access arguments' => array('access alchemy'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/config/services/alchemy'] = array(
+    'title' => t('Alchemy'),
+    'description' => 'Settings for Alchemy.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('alchemy_admin_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'alchemy.admin.inc',
+  );
+  if (function_exists('alchemy_contentanalysis_menu') || function_exists('alchemy_tagging_suggest_menu')) {
+    $items['admin/config/services/alchemy/general'] = $items['admin/config/services/alchemy'];
+    $items['admin/config/services/alchemy/general']['title'] = t('General');
+    $items['admin/config/services/alchemy/general']['type'] = MENU_LOCAL_TASK;
+    $items['admin/config/services/alchemy/general']['weight'] = -10;
+  }
+  return $items;
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function alchemy_util($node = NULL, $type = NULL) {
+  //$ret = libraries_get_path('AlchemyAPI');
+
+  //dsm($ret);
+
+  //print_r($r);
+
+  return 'OK';
+}
+
+/**
+ *
+ * @param node object or nid $node
+ */
+function alchemy_get_elements_from_node($node, $type = 'keywords', $output = 'normalized', $use_cache = FALSE) {
+  // chech if node argument is a node or a nid
+
+  if (!is_object($node) && is_numeric($node)) {
+    $node = node_load($node);
+  }
+  if (!$node) {
+    return array();
+  }
+  
+  //$r = render($node->body);
+//dsm($node);
+
+  $text = strip_tags($node->title . " " . $node->body['und'][0]['value']);
+  $elements = alchemy_get_elements($text, $type, $output = 'normalized', $node->nid, TRUE);
+//dsm($elements);
+  return $elements;
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function alchemy_get_elements($text, $type = 'keywords', $output = 'normalized', $cid = 0, $use_cache = FALSE) {
+  //dsm("alchemy_get_elements($text, $type, $output, $cid, $use_cache)");  
+
+  // clean tags
+
+  $text = strip_tags( $text);
+  $text = html_entity_decode( $text, ENT_QUOTES, 'UTF-8' );
+  $text = str_ireplace( '&nbsp;', ' ', $text );
+
+  if ($use_cache && $cid) {
+    $resultstr = alchemy_cache_get($cid, $type);
+    //watchdog('alchemy', 'fectch from cache: ' . $resultstr);   
+
+  }
+  if (!$resultstr) {
+
+    if (!$alchemyObj = alchemy_new_alchemy_obj()) {
+      return FALSE;
+    }
+
+    // Extract topic keywords from a text string.
+
+    try {
+      switch ($type) {
+        case 'entities':
+          $resultstr = $alchemyObj->TextGetRankedNamedEntities($text);
+          break;
+        case 'categories':
+          $resultstr = $alchemyObj->TextGetCategory($text);
+          break;
+        case 'concepts':
+          $resultstr = $alchemyObj->TextGetRankedConcepts($text);
+          break;
+        case 'keywords':
+          $resultstr = $alchemyObj->TextGetRankedKeywords($text);
+          break;
+      }
+    }
+    catch (Exception $exc) {
+      drupal_set_message($exc->getMessage(), 'warning');
+      return;
+    }
+
+    if ($cid) {
+      alchemy_cache_set($cid, $type, $resultstr);
+    }
+  }
+
+  if ($output == 'xml') {
+    return $resultstr;
+  }
+
+  $result = alchemy_xml2array($resultstr);
+
+  if ($output == 'array') {
+    return $result;
+  }
+  $elements = array();
+  switch ($type) {
+    case 'entities':
+      $elms = $result->entities->entity;
+      break;
+    case 'categories':
+      // TODO
+
+      //print_r($result);
+
+      $elms = array();
+      break;
+    case 'concepts':
+      $elms = $result->concepts->concept;
+      break;
+    case 'keywords':
+      $elms = $result->keywords->keyword;
+      break;
+  }
+  //print_r($elms);
+
+  if (is_object($elms)) {
+    foreach ($elms as $v) {
+      $hash = (string) $v->text;
+      $elements[$hash] = array(
+        'term' => (string) $v->text,
+        'relevance' => (float) $v->relevance,
+      );
+      if ($v->type) {
+        $elements[$hash]['type'] = (string) $v->type;
+      }
+      if ($v->count) {
+        $elements[$hash]['count'] = (string) $v->count;
+      }
+      if ($v->disambiguated) {
+        $elements[$hash]['disambiguated'] = $v->disambiguated;
+      }
+    }
+  }
+  return $elements;
+}
+
+/**
+ * Includes the Alchemy API Class, checking first to see if it exists.
+ */
+function alchemy_include_alchemy_class() {
+  // check if another module has not already included the AlchemyAPI class.
+
+  $ver = '';
+  if (variable_get('alchemy_usecurl', 0)) {
+    $ver = '_CURL';
+  }
+  if (class_exists('AlchemyAPI')) {
+    return TRUE;
+  }
+  $files[] = './' . drupal_get_path('module', 'alchemy') . '/AlchemyAPI/module/AlchemyAPI' . $ver . '.php';
+  if (module_exists('libraries') && ($p = libraries_get_path('AlchemyAPI'))) {
+    $files[] = './' . $p . '/module/AlchemyAPI' . $ver . '.php';
+  }
+  foreach ($files as $f) {
+    if (file_exists($f)) {
+      $file = $f;
+      break;
+    }
+  }
+  if (!$file) {
+    $msg = t('The Alchemy module requires the Alchemy SDK. Use the PHP version of the SDK.');
+    $msg .= ' ' . l(t('Download the SDK here.'), 'http://www.alchemyapi.com/tools/', array('attributes' => array('target' => 'alchemy')));
+    $msg .= "<br><br>";
+    $msg .= t('Download the files and place them in a folder named "AlchemyAPI" under the alchemy module directory.');
+    if ($analysis) {
+      $analysis['messages'][] = contentanalysis_format_message($msg, 'error');
+    }
+    else {
+      drupal_set_message($msg, 'error');
+    }
+    return FALSE;
+  }
+  require_once DRUPAL_ROOT . '/' . $file;
+  return TRUE;
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function alchemy_new_alchemy_obj() {
+  static $alchemyObj;
+  if ($alchemyObj) {
+    return $alchemyObj;
+  }
+  // Load the AlchemyAPI module code.
+
+  if (!alchemy_include_alchemy_class()) {
+    return FALSE;
+  }
+
+  // Create an AlchemyAPI object.
+
+  $alchemyObj = new AlchemyAPI();
+
+  $apikey = alchemy_get_apikey();
+  if (!$apikey) {
+    return FALSE;
+  }
+  $alchemyObj->setAPIKey($apikey);
+
+  return $alchemyObj;
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function alchemy_get_message_apimissing() {
+  $msg = t('You must set the Alchemy API key in order to use Alchemy. !settings_link.', 
+    array(
+    '!settings_link' => l(t('Set key here'), 'admin/config/services/alchemy', array('attributes' => array('target', 'settings'))),
+  )
+  );
+  return $msg;
+}
+
+/**
+ * Returns api key sent in alchemy settings admin
+ */
+function alchemy_get_apikey() {
+  $apikey = variable_get('alchemy_apikey', '');
+  if (!$apikey) {
+    $msg = alchemy_get_message_apimissing();
+    drupal_set_message($msg);
+    return false;
+  }
+  return $apikey;
+}
+
+/**
+ * Utility function to convert xml to a php array
+ * @param xml string $xmlstr
+ */
+function alchemy_xml2array($xmlstr) {
+  $xmlarr = new SimpleXMLElement($xmlstr);
+  return $xmlarr;
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function alchemy_cache_get($cid, $command) {
+  $query = db_select('alchemy_cache', 'c')
+    ->fields('c', array('data'))
+    ->condition('c.nid', $cid)
+    ->condition('c.command', $command);
+  if ($data = $query->execute()->fetchField()) {
+    return $data;
+  }
+  return FALSE;
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function alchemy_cache_set($cid, $command, $data) {
+  if (is_numeric($cid)) {
+    alchemy_cache_clear($cid, $command);
+
+    $fields = array(
+      'nid' => $cid,
+      'path' => '',
+      'created' => REQUEST_TIME,
+      'command' => $command,
+      'data' => $data,
+    );
+    $query = db_insert('alchemy_cache')
+      ->fields($fields);
+    $query->execute();
+  }
+  return TRUE;
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function alchemy_cache_clear($cid, $command) {
+  if (is_numeric($cid)) {
+    $query = db_delete('alchemy_cache')
+      ->condition('nid', $cid)
+      ->condition('command', $command);
+    $query->execute();
+  }
+  return TRUE;
+}
+
+/**
+ * Generates type options and default settings
+ * @param $defaults
+ */
+function alchemy_get_types($defaults = FALSE) {
+  if ($defaults) {
+    $types = array(
+      'concepts',
+      'entities',
+      'keywords',
+    );
+  }
+  else {
+    $types = array(
+      'concepts' => t('Concepts'),
+      'entities' => t('Entities'),
+      'keywords' => t('Keywords'),
+    );
+  }
+  return $types;
+}

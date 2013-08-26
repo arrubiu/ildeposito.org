@@ -1,0 +1,175 @@
+<?php
+// $Id: contentanalysis.install,v 1.1.2.5 2010/09/26 00:32:57 tomdude48 Exp $
+/**
+ * @file 
+ * Install include file. Implements database schema. 
+*/
+
+/**
+ *  Implementation of hook_install().
+ */
+function contentanalysis_install() {
+  drupal_set_message(st('Content Analysis has been installed.')); 
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function contentanalysis_uninstall() {
+  drupal_set_message(st('Content Analysis has been uninstalled.'));  
+}
+
+/**
+ *  Implementation of hook_schema()
+ */
+function contentanalysis_schema() {
+  $schema['contentanalysis'] = array(
+    'description' => ('Creates database table for content analysis settings.'),
+    'fields' => array(
+      'aid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The id for the analysis.',  
+      ), //aid
+      'last_analysis' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The unix timestamp of the time the analysis was last run.',  
+      ), //last_analysis
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid of an analyzed node.',  
+      ), //nid
+      'path' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Drupal path of an analyzed page.',  
+      ), //path  
+      'url' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'URL of an analyzed page.',  
+      ), //url 
+      'analyzers' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Analyzers to use with node.',  
+      ), //analyzers                        
+    ),
+    'primary key' => array('aid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'path' => array('path'),
+      'url' => array('url'),
+    ),
+
+  ); 
+  $schema['contentanalysis_status'] = array(
+    'description' => ('Creates database table for content analysis settings.'),
+    'fields' => array(
+      'aid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The id for the analysis.',  
+      ), //aid
+      'analyzer' => array(
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Analyzer id reporting the status.',  
+      ), //analyzer 
+      'status' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'text status.',  
+      ), //url 
+      'statusi' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'description' => 'Integer id of status',  
+      ), //statusi  
+      'score' => array(
+        'type' => 'float',
+        'description' => 'Report score',  
+      ), //score       
+    ),
+    'primary key' => array('aid', 'analyzer'),
+  ); 
+  return $schema;
+}
+
+/** previous schema for testing
+
+function contentanalysis_schema() {
+  $schema['contentanalysis'] = array(
+    'description' => t('Creates database table for content analysis settings.'),
+    'fields' => array(
+      'aid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The id for the analysis.',  
+      ), //aid
+      'last_analysis' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The unix timestamp of the time the analysis was last run.',  
+      ), //last_analysis
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid of an analyzed node.',  
+      ), //nid
+      'path' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Drupal path of an analyzed page.',  
+      ), //path  
+      'url' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'URL of an analyzed page.',  
+      ), //url 
+      'analyzers' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Analyzers to use with node.',  
+      ), //analyzers                        
+    ),
+    'primary key' => array('aid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'path' => array('path'),
+      'url' => array('url'),
+    ),
+
+  ); 
+  return $schema;
+}
+//*/

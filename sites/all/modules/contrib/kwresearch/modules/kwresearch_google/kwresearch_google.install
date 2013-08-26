@@ -1,0 +1,86 @@
+<?php
+// $Id: kwresearch_google.install,v 1.1.2.8 2011/01/05 20:42:59 tomdude48 Exp $
+
+
+/**
+ * @file
+ * Install hooks for Keyword Reseach Google.
+ */
+
+/**
+ * Implements hook_install().().
+ */
+function kwresearch_google_install() {
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_install_schema('kwresearch_google')
+  drupal_set_message(t('Keyword Research Google has been installed.'));
+}
+
+/**
+ * Implements hook_uninstall().().
+ */
+function kwresearch_google_uninstall() {
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_uninstall_schema('kwresearch_google')
+  drupal_set_message(t('Keyword Research Google has been uninstalled.'));
+}
+
+/**
+ * Implements hook_schema().
+ */
+function kwresearch_google_schema() {
+  $schema['kwresearch_google_data'] = array(
+    'description' => 'Creates database table to store google keyword data.',
+    'fields' => array(
+      'keyphrase' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'target keyphrase.',
+      ), //keyphrase 
+      'updated' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'timestamp of last data update',
+      ), //updated 
+      'monthly_searches' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'monthly search volume.',
+      ), //score 
+      'competition' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'competivness of the keyword.',
+      ), //competition
+      'avg_cpc' => array(
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'competivness of the keyword.',
+      ), //competition
+      'global_monthly_searches' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => 'global monthly search volume from Google AdWords tool.',
+      ), //global_monthly_searches
+      'local_monthly_searches' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => 'local monthly search volume from Google AdWords tool.',
+      ), //local_monthly_searches
+      'sktool_monthly_searches' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => 'local monthly search volume from Google Search Keyword tool.',
+      ), //sktool_monthly_searches
+    ),
+    'primary key' => array('keyphrase'),
+  );
+  return $schema;
+}

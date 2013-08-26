@@ -1,0 +1,150 @@
+/* $Id: seotools.css,v 1.1.2.1 2010/12/28 17:45:39 randallknutson Exp $ */
+
+.chart-main-wrapper {
+  height: 150px;	
+  width: 100%;
+}
+
+.chart-sources-wrapper {
+  height: 150px;    
+  width: 100%;
+}
+
+.chart-refferrers-wrapper {
+  height: 150px;    
+  width: 100%;
+}
+
+.chart-map-wrapper {
+  height: 150px;    
+  width: 100%;
+}
+
+.label-header {
+  text-align: left; 
+}
+
+.numeric-header {
+  text-align: right;    
+}
+
+.text-header {
+  text-align: right;    
+}
+
+.label-cell {
+  text-align: left; 
+}
+
+.numeric-cell {
+  text-align: right;	
+}
+
+.text-cell {
+  text-align: right;    
+}
+
+#seotools-dashboard {
+  color: #000000;
+}
+
+.dashboard-links {
+  font-size: .9em;
+  margin-bottom: 6px;	
+}
+
+#seotools-dashboard h3 {
+  padding: 2px 0px 2px 6px;
+  margin-top: 8px;
+  background-color: #666666;
+  color: #FFFFFF;
+  font-size: 1.1em;
+  font-weight: bold;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-topright: 3px;
+}
+
+#chart-visits {
+  margin: 0 auto;
+  text-align: center;
+}
+
+#dashboard-pane-left {
+  float: left;
+  width: 49%;
+}
+
+.dashboard-spacer {
+  float: left;
+  width: 2%;
+}
+
+#dashboard-pane-right {
+  float: left;
+  width: 49%;
+}
+
+.dashboard-ga-cell {
+  font-size: 1.4em;	
+  vertical-align: middle;
+  font-weight: bold;
+  margin: 4px 0px;
+    
+}
+
+.dashboard-ga-cell a {
+  font-size: .8em; 
+}
+
+#visits-cell {
+  float: left;
+  width: 48%;
+}
+
+#pageviews-cell {
+  clear: left;
+  float: left;
+  width: 48%;
+}
+
+#average_pageviews-cell {
+  clear: left;
+  float: left;
+  width: 48%;
+}
+
+#goals-cell {
+  clear: left;
+  float: left;
+  width: 48%;
+}
+
+#bounce_rate-cell {
+  float: left;  
+  width: 48%;
+  margin-left: 2%;
+  padding-left: 1%;
+}
+
+#time_on_site-cell {
+  float: left;  
+  width: 48%;
+  margin-left: 2%;
+  padding-left: 1%;
+}
+
+#vistor_type-cell {
+  float: left;  
+  width: 48%;
+  margin-left: 2%;
+  padding-left: 1%;
+}
+
+#goal_conversion_rate-cell {
+  float: left;  
+  width: 48%;
+  margin-left: 2%;
+  padding-left: 1%;
+}

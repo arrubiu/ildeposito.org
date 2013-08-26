@@ -1,0 +1,456 @@
+/* $Id: contentanalysis.css,v 1.1.2.4 2010/06/01 21:23:39 tomdude48 Exp $ */
+
+/*
+ * modal dialog box styles
+ */
+#block-contentanalysis-launch fieldset {
+  z-index: 1000;
+  position: relative;
+  margin-top: 4px;
+}
+
+#block-contentanalysis-launch .fieldset-wrapper {
+  background-color: #FFFFFF;
+  color: #333333;
+  padding: 3px 5px 3px 5px;
+}
+
+#modalContent div.ctools-modal-content .modal-header {
+  background: #fff url('images/bg-shade-light.png') repeat-x bottom left;
+  color: #777;
+  display: block;
+  font-weight: 700;
+  letter-spacing: normal;
+  padding: 0.25em 1em;
+  -moz-border-radius-topleft: 0.5em;
+  -moz-border-radius-topright: 0.5em;
+  -webkit-border-top-left-radius: 0.5em;
+  -webkit-border-top-right-radius: 0.5em;
+}
+#modalContent div.ctools-modal-content .modal-title {
+  font-size: 120%;
+  font-weight: bold;
+  text-shadow: #fff 1px 1px 1px;
+  color: #555;
+}
+
+#modalContent div.ctools-modal-content div.progress {
+  margin-left: 180px;
+}
+
+#modalContent div.ctools-modal-content a.close {
+  color: #666;
+  font-weight: normal;
+  padding-left: 1.6em;
+  background: url('images/sprite.png') no-repeat -166px -1686px;
+}
+#modalContent div.ctools-modal-content a.close img {
+  display: none;
+}
+/** modal forms CSS **/
+#modalContent div.ctools-modal-content .form-item label {
+  width: 100%;
+  float: none;
+  clear: both;
+}
+#modalContent div.ctools-modal-content .resizable-textarea {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+#modalContent div.ctools-modal-content {
+  font-size: 12px;
+  border: solid 1px #ddd;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  -webkit-box-shadow: -1em 1em 1em rgba(0, 0, 0, 0.5);
+  position: relative;
+  display: block;
+}
+#modal-content {
+  position: relative;
+  display: block;
+  background: #fafafa url(images/bg-content-modal.png) repeat-y top left;
+  height: 100%;
+  padding-top: 1em;
+}
+#modalBackdrop {
+  position: fixed!important;
+  background-color: #000!important;
+}
+
+/*
+ * modal left column styles
+ */
+div.analyzers {
+  width: 174px;
+  margin-left: -1em;
+  float: left;
+}
+.page-analysis div.analyzers {
+  float: none;
+}
+h2.analyzers {
+  font-size: 1.5em;
+  color:#5B5B5B;
+  margin-bottom: .5em;
+}
+div.analyzers h3.analyzer.active {
+ background: #fff url(images/arrow-active.png) no-repeat scroll right center;
+ left: 1px;
+ position: relative;
+}
+div.analyzers h3.analyzer:hover {
+  text-decoration: underline;
+}
+div.analyzers h3.analyzer {
+  cursor: pointer;
+  color:#5B5B5B;
+  font-size: 1.1em;
+  font-weight: bold;
+  line-height: 2em;
+  border-bottom: 1px solid white;
+  padding-left: 1em;
+  position:relative;  
+}
+div.analysis-results {
+  margin-top: -33px;
+  margin-left: 180px;
+  margin-right: 5px;
+}
+div.analysis-results .analyzer-analysis  {
+  display: none;
+}
+
+/* ??? not sure this is used anymore
+div.page-analysis .analyzers {
+  display: none;
+}
+div.page-analysis div.analysis-results .analyzer-analysis  {
+  display: block;
+}
+*/
+
+/*
+ * modal reports section styles
+ */
+#modalContent .contentanalysis-report {
+   position: relative;
+ }
+ 
+#modalContent .contentanalysis-results {
+  position: absolute;
+  margin-top: 3px;
+  /* border: 2px solid green; */
+  float: left;
+  clear: left;
+/*  
+  margin-top: 40px;
+  margin-top: 0\9;  /*IE hack
+  top: 40px\9;
+  */
+}
+
+
+/* tabs */
+
+.contentanalysis-report-tabs {
+  float: left;
+  /* border: 2px solid red; */
+}
+
+.contentanalysis-report-tab {
+  -webkit-border-radius-topleft: 0.5em;
+  -webkit-border-radius-topright: 0.5em;
+  -moz-border-radius-topleft: 0.5em;
+  -moz-border-radius-topright: 0.5em;
+  border-radius-topleft: 0.5em;
+  border-radius-topright: 0.5em;    
+  /* display: inline; */
+  float: left; 
+  cursor: pointer;
+  padding: 3px 10px 2px 10px;
+  border: 1px solid #e0e0e0;
+  border-bottom: 0px;
+  margin: 0 3px;
+  font-size: 1.1em;
+  color: #555;
+  background-color: #eee;
+  font-weight: bold;
+}
+
+.contentanalysis-report-tab.active {
+  background-color: #fff;
+}
+
+/*???
+.content-analysis-results {
+  display: none;
+  position: absolute;
+  margin-top: 50px;
+  clear: both;
+}
+
+.page-analysis .content-analysis-results {
+  display: block;
+  position: relative;
+}
+.page-analysis div.analysis-results {
+  margin-left: 10px;
+  margin-top: 0px;
+}
+*/
+
+
+/* status report table */
+
+
+
+.contentanalysis_stats {
+  padding-left: 15px;
+}
+
+.contentanalysis-results table thead {
+  background:#FFFFFF url(images/bg-shade-light.png) repeat-x scroll left bottom;
+}
+
+.contentanalysis-results table thead td:first-child,
+.contentanalysis-results table {
+  -moz-border-radius-topleft: 4px;
+  -webkit-border-radius-topleft: 4px;
+}
+
+.contentanalysis-results table thead td:last-child,
+.contentanalysis-results table {
+  -moz-border-radius-topright: 4px;
+  -webkit-border-radius-topright: 4px;
+}
+
+.contentanalysis-results table {
+  border: 1px solid #e0e0e0;
+  border-collapse: separate;
+  border-spacing: 0px;
+  background: #fff;
+}
+.contentanalysis-results table .messages {
+  border: 0;
+  padding: 0;
+  background: #fff;
+}
+
+.contentanalysis-results table thead th {
+  border-bottom: 0;
+}
+
+.contentanalysis-results table {
+  min-width: 100%;
+}
+.contentanalysis-results table td.section {
+  border-right: 1px solid #e0e0e0;
+}
+.contentanalysis-results table tbody tr td {
+  border-bottom: 1px solid #e0e0e0;
+  /* background-color: #FFFFFF; */
+}
+.contentanalysis-results table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.status_report td.messages li {
+  min-width: 300px;
+  padding-right: 15px;
+}
+.status_report td:first-child {
+  width: 150px;
+}
+
+
+
+#modalContent div.contentanalysis-results h3 {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333333;
+}
+
+#modalContent div.contentanalysis-results h4 {
+  font-size: 1.0em;
+  font-weight: bold;
+  color: #333333;
+}
+
+.contentanalysis_analysis table {
+  font-size: 100%;
+}
+
+.contentanalysis_analysis h3 {  
+  padding: 0 5px 0 5px;  
+  margin: 0 0 0 0; 
+}
+
+.contentanalysis_stats {
+  padding: 12px 12px 12px 15px;
+  color: #333;
+  background: #fff;
+}
+
+.analysis-results pre {  
+  padding: 0 5px 0 5px;  
+  background-color: #FFFFFF; 
+}
+
+/* Status Report */
+
+.analysis-results .status_report .sections {  
+  width: 120px;
+}
+
+.analysis-results .status_report .section {  
+  text-align: center;
+}
+.analysis-results .status_report .messages .status, 
+.analysis-results .status_report .messages .complete, 
+.analysis-results .status_report .messages .pass,
+.analysis-results .status_report .messages .warning, 
+.analysis-results .status_report .messages .error {  
+  padding-left: 50px;  
+  background-repeat: no-repeat;  
+  background-position: 15px center;  
+  min-height: 16px;
+  list-style-image: none;
+  list-style-type: none;
+}
+
+/* inline report styling */
+fieldset.contentanalysis_section_analysis {
+	padding: 0 0 0 0;
+}
+
+fieldset.contentanalysis_section_analysis .fieldset-legend {
+	position: static;
+}
+
+/* fix to work with admin theme */
+
+#content .analysis-results .status_report .messages li.status, 
+#content .analysis-results .status_report .messages li.complete, 
+#content .analysis-results .status_report .messages li.pass,
+#content .analysis-results .status_report .messages li.warning, 
+#content .analysis-results .status_report .messages li.error {  
+  padding-left: 50px;  
+  background-repeat: no-repeat;  
+  background-position: 15px center;  
+  min-height: 16px;
+}
+
+
+.analysis-results .status_report li {  
+  margin: 0;  
+  padding: 5px 0;  
+  line-height: 140%;
+}
+
+#content .contentanalysis_analysis .status_report ul li {  
+  list-style: none outside none;  
+  margin-left: 0px;
+}
+
+#modal-content .contentanalysis-results .status_report ul li {  
+  list-style: none outside none;  
+  margin-left: 0px;
+}
+
+.analysis-results .status_report .status {  
+  color: #333333; 
+  background-color: #FFFFFF;	
+}
+
+.analysis-results .status_report .messages .status {  
+  background-color: #FFFFFF;	
+}
+
+.analysis-results .status_report .complete {  
+  color: #333333;  
+  background-color: #DDFFAA;  
+}
+
+.analysis-results .status_report .messages .complete {  
+  background-image: url('icons/complete.png');
+}
+
+.analysis-results .status_report .pass {  
+  color: #333333;  
+  background-color: #DDFFAA;  
+}
+
+.analysis-results .status_report .messages .pass {  
+  background-image: url('icons/pass.png');
+}
+
+.analysis-results .status_report .warning {  
+  color: #333333;  
+  background-color: #FFFFCC;	
+}
+
+.analysis-results .status_report .messages .warning {  
+  background-image: url('icons/warning.png');  
+}
+
+.analysis-results .status_report .error {  
+  color: #333333;  
+  background-color: #FFCCCC;  
+}
+
+.analysis-results .status_report .messages .error {  
+  background-image: url('icons/error.png');  
+}
+
+/* button styling */
+a.contentanalysis-button {
+  line-height: 15px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.contentanalysis-button {
+  text-shadow:0 1px 0 #FFFFFF;
+  -moz-border-radius:11px 11px 11px 11px;
+  -moz-box-sizing:content-box;
+  border-style:solid;
+  border-width:1px;
+  cursor:pointer;
+  font-size:11px !important;
+  line-height:14px;
+  padding:2px 8px;
+  text-decoration:none;
+}
+
+.contentanalysis-button:active {
+  background:url("images/white-grad-active.png") repeat-x scroll left top #EEEEEE;
+}
+
+.contentanalysis-button:hover {
+  /* border-color:#666666; */
+  color:#FF4444;
+}
+
+.contentanalysis-button:active,
+.contentanalysis-button:focus {
+  color:#FF4444;
+}
+
+/* analyzer form cleanup */
+#edit-contentanalysis fieldset {
+  position: static;	
+}
+
+/**
+ * slider styling
+ */
+.ui-slider {
+  width:400px;
+}
+
+/* @end */
+
+
+

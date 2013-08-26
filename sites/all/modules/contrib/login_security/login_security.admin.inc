@@ -23,22 +23,6 @@ function login_security_admin_settings() {
     '#description' => t('The time window to check for security violations: the time in hours the login information is kept to compute the login attempts count. A common example could be 24 hours. After that time, the attempt is deleted from the list, and will never be considered again.'),
     '#field_suffix' => t('Hours'),
   );
-  $form['login_security_delay_base_time'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Login delay base time'),
-    '#default_value' => variable_get('login_security_delay_base_time', LOGIN_SECURITY_BASE_TIME),
-    '#element_validate' => array('_login_security_valid_integer'),
-    '#size' => 3,
-    '#description' => t('Delay in seconds for the login process: any invalid login attempt will have a punishment of these seconds, as a protection for password guessing attempts.'),
-    '#field_suffix' => t('Seconds'),
-  );
-  $form['login_security_delay_increase'] = array(
-    '#type' => 'radios',
-    '#title' => t('Increase delay for each attempt?'),
-    '#default_value' => variable_get('login_security_delay_increase', LOGIN_SECURITY_DELAY_INCREASE),
-    '#options' => array(1 => 'Yes', 0 => 'No'),
-    '#description' => t('Increase delay in seconds for the next login count. It is computed by host and user, so any attempt to login again with the same user from the same IP address will be punished with a delay computed as (delay base time) x (login attempts for this user from this IP address) in seconds. The number of attempts is counted within the "Track time" time value. In the previous example of 24 hours tracking time, after 24h the login attemps will be cleared, and the delay decreased.'),
-  );
   $form['login_security_user_wrong_count'] = array(
     '#type' => 'textfield',
     '#title' => t('Maximum number of login failures before blocking a user'),

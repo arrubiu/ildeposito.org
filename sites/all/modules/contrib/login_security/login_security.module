@@ -9,8 +9,6 @@
  */
 
 define('LOGIN_SECURITY_TRACK_TIME', 1);
-define('LOGIN_SECURITY_BASE_TIME', 0);
-define('LOGIN_SECURITY_DELAY_INCREASE', 0);
 define('LOGIN_SECURITY_USER_WRONG_COUNT', 0);
 define('LOGIN_SECURITY_HOST_WRONG_COUNT', 0);
 define('LOGIN_SECURITY_HOST_WRONG_COUNT_HARD', 0);
@@ -123,7 +121,7 @@ function login_security_set_login_timestamp($form, &$form_state) {
   _login_security_access_timestamp($account['access']);
 
   // Save entry in security log, Username and IP Address
-  _login_security_add_event(check_plain($form_state['values']['name']), check_plain(ip_address()));
+  _login_security_add_event($form_state['values']['name'], ip_address());
 }
 
 function _login_security_login_timestamp($login = NULL) {
@@ -148,7 +146,7 @@ function _login_security_access_timestamp($access = NULL) {
  * @url http://drupal.org/node/493164
  */
 function login_security_soft_block_validate($form, &$form_state) {
-  $variables = _login_security_get_variables_by_name(check_plain($form_state['values']['name']));
+  $variables = _login_security_get_variables_by_name($form_state['values']['name']);
   // Check for host login attempts: Soft
   if ($variables['@soft_block_attempts'] >= 1) {
     if ($variables['@ip_current_count'] >= $variables['@soft_block_attempts']) {
@@ -167,7 +165,7 @@ function login_security_soft_block_validate($form, &$form_state) {
  */
 function login_security_validate($form, &$form_state) {
   // Sanitize user input
-  $name = check_plain($form_state['values']['name']);
+  $name = $form_state['values']['name'];
   // Null username should not be tracked
   if (!strlen($name)) {
     return;
@@ -206,18 +204,10 @@ function login_security_validate($form, &$form_state) {
     }
   }
 
-  // then, start with login Delay
-  if ($delay = variable_get('login_security_delay_base_time', LOGIN_SECURITY_BASE_TIME)) {
-    $secs = (variable_get('login_security_delay_increase', LOGIN_SECURITY_DELAY_INCREASE) == 1) ? intval($variables['@user_ip_current_count']-1) * intval($delay) : intval($delay);
-    //Included 0 just in case of 'max_execution_time' being lower than 3
-    $sleep_time  = max(0, min(ini_get('max_execution_time') - 3, $secs));
-    @sleep($sleep_time);
-  }
-
   // Check for host login attempts: Hard
   if ($variables['@hard_block_attempts'] >= 1) {
     if ($variables['@ip_current_count'] >= $variables['@hard_block_attempts']) {
-      // block the host check_plain(ip_address())
+      // block the host ip_address()
       login_user_block_ip($variables);
     }
   }
@@ -234,7 +224,7 @@ function login_security_validate($form, &$form_state) {
   global $user;
 
   // login failed
-  $messages = drupal_get_messages('error');
+  $messages = drupal_get_messages('error', FALSE);
   if (!empty($messages['error'])) {
     $failure_message = preg_grep("/<a href=\"\/user\/password\">/", $messages['error']);
     if (user_is_anonymous() && !empty($failure_message)) {
@@ -290,13 +280,13 @@ function _login_security_remove_events($name = NULL, $host = NULL) {
   if (!empty($name)) {
     if (!empty($host)) {
       $result = db_delete('login_security_track')
-        ->condition('name',  check_plain($name))
-        ->condition('host', check_plain($host))
+        ->condition('name',  $name)
+        ->condition('host', $host)
         ->execute();
     }
     else {
       $result = db_delete('login_security_track')
-        ->condition('name',  check_plain($name))
+        ->condition('name',  $name)
         ->execute();
     }
   }
@@ -410,7 +400,11 @@ function login_user_block_user_name($variables) {
  */
 function _login_security_get_variables_by_name($name) {
   $account = user_load_by_name($name);
-  $ipaddress = check_plain(ip_address());
+  // https://drupal.org/node/1744704
+  if (empty($account)) {
+    $account = user_load(0);
+  }
+  $ipaddress = ip_address();
   global $base_url;
   $variables = array(
     '@date' => format_date(REQUEST_TIME),

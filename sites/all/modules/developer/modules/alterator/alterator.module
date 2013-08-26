@@ -142,10 +142,10 @@ function alterator_block_view($delta = '') {
  * 
  */
 function social_count() {
-  $url = "http://twitter.com/users/show/ildeposito";
+  /*$url = "http://twitter.com/users/show/ildeposito";
   $response = file_get_contents($url);
   $t_profile = new SimpleXMLElement($response);
-  $count_twitter = $t_profile->followers_count;
+  $count_twitter = $t_profile->followers_count;*/
 
 
   require_once('facebook.php');
@@ -175,7 +175,7 @@ function social_count() {
   $output = '';
   $output .= '<div class="social">' . l($facebook_img, 'http://www.facebook.com/ildeposito.org', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Facebook', 'http://www.facebook.com/ildeposito.org', array('absolute' => TRUE)) . '<br /><strong>ildeposito.org</strong><br /><strong> ' . $count_facebook . '</strong> mi piace</div>';
 
-  $output .= '<div class="social">' . l($twitter_img, 'http://twitter.com/ildeposito', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Twitter', 'http://twitter.com/ildeposito', array('absolute' => TRUE)) . '<br /><strong>@ildeposito</strong><br /><strong> ' . $count_twitter . '</strong> follower</div>';
+  $output .= '<div class="social">' . l($twitter_img, 'http://twitter.com/ildeposito', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Twitter', 'http://twitter.com/ildeposito', array('absolute' => TRUE)) . '<br /><strong>@ildeposito</strong><br /></div>';
 
   return $output;
 }

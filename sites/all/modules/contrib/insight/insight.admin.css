@@ -1,0 +1,78 @@
+@CHARSET "ISO-8859-1";
+#insight-score td {
+  background-color: #FFFFFF;
+}
+
+#insight-score .value {
+  font-size: 4em;
+  color: #333333;
+  text-align: center;
+  width: 150px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+#insight-score .complete {  
+  color: #333333;    
+  background-color: #DDFFAA;  
+}
+
+#insight-score .warning {  
+  color: #333333;  
+  background-color: #FFFFCC;  
+}
+
+#insight-score .error {  
+  color: #333333;  
+  background-color: #FFCCCC;  
+}
+
+/*
+ * Styling for insight page report
+ */
+
+div.insight-report-value {
+  font-weight: bold;
+  border:1px solid #DDDDDD;
+  width: 3em;
+  height: 1.5em;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  background-image: none;
+  color: #FFFFFF;
+}
+
+.insight-report-value.none {
+  color: #CCCCCC;
+}
+
+.insight-report-value.complete {
+	background-color: #468A01;
+	color: #FFFFFF;
+	border:1px solid #DDDDDD;
+}
+
+.insight-report-value.warning {
+  background-color: #DEC259;
+  color: #FFFFFF;
+  border:1px solid #DDDDDD;
+}
+
+.insight-report-value.error {
+  background-color: #BB0000;
+  color: #FFFFFF;
+  border:1px solid #DDDDDD;
+}
+
+.insight-report-value.complete.inactive {
+  background-color: #DDDDDD;
+}
+
+.insight-report-value.warning.inactive {
+  background-color: #DDDDDD;
+}
+
+.insight-report-value.error.inactive {
+  background-color: #DDDDDD;
+}

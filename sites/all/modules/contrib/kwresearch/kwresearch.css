@@ -1,0 +1,123 @@
+/* $Id: kwresearch.css,v 1.1.2.12 2011/01/05 20:42:59 tomdude48 Exp $ */
+
+.kwresearch_actions {
+  display: none;
+  position: absolute;
+  margin-top: -1.2em;
+  /* background-color: #FFFFFF; */
+}
+
+.kwresearch-tool-button {
+  margin-right: 1px;
+  float: left;
+}
+
+.kwresearch_keyword .kwresearch-tool-menu {
+  position: absolute;
+  margin-top: 0px;
+  clear: left;
+  border: 1px solid #CCCCCC;
+  background-color: #FFFFFF;
+  color: #333333;
+}
+
+.kwresearch_keyword .kwresearch-tool-menu  li {  
+  list-style: none outside none;  
+  margin: 0px 6px;
+  padding: 0px;
+  background: none;
+}
+.kwresearch_keyword .kwresearch-tool-menu  li:first-child {
+  margin-top: 5px;
+}
+.kwresearch_keyword .kwresearch-tool-menu  li:last-child {
+  margin-bottom: 5px;
+}  
+.kwresearch_keyword .kwresearch-tool-menu li.active {  
+  background-color: #DBE6DE;
+}
+
+.kwresearch_keyword.active {
+  background-color: #DBE6DE;
+  color: #000088;
+}
+
+.kwresearch_keyword.processed {
+  border-bottom: 1px dashed #CCCCCC;
+}
+
+.kwresearch_keyword .kwresearch-more-tools a {
+  margin-right: 2px;
+}
+
+#kwresearch-form-inputs {
+  float: left;
+}
+
+#kwresearch-form-inputs .form-item {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#kwresearch-form-inputs fieldset {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#kwresearch-form-buttons {
+  float: left;
+  padding-top: 1.5em;
+  padding-left: 5px;
+}
+
+#kwresearch-report {
+  clear: left;
+}
+
+/* form styling */
+#kwresearch-filter-form #edit-priority-wrapper, #kwresearch-filter-form #value-fields-wrapper, #kwresearch-filter-form #page_count-fields-wrapper, #kwresearch-filter-form #daily-fields-wrapper {
+  float: left;
+  padding: 0.2em 0.4em 0.2em 0.4em;
+  border: 1px solid #CCCCCC;
+  margin: 0.1em;
+}
+
+#kwresearch-site-keywords .page_count {
+  text-align: center;   
+}
+
+#kwresearch-site-keywords .daily_volume {
+  text-align: center;	
+}
+
+.stats-indicator {
+    background-color:#FFFFFF;
+    border:1px solid #CCCCCC;
+    width:80px;
+    height: 15px;
+}
+
+.stats-indicator-text {
+    float: left;
+    line-height: 1.25em;
+    width: 80px;
+    text-align: center;
+}
+
+.searches-indicator-bar {
+    background-color:#DDFFCC;
+    padding: 0 0 0 0;
+    height: 15px;
+}
+
+.competition-indicator-bar {
+    background-color:#FFCCCC;
+    padding: 0 0 0 0;
+    height: 15px;
+}
+
+.bid-indicator-bar {
+    background-color:#FFE6B6;
+    padding: 0 0 0 0;
+    height: 15px;
+}

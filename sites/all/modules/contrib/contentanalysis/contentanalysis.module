@@ -1,0 +1,1769 @@
+<?php
+// $Id: contentanalysis.module,v 1.1.2.14 2010/09/26 15:27:18 tomdude48 Exp $
+
+/**
+ * @file
+ * Provides API to enable analyzer modules to interface with web content and display an analysis 
+ */
+
+//require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'contentanalysis') . "/includes/seo_friend.inc";
+require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'contentanalysis') . "/includes/theme.inc";
+
+DEFINE('CONTENTANALYSIS_NODE_PARSE_NODETITLE_TAGS_DEFAULT', '<h1 class="title" id="page-title">[node:title]</h1>');
+DEFINE('CONTENTANALYSIS_NODE_PARSE_NODETITLE_PREPEND_DEFAULT', 1);
+
+/**
+ * Implementation of hook_menu().
+ */
+function contentanalysis_menu() {
+  $items = array();
+  $items['admin/config/content/contentanalysis'] = array(
+    'title' => 'Content analysis',
+    'description' => 'Analyze and optimize node content.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contentanalysis_admin_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('admin content analysis'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'contentanalysis.admin.inc',
+  );
+  $items['admin/config/content/contentanalysis/general'] = array(
+    'title' => 'General',
+    'description' => 'Insight configuration configuration settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contentanalysis_admin_settings'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'file' => 'contentanalysis.admin.inc',
+  );
+  $items['admin/config/content/contentanalysis/analyzers'] = array(
+    'title' => 'Analyzers',
+    'description' => 'Insight configuration configuration settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contentanalysis_admin_analyzer_settings_form'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'contentanalysis.admin.inc',
+    'weight' => 1,
+  );
+  $items['admin/reports/contentanalysis'] = array(
+    'title' => 'Content analysis',
+    'description' => 'Analyze nodes, web pages and free form content.',
+    'page callback' => 'contentanalysis_page_analyzer',
+    'access callback' => 'user_access',
+    'access arguments' => array('perform content analysis'),
+    'type' => MENU_NORMAL_ITEM,
+  );  
+  $items['admin/contentanalysis/analyze_js'] = array(
+    'title' => '',
+    'page callback' => 'contentanalysis_analyze_js',
+    'access callback' => TRUE,
+    'access arguments' => array('perform content analysis'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/contentanalysis/ajax/analysis'] = array(
+    'title' => '',
+    'page callback' => 'contentanalysis_modal_popup',
+    'access callback' => TRUE,
+    'access arguments' => array('perform content analysis'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/contentanalysis/ajax/analysis_only'] = array(
+    'title' => '',
+    'page callback' => 'contentanalysis_modal_popup_only',
+    'access callback' => TRUE,
+    'access arguments' => array('perform content analysis'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['contentanalysis/util'] = array(
+    'title' => 'Contentanalysis util',
+    'page callback' => 'contentanalysis_util',
+    'access callback' => 'user_access',
+    'access arguments' => array('admin'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function contentanalysis_util() {
+
+return 'ok'; 
+	$node = node_load(2);
+ $options = array(
+    'entity_type' => 'node',
+    'entity' => $node,
+    'view_mode' => 'full',
+    'display_mode' => 'full',
+    'token data' => array(
+     'node' => $node,
+    )
+ );
+ $metatags = array(
+    'title' => array(
+     'value' => '[node:title] YES [site:name]',
+    ),
+    'keywords' => array(
+     'value' => 'echo, foxtrot',
+    ),
+    'description' => array(
+     'value' => 'YES [node:summary]',
+    ),
+ );
+
+ $ret = metatag_metatags_view('global', array());
+//dsm($ret);
+ $ret = metatag_metatags_view('node:article', $metatags, $options);
+//dsm($ret);
+
+  return 'ok';
+}
+
+/**
+ * Implementation of hook_perm()
+ */
+function contentanalysis_permission() {
+  return array(
+    'perform content analysis' => array(
+      'title' => t('admin content analysis'),
+      'description' => t('Perform content analysis'),
+    ),
+  );
+}
+
+/**
+ * Returns Chaos Tools modal popup
+ */
+function contentanalysis_modal_popup() {
+  ctools_include('ajax');
+  ctools_include('modal');
+  $title = t('Content Analysis Results');
+  //$html = contentanalysis_analyze();
+  $html = '<div id="analysis-modal">' . theme_progress_bar(array( 'percent' => 0, 'message' => t('Analyzing Content'))) . '</div><script type="text/javascript">contentanalysis.contentanalysis_full_analysis();</script>';
+  $output[] = ctools_modal_command_display($title, $html);
+  if (!$output) {
+    $output = array();
+    $output[] = ctools_ajax_command_append('#modal-message', '<div id="message">test text</div>');
+    $output[] = ctools_modal_command_dismiss();
+  }
+  //ctools_ajax_render($output);
+  print ajax_render($output);
+  exit;
+}
+
+/**
+ * Returns Chaos Tools modal popup
+ */
+function contentanalysis_modal_popup_only() {
+  ctools_include('ajax');
+  ctools_include('modal');
+  $title = t('Content Analysis Results');
+  //$html = contentanalysis_analyze_popup_only();
+  $html = '<div id="analysis-modal">' . theme_progress_bar(array( 'percent' => 0, 'message' => t('Analyzing Content'))) . '</div>' . $output . '<script type="text/javascript">contentanalysis.contentanalysis_dialog_analysis();</script>';
+  $output[] = ctools_modal_command_display($title, $html);
+  if (!$output) {
+    $output = array();
+    $output[] = ctools_ajax_command_append('#modal-message', '<div id="message">test text</div>');
+    $output[] = ctools_modal_command_dismiss();
+  }
+  //ctools_ajax_render($output);
+  print ajax_render($output);
+  exit;
+}
+
+/**
+ * Presents analyzer admin form
+ * @see contentanalysis_page_analyzer_form()
+ */
+function contentanalysis_page_analyzer() {
+  drupal_add_css(drupal_get_path('module', 'contentanalysis') . '/contentanalysis.admin.css');
+  
+  $output = render(drupal_get_form('contentanalysis_page_analyzer_form', array()));  
+  
+  return $output;
+}
+
+/**
+ * Provides content analysis admin form
+ * 
+ * - prepends three admin form input fields
+ * - merges form from contentanalysis_analysis_form()
+ * 
+ * @see contentanalysis_analysis_form()
+ * 
+ * @param $form_state
+ *   standard form_api form_state array
+ * @param $analysis
+ *   contentanalysis formated analysis array
+ * @return
+ *   form_api formated array
+ */
+function contentanalysis_page_analyzer_form($form_state, $analysis) {
+  $form['instructions'] = array(
+    '#markup' => t('You can specify content to be analyzed using one of the three below methods. Use only one method. Either enter text content, use a numeric node id, or provide a URL to an existing webpage.'),
+  );
+  $form['input'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Content'),    
+    '#default_value' => isset($analysis['#context']['inputs']['text']) ? $analysis['#context']['inputs']['text'] : '',
+  );
+  $form['input_nid'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Node ID'),
+    //'#autocomplete_path' => 'node/autocomplete',
+    '#default_value' => isset($analysis['#context']['inputs']['nid']) ? $analysis['#context']['inputs']['nid'] : '',
+  );
+  $form['input_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('URL'),
+    '#default_value' => isset($analysis['#context']['inputs']['url']) ? $analysis['#context']['inputs']['url'] : '',
+  );
+  
+  $form = array_merge($form, contentanalysis_analysis_form($form_state, $analysis, array(), 'admin'));
+ 
+  return $form;
+}
+
+/**
+ * Provides common Content Analysis form fields
+ * 
+ * - creates checkboxes of installed analyzers
+ * - requests additional fields from analyzer modules for analyzer 
+ *   definitions declaring "form elements callback"
+ * - initializes Drupal.settings for AJAX calls
+ * - formats fields according to the requested interface
+ * 
+ * @param $form_state
+ *   standard form_state generated by form_api
+ * @param $analysis
+ *   contentanalysis formated analysis array
+ * @param $node
+ *   Node object of the node being analyzed
+ * @param $mode
+ *   The style of form to return, options are [admin|node-edit|block]
+ * @return
+ *   form_api formated array
+ *   
+ */
+function contentanalysis_analysis_form($form_state, $analysis = array(), $node = array(), $mode = 'admin') {
+  // check the number of calls
+  
+  drupal_add_js(drupal_get_path('module', 'contentanalysis') . '/contentanalysis.js');
+  ctools_include('ajax'); // Module  include the dependence it needs for ajax.
+  ctools_include('modal');
+  ctools_modal_add_js();
+  ctools_add_js('ajax-responder');
+  
+  $fields = array();
+  
+  drupal_add_css(drupal_get_path('module', 'contentanalysis') . '/contentanalysis.css');  
+  $display = variable_get('contentanalysis_display', array('sections', 'main'));
+  $analyzers = contentanalysis_analyzer_info();
+  $analyzer_modules = array();
+  
+  foreach ($analyzers AS $aid => $analyzer) {
+    if ($analyzer['module']) {
+      $analyzer_modules[$aid] = array(
+        'aid' => $aid,
+        'module' => $analyzer['module'],
+      );
+    }
+  }
+  // generate code to secure form
+  if ((!isset($_SESSION['contentanalysis']) || !isset($_SESSION['contentanalysis']['code'])) || !($code = $_SESSION['contentanalysis']['code'])) {
+    $code = md5(rand());
+    $_SESSION['contentanalysis']['code'] = $code;
+  }
+  $report_style = variable_get('contentanalysis_node_report_display', 'both');
+  $display_inline = 1;
+  $display_dialog = 1;
+  if ($report_style == 'dialog') {
+    $display_inline = 0;
+  }
+  elseif ($report_style == 'inline') {
+    $display_dialog = 0;
+  }
+
+  // hack protecting settings on mutiple calls
+  static $js_added;
+  if (!$js_added) {
+    drupal_add_js(
+      array('contentanalysis' => array(
+        'analyze_callback' => variable_get('contentanalysis_host', '') . base_path() . 'admin/contentanalysis/analyze_js',
+        'base_path' => base_path(),
+        'path_to_module' => base_path() . drupal_get_path('module', 'contentanalysis'),
+        'nid' => isset($node->nid) ? $node->nid : -1,
+        'node_type' => isset($node->type) ? $node->type : -1,
+        'display_sections' => ((isset($display['sections']) && $display['sections'] )?1:0),
+        'display_main' => ((isset($display['main']) && $display['main'])?1:0),
+        'analyze_on_start' => variable_get('contentanalysis_analyze_on_start', '0'),    
+        'analyzer_modules' => $analyzer_modules,
+        'code' => $code,
+        'display_dialog' => $display_dialog,
+        'display_inline' => $display_inline,
+      )), 
+    'setting');
+    $js_added = TRUE;
+  }
+  
+  $fields['analyzers'] = contentanalysis_get_analyzer_form_element($analysis, $analyzers);
+
+  foreach ($analyzers AS $aid => $analyzer) {
+    if (isset($analyzer['form elements callback']) && $analyzer['form elements callback']) {
+      $e = call_user_func($analyzer['form elements callback'], $form_state, $analysis, $node); 
+      if (is_array($e)) {        
+        $fs = array(
+          '#type' => 'fieldset',
+          '#title' => $analyzer['title'] . ' ' . t('analyzer options'),
+          '#tree' => TRUE,
+        );
+        $fields[$aid] = array_merge($fs, $e);        
+      }
+    }
+  }
+
+  if ($mode == 'node-edit') {
+    $form = $fields;
+    $report_style = variable_get('contentanalysis_node_report_display', 'both');
+    if ($report_style == 'both') {
+      $form['clickme'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div id="contentanalysis-buttons">' .   $output = ctools_ajax_text_button(t('Analyze content'), 'admin/contentanalysis/ajax/analysis', t('Content Analysis'), 'contentanalysis-button', 'ctools-use-modal') . '</div>'
+      );
+    }
+    elseif ($report_style == 'dialog') {
+      $form['clickme'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div id="contentanalysis-buttons">' .   $output = ctools_ajax_text_button(t('Analyze content'), 'admin/contentanalysis/ajax/analysis_only', t('Content Analysis'), 'contentanalysis-button', 'ctools-use-modal') . '</div>'
+      ); 
+    } 
+    elseif ($report_style == 'inline') {
+      $form['clickme'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div id="contentanalysis-buttons">' . l(t('Analyze content'), base_path() . 'admin/contentanalysis/analyze_js', array('attributes' => array('id' => 'contentanalysis-ininline-analysis-button', 'class' => "contentanalysis-analyze-content contentanalysis-button", "onclick" => "contentanalysis_inline_analysis(); return (false);"))) . '</div>'
+      );    
+    }
+    else {
+      $v = '<div id="contentanalysis-buttons">';
+      $v .= t('Analyze content') . ': ';
+      $v .= ctools_ajax_text_button(t('Full reports'), 'admin/contentanalysis/ajax/analysis', t('Content Analysis'), 'contentanalysis-button', 'ctools-use-modal');
+      $v .= ' ';
+      $v .= ctools_ajax_text_button(t('Main report'), 'admin/contentanalysis/ajax/analysis_only', t('Content Analysis'), 'contentanalysis-button', 'ctools-use-modal');
+      $v .= ' ';
+      $v .= '<a href="#" id="contentanalysis-ininline-analysis-button" class="contentanalysis-analyze-content contentanalysis-button" onclick="contentanalysis_inline_analysis(); return (false);">' . t('Inline reports') . '</a>';
+      //$v .= l(t('Inline recommendations'), '#', array('attributes' => array('class' => "contentanalysis-analyze-content", "onclick" => "contentanalysis_inline_analysis(); return (false);")));
+      $v .= '</div>';
+      $form['clickme'] = array(
+        '#type' => 'markup',
+        '#markup' => $v,
+      ); 
+    }
+  } 
+  elseif ($mode == 'admin') {
+    $form = $fields;
+    $form['clickme'] = array(
+      '#type' => 'markup',
+      '#markup' => '<div>' . $output = ctools_ajax_text_button(t('Analyze content'), 'admin/contentanalysis/ajax/analysis', t('Content Analysis'), 'contentanalysis-button', 'ctools-use-modal') . '</div>'
+    );  
+  } 
+  else {
+    $form['clickme'] = array(
+      '#type' => 'markup',
+      '#markup' => '<div>' . $output = ctools_ajax_text_button(t('Analyze content'), 'admin/contentanalysis/ajax/analysis', t('Content Analysis'), 'contentanalysis-button', 'ctools-use-modal') . '</div>'
+    );
+    
+    $form['contentanalysis_options'] = array(
+      '#title' => t('options'),
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      
+    ); 
+    $form['contentanalysis_options'] = array_merge($form['contentanalysis_options'], $fields);
+  }
+  
+  return $form;
+}
+
+/**
+ * Generates analyzer enable/disable checkboxes field
+ * 
+ * @param $params
+ *   Associative array of overrides for settings. Overrides include: [title|description|nid]
+ * @param $analyzers
+ *   Array of analyzer definitions
+ */
+function contentanalysis_get_analyzer_form_element($params = array(), $analyzers = array()) {
+  if (empty($analyzers)) {
+    $analyzers = contentanalysis_analyzer_info();
+  }
+  if ($analyzers) {
+    // don't show checkboxes if only one analyzer
+    $options = array();
+    $defaults = array();
+    foreach ($analyzers AS $aid => $analyzer) {
+      $options[$aid] = $analyzer['title'];
+      $defaults[] = $aid;
+    }
+    $default_value = array();
+    if (isset($analysis) && is_array($analysis['#context']['analyzers'])) {
+      foreach ($analysis['#context']['inputs']['analyzers'] AS $aid => $item) {
+        $default_value[] = $aid;
+      }
+    } 
+    else {
+      $default_value = variable_get('contentanalysis_default_analyzers', $defaults);
+    }
+    $analyser_override = '';
+    if (count($options) == 1) {
+      $k = array_keys($options);
+      $element = array(
+        '#type' => 'hidden',
+        '#value' => $k[0], 
+        '#prefix' => '<div id="contentanalysis_analyzers_override">',
+        '#suffix' => '</div>',
+      );
+    } 
+    else {
+      $element = array(
+        '#type' => 'checkboxes',
+        '#title' => (isset($params['title']) && $params['title'])?$params['title']:t('Analyzers'), 
+        '#description' => (isset($params['description']) && $params['description'])?$params['description']:t('Select analyzers for content.'),
+        '#options' => $options,
+        '#default_value' => $default_value, 
+        '#prefix' => '<div id="contentanalysis_analyzers">',
+        '#suffix' => '</div>',
+      );
+    }
+
+  } 
+  else {
+    drupal_set_message(t('No content analyzers are enabled.'), 'error');
+    return FALSE;
+  }
+  return $element;
+}
+
+/**
+ * Returns content analysis for AJAX calls
+ * 
+ * - initializes context from AJAX _POST data
+ * - submits context to contentanalysis_do_analysis for analysis
+ * - formats returned analysis
+ * 
+ * @see contentanalysis_do_analysis()
+ * 
+ * @return
+ *   JSON formated analysis
+ */
+function contentanalysis_analyze_js() {
+  $analysis = array();
+  if ($_SESSION['contentanalysis']['code'] != $_POST['code']) {
+    watchdog('contentanalysis', 'Blocked invalid attempt ' . $_SESSION['contentanalysis']['code'] . ' != ' . $_POST['code']);
+    exit;
+  }
+  
+  $context = contentanalysis_get_default_context();
+  $context['form_id'] = 'contentanalysis_analyze_js';
+  
+  $context['inputs']['nid'] = ($_POST['nid']=='-1')?NULL:$_POST['nid'];
+  $context['inputs']['url'] = ($_POST['url']=='-1')?NULL:$_POST['url'];
+  $context['inputs']['title'] = ($_POST['title']=='-1')?NULL:$_POST['title'];
+  $context['inputs']['page_title'] = ($_POST['page_title']=='-1')?NULL:$_POST['page_title'];
+  $context['inputs']['meta_title'] = ($_POST['meta_title']=='-1')?NULL:$_POST['meta_title'];
+  $context['inputs']['body'] = ($_POST['body']=='-1')?NULL:$_POST['body'];
+  $context['inputs']['body_summary'] = ($_POST['body_summary']=='-1')?NULL:$_POST['body_summary'];
+  $context['inputs']['meta_keywords'] = ($_POST['meta_keywords']=='-1')?NULL:$_POST['meta_keywords'];
+  $context['inputs']['meta_description'] = ($_POST['meta_description']=='-1')?NULL:$_POST['meta_description']; 
+  $context['inputs']['page'] = ($_POST['page']=='-1')?NULL:$_POST['page'];
+  $context['inputs']['node_type'] = ($_POST['node_type']=='-1')?NULL:$_POST['node_type'];
+  $context['inputs']['body_input_filter'] = (!isset($_POST['body_input_filter']) || $_POST['body_input_filter'] == '-1') ? NULL : $_POST['body_input_filter'];
+  $context['inputs']['hidden'] = ($_POST['hidden']=='-1')?NULL:$_POST['hidden'];  
+  $context['inputs']['action'] = ($_POST['action']=='-1')?NULL:$_POST['action']; 
+  
+  $context['source'] = $_POST['source'];  
+  $context['nid'] = $context['inputs']['nid'];
+  $context['url'] = $context['inputs']['url']; 
+  
+  // load analyzers using hook_contentanalysis_analyzers
+  $analyzer_defs = contentanalysis_analyzer_info();
+  
+  $analyzers = array();
+  $a = explode(',', $_POST['analyzers']);
+  $context['inputs']['analyzers'] = array();
+  if (is_array($a)) {
+    foreach ($a AS $aid) {
+      $context['inputs']['analyzers'][$aid] = $aid;
+      $analyzers[$aid] = $analyzer_defs[$aid];
+    }
+  }
+  
+  foreach ($_POST AS $k => $v) {
+    if (substr($k, 0, 3) == 'ao_') {
+      list($t, $aid, $vk) = explode('_', $k);
+      $context['inputs']['analyzer_options'][$aid][$vk] = $v;
+    } 
+  }
+  
+  $context['title'] = $context['inputs']['title'];
+  $context['page_title'] = $context['inputs']['page_title'];
+  $context['body'] = $context['inputs']['body'];
+  $context['meta_title'] = $context['inputs']['meta_title'];
+  $context['meta_keywords'] = $context['inputs']['meta_keywords'];
+  $context['meta_description'] = $context['inputs']['meta_description'];
+  $context['page'] = $context['inputs']['page'];  
+  
+  if (isset($context['options']) && isset($context['options']['exit'])) {
+    $analysis['#context'] = $context;
+  } 
+  else {
+    // if url is input from admin form, go fetch the page contents
+    if (($context['source'] == 'admin-form') && ($context['url']) && !$context['nid'] && !$context['body']) {
+     $context['page'] =  file_get_contents($context['url']);     
+    }
+    
+    $analysis = contentanalysis_do_analysis($context, $analyzers);
+    
+    foreach ($analyzers AS $aid => $analyzer) {
+      if ($analyzer['admin form submit callback']) {
+        call_user_func($analyzer['admin form submit callback'], $form, $form_state);   
+      }
+    } 
+    
+    $analysis = contentanalysis_build_analysis_content($analysis);
+    contentanalysis_save_status($analysis);
+  }
+  
+  $output = array();
+  $output['main']['output'] = theme_contentanalysis_analysis($analysis);
+  $output['page_title']['output'] = theme_contentanalysis_section_analysis($analysis, 'page_title');
+  $output['body']['output'] = theme_contentanalysis_section_analysis($analysis, 'body');
+  $output['meta_keywords']['output'] = theme_contentanalysis_section_analysis($analysis, 'meta_keywords');
+  $output['meta_description']['output'] = theme_contentanalysis_section_analysis($analysis, 'meta_description');
+  $output['inputs']['analyzers'] = implode(",", $analysis['#context']['inputs']['analyzers']);
+  
+  $output['inputs']['action'] = $analysis['#context']['inputs']['action'];
+
+//dsm($output);
+  drupal_json_output($output);
+}
+
+function contentanalysis_save_status($analysis) {
+  $aid = isset($analysis['#context']['aid']) ? $analysis['#context']['aid'] : NULL;
+  if (!$aid) {
+  	return;
+  }
+  foreach ($analysis AS $anid => $analysisi) {
+    if (substr($anid, 0, 1)=='#' || !is_array($analysisi)) { 
+      continue; 
+    }
+    if((isset($analysisi['#status']) && ($analysisi['#status'] != 'status')) || ($analysisi['#score'])) {
+		  $statusi = array(
+	      'error' => 0,
+			  'warning' => 1,
+			  'complete' => 2,
+		  );
+		  $fields = array(
+		    'status' => $analysisi['#status'],
+		    'statusi' => $statusi[$analysisi['#status']],
+		  );
+		  if($analysisi['#score']) {
+		    $fields['score'] = $analysisi['#score'];
+		  }
+		  $keys = array(
+        'aid' => $aid,
+        'analyzer' => $anid,		  
+		  );
+		  $query = db_merge('contentanalysis_status')
+		    ->key($keys)
+		    ->fields($fields);
+		    
+		  $updated = $query->execute();
+    }
+  }
+}
+
+/**
+ * Provides initial format for context associative array
+ * 
+ * @return
+ *   Initialized context associative array
+ */
+function contentanalysis_get_default_context() {
+  $context = array(
+    'aid' => NULL,              // analysis id
+    'form_id' => NULL,          // id of form that submitted the content
+    'source' => NULL,           // source of request
+    'nid' => NULL,              // the Drupal node id
+    'path' => NULL,             // the Drupal path, after base_path, for a Drupal page
+    'url' => NULL,              // full url including http://
+    'page' => NULL,             // the contents of a page if a full page is to be analyzed, e.g. by using a URL to fetch a page
+    'title' => NULL,            // a drupal page title, e.g. a node title or header for other types of Drupal pages
+    'node_body' => NULL,        // content of the node body field
+    'body' => NULL,             // the main body of text to be analyzed. for a node it is the node body, plus title or any cck fields. For a page it is all content between the body tags
+    'body_notags' => NULL,      // the body field with all stripped of all HTML tags
+    'page_title' => NULL,       // the title found between the title tags in the header section of a HTMLdoc.
+    'meta_title' => NULL,       // the meta title found in the ehader section of a HTML doc
+    'meta_keywords' => NULL,    // the meta keywords found in the header section of a HTML doc.
+    'meta_description' => NULL, // the meta keywords found in the header section of a HTML doc.
+    'analyzers' => array(),
+  );
+  return $context;
+}
+
+/**
+ * Inspects context to select a normalizing context parser
+ * 
+ * @param $the_context
+ *   Initialized contentalaysis context formated array
+ *   
+ * 
+ * @return
+ *   A normalized context array
+ */
+function contentanalysis_parse_context($the_context, $analysis) {
+  
+  $context = contentanalysis_get_default_context();
+  
+  if (is_array($the_context)) {   
+    $context = array_merge($context, $the_context);
+  }
+
+  // select which parser to use
+  if ($context['source'] == 'node-edit-form') {
+    return contentanalysis_parse_context_node_edit($context, $analysis);
+  } 
+  elseif ($context['nid'] > 0) { // analysis by nid
+    return contentanalysis_parse_context_node_load($context, $analysis);
+  } 
+  elseif ($context['body']) { // analysis by direct text input
+    $context['body_notags'] = strip_tags($context['body']);
+  } 
+  elseif ($context['page']) { // analysis by url
+    return contentanalysis_parse_context_page($context, $analysis);
+  }
+  
+  return $context; 
+ 
+}
+
+
+/**
+ * Normalizes context data inputed by node edit form
+ * 
+ * @param $the_context
+ *   Initialized context formated array
+ * 
+ * @return
+ *   A normalized context array
+ */
+function contentanalysis_parse_context_node_edit($context, &$analysis) {
+  // create dumby node from inputs
+  if ($context['nid'] && is_numeric($context['nid'])) {
+    $context['node'] = node_load($context['nid']);
+  } 
+  if (!isset($context['node']) && !$context['node']) {
+    $context['node'] = new stdClass();
+    $context['node']->type = 'article';
+    node_object_prepare($context['node']);
+    $context['node']->language = LANGUAGE_NONE;
+  }
+
+  
+  $context['node']->title = $context['title'];
+  $context['node']->body[$context['node']->language][0]['value']   = $context['body'];
+  // get teaser trim length if available from field
+  if ($context['inputs']['body_summary']) {
+  	$context['node']->body[$context['node']->language][0]['summary'] = $context['inputs']['body_summary'];
+  }
+  else if ($items = field_get_items('node', $context['node'], 'body')) {
+    $instance = field_info_instance('node', 'body', $context['node']->type);
+    $context['node']->body[$context['node']->language][0]['summary'] = text_summary($context['body'], $context['inputs']['body_input_filter'], $instance['display']['teaser']['settings']['trim_length']);
+  }
+  else {
+    $context['node']->body[$context['node']->language][0]['summary'] = text_summary($context['body'], $context['inputs']['body_input_filter']);
+  }
+  $context['node']->body[$context['node']->language][0]['format']  = $context['inputs']['body_input_filter'];
+  // force node_view to rebuild filtered node body
+  unset($context['node']->body[$context['node']->language][0]['safe_value']);
+  unset($context['node']->body[$context['node']->language][0]['safe_summary']);
+
+  $context['node_body'] = $context['body'];
+  $node_view = node_view($context['node']);
+
+  $context['body'] = $node_view['body'][0]['#markup'];
+
+  // prepend node title
+  if (variable_get('contentanalysis_node_parse_nodetitle_prepend', CONTENTANALYSIS_NODE_PARSE_NODETITLE_PREPEND_DEFAULT)) {
+    $h = $context['title'];
+    $p = variable_get('contentanalysis_node_parse_nodetitle_tags', CONTENTANALYSIS_NODE_PARSE_NODETITLE_TAGS_DEFAULT);
+    if (strpos($p, '[node:title]') !== FALSE) {
+      $h = str_replace('[node:title]', $h, $p);
+    }
+    $context['body'] = $h . "\n" . $context['body'];
+  }
+  
+  $context['body_notags'] = strip_tags($context['body']);
+  
+  if (!$context['page_title']) {
+    $context['page_title'] = $context['title'];
+  } 
+  if (is_null($context['path'])) {
+    $path = 'node/' . $context['nid'];
+    $path_alias = drupal_get_path_alias($path);
+    $context['path'] = ($path_alias)?$path_alias:$path;
+  }
+
+  if (is_null($context['url'])) {
+    $url = 'http';
+    if ($_SERVER["HTTPS"] == "on") {
+      $url .= "s";
+    }
+    $url .= "://";
+    if ($_SERVER["SERVER_PORT"] != "80") {
+      $url .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"];
+    } 
+    else {
+      $url .= $_SERVER["SERVER_NAME"];
+    }
+    $url .= base_path();
+    $url .= $context['path'];
+    $context['url'] = $url;
+  }
+  
+  // get metatag context
+  $context = contentanalysis_parse_context_metatags($context);
+//dsm($context);
+  return $context;
+}
+
+/**
+ * Normalizes context data inputed from the node_load function
+ * 
+ * @param $context
+ *   Initialized context formated array
+ * 
+ * @return
+ *   A normalized context array
+ */
+function contentanalysis_parse_context_node_load($context, &$analysis) {
+	if (isset($context['node']) && is_object($context['node'])) {
+  	$node = $context['node'];
+  }
+  elseif ($context['nid']) {
+    $node = node_load($context['nid']);
+    if (!$node) {
+    	$msg = t('Nid @nid is invalid.', array('@nid' => $context['nid']));
+    	$analysis['messages'][] = contentanalysis_format_message($msg, 'error');
+    	return $context;
+    }
+    $context['node'] = $node;
+  }
+  else {
+    $msg = t('A valid node/nid was not submitted.');
+    $analysis['messages'][] = contentanalysis_format_message($msg, 'error');
+  	return $context;
+  }
+  $context['node_type'] = $node->type;
+
+  $context['title'] = (!is_null($context['title']))?$context['title']:$node->title;
+
+  if (is_null($context['page_title'])) {
+    $context_title = $context['title'];
+    $context_page_title = $context['title'];
+    if (module_exists('page_title')) {
+      $page_title_pattern = variable_get('page_title_type_'. (isset($node->type) ? $node->type : ''), '');
+  
+      if (empty($page_title_pattern)) {
+        $page_title_pattern = variable_get('page_title_default', '[current-page:page-title] | [site:name]');
+      }
+      
+      //$page_title_pattern = str_replace('[page-title]', (($context_page_title && (!is_null($context_page_title)))?$context_page_title:$context_title), $page_title_pattern);
+      //$page_title_pattern = str_replace('[title]', check_plain($context_title), $page_title_pattern);
+      //$page_title_pattern = str_replace('[title-raw]', $context_title, $page_title_pattern);
+  
+      $types = array();
+  
+      if (isset($node)) {
+        $types['node'] = $node;
+      }
+  
+      $types['page_title'] = NULL;
+      $context['page_title'] = token_replace($page_title_pattern, $types);
+    }
+  } 
+  else {
+    $context['page_title'] = ($context['title'])?$context['title']:$node->title;
+  }
+ 
+  $context['node_body'] = $context['body'];
+  $node_view = node_view($context['node']);
+
+  $context['body'] = $node_view['body'][0]['#markup'];
+  
+  // prepend node title
+  if (variable_get('contentanalysis_node_parse_nodetitle_prepend', CONTENTANALYSIS_NODE_PARSE_NODETITLE_PREPEND_DEFAULT)) {
+    $h = $context['title'];
+    $p = variable_get('contentanalysis_node_parse_nodetitle_tags', CONTENTANALYSIS_NODE_PARSE_NODETITLE_TAGS_DEFAULT);
+    if (strpos($p, '[node:title]') !== FALSE) {
+      $h = str_replace('[node:title]', $h, $p);
+    }
+    $context['body'] = $h . "\n" . $context['body'];
+  }
+  
+  if (is_null($context['body_notags'])) {
+    $context['body_notags'] = strip_tags($context['body']);
+  }  
+  
+  // get metatag context
+  if (isset($node->metatags['keywords']['value'])) {
+  	$context['meta_keywords'] = $node->metatags['keywords']['value'];
+  }
+  if (isset($node->metatags['description']['value'])) {
+    $context['meta_description'] = $node->metatags['description']['value'];
+  }
+  $context = contentanalysis_parse_context_metatags($context);
+
+  if (is_null($context['path'])) {
+    $path = 'node/' . $context['nid'];
+    $path_alias = drupal_get_path_alias($path);
+    $context['path'] = ($path_alias)?$path_alias:$path;
+  }
+
+  if (is_null($context['url'])) {
+    $url = 'http';
+    if (isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) {
+      $url .= "s";
+    }
+    $url .= "://";
+    if ($_SERVER["SERVER_PORT"] != "80") {
+      $url .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"];
+    } 
+    else {
+      $url .= $_SERVER["SERVER_NAME"];
+    }
+    $url .= base_path();
+    $url .= $context['path'];
+    $context['url'] = $url;
+  }
+
+  return $context;
+}
+
+/**
+ * Normalizes context data inputed as a complete xHTML document
+ * 
+ * @param $the_context
+ *   Initialized context formated array
+ * 
+ * @return
+ *   A normalized context array
+ */
+function contentanalysis_parse_context_page($context, &$analysis) {
+//print "contentanalysis_parse_context_page($context)";
+//print_r($context);
+  if (!$context['page']) {
+    return $context;
+  }
+  $count = preg_match('/<title>(.+?)<\/title>/isx', $context['page'], $match); 
+  $context['page_title'] =  $match[1];
+  //$count = preg_match('/(<meta name="keywords" content="(.*)" \/>)/i', $context['page'] ,$match);  // value in $match [2]
+  $count = preg_match("|<meta[^>]*keywords[^>]*content=\"([^>]+)\"[^>]*>|Ui", $context['page'], $match);
+  $context['meta_keywords'] =  $match[1];
+  //$count = preg_match('/(<meta name=\"description\" content="(.*)" \/>)/i', $context['page'], $match); // value in $match [2]
+  $count = preg_match("|<meta[^>]*description[^>]*content=\"([^>]+)\"[^>]*>|Ui", $context['page'], $match);
+  $context['meta_description'] =  $match[1];
+  $count = preg_match('/(<body.*>)(.+?)(<\/body>)/ismU', $context['page'], $match); 
+  $context['body'] =  $match[2];
+  $context['body_notags'] = strip_tags($context['body']);
+  
+  return $context;
+}
+
+function contentanalysis_parse_context_metatags($context) {
+	if (module_exists('metatag')) {
+    $options = array(
+      'entity_type' => 'node',
+      'entity' => $context['node'],
+      'view_mode' => 'full',
+      'display_mode' => 'full',
+      'token data' => array(
+        'node' => $context['node'],
+      )
+    );
+    $metatags = array();
+    if (trim($context['meta_title'])) {
+    	$metatags['title'] = array(
+        'value' => $context['meta_title'],
+      );
+    }
+    if (trim($context['meta_keywords'])) {
+      $metatags['keywords'] = array(
+        'value' => $context['meta_keywords'],
+      );
+    }
+    if (trim($context['meta_description'])) {
+      $metatags['description'] = array(
+        'value' => $context['meta_description'],
+      );
+    }
+    
+    $nodemeta = metatag_metatags_view('node:' . $context['node']->type , $metatags, $options); 
+    $globalmeta = metatag_metatags_view('global', array(), $options); 
+    
+    // init data for toke_replace
+    $types = array();  
+    if (isset($context['node'])) {
+      $types['node'] = $context['node'];
+    }     
+    if (!empty($context['inputs']['meta_title'])) {
+      $types['meta_title'] = NULL; 
+      $context['meta_title'] = token_replace($context['inputs']['meta_title'], $types);
+    }
+    elseif (!empty($context['node']->metatags[$context['node']->language]['title']['value'])) {
+      $types['meta_title'] = NULL; 
+      $context['meta_title'] = token_replace($context['node']->metatags[$context['node']->language]['title']['value'], $types);      
+    } 
+    elseif (isset($nodemeta['title']['#attached']['metatag_set_preprocess_variable'][0][2])) {
+      $context['meta_title'] = $nodemeta['title']['#attached']['metatag_set_preprocess_variable'][0][2]; 
+    }
+    if (isset($nodemeta['keywords']['#attached']['drupal_add_html_head'][0][0]['#value'])) {
+      $context['meta_keywords'] = $nodemeta['keywords']['#attached']['drupal_add_html_head'][0][0]['#value'];
+    }
+    if (isset($nodemeta['description']['#attached']['drupal_add_html_head'][0][0]['#value'])) {
+      $context['meta_description'] = $nodemeta['description']['#attached']['drupal_add_html_head'][0][0]['#value'];
+    }
+    if (!$context['meta_keywords'] && isset($globalmeta['keywords']['#attached']['drupal_add_html_head'][0][0]['#value'])) {
+    	$context['meta_keywords'] = $globalmeta['keywords']['#attached']['drupal_add_html_head'][0][0]['#value'];
+    }
+    if (!$context['meta_description'] && isset($globalmeta['description']['#attached']['drupal_add_html_head'][0][0]['#value'])) {
+      $context['meta_description'] = $globalmeta['description']['#attached']['drupal_add_html_head'][0][0]['#value'];
+    }
+  }
+  else if(!isset($context['meta_title'])) {
+  	$context['meta_title'] = $context['title'];
+  }
+  return $context;
+}
+
+function contentanalysis_get_analyzer_settings($analyzer_name) {
+  $analyzer_defs = contentanalysis_analyzer_info();
+  $settings = array();
+  $all_settings = variable_get('contentanalysis_analyzer_settings', array());
+  if (isset($all_settings[$analyzer_name]) && is_array($all_settings[$analyzer_name])) {
+    $settings = $all_settings[$analyzer_name];
+  }	
+  if (isset($analyzer_defs[$analyzer_name]['settings'])) {
+    $settings += $analyzer_defs[$analyzer_name]['settings'];
+  }
+  return $settings;
+}
+
+/**
+ * Provides analysis on context passed in
+ * 
+ * - Normalizes the context
+ * - Passes context to analyzer modules' "callback" declaired in analyzer definition
+ * 
+ * @param unknown_type $context
+ * @param unknown_type $analyzers
+ * @param unknown_type $analyzers_params
+ */
+function contentanalysis_do_analysis($context, $analyzers = NULL, $analyzers_params = array()) {
+  $analysis = array();  
+	$analysis_struc = array(
+    '#title' => '',
+    '#status' => 'status',
+    'content' => array(),
+    'stats' => array(),
+    'tests' => array(),
+    'messages' => array(),
+    'page_title' => array('#title' => t('Page title'), '#status' => 'status'),
+    'body' => array('#title' => t('Body'), '#status' => 'status'),
+    'meta_keywords' => array('#title' => t('Meta keywords'), '#status' => 'status'),
+    'meta_description' => array('#title' => t('Meta description'), '#status' => 'status'), 
+  );
+  // change structure if content is directly inputed without a full page
+  
+  if ($context['source'] == 'admin') {
+    if (!$context['inputs']['nid'] && !$context['inputs']['body'] && !$context['inputs']['url']) {
+      $analysis = $analysis_struc;
+      $analysis['messages'] = contentanalysis_format_message(t('No input was submitted. Please enter content, a Node ID or URL.'), 'error');
+      return $analysis;
+    }
+  }
+  
+  $context = contentanalysis_parse_context($context, $analysis);
+
+  // get analyzer settings
+  foreach($analyzers AS $analyzer_name => $analyzer) {
+  	$settings = contentanalysis_get_analyzer_settings($analyzer_name);
+  	$context['analyzers'][$analyzer_name]['settings'] = $settings;
+  }
+ 
+  // allow modules to alter context
+  //drupal_alter('contentanalysis_context_parser', $context);
+  drupal_alter('contentanalysis_context', $context, $analyzers);
+
+  // save data to db 
+  $save = isset($context['options']['dontsave']) ? 0 : 1;
+  $context['aid'] = contentanalysis_get_aid($context, $save);
+  
+  // change section labels if content is directly inputed
+  if (($context['source'] == 'admin-form') && is_null($context['inputs']['url']) && is_null($context['inputs']['nid'])) {
+    $analysis_struc['body']['#title'] = t('Text');
+    unset($analysis_struc['page_title']);
+    unset($analysis_struc['meta_title']);
+    unset($analysis_struc['meta_keywords']);
+    unset($analysis_struc['meta_description']);
+  }
+  
+  
+  $analysis['#context'] = $context;
+
+  foreach ($analyzers AS $aid => $analyzer) {
+    $analysis_struc['#title'] = $analyzer['title'];
+    $analysis[$aid] = call_user_func($analyzer['callback'], $context, $analysis_struc, isset($analyzers_params[$aid]) ? $analyzers_params[$aid] : NULL);  
+  }
+
+  // do quickstart analysis if no analyzers are enabled
+  if (variable_get('contentanalysis_analyzerchecklist', 1)) {
+    $analysis_struc['#title'] = t('Analyzer checklist');
+    $analysis['contentanalysis'] = contentanalysis_checklist_analyzer($context, $analysis_struc);
+  }
+
+  drupal_alter('contentanalysis_analysis', $analysis, $context);  
+
+  return $analysis;
+}
+
+/**
+ * Generates checklist analyzer
+ * 
+ * @param $context
+ *   A context formated array
+ * @param $analysis
+ *   contentanalysis formated analysis array
+ */
+function contentanalysis_checklist_analyzer($context, $analysis) {
+  $analysis['content'][] = contentanalysis_format_content(t('The content analysis module enables a suite of analyzers to help you develop better, more optimized content. <br> <br> List of available analyzer modules:'), -5);
+  $modules = array(
+    array(
+      'name' => t('Content optimizer'),
+      'module' => 'contentoptimizer',
+      'description' => t('Quick search engine optimization (SEO) analysis to assure your content follows basic SEO guidelines.'),
+      'recommended' => TRUE,
+      'link' => 'http://www.drupal.org/project/contentoptimizer',
+    ),
+    array(
+      'name' => t('Insight'),
+      'module' => 'insight',
+      'description' => t('Provides a suite of advanced content analyzers in a single API. Features content scoring, SEO analysis, keyword extraction, optimization recommendations.'),
+      'recommended' => TRUE,
+      'link' => 'http://www.drupal.org/project/insight',
+    ),
+    array(
+      'name' => t('Readability'),
+      'module' => 'readability',
+      'description' => t('Grades content for readability using five popular automated readability standards.'),
+      'recommended' => TRUE,
+      'link' => 'http://www.drupal.org/project/readability',
+    ),
+    array(
+      'name' => t('Alchemy'),
+      'module' => 'alchemy',
+      'description' => t('Extracts keywords, concepts and entities from content using the Alchemy service.'),
+      'recommended' => TRUE,
+      'link' => 'http://www.drupal.org/project/alchemy',
+    ),
+    array(
+      'name' => t('Keyword research'),
+      'module' => 'kwresearch',
+      'description' => t('Provides search popularity and other statistics for researching keyword phrases.'),
+      'recommended' => TRUE,
+      'link' => 'http://www.drupal.org/project/kwresearch',
+    ),
+    /*
+    array(
+      'name' => t('W3C analyzer'),
+      'module' => 'w3canalyzer',
+      'description' => t('Validates that content is W3C compliant.'),
+      'recommended' => TRUE,
+      'link' => 'http://www.drupal.org/project/w3canalyzer',
+    ),
+    */
+  );
+  foreach ($modules AS $module) {
+    $status = 'status';
+    $msg_vars = array(
+      '@module_name' => $module['name'],
+      '!enabled_status' => '',   
+    );
+    if (module_exists($module['module'])) {
+      $msg_vars['!enabled_status'] = t('enabled');
+      $link = FALSE;
+      if ($module['recommended']) {
+        $status = 'pass';
+      }
+    } 
+    else {
+      $msg_vars['!enabled_status'] = t('not enabled');
+      $link = l(t('Click here to download.'), $module['link'], array('target' => '_drupalorg'));
+      if ($module['recommended']) {
+        $status = 'warning';
+      }
+    }
+    $msg = t('<strong>@module_name</strong> is !enabled_status.', $msg_vars);
+    if ($link) {
+      $msg .= ' ' . $link;
+    }    
+    $analysis['messages'][] = contentanalysis_format_message($msg, $status);
+    $analysis['messages'][] = contentanalysis_format_message($module['description'], 'status');
+  }
+  
+  return $analysis; 
+}
+
+/**
+ * Readies analysis elements such as stats and messages as markup output
+ * 
+ * @param $analysis
+ *   contentanalysis formated analysis array
+ */
+function contentanalysis_build_analysis_content($analysis) {
+
+  $ignore_keys = array('content', 'context', 'stats', 'tests', 'messages');
+  // create status messages table
+  foreach ($analysis AS $aid => $analysisi) {
+    if (substr($aid, 0, 1)=='#' || !is_array($analysisi)) { 
+      continue; 
+    }
+
+    $content = theme_contentanalysis_status_report($analysisi);
+    $analysis[$aid]['content'][] = array(
+      '#value' => $content,
+      '#weight' => 0,
+    );
+    // construct content for section analysis
+    $analysis[$aid]['sections'] = array();
+    foreach ($analysisi AS $sid => $analysisis) {
+      if ((substr($sid, 0, 1)=='#') || in_array($sid, $ignore_keys)  ) { 
+        continue; 
+      }
+      $content = '';
+      $analysis[$aid]['sections'][] = $sid;
+      $content = theme_contentanalysis_status_report($analysisi, $sid);
+      if ($content) {
+        if (!isset($analysis[$aid][$sid]['content']) || !is_array($analysis[$aid][$sid]['content'])) {
+          $analysis[$aid][$sid]['content'] = array();
+        }
+        $analysis[$aid][$sid]['content'][] = array(
+          '#value' => $content,
+          '#weight' => 0,
+        );   
+      }   
+    }   
+  }
+  
+  $tabs = '';
+  $con = '';
+  foreach ($analysis AS $aid => $analysisi) {
+    $ti = 0;
+    if (substr($aid, 0, 1)=='#' || !is_array($analysisi)) {
+      continue;
+    }
+    $analysis[$aid]['output'] = '<div id="contentanalysis-report-' . $aid . '" class="contentanalysis-report">';
+    if (isset($analysisi['content'][0]['#tab']) && $analysisi['content'][0]['#tab']) {      
+      $tabs = '<h3 id="contentanalysis-report-tab-' . $aid . '-0" class="contentanalysis-report-tab">' . $analysisi['content'][0]['#value'] . "</h3>\n";
+    } 
+    else {
+      $tabs = '<h3 id="contentanalysis-report-tab-' . $aid . '-0" class="contentanalysis-report-tab">' . t('Report') . "</h3>\n";
+    }
+    
+    uasort($analysisi['content'], "element_sort");
+    $i = 0;
+    $con = '<div id="contentanalysis-report-results-' . $aid . '-' . $ti .'" class="contentanalysis-results-section">';
+    foreach ($analysisi['content'] AS $item) {
+      if (isset($item['#tab']) && $item['#tab']) {
+        if ($i==0) {
+          continue;
+        }
+        $ti++;
+        $con .= '</div>';
+        $tabs .= '<h3  id="contentanalysis-report-tab-' . $aid . '-' . $ti .'" class="contentanalysis-report-tab">' . $item['#value'] . "</h3>\n";
+        $con .= '<div id="contentanalysis-report-results-' . $aid . '-' . $ti .'" class="contentanalysis-results-section">';
+        
+      } 
+      else {
+        $con .= $item['#value'];
+      }
+      $i++;
+    }
+    $con .= '</div>';
+    
+    $analysis[$aid]['output'] .= '<div id="contentanalysis-report-tabs-' . $aid . '" class="contentanalysis-report-tabs">';
+    $analysis[$aid]['output'] .= $tabs;
+    $analysis[$aid]['output'] .= '</div>';
+    $analysis[$aid]['output'] .= '<div id="contentanalysis-report-results-' . $aid . '" class="contentanalysis-results">';
+    $analysis[$aid]['output'] .= $con;
+    $analysis[$aid]['output'] .= '</div>';
+    
+    $analysis[$aid]['output'] .= "</div>\n";
+    foreach ($analysisi['sections'] AS $sid) {
+      if (!isset($analysisi[$sid]['content']) || !is_array($analysisi[$sid]['content'])) { 
+        continue; 
+      }
+      uasort($analysisi[$sid]['content'], "element_sort");
+      $analysis[$aid][$sid]['output'] = '';
+      foreach ($analysisi[$sid]['content'] AS $content) {
+        $analysis[$aid][$sid]['output'] .= $content['#value'];
+      }
+    }
+  }
+
+  return $analysis; 
+
+}
+
+/**
+ * Themes the content analysis
+ * 
+ * @param $analysis
+ *   contentanalysis formated analysis array
+ * 
+ * @return
+ *  Themed content analysis
+ */
+function theme_contentanalysis_analysis($analysis) { 
+  $titles = array();
+  $bodies = array();
+  if (count($analysis['#context']['messages']) > 0) {
+    //$titles[] = '<h3 class="analyzer">'.t('Messages')."</h3>\n";;
+    $bodies[] = theme_contentanalysis_messages($analysis['#context']['messages']);
+  }
+  foreach ($analysis AS $aid => $analysisi) {
+    if (!is_array($analysisi) || (substr($aid, 0, 1) == '#')) { 
+      continue;  
+    }
+    $titles[] = '<h3 id="contentanalysis-analyzer-tab-' . $aid . '" class="analyzer">' . $analysisi['#title'] . "</h3>\n";
+    $bodies[] = '<div class="analyzer-analysis"><h2>' . $analysisi['#title'] . '</h2>' . $analysisi['output'] . '</div>';
+  }
+
+  $out = '<h2 class="analyzers">Analyzers</h2>';
+  $out .= '<div class="analyzers">'. implode($titles) . '</div>';
+  $out .= '<div class="analysis-results">'. implode($bodies) . '</div>';
+  return $out;
+}
+
+/**
+ * Themes the contentanalysis sections
+ * 
+ * @param $analysis
+ *   contentanalysis formated analysis array
+ * @param $section
+ *   string name of section [body|title|meta_description|meta_keyowrd]
+ * @return
+ *   Themed content analysis section
+ */
+function theme_contentanalysis_section_analysis($analysis, $section) {
+  
+  if ($analysis['#context']['inputs']['action'] != 'refresh') {
+    $form['report-' . $section] = array(
+      '#type' => 'fieldset',      
+      '#title' => t('Content analysis report'),      
+      '#collapsible' => TRUE,      
+      '#collapsed' => FALSE,   
+      '#attributes' => array('class' => array('contentanalysis_section_analysis', 'analysis-results', 'contentanalysis-results')),
+    );
+  }
+  $i=0;
+  foreach ($analysis AS $aid => $analysisi) {
+    if (!is_array($analysisi) || (substr($aid, 0, 1) == '#') || !is_array($analysisi[$section])  || !isset($analysisi[$section]['output'])) { 
+      continue;  
+    } 
+    $img = base_path() . '/' . drupal_get_path('module', 'contentanalysis') . '/icons/refresh.png';
+    $form['report-' . $section][$aid . '-report'] = array(    
+      '#type' => 'item',    
+      '#title' => $analysisi['#title'],    
+      '#markup' => $analysisi[$section]['output'],
+      '#prefix' => '<div id="contentanalysis-report-' . $aid . '-' . $section .'" class="contentanalysis-report-' . $aid . ' contentanalysis-report-' . $aid . '-' . $section .'">',
+      '#suffix' => '</div>',
+      '#weight' => $i++,
+    );   
+  }
+  
+  $output = $i ? drupal_render($form) : '';  
+  
+  return $output;
+}
+
+/**
+ * Theming function for analysis status report
+ * 
+ * @param $analysisi
+ *   Content analysis analyzer elements array, e.g. $analysis['seo']
+ * @param $show
+ *   Sections to include. Values: [all|general|sections|page_title|body|meta_keywords|meta_description]
+ * @return
+ *   Themed status report table
+ */
+function theme_contentanalysis_status_report($analysisi, $show = 'all') {
+  $out = '';
+  $rows = array();
+
+  if (($show == 'all') || ($show == 'general')) {
+    $stats = isset($analysisi['stats']) ? theme_contentanalysis_analysis_stats($analysisi['stats']) : '';
+    $msgs = isset($analysisi['messages']) ? theme_contentanalysis_analysis_messages($analysisi['messages']) : '';
+    $status = (isset($analysisi['#status'])) ? $analysisi['#status']:'status';
+    if ($stats || $msgs) {
+      $rows[] = array(
+        array(
+          'data' => t('General'), 
+          'class' => array('section', $status),
+        ),
+        array(
+          'data' => $stats . $msgs, 
+          'class' => array('messages')
+        )
+      );
+    }    
+  }
+  if (($show == 'all') || ($show == 'sections')) {
+    foreach ($analysisi AS $sid => $analysisis) {
+      $stats = isset($analysisis['stats']) ?  theme_contentanalysis_analysis_stats($analysisis['stats']) : '';
+      $msgs = isset($analysisis['messages']) ? theme_contentanalysis_analysis_messages($analysisis['messages']) : '';
+      $status = (isset($analysisis['#status']) && $analysisis['#status']) ? $analysisis['#status'] : 'status';      
+      if ($stats || $msgs) {
+        $rows[] = array(
+          array(
+            'data' => $analysisis['#title'], 
+            'class' => array('section', $status),
+          ), 
+          array(
+            'data' => $stats . $msgs,
+            'class' => array('messages'),
+          )
+        );        
+      }
+    }
+  } 
+  elseif ($analysisis = $analysisi[$show]) {
+    $stats = isset($analysisis['stats']) ?  theme_contentanalysis_analysis_stats($analysisis['stats']) : '';
+    $msgs = isset($analysisis['messages']) ? theme_contentanalysis_analysis_messages($analysisis['messages']) : '';
+    $status = (isset($analysisis['#status']) && $analysisis['#status']) ? $analysisis['#status'] : 'status'; 
+    if ($stats || $msgs) {
+      $rows[] = array(
+        array(
+          'data' => $analysisis['#title'], 
+          'class' => array('section', $status)
+        ),
+        array(
+          'data' => $stats . $msgs,
+          'class' => array('messages'),
+        ),
+      );       
+    }  
+  }
+  if (count($rows) > 0) {
+    $header = array(array('data' => t('Sections')), array('data' => t('Analysis')));
+  
+    $vars= array(
+      'header' => $header,
+      'rows' => $rows,
+      'attributes' => array('class' => array('status_report')),
+    );
+    $out .= theme('table', $vars);
+  }
+  return $out;
+}
+
+/**
+ * Theses analysis report stats elements into output
+ * 
+ * @param $stats
+ *   Analysis stats formated associative array formated by 
+ *   contentanalysis_format_stat()
+ * @return
+ *   Themed stats section
+ */
+function theme_contentanalysis_analysis_stats($stats) {
+  if (!$stats || !is_array($stats)) {
+    return '';
+  }
+  $output = '<div class="contentanalysis_stats">'."\n";
+  $i=0;
+  foreach ($stats AS $sid => $item) {
+    $output .= (($i)?', ':'') . $item['#title'] . '=' . number_format($item['#value'], (($item['#decimals'])?$item['#decimals']:0));   
+    $i++; 
+  }
+  $output .= "</div>\n";  
+  return $output;
+}
+
+/**
+ * Themes analysis report messages into output
+ * 
+ * @param $stats
+ *   Analysis messages formated associative array formated by
+ *   contentanalysis_format_message()
+ * @return
+ *   Themed report messages section
+ */
+function theme_contentanalysis_analysis_messages($msgs) {
+  if (!$msgs || !is_array($msgs)) {
+    return '';
+  }
+  foreach ($msgs AS $mid => $item) {
+    $items[] = array('class' => array($item['#status']), 'data' => $item['#value']);    
+  }
+  $vars = array(
+    'items' => $items,
+    'title' => NULL,
+    'type' => 'ul',
+    'attributes' => array('class' => array('contentanalysis_messages')),
+  );
+  //return theme_item_list($items, NULL, 'ul', array('class' => 'contentanalysis_messages'));
+  return theme_item_list($vars);
+}
+
+/**
+ * Themes status messages into output
+ * 
+ * @param $stats
+ *   Messages formated associative arrayformated by
+ *   contentanalysis_format_message()
+ * @return
+ *   Themed messages section
+ */
+function theme_contentanalysis_messages($msgs) {
+  if (!$msgs || !is_array($msgs)) {
+    return '';
+  }
+  foreach ($msgs AS $mid => $item) {
+    $out .= '<div class="messages ' . $item['#status'] . '">';
+    $out .= $item['#value'];
+    $out .= '</div>';
+  }
+  return $out;
+}
+
+/**
+ * Formats a stats element
+ * @param $title
+ *   Human readable label for stat
+ * @param $value
+ *   Stat value
+ * @param $decimals
+ *   Decimals to round to on display
+ * @return
+ *   Stats formated associative array
+ */
+function contentanalysis_format_stat($title, $value, $decimals=0) {
+  return array(
+    '#title' => $title,
+    '#value' => $value,
+    '#decimals' => $decimals,
+  );
+}
+
+/**
+ * Formats a message element
+ * @param $message
+ *   Text of the message
+ * @param $type
+ *   Status of the message. Values: ['status'|'complete'|'warning','error']
+ * @return
+ *   Message formated associative array
+ */
+function contentanalysis_format_message($message, $type='status') {
+  return array(
+    '#value' => $message,
+    '#status' => $type,
+  );
+}
+
+/**
+ * Formats a content element
+ * @param $value
+ *   String of element content
+ * @param $weight
+ *   Int sort order value for element
+ * @param $tab
+ *   Boolean if element should be inserted as a tab
+ * @return
+ *   Content formated associative array
+ */
+function contentanalysis_format_content($value, $weight = -1, $tab = FALSE) {
+  $ret = array(
+    '#value' => $value,
+    '#weight' => $weight,
+  );
+  if ($tab) {
+    $ret['#tab'] = TRUE;
+  }
+  return $ret;
+}
+
+/**
+ * Implementation of hook_form_alter().
+ *
+ * Add Content Optimizer field set to node edit forms.
+ * Add Content Analysis enabled field to content type admin form
+ */
+function contentanalysis_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['type']['#value']) && $form['type']['#value'] .'_node_form' == $form_id && variable_get('contentanalysis_type_' . $form['#node']->type . '_enable', 1)) {
+    if (!user_access('perform content analysis')) {
+      return '';
+    }
+    $node = $form['#node'];
+    
+    //$form['contentanalysis'] = contentanalysis_node_form($form_state, array(), $node, $settings);
+    $form['contentanalysis'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Content analysis'),
+      '#collapsible' => TRUE,
+      '#collapsed' => variable_get('contentanalysis_node_edit_form_collapsed', 0),
+      //'#attributes' => array('class' => 'contentanalysis'),
+      '#group' => 'additional_settings',
+      '#weight' => -99,
+    );
+    
+    $form['contentanalysis'] = array_merge($form['contentanalysis'], contentanalysis_analysis_form($form_state, array(), $node, 'node-edit'));
+    $form['#submit'][] = 'contentanalysis_node_submit';
+  }
+  if ($form_id == 'node_type_form') {
+    $form['contentanalysis'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Content Analysis Settings'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#tree' => TRUE,
+      '#group' => 'additional_settings',      
+    );
+    $form['contentanalysis']['enable'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Content Analysis'),
+      '#description' => t('If checked, the <em>Content Analysis</em> fieldset will appear on the node edit form for those who have permission to perform content analysis.'),
+      '#options' => array(
+        'enable' => t('Enable'),
+      ),
+      '#default_value' => variable_get('contentanalysis_type_'. $form['#node_type']->type .'_enable', 1) ? array('enable') : array(),
+    ); 
+/* TODO get analyzer settings working at node_type level
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'contentanalysis') . "/contentanalysis.admin.inc";
+    $form['contentanalysis'] = array_merge($form['contentanalysis'], contentanalysis_admin_analyzer_settings_element($mode = 'node_type'));
+*/  
+    $form['#submit'][] = 'contentanalysis_node_type_form_submit';
+  }
+}
+
+/**
+ * Enables/disables content analysis on content type admin form
+ * 
+ * @param $form
+ *   standard form_api form array
+ * @param $form_state
+ *   standard form_api form_state array
+ */
+function contentanalysis_node_type_form_submit($form, &$form_state) {
+  $enable = ($form_state['values']['contentanalysis']['enable']['enable']) ? 1 : 0;
+  variable_set('contentanalysis_type_'. $form_state['values']['type'] .'_enable', $enable);
+}
+
+/**
+ * Trigers analyzer node form submit callback on node edit submission
+ * @param $form
+ *   standard form_api form array
+ * @param $form_state
+ *   standard form_api form_state array
+ */
+function contentanalysis_node_submit($form, &$form_state) {
+//print "contentanalysis_node_submit($form, $form_state)";
+//print_r($form_state);
+  $analyzers = contentanalysis_analyzer_info();  
+  
+  foreach ($analyzers AS $aid => $analyzer) {
+    if (isset($analyzer['node form submit callback'])) {
+      $analysis[$aid] = call_user_func($analyzer['node form submit callback'], $form, $form_state);   
+    }
+  } 
+}
+
+
+/*
+* Implementation of hook_block()
+* 
+* Provides block for launching content analysis.
+*/
+function contentanalysis_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      $blocks['launch']['info'] = t('Content analysis');
+      $blocks['launch']['cache'] = BLOCK_NO_CACHE;
+      return $blocks;
+  
+    case 'view':
+      if (
+        (arg(0) == 'admin') 
+        || ((arg(0) == 'node') && (is_numeric(arg(1))) && (arg(2) == 'edit'))
+        || !user_access('perform content analysis')
+        ) {
+        return '';
+      }
+      // don't display on node edit forms
+      if (!((arg(0) == 'node') && (arg(2) == 'edit') || (arg(1) == 'add'))) {
+        $block['content'] = drupal_get_form('contentanalysis_analysis_form', array(), array(), 'block');
+      } 
+      return $block;
+  }
+}
+
+/**
+ * Returns the aid for a given context
+ * 
+ * @param $context
+ * @param $save
+ *   Boolean to save the aid if it does not already exist
+ * @return
+ *   aid
+ */
+function contentanalysis_get_aid($context, $save = 0) {
+  // save data to db 
+//watchdog('ca 1465', print_r($context, 1));
+  $aid = NULL;
+  $where = '';
+  if (($context['source'] == 'node-edit-form') && (is_null($context['nid']))) {
+    return $aid;
+  }
+  $query = db_select('contentanalysis', 'ca')
+    ->fields('ca');
+  if ($context['aid'] > 0) {
+    $query->condition('aid', $context['aid']);
+    $where = TRUE;
+  } 
+  elseif ($context['nid'] > 0) {
+  	$query->condition('nid', $context['nid']);
+  	$where = TRUE;
+  } 
+  elseif (!is_null($context['path'])) {
+    $query->condition('path', $context['path']);
+    $where = TRUE;
+  } 
+  elseif (!is_null($context['url'])) {
+    $query->condition('url', $context['url']);
+    $where = TRUE;
+  } 
+
+  if ($where && $save) { // by pass db save if analyzing content direct submission
+//watchdog('ca 1491', " " . $query);
+    $result = $query->execute()->fetchObject();
+    $fields = array(
+      'last_analysis' => time(),
+      'nid' => isset($context['nid']) && $context['nid'] ? $context['nid'] : 0,
+      'path' => isset($context['path']) && $context['path'] ? $context['path'] : '',
+      'url' => $context['url'],
+    );    
+    if ($result && $result->aid) {
+      $aid = $result->aid;
+      db_update('contentanalysis')
+        ->fields($fields)
+        ->condition('aid', $result->aid)
+        ->execute();
+    } 
+    // check if all essential fields are set, then save
+    elseif (isset($fields['url'])) {
+      $context['last_analysis'] = REQUEST_TIME;
+      $query = db_insert('contentanalysis')
+        ->fields($fields);
+//watchdog('ca 1505', " " . $query);        
+      $aid = $query->execute();
+    }
+  }
+  return $aid;
+}
+
+/**
+ * Returns the aid for a given node id
+ * 
+ * @param $nid
+ *   node id for the node of the analysis
+ * @return
+ *   aid
+ */
+function contentanalysis_get_aid_by_nid($nid) {
+  $query = db_select('contentanalysis', 'ca')
+    ->fields('ca', array('aid'))
+    ->condition('nid', $nid, '=');
+  return (int) $query->execute()->fetchField();
+}
+
+/**
+ * Returns the aid for a given url
+ * 
+ * @param $url
+ *   url of an analysis
+ * @return
+ *   aid
+ */
+function contentanalysis_get_aid_by_url($url) {
+  $query = db_select('contentanalysis', 'ca')
+    ->fields('ca', array('aid'))
+    ->condition('url', $url);
+  return $query->execute()->fetchField();
+}
+
+/**
+ * Implements hook_node_delete
+ * 
+ * @param $node
+ */
+function contentanalysis_node_delete($node) {	
+	$aid = contentanalysis_get_aid_by_nid($node->nid);
+	// call analysis delete callbacks to enable analyzers to delete data
+	$analyzers = contentanalysis_analyzer_info();
+  foreach ($analyzers AS $name => $analyzer) {
+  	if (isset($analyzer['analysis delete callback'])) {
+      $analysis[$aid] = call_user_func($analyzer['analysis delete callback'], $aid);  
+  	}
+  }
+  // delete contentanalysis records
+  $query = db_delete('contentanalysis_status')
+    ->condition('aid', $aid);
+  $query->execute(); 
+  $query = db_delete('contentanalysis')
+    ->condition('aid', $aid);
+  $query->execute(); 
+}
+
+function contentanalysis_analyzer_info() {
+  $analyzers = &drupal_static(__FUNCTION__);
+
+  // Grab from cache or build the array.
+  if (!isset($analyzer)) {
+    if ($cache = cache_get("contentanalysis_analyzers") && !empty($cache->data)) {
+      $analyzers = $cache->data;
+    }
+    else {
+      $analyzers = array();
+      foreach (module_implements('contentanalysis_analyzer_info') as $module) {     
+        foreach (module_invoke($module, 'contentanalysis_analyzer_info') as $name => $analyzer) {
+          // Ensure the current toolkit supports the element.
+          $analyzer['module'] = $module;
+          $analyzer['name'] = $name;
+          $analyzers[$name] = $analyzer;
+        }
+      }
+      // TODO used to support depricated hook naming convention (renamed to hook_analyzer_info above). Remove this after sufficent time.
+      foreach (module_implements('contentanalysis_analyzers') as $module) {     
+        foreach (module_invoke($module, 'contentanalysis_analyzers') as $name => $analyzer) {
+          // Ensure the current toolkit supports the element.
+          $analyzer['module'] = $module;
+          $analyzer['name'] = $name;
+          $analyzers[$name] = $analyzer;
+        }
+      }
+      drupal_alter('contentanalysis_analyzer_info', $analyzers);
+      cache_set("contentanalysis_analyzers", $analyzers);
+    }
+  }
+  return $analyzers; 
+}

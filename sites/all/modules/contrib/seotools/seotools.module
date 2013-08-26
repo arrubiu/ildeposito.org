@@ -1,0 +1,62 @@
+<?php
+/**
+ * @file
+ * Code for the SEO Tools feature.
+ */
+
+include_once('seotools.features.inc');
+
+/**
+ * Implements hook_permission().
+ */
+function seotools_permission() {
+  return array(
+    'administer seotools' => array(
+      'title' => t('Administer SEO Tools'),
+      'description' => t('Can configure SEO Tools settings.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function seotools_menu() {
+  // Module settings.
+  
+  $items['admin/config/search/seotools'] = array(
+    'title' => 'SEO Tools',
+    'description' => 'Configuration settings for SEO Tools.',
+    'page callback' => 'seotools_admin_settings',
+    'page arguments' => array(5),
+    'access arguments' => array('administer seotools'),
+    'file' => 'seotools.admin.inc',
+    'weight' => 2,
+    'type' => MENU_NORMAL_ITEM,
+    //'type' => MENU_CALLBACK,
+  );
+  $items['admin/config/search/seotools/setup'] = array(
+    'title' => 'Setup wizard',
+    'description' => 'Setup wizard to help you get started quickly.',
+    'page callback' => 'seotools_admin_setup',
+    'page arguments' => array(5),
+    'access arguments' => array('administer seotools'),
+    'file' => 'seotools.setup.inc',
+    'weight' => 2,
+    'type' => MENU_LOCAL_ACTION,
+    //'type' => MENU_CALLBACK,
+  );
+
+  $items['seotools/util'] = array(
+    'title' => t('Social media util'),
+    'page callback' => 'seotools_util',
+    'access arguments' => array('administer-site-configuration'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function seotools_util() {
+	return 'OK';
+}

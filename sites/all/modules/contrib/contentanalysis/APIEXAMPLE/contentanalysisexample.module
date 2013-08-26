@@ -1,0 +1,89 @@
+<?php
+// $Id: contentanalysisexample.module,v 1.6 2010/05/09 19:55:26 tomdude48 Exp $
+
+/**
+ * @file
+ * An example content analyzer using the Content Analysis API
+ */
+
+/**
+ *  Implentation of hook_contentanalysis_analyzers()
+ *  register contentanalysisexample with contentanalysis analyzers registry
+ */
+function contentanalysisexample_contentanalysis_analyzers() {
+  $analyzers['contentanalysisexample'] = array(
+    'title' => t('Example'),
+    'module' => 'contentanalysisexample',
+    'callback' => 'contentanalysisexample_analyzer',
+    'form elements callback' => 'contentanalysisexample_analyzer_form_elements',
+    'node form submit callback' => 'contentanalysisexample_node_form_submit',
+    'weight' => -5,
+  );
+  return $analyzers;  
+}
+
+/**
+ * Implementation of hook_analyzer_form_elements() via custom define callback
+ * 
+ * hook to add any analyzier specific form elements to the content analyzer form. 
+ * callback is defined in hook_contentanalysis_analyzers ['form elements callback']
+ * 
+ * @param $form_state
+ *   Array defined by form_api
+ * @param $analysis
+ *   Array analysis formated array defined in conentanalysis
+ * @param $node
+ *   Node object
+ */
+function contentanalysisexample_analyzer_form_elements($form_state, $analysis='', $node=0) {
+  drupal_add_css(drupal_get_path('module', 'contentanalysisexample') . '/contentanalysisexample.css'); 
+  drupal_add_js(drupal_get_path('module', 'contentanalysisexample') . '/contentanalysisexample.js');
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Whats your name'),
+  ); 
+  return $form;
+}
+
+/**
+ * Implementation of hook_node_form_submit() via custom define callback
+ * @param $form
+ *   Array defined by form_api
+ * @param $form_state
+ *   Array defined by form_api
+ */
+function contentanalysisexample_node_form_submit($form, &$form_state) {
+  drupal_set_message(t('You actually submitted that dribble. Come on, you can do better. If you don\t like this relentless taunting, disable the content analysis example module'));
+}
+
+/**
+ * Implementation of hook_analyzer() via custom define callback
+ * 
+ * Performs the analysis. 
+ * callback is defined in hook_contentanalysis_analyzers ['callback']
+ * 
+ * @param unknown_type $context
+ *   Array context format defined by contentanalysis.module
+ * @param unknown_type $analysis
+ *  Array analysis format defined by contentanalysis.module
+ * @param unknown_type $params
+ *   Array customer defined paramters
+ */
+function contentanalysisexample_analyzer($context, $analysis, $params) {
+  $subject = t('World');
+  $name = $context['inputs']['analyzer_options']['contentanalysisexample']['name'];
+  if ($name) {
+    $subject = $name;
+    $analysis['messages'][] = contentanalysis_format_message(t('Good job, you submitted your name.'), 'complete'); 
+    $analysis['#status'] = 'complete';
+  } 
+  else {
+    $analysis['messages'][] = contentanalysis_format_message(t('Your name was not entered in the options field. Please enter it to make this warning go away.'), 'warning'); 
+    $analysis['#status'] = 'warning';
+  }
+  $analysis['content'][] = contentanalysis_format_content('<strong>' . t('Hello ' . $subject) . '</strong>', -5);
+  
+  return $analysis;
+}
+

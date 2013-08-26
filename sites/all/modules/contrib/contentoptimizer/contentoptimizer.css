@@ -1,0 +1,26 @@
+
+@CHARSET "ISO-8859-1";
+
+.contentoptimizer_analysis {
+  padding: 0 5px 0 5px;	
+}
+
+.contentoptimizer_analysis h3 {
+  padding: 0 5px 0 5px;
+  margin: 0 0 0 0; 
+}
+
+.contentoptimizer_analysis pre {
+  padding: 0 5px 0 5px;
+  background-color: #FFFFFF; 
+}
+
+.contentoptimizer_analysis .status {
+  border: 1px solid #88FF88;
+  background-color: #CCFFCC;
+  color: #000000;
+}
+
+.contentoptimizer_analysis .warning {
+  /* border: medium solid #FF0000; */
+}

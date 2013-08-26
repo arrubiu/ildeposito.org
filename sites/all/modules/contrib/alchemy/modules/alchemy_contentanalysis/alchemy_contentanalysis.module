@@ -1,0 +1,239 @@
+<?php
+/*
+ * @file alchemy_contentanalysis.module
+ * Alchemy based Content analyzer.
+ */
+
+/**
+ * Implements hook_menu().().
+ */
+function alchemy_contentanalysis_menu() {
+  $items = array();
+
+  $items['admin/config/services/alchemy/contentanalysis'] = array(
+    'title' => t('Content analyzer'),
+    'description' => 'Settings for Alchemy content analyzer.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('alchemy_contentanalysis_admin_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('admin content analysis'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'alchemy_contentanalysis.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ *  Implentation of hook_contentanalysis_analyzers()
+ *  register kwanalysis with contentanalysis analyzers registry
+ */
+function alchemy_contentanalysis_contentanalysis_analyzer_info() {
+  $analyzers['alchemy'] = array(
+    'title' => t('Alchemy'),
+    'module' => 'alchemy_contentanalysis',
+    'callback' => 'alchemy_contentanalysis_analyzer',
+    'form elements callback' => 'alchemy_contentanalysis_analyzer_form_elements',
+  );
+  return $analyzers;
+}
+
+/**
+ * Generates type options and default settings
+ * @param $defaults
+ */
+function alchemy_contentanalysis_get_types($defaults = FALSE) {
+  if ($defaults) {
+    $types = array(
+      'concepts',
+      'entities',
+      'keywords',
+    );
+  }
+  else {
+    $types = array(
+      'concepts' => t('Concepts'),
+      'entities' => t('Entities'),
+      'keywords' => t('Keywords'),
+    );
+  }
+  return $types;
+}
+
+/**
+ * Implements hook_analyzer_form_elements() via custom define callback().
+ *
+ * hook to add any analyzier specific form elements to the content analyzer form.
+ * callback is defined in hook_contentanalysis_analyzers ['form elements callback']
+ *
+ * @param $form_state
+ *   Array defined by form_api
+ * @param $analysis
+ *   Array analysis formated array defined in conentanalysis
+ * @param $node
+ *   Node object
+ */
+function alchemy_contentanalysis_analyzer_form_elements($form_state, $analysis = '', $node = 0) {
+  drupal_add_js(drupal_get_path('module', 'alchemy_contentanalysis') . '/alchemy_contentanalysis.js');
+
+  $options = alchemy_contentanalysis_get_types();
+  $form['alchemy_types'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Alchemy data types'),
+    '#options' => $options,
+    '#default_value' => variable_get('alchemy_contentanalysis_defaulttypes', alchemy_contentanalysis_get_types(TRUE)),
+    '#description' => t('Use the above checkboxes to select what types of data you want to report.'),
+    '#prefix' => '<div id="alchemy_contentanalysis_types">',
+    '#suffix' => '</div>',
+  );
+
+  $form['alchemy_usecache'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use cached data if available.'),
+    '#default_value' => variable_get('alchemy_contentanalysis_defaultusecache', ''),
+    '#description' => t('Check the above box to retrieve the data from the previous Alchemy call. If unchecked, the data will be sent Alchemy for a fresh analysis.'),
+    '#prefix' => '<div id="alchemy_contentanalysis_cache">',
+    '#suffix' => '</div>',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_analyzer() via custom define callback().
+ *
+ * Performs the analysis.
+ * callback is defined in hook_contentanalysis_analyzers ['callback']
+ *
+ * @param unknown_type $context
+ *   Array context format defined by contentanalysis.module
+ * @param unknown_type $analysis
+ *  Array analysis format defined by contentanalysis.module
+ * @param unknown_type $params
+ *   Array customer defined paramters
+ */
+function alchemy_contentanalysis_analyzer($context, $analysis, $params) {
+  if (!alchemy_include_alchemy_class()) {
+    $msg = t('The Alchemy module requires the Alchemy SDK. Use the PHP version of the SDK.');
+    $msg .= ' ' . l(t('Download the SDK here.'), 'http://www.alchemyapi.com/tools/', array('attributes' => array('target' => 'alchemy')));
+    $msg .= "<br><br>";
+    $msg .= t('Download the files and place them in a folder named "AlchemyAPI" under the alchemy module directory.');
+    $analysis['messages'][] = contentanalysis_format_message($msg, 'error');
+    return $analysis;
+  }
+
+  if (!alchemy_get_apikey()) {
+    $analysis['messages'][] = contentanalysis_format_message(alchemy_get_message_apimissing(), 'error');
+    return $analysis;
+  }
+
+  $text = $context['body_notags'];
+  $nid = $context['nid'];
+  $types = explode(',', $context['inputs']['analyzer_options']['alchemy']['types']);
+  $usecache = (int) $context['inputs']['analyzer_options']['alchemy']['usecache'];
+
+  $weight = -10;
+  // keywords
+
+  if (in_array('keywords', $types)) {
+
+    $keywords = alchemy_get_elements($text, 'keywords', 'normalized', $nid, (ALCHEMY_DEBUG || $usecache));
+
+    $rows = array();
+    $header = array(
+      array('data' => t('Term')),
+      array('data' => t('Relevance')),
+    );
+    if (is_array($keywords)) {
+      foreach ($keywords as $v) {
+        $rows[] = array(
+          "<span class=\"kwresearch_keyword\">" . $v['term'] . "</span>",
+          number_format($v['relevance'] * 100, 1) . "%",
+        );
+      }
+    }
+
+    if (!$rows) {
+      $rows[] = array(array(
+          'data' => t('No keywords available.'),
+          'colspan' => count($header),
+        ));
+    }
+
+    $output = theme('table', array('header' => $header, 'rows' => $rows));
+
+    $analysis['content'][] = contentanalysis_format_content(t('Keywords'), $weight++, TRUE);
+    $analysis['content'][] = contentanalysis_format_content($output, $weight++);
+  }
+
+  // concepts
+
+  if (in_array('concepts', $types)) {
+
+    $keywords = alchemy_get_elements($text, 'concepts', 'normalized', $nid, (ALCHEMY_DEBUG || $usecache));
+
+    $rows = array();
+    $header = array(
+      array('data' => t('Term')),
+      array('data' => t('Relevance')),
+    );
+    if (is_array($keywords)) {
+      foreach ($keywords as $v) {
+        $rows[] = array(
+          "<span class=\"kwresearch_keyword\">" . $v['term'] . "</span>",
+          number_format($v['relevance'] * 100, 1) . "%",
+        );
+      }
+    }
+
+    if (!$rows) {
+      $rows[] = array(array(
+          'data' => t('No concepts available.'),
+          'colspan' => count($header),
+        ));
+    }
+
+    $output = theme('table', array('header' => $header, 'rows' => $rows));
+
+    $analysis['content'][] = contentanalysis_format_content(t('Concepts'), $weight++, TRUE);
+    $analysis['content'][] = contentanalysis_format_content($output, $weight++);
+  }
+
+  //entities
+
+  if (in_array('entities', $types)) {
+
+    $keywords = alchemy_get_elements($text, 'entities', 'normalized', $nid, (ALCHEMY_DEBUG || $usecache));
+
+    $rows = array();
+    $header = array(
+      array('data' => t('Term')),
+      array('data' => t('Type')),
+      array('data' => t('Relevance')),
+      array('data' => t('Count')),
+    );
+    if (is_array($keywords)) {
+      foreach ($keywords as $v) {
+        $rows[] = array(
+          "<span class=\"kwresearch_keyword\">" . $v['term'] . "</span>",
+          $v['type'],
+          number_format($v['relevance'] * 100, 1) . "%",
+          $v['count'],
+        );
+      }
+    }
+
+    if (!$rows) {
+      $rows[] = array(array(
+          'data' => t('No entities available.'),
+          'colspan' => count($header),
+        ));
+    }
+
+    $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'kwresearch-site-keywords')));
+
+    $analysis['content'][] = contentanalysis_format_content(t('Entities'), $weight++, TRUE);
+    $analysis['content'][] = contentanalysis_format_content($output, $weight++);
+  }
+  return $analysis;
+
+}

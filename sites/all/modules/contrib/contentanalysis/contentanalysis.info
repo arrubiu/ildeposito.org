@@ -1,0 +1,20 @@
+; $Id: contentanalysis.info,v 1.1.2.4 2010/06/01 21:23:39 tomdude48 Exp $
+name = "Content Analysis API"
+description = "Provides an API for content analyzers"
+package = Content analysis
+dependencies[] = ctools
+files[] = contentanalysis.admin.inc
+files[] = contentanalysis.install
+files[] = contentanalysis.module
+files[] = contentanalysis.css
+scripts[] = contentanalysis.js
+
+core = 7.x
+
+configure = admin/settings/contentanalysis
+; Information added by drupal.org packaging script on 2013-06-17
+version = "7.x-1.0-beta6"
+core = "7.x"
+project = "contentanalysis"
+datestamp = "1371477651"
+

@@ -1710,3 +1710,6 @@ form#user-login-form label {
 .front .pane-views-home-sezioni-block {
   display: none;
 }
+ .invisible {
+  display: none;
+}

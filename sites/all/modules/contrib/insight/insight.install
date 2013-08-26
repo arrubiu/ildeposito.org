@@ -1,0 +1,234 @@
+<?php
+// $Id: contentanalysis.install,v 1.1.2.5 2010/09/26 00:32:57 tomdude48 Exp $
+/**
+ * @file 
+ * Install include file. Implements database schema. 
+*/
+
+/**
+ *  Implementation of hook_install().
+ */
+function insight_install() {
+
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function insight_uninstall() {
+
+}
+
+/**
+ *  Implementation of hook_schema()
+ */
+function insight_schema() {
+$schema['insight_report'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'irid' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'serial',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '64',
+      'not null' => TRUE,
+    ),
+    'nid' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'path' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => TRUE,
+    ),
+    'created' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'active' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'size' => 'tiny',
+      'not null' => TRUE,
+    ),
+    'status' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'size' => 'tiny',
+      'not null' => FALSE,
+    ),
+    'score' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'float',
+      'not null' => FALSE,
+    ),
+    'help' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'text',
+      'not null' => FALSE,
+    ),
+    'report' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'blob',
+      'size' => 'big',
+      'not null' => TRUE,
+    ),
+    'data' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'blob',
+      'size' => 'big',
+      'not null' => FALSE,
+    ),
+  ),
+  'primary key' => array('irid'),
+  'indexes' => array(
+    'name' => array('name'),
+    'nid' => array('nid', 'path'),
+    'path' => array('path'),
+  ),
+);
+$schema['insight_alert'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'iaid' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'serial',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => TRUE,
+    ),
+    'report' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '64',
+      'not null' => TRUE,
+    ),
+    'nid' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'path' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => TRUE,
+    ),
+    'created' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'active' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'size' => 'tiny',
+      'not null' => TRUE,
+    ),
+    'irid' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'status' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'size' => 'tiny',
+      'not null' => TRUE,
+    ),
+    'message' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'text',
+      'not null' => TRUE,
+    ),
+  ),
+  'primary key' => array('iaid'),
+  'indexes' => array(
+    'name' => array('name'),
+    'nid' => array('nid'),
+    'path' => array('path'),
+    'report' => array('report'),
+  ),
+);
+
+	
+  return $schema;
+}
+
+/** previous schema for testing
+
+function contentanalysis_schema() {
+  $schema['contentanalysis'] = array(
+    'description' => t('Creates database table for content analysis settings.'),
+    'fields' => array(
+      'aid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The id for the analysis.',  
+      ), //aid
+      'last_analysis' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The unix timestamp of the time the analysis was last run.',  
+      ), //last_analysis
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid of an analyzed node.',  
+      ), //nid
+      'path' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Drupal path of an analyzed page.',  
+      ), //path  
+      'url' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'URL of an analyzed page.',  
+      ), //url 
+      'analyzers' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Analyzers to use with node.',  
+      ), //analyzers                        
+    ),
+    'primary key' => array('aid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'path' => array('path'),
+      'url' => array('url'),
+    ),
+
+  ); 
+  return $schema;
+}
+//*/

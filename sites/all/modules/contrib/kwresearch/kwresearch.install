@@ -1,0 +1,170 @@
+<?php
+// $Id: kwresearch.install,v 1.1.2.13 2011/01/05 20:42:59 tomdude48 Exp $
+
+
+/**
+ * @file
+ * Install hooks for Keyword Research.
+ */
+
+/**
+ * Implements hook_install().().
+ */
+function kwresearch_install() {
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_install_schema('kwresearch')
+  drupal_set_message(t('Keyword Research has been installed.'));
+}
+
+/**
+ * Implements hook_uninstall().().
+ */
+function kwresearch_uninstall() {
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_uninstall_schema('kwresearch')
+  drupal_set_message(t('Keyword Research has been uninstalled.'));
+}
+
+/**
+ * Implements hook_schema().
+ */
+function kwresearch_schema() {
+
+  $schema['kwresearch_keyword'] = array(
+    'description' => 'Creates database table to store keyword data.',
+    'fields' => array(
+      'kid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The id for the keyword.',
+      ), //kid
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The id for the user.',
+      ), //uid
+      'keyword' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'subject keyword.',
+      ), //keyword
+      'keyword_stem' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'subject keyword stem.',
+      ), //keyword_stem
+      'word_count' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+        'description' => 'number of words in phrase',
+      ), //word_count  
+      'priority' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        //'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => -1,
+        'description' => 'importance of word to site',
+      ), //priority  
+      'value' => array(
+        'type' => 'float',
+        //'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => -1,
+        'description' => 'value of word to site',
+      ), //value 
+      'page_count' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'number of pages with keyword assocated',
+      ), //page_count
+      'stats_update' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'timestamp of last data update',
+      ), //stats_update
+      'daily_volume' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'estimated times the keyword is searched on major search engines per day',
+      ), //daily_volume
+      'bid' => array(
+        'type' => 'float',
+        //'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => -1,
+        'description' => 'recommended bid price for keyword phrase',
+      ), //value 
+      'competition' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        //'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => -1,
+        'description' => 'level of competition for the keyword phrase',
+      ), //competitiveness
+    ),
+    'primary key' => array('kid'),
+    'indexes' => array(
+      'keyword' => array('keyword'),
+      'priority' => array('priority'),
+    ),
+  );
+  $schema['kwresearch_page_keyword'] = array(
+    'description' => 'Creates database table to store page keyword data.',
+    'fields' => array(
+      'kid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The id for the keyword.',
+      ), //kid
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The id for the node.',
+      ), //nid
+      'path' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'description' => 'path to page.',
+      ), //path  
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The id for the user.',
+      ), //uid
+      'priority' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        //'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => -1,
+        'description' => 'importance of word to site',
+      ), //priority  
+    ),
+    'indexes' => array(
+      'kid' => array('kid'),
+      'nid' => array('nid'),
+      'path' => array('path'),
+    ),
+  );
+
+  return $schema;
+}

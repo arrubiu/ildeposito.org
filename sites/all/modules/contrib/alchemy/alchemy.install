@@ -1,0 +1,69 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the alchemy module.
+ *
+ */
+
+
+/**
+ * Implements hook_install().().
+ */
+function alchemy_install() {
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_install_schema('alchemy')
+  drupal_set_message(t('Alchemy has been installed.'));
+}
+
+/**
+ * Implements hook_uninstall().().
+ */
+function alchemy_uninstall() {
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_uninstall_schema('alchemy')
+  drupal_set_message(t('Alchemy has been uninstalled.'));
+}
+
+/**
+ * Implements hook_schema().
+ */
+function alchemy_schema() {
+  $schema['alchemy_cache'] = array(
+    'description' => 'Creates database table to cache Alchemy data.',
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The nid for the analyzed node.',
+      ), //vid
+      'path' => array(
+        'type' => 'text',
+        'description' => 'Path of the analyzed content',
+      ), //path
+      'created' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The unix time the recored was created.',
+      ), //created
+      'command' => array(
+        'type' => 'text',
+        'description' => 'Command request to Alchemy',
+      ), //command
+      'data' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        //'default' => '',
+        'description' => 'Cached data.',
+      ), //data  
+    ),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'path' => array(array('path', 18)),
+    ),
+  );
+  return $schema;
+}

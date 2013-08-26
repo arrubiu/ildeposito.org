@@ -1,0 +1,15 @@
+name = Insight
+description = Provides marketing insight integration
+package = Insight
+core = 7.x
+php = 5.1
+dependencies[] = contentanalysis
+configure = admin/config/insight
+files[] = insight.module
+files[] = insight.admin.inc
+; Information added by drupal.org packaging script on 2012-01-12
+version = "7.x-1.0-alpha2"
+core = "7.x"
+project = "insight"
+datestamp = "1326409840"
+

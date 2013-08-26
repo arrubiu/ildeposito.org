@@ -1,0 +1,14 @@
+; $Id: contentanalysisexample.info,v 1.5 2010/05/08 16:12:13 tomdude48 Exp $
+name = "Content Analysis API Example"
+description = "Example Content Analyzer module"
+package = Content analysis
+dependencies[] = contentanalysis
+files[] = contentanalysisexample.module
+scripts[] = contentanalysisexample.js
+core = 7.x
+; Information added by drupal.org packaging script on 2013-06-17
+version = "7.x-1.0-beta6"
+core = "7.x"
+project = "contentanalysis"
+datestamp = "1371477651"
+

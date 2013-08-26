@@ -1,0 +1,954 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Demonstrate basic module insight.
+ */
+
+DEFINE('INSIGHT_CONTENTANALYSIS_AUTORUN_ON_NODESAVE_DEFAULT', 0);
+DEFINE('INSIGHT_CONTENTANALYSIS_AUTORUN_ON_CRON_DEFAULT', 1);
+
+/**
+ * Implements hook.().
+ */
+function insight_menu() {
+  // Module settings.
+  $items['admin/config/services/insight'] = array(
+    'title' => 'Insight',
+    'description' => 'Insight configuration configuration settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('insight_admin_settings_form'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,    
+    'file' => 'insight.admin.inc',
+    'file path' => drupal_get_path('module', 'insight'),
+  );
+  $items['admin/config/services/insight/general'] = array(
+    'title' => 'General',
+    'description' => 'Insight configuration configuration settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('insight_admin_settings_form'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'file' => 'insight.admin.inc',
+  );
+  $items['admin/config/services/insight/api'] = array(
+    'title' => 'API',
+    'description' => 'Insight configuration configuration settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('insight_admin_api_settings'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_CALLBACK,
+    'file' => 'insight.admin.inc',
+  );
+  /*
+  $items['admin/config/services/insight/analyzers'] = array(
+    'title' => 'Analyzers',
+    'description' => 'Insight configuration configuration settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('insight_admin_analyzer_settings'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'insight.admin.inc',
+  );
+  */
+  $items['admin/content/insight'] = array(
+    'title' => 'Insight',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('insight_page_report'),
+    'access arguments' => array('access content overview'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
+    'file' => 'insight.page_reports.inc',
+    'file path' => drupal_get_path('module', 'insight'),  
+  );
+  $items['admin/content/insight/alerts'] = array(
+    'title' => 'Alerts',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('insight_page_alerts_page'),
+    'access arguments' => array('access content overview'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
+    'file' => 'insight.page_alerts.inc',
+    'file path' => drupal_get_path('module', 'insight'),  
+  );
+  $items['admin/content/insight/reports'] = array(
+    'title' => 'Reports',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('insight_page_report'),
+    'access arguments' => array('access content overview'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
+    'file' => 'insight.page_reports.inc',
+    'file path' => drupal_get_path('module', 'insight'),  
+  );
+  $items['admin/reports/insight/report/%insight_report'] = array(
+    'title' => 'Insight reports',
+    'description' => 'Configure an widget set.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('insight_report_form', 4),
+    'access arguments' => array('administer widgets sets'),
+    'type' => MENU_CALLBACK,
+    'file' => 'insight.reports.inc',
+  );
+  $items['admin/reports/insight/alert/active/%insight_alert'] = array(
+    'title' => 'Insight alert operation',
+    'description' => 'Configure an widget set.',
+    'page callback' => 'insight_alert_active_operation',
+    'page arguments' => array(5),
+    'access arguments' => array('administer widgets sets'),
+    'type' => MENU_CALLBACK,
+    'file' => 'insight.reports.inc',
+  );
+  $items['admin/reports/insight/autoanalyze/node/%node'] = array(
+    'title' => 'Insight alert operation',
+    'description' => 'Configure an widget set.',
+    'page callback' => 'insight_autoanalyze_node_operation',
+    'page arguments' => array(5),
+    'access arguments' => array('administer widgets sets'),
+    'type' => MENU_CALLBACK,
+    'file' => 'insight.reports.inc',
+  );
+  $items['insight/util'] = array(
+    'title' => 'Insight util',
+    'page callback' => 'insight_util',
+    'access callback' => 'user_access',
+    'access arguments' => array('admin'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function insight_util() {
+	
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'));
+  $ca_alias = $query->leftJoin('contentanalysis', 'ca', '%alias.nid = n.nid');
+  $query->where("{$ca_alias}.last_analysis IS NULL OR n.changed > {$ca_alias}.last_analysis");
+  $query->range(0, 100);
+  $result = $query->execute();
+  $nids = array();
+  while ($nid = $result->fetchField()) {
+  	$nids[] = $nid;
+  }
+dsm(" " . $query);
+  $nodes = node_load_multiple($nids);
+  dsm($nids);
+  dsm($nodes);
+  return ''; //insight_contentanalysis_theme_score($score, $description);
+}
+
+
+/**
+ * Implements hook_help().
+ */
+function insight_help($path, $arg) {
+  switch ($path) {
+    case 'admin/settings/insight':
+      return t('This is some help text for the insight settings page.');
+
+    case 'admin/help#insight':
+      $output = '<p>' . t('This is help text for the insight help page') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Save a report.
+ *
+ * @param set
+ *   An widget set array.
+ * @return
+ *   An widget set array. In the case of a new set, 'wsid' will be populated.
+ */
+function insight_report_save($report) {
+	// check if report already exists
+  $report0 = insight_report_load_by_params($report['name'], $report['nid'], $report['path']);
+
+  $report += array(
+    'created' => REQUEST_TIME,
+    'active' => 1,
+  );
+
+  if (isset($report0['irid'])) {
+  	$report['irid'] = $report0['irid'];
+    drupal_write_record('insight_report', $report, array('irid'));
+  }
+  else {
+  	drupal_write_record('insight_report', $report);
+  }
+  
+  // Let other modules update as necessary on save.
+  module_invoke_all('insight_report_save', $report);
+
+  return $report;
+}
+
+function insight_report_load($irid) {
+	
+  $report = db_select('insight_report', 'r')
+    ->fields('r')
+    ->condition('r.irid', $irid)
+    ->execute()
+    ->fetchAssoc();
+
+  // Otherwise the set was not found.
+  return $report;
+}
+
+function insight_report_load_by_params($name, $nid = NULL, $path = NULL) {  
+  $reports = insight_reports_load_by_params($name, $nid, $path);
+  return isset($reports[$name]) ? $reports[$name] : FALSE;
+}
+
+function insight_reports_load_by_params($name = NULL, $nid = NULL, $path = NULL) {  
+  $query = db_select('insight_report', 'r', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('r');
+
+  if (isset($name)) {
+    $query->condition('r.name', $name);
+  }
+  else {
+  	$query->orderBy('r.name');
+  }
+  if (isset($nid)) {
+  	$query->condition('r.nid', $nid);
+  }
+  elseif (isset($path)) {
+    $query->condition('r.path', $path);
+  }    
+  else {
+  	return FALSE;
+  }
+  
+  $reports = $query->execute()->fetchAllAssoc('name', PDO::FETCH_ASSOC);
+
+  // Otherwise the set was not found.
+  return $reports;
+}
+
+function insight_reports_load_by_page($nid = NULL, $path = NULL) {  
+  $query = db_select('insight_report', 'r', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('r');
+
+  if (isset($nid)) {
+    $query->condition('r.nid', $nid);
+  }
+  elseif (isset($path)) {
+    $query->condition('r.path', $path);
+  }    
+  else {
+    return FALSE;
+  }
+  $reports = $query->execute()->fetchAllAssoc('name', PDO::FETCH_ASSOC);    
+    
+  if (!is_array($reports)) {
+  	return FALSE;
+  }
+
+  // Otherwise the set was not found.
+  return $report;
+}
+
+function insight_report_delete($irid) {
+  $report = db_delete('insight_report')
+    ->condition('irid', $irid)
+    ->execute();
+
+  // delete report alerts
+  insight_alerts_delete_by_params($irid);    
+  
+  return $report;
+}
+
+function insight_reports_delete_by_params($name = NULL, $nid = NULL, $path = NULL) {  
+	$reports = insight_reports_load_by_params($name, $nid, $path);
+	$query = db_delete('insight_report');
+
+  if (isset($name)) {
+    $query->condition('name', $name);
+  }
+  if (isset($nid)) {
+    $query->condition('nid', $nid);
+  }
+  elseif (isset($path)) {
+    $query->condition('path', $path);
+  }    
+  
+  $deleted = $query->execute();
+  
+  // delete alerts associated with just deleted reports
+  if (is_array($reports)) {
+  	foreach ($reports AS $report) {
+  		insight_alerts_delete_by_params($report['irid']); 
+  	}
+  }
+
+  // Otherwise the set was not found.
+  return $deleted;
+}
+
+function insight_report_ignore($irid) {
+	$query = db_update('insight_report')
+	  ->fields(array('active' => 0))
+	  ->condition('irid', $irid)
+	  ->execute();
+}
+
+function insight_report_activate($irid) {
+  $query = db_update('insight_report')
+    ->fields(array('active' => 1))
+    ->condition('irid', $irid)
+    ->execute();
+}
+
+function insight_alert_save($alert) {
+  // check if report already exists
+  $alert0 = insight_alert_load_by_params(NULL, $alert['report'], $alert['name'], $alert['nid'], $alert['path']);
+  $alert += array(
+    'created' => REQUEST_TIME,
+    'active' => 1,
+  );
+  if (isset($alert0['iaid'])) {
+    $alert['iaid'] = $alert0['iaid'];
+    drupal_write_record('insight_alert', $alert, array('iaid'));
+  }
+  else {
+    drupal_write_record('insight_alert', $alert);
+  }
+  
+  // Let other modules update as necessary on save.
+  module_invoke_all('insight_alert_save', $alert);
+
+  return $alert;
+}
+
+function insight_report_alerts_save($alerts, $analyzer, $report = NULL, $nid = NULL, $path = NULL) {
+  // check if report already exists
+	
+  if (!is_array($alerts) || count($alerts) == 0) {
+  	return FALSE;
+  }
+  if (!isset($report)) {
+  	$report = $alerts[key($alerts)]['report'];
+  }
+  if (!isset($nid)) {
+    $nid = $alerts[key($alerts)]['nid'];
+  }
+  if (!isset($path)) {
+    $path = $alerts[key($alerts)]['path'];
+  }
+  
+  $alerts0 = insight_alerts_load_by_params(NULL, $report, NULL, $nid);
+  
+  $analyzer_defs = insight_analyzer_info();
+  $alert_defs = $analyzer_defs[$analyzer]['reports'][$report]['alerts'];
+
+  foreach ($alert_defs AS $name) {
+  	// alert generated
+  	if (isset($alerts[$name])) {
+  		// alert generated, doen't previously exist
+  		if (!isset($alerts0[$name])) {
+        insight_alert_save($alerts[$name]);
+  		}
+  		// alert exists and not ignore
+  		else {
+  			if ($alerts0[$name]['active'] != 0) {
+  				insight_alert_activate($alerts0[$name]['iaid'], TRUE);
+  			}  			
+  		}
+  	}
+  	// alert not generated
+  	else {
+  	  if (isset($alerts0[$name])) {
+  	  	// existing alert not ignored
+  	  	if ($alerts0[$name]['active'] == 0) {
+  	  		insight_alert_ignore_dismiss($alerts0[$name]['iaid'], TRUE);
+  	  	}
+  	  	else {
+          insight_alert_dismiss($alerts0[$name]['iaid'], TRUE);
+  	  	}
+      }  		
+  	}
+  }
+  
+  return $alerts;
+}
+
+function insight_alert_update_active($iaid, $active, $update_time = FALSE) {
+  $fields = array(
+    'active' => $active,
+  );
+  if ($update_time) {
+  	$fields['created'] = REQUEST_TIME;
+  }
+	$query = db_update('insight_alert')
+    ->fields($fields)
+    ->condition('iaid', $iaid)
+    ->execute();	
+}
+
+function insight_alert_ignore_dismiss($iaid, $update_time = FALSE) {
+  insight_alert_update_active($iaid, -2, $update_time);
+}
+
+function insight_alert_dismiss($iaid, $update_time = FALSE) {
+  insight_alert_update_active($iaid, -1, $update_time);
+}
+
+function insight_alert_ignore($iaid, $update_time = FALSE) {
+  insight_alert_update_active($iaid, 0, $update_time);
+}
+
+function insight_alert_activate($iaid, $update_time = FALSE) {
+  insight_alert_update_active($iaid, 1, $update_time);
+}
+
+function insight_alert_load($iaid) {
+  
+  $alert = db_select('insight_alert', 'a')
+    ->fields('a')
+    ->condition('a.iaid', $iaid)
+    ->execute()
+    ->fetchAssoc();
+
+  // Otherwise the set was not found.
+  return $alert;
+}
+/**
+ * Loads one alert by params
+ * @param unknown_type $irid
+ * @param unknown_type $report_name
+ * @param unknown_type $alert_name
+ * @param unknown_type $nid
+ * @param unknown_type $path
+ */
+function insight_alert_load_by_params($irid = NULL, $report_name = NULL, $alert_name = NULL, $nid = NULL, $path = NULL) {  
+  $alerts = insight_alerts_load_by_params($irid = NULL, $report_name, $alert_name, $nid, $path);
+  return isset($alerts[0]) ? $alerts[0] : FALSE;
+}
+
+function insight_alerts_load_by_params($irid = NULL, $report_name = NULL, $alert_name = NULL, $nid = NULL, $path = NULL) {  
+  $query = db_select('insight_alert', 'a', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('a');
+ 
+  if (isset($irid)) {
+    $query->condition('a.irid', $irid);  
+  }
+  if (isset($report_name)) {
+    $query->condition('a.report', $report_name);  
+  }  
+  if (isset($alert_name)) {
+    $query->condition('a.name', $alert_name);
+  }
+  if (isset($nid)) {
+    $query->condition('a.nid', $nid);
+  }
+  elseif (isset($path)) {
+    $query->condition('a.path', $path);
+  }    
+  
+  $alerts = $query->execute()->fetchAllAssoc('name', PDO::FETCH_ASSOC);
+
+  // Otherwise the set was not found.
+  return $alerts;
+}
+
+function insight_alert_delete($iaid) {
+  
+  $alert = db_delete('insight_alert')
+    ->condition('iaid', $iaid)
+    ->execute();
+
+  return $alert;
+}
+
+function insight_alerts_delete_by_params($irid = NULL, $report_name = NULL, $alert_name = NULL, $nid = NULL, $path = NULL) {  
+  $query = db_delete('insight_alert');
+ 
+  if (isset($irid)) {
+    $query->condition('irid', $irid);  
+  }
+  if (isset($report_name)) {
+    $query->condition('report', $report_name);  
+  }  
+  if (isset($alert_name)) {
+    $query->condition('name', $alert_name);
+  }
+  if (isset($nid)) {
+    $query->condition('nid', $nid);
+  }
+  elseif (isset($path)) {
+    $query->condition('path', $path);
+  }    
+  
+  $alerts = $query->execute();
+
+  return $alerts;
+}
+
+/**
+ * Implementation of hook_node_insert();
+ */
+function insight_node_insert($node) {
+  if (variable_get('insight_contentanalysis_autorun', '') == 'nodesave') {
+    insight_contentanalysis_autoanalyze($node);
+  }
+}
+
+/**
+ * Implementation of hook_node_update();
+ */
+function insight_node_update($node) {
+	if (variable_get('insight_contentanalysis_autorun_on_nodesave', INSIGHT_CONTENTANALYSIS_AUTORUN_ON_NODESAVE_DEFAULT)) {
+	  insight_contentanalysis_autoanalyze($node);
+	}
+}
+
+/**
+ * Implementation of hook_node_update();
+ */
+function insight_node_delete($node) {
+  insight_reports_delete_by_params(NULL, $node->nid);
+}
+
+
+/**
+ * Returns xml connection data for Wordtracker data
+ * TODO ??? move/rename this function
+ */
+function insight_get_xml_connect() { 
+  $c = array();
+  $c['apikey'] = variable_get('insight_apikey', '');
+  if (!$c['apikey']) {
+    return FALSE;
+  }
+  //$c['endpoint'] = 'http://api.localhost/xmlrpc.php';
+  $c['endpoint'] = 'http://api.leveltendesign.com/xmlrpc.php';
+  return $c;
+}
+
+function insight_api_query_permissions() {
+
+  if (!$c = insight_get_xml_connect()) {
+    drupal_set_message(t('API key is missing.'), 'error'); 
+  }
+  $args = array(
+    'insight.profile_load' => array(
+      $c['apikey'],
+    ),
+  );
+  $apiret = xmlrpc($c['endpoint'], $args);
+  
+  return $apiret;
+}
+
+function insight_contentanalysis_autoanalyze($node) {
+  $analysis = array();
+
+  $context = contentanalysis_get_default_context();
+  //$context['form_id'] = 'contentanalysis_analyze_js';
+  
+  if (is_object($node)) {
+  	$nid = $node->nid;
+  }
+  elseif (is_numeric($node)) {
+  	$nid = $node;
+    $node = node_load($nid);
+  }
+  $context['inputs']['nid'] = $nid;
+  
+  $context['source'] = 'insight_auto';  
+  $context['nid'] = $context['inputs']['nid'];
+  $context['node'] = $node;
+  
+  $active = variable_get('insight_contentanalysis_autorun_analyzers', array());
+  
+  // load analyzers using hook_contentanalysis_analyzers
+  $analyzer_defs = contentanalysis_analyzer_info();
+  
+//dsm($analyzer_defs);
+
+  // enable modules to alter analyzers
+  $analyzers = array();
+  foreach ($active AS $name => $enabled) {
+  	if ($enabled) {
+  	  $analyzers[$name] = $analyzer_defs[$name];
+  	}
+  }
+  drupal_alter('contentanalysis_analyzers', $analyzers);
+  
+  $analysis = contentanalysis_do_analysis($context, $analyzers);
+  
+  $analysis = contentanalysis_build_analysis_content($analysis);
+  
+  return '';
+}
+
+function insight_contentanalysis_autoanalyze_nodes(array $nids, $op, array $options = array()) {
+  $options += array('message' => FALSE);
+
+  $nodes = node_load_multiple($nids);
+  foreach ($nodes as $node) {
+    insight_contentanalysis_autoanalyze($node);
+  }
+
+  if (!empty($options['message'])) {
+    drupal_set_message(format_plural(count($nids), 'Analyzed 1 node.', 'Analyzed @count nodes.'));
+  }
+}
+
+function insight_contentanalysis_autoanalyze_batch($obj) {
+	//watchdog('insight_cron', dsm($obj));
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'));
+  $ca_alias = $query->leftJoin('contentanalysis', 'ca', '%alias.nid = n.nid');
+  $query->where("{$ca_alias}.last_analysis IS NULL OR n.changed > {$ca_alias}.last_analysis");
+  $query->range(0, 100);
+  $result = $query->execute();
+  $nids = array();
+  while ($nid = $result->fetchField()) {
+    $nids[] = $nid;
+  }
+  $nodes = node_load_multiple($nids);
+  foreach ($nodes as $node) {
+    insight_contentanalysis_autoanalyze($node);
+  }	
+}
+
+
+
+function insight_contentanalysis_analysis_format_score($score, $help = '') {
+  $status = 'analyzer-error';
+  if ($score > 50) { 
+    $status = 'analyzer-warning'; 
+  }
+  if ($score > 75) { 
+    $status = 'analyzer-complete'; 
+  }
+	return ' <span class="analyzer-insight-score '. $status .'">' . $score . '%</span>';
+}
+
+/*
+
+function insight_contentanalysis_analyzer_seo($context, $analysis, $params, $type = '') {
+	return insight_contentanalysis_analyzer($context, $analysis, $params, 'seo');
+}
+
+function insight_contentanalysis_analyzer_terms($context, $analysis, $params, $type = '') {
+  return insight_contentanalysis_analyzer($context, $analysis, $params, 'terms');
+}
+*/
+
+/**
+ * Implementation of hook_analyzer() via custom define callback
+ * 
+ * Analyzes content based on readability algorithms from php-text-statistics
+ * 
+ * @rerturn array
+ *   readability analysis
+ */
+function insight_contentanalysis_analyzer(&$context, $analysis, $params, $type = '') {
+  if (!$c = insight_get_xml_connect()) {
+    $msg = t('You must !settings_link in order to get Insight reports. !get_link.', 
+      array(
+        '!settings_link' => l(t('set the Insight API key'), 'admin/config/services/insight/api', array('attributes' => array('target', 'settings'))),
+        '!get_link' => l(t('Get an Insight API key here'), 'http://api.leveltendesign.com', array('attributes' => array('target', 'api'))),
+      )
+    );
+    $analysis['messages']['apikey_missing'] = contentanalysis_format_message($msg, 'error');
+    return $analysis;
+  }
+  
+  $args = array(
+    'insight.contentanalysis' => array(
+    $c['apikey'],
+    $context,
+    $analysis,
+    $params,
+    ),
+  );
+  $apiret = xmlrpc($c['endpoint'], $args);
+  $analysises = $apiret['analysis'];
+//dsm($apiret);
+  return $analysises;
+  
+//dsm($analysises);
+//dsm($report_defs);
+/*
+  foreach($report_defs AS $report_name => $report_def) {
+	  insight_set_contentanalysis($report_name, $analysises[$report_name]);
+	  $report = insight_report_save(insight_ca_report_to_insight_report($context, $analysises['links'], 'links', $report_defs));
+	  $alerts = insight_ca_report_to_insight_alerts($context, $analysises['links'], $report, 'links', $report_defs);
+	  insight_analyzer_alerts_save($alerts);
+  }
+*/
+  
+variable_set('insight_test_analysises', $analysises);
+variable_set('insight_test_context', $context);
+  // return nothing, analysis will be added in hook_contentanalysis_analysis
+  return '';
+}
+
+function insight_contentanalysis_analysis_alter(&$analysis, $context) {
+//dsm($analysis);
+//dsm($context);
+  $analyzer_defs = insight_insight_analyzer_info();
+  $report_defs = $analyzer_defs['insight_content']['reports'];
+//dsm($report_defs);
+  
+	// process internal analyzers
+	if (!isset($analysis['insight_content']['messages']['apikey_missing'])) {
+  	foreach ($report_defs AS $report_name => $report_def) {
+  		if (isset($analysis['insight_content'][$report_name])) {
+  		  $analysis[$report_name] = $analysis['insight_content'][$report_name];
+  		  $analysis[$report_name]['#title'] = $report_def['title'];
+  		  
+        $report = insight_ca_report_to_insight_report($context, $analysis[$report_name], $report_name, $report_name);
+        $report = insight_report_save($report);
+        $alerts = insight_ca_report_to_insight_alerts($context, $analysis[$report_name], $report);
+        insight_report_alerts_save($alerts, $analyzer_name);
+  		}
+  	}
+  	unset($analysis['insight_content']);
+	}
+	// apikey missing
+	else {
+	  
+	}
+	// process in
+  
+	// process other analyzers
+	$analyzer_defs = insight_analyzer_info();
+//dsm($analyzer_defs);
+//dsm($analysis);
+  foreach ($analyzer_defs AS $analyzer_name => $analyzer_def) {
+    if ($analyzer_name == 'insight_content') {
+      continue;
+    }
+	  foreach ($analyzer_def['reports'] AS $report_name => $def) {
+  	  if (isset($analysis[$analyzer_def['contentanalyzer']])) {
+		    $report = insight_ca_report_to_insight_report($context, $analysis[$analyzer_def['contentanalyzer']], $analyzer_def['contentanalyzer'], $report_name);
+		    $report = insight_report_save($report);
+		    $alerts = insight_ca_report_to_insight_alerts($context, $analysis[$analyzer_def['contentanalyzer']], $report);
+		    insight_report_alerts_save($alerts, $analyzer_name);
+	    }
+	  }
+  }
+//dsm($analysis);
+}
+
+function insight_ca_report_to_insight_alerts($context, $analysis, $report) {
+//dsm($analysis);
+//dsm($report);
+  $alerts = array();
+  if (isset($analysis['#insight']['alerts'])) {
+    foreach($analysis['#insight']['alerts'] AS $alert_name => $alert) {
+      $alert = array(
+        'name' => $alert_name,
+        'report' => $report['name'],
+        'nid' => $context['nid'],
+        'path' => $context['path'],
+        'irid' => $report['irid'],
+        'status' => $alert['status'],
+        'message' => $alert['message'],
+      );
+      $alerts[$alert_name] = $alert;
+    }
+  } 
+//dsm($alerts);
+  return $alerts;
+}
+
+function insight_ca_report_to_insight_report($context, $analysis, $analyzer, $report) {
+//dsm($report_defs);
+//dsm($analysis);
+  $analysis += array(
+    '#score' => NULL,
+    '#help' => NULL,
+    '#data' => NULL,
+  );
+
+  $status = NULL;
+  if (isset($analysis['#status'])) {
+    $status = 2;
+    if ($analysis['#status'] == 'warning') {
+      $status = 1;
+    }
+    else if ($analysis['#status'] == 'error') {
+      $status = 0;
+    }
+  }
+  $a = array(
+    $analyzer => $analysis
+  );
+  $b = contentanalysis_build_analysis_content($a);
+  $output = '<style> .contentanalysis-report-tabs { display: none; } </style>';
+  $output .= '<div class="analysis-results" style="margin: 0 0 0 0;"><div class="analyzer-analysis" style="display: block;">' . $b[$analyzer]['output'] . '</div></div>';
+  
+  $report = array(
+    'name' => $report,
+    'nid' => $context['nid'],
+    'path' => $context['path'],
+    'status' => $status,
+    'score' => $analysis['#score'],
+    'help' => $analysis['#help'],
+    'report' => $output,
+    'data' => $analysis['#data'], 
+  );
+  return $report;
+}
+
+function insight_set_contentanalysis($name, $analysis) {
+  return _insight_contentanalysis($name, 'set', $analysis);
+}
+
+function insight_get_contentanalysis($name) {
+  return _insight_contentanalysis($name);
+}
+
+function _insight_contentanalysis($name, $action = 'get', $analysis = NULL) {
+  static $analysises = array();
+  if($action == 'set') {
+    $analysises[$name] = $analysis;
+  }
+  elseif ($action == 'reset') {
+    unset($analysises[$name]);
+  }
+  if (isset($analysises[$name])) {
+    return $analysises[$name];
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Implements hook_node_operations().
+ */
+function insight_node_operations() {
+  $operations['insight_contentanalysis_analyze'] = array(
+    'label' => t('Analyze selected content'),
+    'callback' => 'insight_contentanalysis_autoanalyze_nodes',
+    'callback arguments' => array('bulkupdate', array('message' => TRUE)),
+  );
+  return $operations;
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function insight_cron_queue_info() {
+  $queues['insight_autoanalyze'] = array(
+    'worker callback' => 'insight_contentanalysis_autoanalyze_batch',
+    'time' => 600,
+  );
+  return $queues;
+}
+
+/**
+ * Implements hook_cron().
+ *
+ */
+function insight_cron() {
+	if (variable_get('insight_contentanalysis_autorun_on_cron', INSIGHT_CONTENTANALYSIS_AUTORUN_ON_CRON_DEFAULT)) {
+	  $queue = DrupalQueue::get('insight_autoanalyze');
+	  $obj = new stdClass;
+	  $queue->createItem($obj);
+	}
+}
+
+function insight_analyzer_info($with_meta = FALSE) {
+  $analyzers = &drupal_static(__FUNCTION__);
+
+  // Grab from cache or build the array.
+  if (!isset($analyzer)) {
+    if ($cache = cache_get("insight_analyzers") && !empty($cache->data)) {
+      $analyzers = $cache->data;
+    }
+    else {
+      //include_once drupal_get_path('module', 'insight') . '/insight.reports.inc';
+      $analyzers['#meta'] = array();
+      foreach (module_implements('insight_analyzer_info') as $module) {  
+        foreach (module_invoke($module, 'insight_analyzer_info') as $name => $analyzer) {
+          // Ensure the current toolkit supports the element.
+          $analyzer['module'] = $module;
+          $analyzer['name'] = $name;
+          $analyzers[$name] = $analyzer;
+          $analyzers['#meta']['analyzers_by_type'][$analyzer['type']][] = $name;
+          if (isset($analyzer['contentanalyzer'])) {
+            $analyzers['#meta']['by_contentanalyzer'][$analyzer['contentanalyzer']] = $name;
+          }
+          if (isset($analyzer['reports'])) {
+            foreach ($analyzer['reports'] AS $report_name => $report) {
+            	$analyzers['#meta']['reports'][$report_name] = $report;
+            	$analyzers['#meta']['reports_by_type'][$analyzer['type']][] = $report_name;
+            }
+          }
+        }
+      }
+      drupal_alter('insight_analyzer_info', $analyzers);
+      cache_set("insight_analyzers", $analyzers);
+    }
+  }
+  if (!$with_meta) {
+    unset($analyzers['#meta']);
+  }
+  return $analyzers; 
+}
+
+/**
+ *  Implementation of hook_contentalalysis_analyzers()
+ *  
+ */
+function insight_contentanalysis_analyzer_info() {
+return array();
+  $analyzers['insight_content'] = array(
+    'title' => t('Insight'),
+    'module' => 'insight',
+    'callback' => 'insight_contentanalysis_analyzer',
+    //'form elements callback' => 'insight_contentanalysis_analyzer_form_elements',
+    //'node form submit callback' => 'insight_contentanalysis_node_form_submit',
+    //'weight' => -5,
+  );
+  return $analyzers;  
+}
+
+function insight_insight_analyzer_info() {
+return array(
+  'insight_content' => array (
+    'title' => t('Content Insight (comming soon)'),
+    'reports' => array(),
+    'type' => 'content',
+  )
+);	
+  $analyzers['insight_content'] = array(
+    'title' => t('Content Insight'),
+    'type' => 'content',
+    'contentanalyzer' => 'insight_content',
+  );  
+  $reports['insight_seo'] = array(
+    'title' => t('SEO Insight'),
+    'short title' => t('iSEO'),
+    'score type' => 'percentage',
+  );
+  $reports['insight_style'] = array(
+    'title' => t('Style Insight'),
+    'short title' => t('iStyle'),
+    'score type' => 'value', 
+  );
+  $reports['insight_terms'] = array(
+    'title' => t('Terms Insight'),
+    'short title' => t('iTerms'),  
+    'score type' => 'percentage', 
+  );
+  $reports['insight_links'] = array(
+    'title' => t('Links Insight'),
+    'short title' => t('iLinks'),  
+    'score type' => 'value',     
+  );
+  $analyzers['insight_content']['reports'] = $reports;
+  
+  return $analyzers;
+}

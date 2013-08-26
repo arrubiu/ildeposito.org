@@ -1,0 +1,65 @@
+<?php
+// $Id: seotools.install,v 1.1.2.2 2010/12/28 17:45:39 randallknutson Exp $
+
+/**
+ *  Implementation of hook_install().
+ */
+function seotools_install() {
+  //drupal_install_schema('seotools');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function seotools_uninstall() {
+  //drupal_uninstall_schema('seotools');
+  //drupal_set_message(t('SEO Tools has been uninstalled.'));
+}
+
+/**
+ *  Implementation of hook_schema
+ */
+function seotools_schema() {
+	return array();
+  $schema['seotools_cache'] = array(
+    'description' => 'Creates database table to store keyword data.',
+    'fields' => array(
+      'cid' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'cache id.',
+      ),
+      'data' => array(
+        'type' => 'text',
+        'description' => 'stores the cached data',
+      ),
+      'start_date' => array(
+        'type' => 'char',
+        'length' => '10',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'start date of query',
+      ),
+      'end_date' => array(
+        'type' => 'char',
+        'length' => '10',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'end date of query',
+      ),
+      'records' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'description' => 'number of records in data',
+      ), //autogen
+    ),
+    'indexes' => array(
+      'cid' => array('cid'),
+      'start_date' => array('start_date'),
+    ),
+  );
+
+  return $schema;
+}
