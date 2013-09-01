@@ -1,0 +1,14 @@
+name = "Mail-a-view"
+description = "Utility module which allows site administrators to e-mail views."
+core = "7.x"
+
+dependencies[] = "htmlmail"
+dependencies[] = "views"
+
+
+; Information added by drupal.org packaging script on 2013-06-07
+version = "7.x-1.1"
+core = "7.x"
+project = "mailaview"
+datestamp = "1370644852"
+
