@@ -549,7 +549,7 @@ function ildeposito_media_file_default_displays() {
   $file_display->api_version = 1;
   $file_display->name = 'image__sezioni_home__file_picture';
   $file_display->weight = 0;
-  $file_display->status = TRUE;
+  $file_display->status = FALSE;
   $file_display->settings = array(
     'picture_group' => 'seizoni_home',
     'fallback_image_style' => 'sezioni_homebreakpoints_theme_ildeposito_normal_1x',
