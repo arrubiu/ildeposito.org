@@ -33,7 +33,7 @@ function ildeposito_ct_canto_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-categorie field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -65,7 +65,7 @@ function ildeposito_ct_canto_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-principale field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -96,7 +96,7 @@ function ildeposito_ct_canto_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-risorse field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -127,7 +127,7 @@ function ildeposito_ct_canto_field_group_info() {
       'formatter' => 'collapsible',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-staff field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -155,7 +155,7 @@ function ildeposito_ct_canto_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-testo field-group-tab',
         'required_fields' => 1,
       ),
     ),

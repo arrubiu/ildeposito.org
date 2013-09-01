@@ -14,14 +14,14 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cache_flush_cache_entity_taxonomy_term';
-  $strongarm->value = 1370764801;
+  $strongarm->value = 0;
   $export['cache_flush_cache_entity_taxonomy_term'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cache_flush_cache_entity_taxonomy_vocabulary';
-  $strongarm->value = 1370764801;
+  $strongarm->value = 0;
   $export['cache_flush_cache_entity_taxonomy_vocabulary'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -375,15 +375,15 @@ function ildeposito_tassonomie_strongarm() {
         'description' => array(
           'default' => array(
             'weight' => '0',
-            'visible' => TRUE,
+            'visible' => FALSE,
           ),
           'full' => array(
             'weight' => '0',
-            'visible' => TRUE,
+            'visible' => FALSE,
           ),
           'elenco_termini_contenuti' => array(
             'weight' => '0',
-            'visible' => TRUE,
+            'visible' => FALSE,
           ),
         ),
       ),
@@ -436,7 +436,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_vocab_lingue';
-  $strongarm->value = 'Contenuti in \'[term:name]\' | [site:name]';
+  $strongarm->value = 'Contenuti in \'[term:name]\' | canti, canzoni, traduzioni | [site:name]';
   $export['page_title_vocab_lingue'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -450,7 +450,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_vocab_localizzazione';
-  $strongarm->value = 'Contenuti localizzati in [term:name] | [site:name]';
+  $strongarm->value = 'Contenuti localizzati in [term:name] | autori, eventi [site:name]';
   $export['page_title_vocab_localizzazione'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -464,7 +464,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_vocab_percorsi';
-  $strongarm->value = 'Percorso: \'[term:name]\' | [site:name]';
+  $strongarm->value = 'Percorso: \'[term:name]\' | eventi, canzoni ed eventi del percorso | [site:name]';
   $export['page_title_vocab_percorsi'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -478,7 +478,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_vocab_sezioni';
-  $strongarm->value = '';
+  $strongarm->value = '[current-page:page-title] - canti, canzoni, eventi, autori, traduzioni di questo periodo | [site:name]';
   $export['page_title_vocab_sezioni'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -492,7 +492,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_vocab_tags';
-  $strongarm->value = 'Contenuti nel tag \'[term:name]\' [site:name]';
+  $strongarm->value = 'Contenuti nel tag \'[term:name]\' | canti, canzoni, eventi, autori, traduzioni |[site:name]';
   $export['page_title_vocab_tags'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -506,7 +506,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_vocab_tematiche';
-  $strongarm->value = 'Contenuti per la tematica \'[term:name]\' [site:name]';
+  $strongarm->value = 'Contenuti per la tematica \'[term:name]\' - canti, eventi, autori, traduzioni | [site:name]';
   $export['page_title_vocab_tematiche'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -765,7 +765,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->name = 'xmlsitemap_settings_taxonomy_term_sezioni';
   $strongarm->value = array(
     'status' => '1',
-    'priority' => '0.5',
+    'priority' => '0.9',
   );
   $export['xmlsitemap_settings_taxonomy_term_sezioni'] = $strongarm;
 

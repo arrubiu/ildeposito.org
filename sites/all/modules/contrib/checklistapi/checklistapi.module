@@ -132,7 +132,7 @@ function checklistapi_menu() {
       'access arguments' => array($id),
       'file' => 'checklistapi.pages.inc',
     );
-    if (!empty($checklist['#menu_name'])) {
+    if (!empty($definition['#menu_name'])) {
       $items[$definition['#path']]['menu_name'] = $definition['#menu_name'];
     }
 

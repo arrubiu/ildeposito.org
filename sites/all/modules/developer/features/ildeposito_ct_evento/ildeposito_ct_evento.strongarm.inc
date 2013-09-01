@@ -315,7 +315,7 @@ function ildeposito_ct_evento_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_type_evento';
-  $strongarm->value = '';
+  $strongarm->value = '[current-page:page-title] - [node:field-percorso] - [node:field-localizzazione] | [site:name]';
   $export['page_title_type_evento'] = $strongarm;
 
   $strongarm = new stdClass();

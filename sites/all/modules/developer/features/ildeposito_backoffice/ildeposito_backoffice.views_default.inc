@@ -1839,6 +1839,36 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ precedente';
   $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
   $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Campo: Contenuto: Sezione */
+  $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['label'] = '';
+  $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
+  /* Campo: Contenuto: Link modifica */
+  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['label'] = '';
+  $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
+  /* Campo: Contenuto: Localizzazioni (editable) */
+  $handler->display->display_options['fields']['field_localizzazione_editable']['id'] = 'field_localizzazione_editable';
+  $handler->display->display_options['fields']['field_localizzazione_editable']['table'] = 'field_data_field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione_editable']['field'] = 'field_localizzazione_editable';
+  $handler->display->display_options['fields']['field_localizzazione_editable']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_localizzazione_editable']['widget_type'] = '0';
+  $handler->display->display_options['fields']['field_localizzazione_editable']['suppress_label'] = 0;
+  $handler->display->display_options['fields']['field_localizzazione_editable']['suppress_description'] = 0;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Criterio del filtro: Contenuto: Tipo */
@@ -1995,29 +2025,15 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
-    'title' => 'title',
-    'edit_node' => 'edit_node',
     'type' => 'type',
-    'published' => 'published',
-    'workbench_moderation_history_link' => 'workbench_moderation_history_link',
-    'state' => 'state',
+    'title' => 'title',
+    'created' => 'created',
     'timestamp' => 'timestamp',
-    'stamp' => 'stamp',
+    'status' => 'status',
+    'edit_node' => 'edit_node',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
-    'title' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'edit_node' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
     'type' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
@@ -2025,19 +2041,14 @@ function ildeposito_backoffice_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'published' => array(
+    'title' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'workbench_moderation_history_link' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'state' => array(
+    'created' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -2051,9 +2062,14 @@ function ildeposito_backoffice_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'stamp' => array(
+    'status' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit_node' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -2063,16 +2079,22 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Tipo */
-  $handler->display->display_options['fields']['type']['id'] = 'type';
-  $handler->display->display_options['fields']['type']['table'] = 'node';
-  $handler->display->display_options['fields']['type']['field'] = 'type';
   /* Campo: Contenuto: Titolo */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Campo: Contenuto: Tipo */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
+  /* Campo: Contenuto: Data di inserimento */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'd.m.Y h:i';
   /* Campo: Revisione del contenuto: Data modifica */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'node_revision';
@@ -2091,24 +2113,13 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Revisione del contenuto: Data modifica */
-  $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['sorts']['timestamp']['table'] = 'node_revision';
-  $handler->display->display_options['sorts']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['sorts']['timestamp']['order'] = 'DESC';
+  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
-  $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
-  $handler->display->display_options['filters']['type_1']['table'] = 'node';
-  $handler->display->display_options['filters']['type_1']['field'] = 'type';
-  $handler->display->display_options['filters']['type_1']['value'] = array(
-    'articolo' => 'articolo',
-    'custom_content' => 'custom_content',
-    'pagina' => 'pagina',
-    'book' => 'book',
-  );
-  $handler->display->display_options['filters']['type_1']['group'] = 1;
   /* Criterio del filtro: Contenuto: Titolo */
   $handler->display->display_options['filters']['title']['id'] = 'title';
   $handler->display->display_options['filters']['title']['table'] = 'node';
@@ -2137,18 +2148,13 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'articolo' => 'articolo',
-    'custom_content' => 'custom_content',
-    'pagina' => 'pagina',
-    'book' => 'book',
-  );
   $handler->display->display_options['filters']['type']['group'] = 1;
   $handler->display->display_options['filters']['type']['exposed'] = TRUE;
   $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
   $handler->display->display_options['filters']['type']['expose']['label'] = 'Tipo';
   $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
   $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
+  $handler->display->display_options['filters']['type']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -2156,7 +2162,6 @@ function ildeposito_backoffice_views_default_views() {
     4 => 0,
     5 => 0,
   );
-  $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
   $handler->display->display_options['path'] = 'gestione-contenuti';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Gestione contenuti';
@@ -2185,6 +2190,7 @@ function ildeposito_backoffice_views_default_views() {
     t('modifica'),
     t('Tipo'),
     t('Autori'),
+    t('Localizzazioni (editable)'),
     t('Pubblicato'),
     t('Sezione'),
     t('Elenco'),
@@ -2193,6 +2199,7 @@ function ildeposito_backoffice_views_default_views() {
     t('Tag (editable)'),
     t('Contenuti'),
     t('Gestione contenuti'),
+    t('Data di inserimento'),
     t('Data modifica'),
   );
   $export['gestione_contenuti'] = $view;

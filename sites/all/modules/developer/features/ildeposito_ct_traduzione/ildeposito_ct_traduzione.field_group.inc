@@ -32,7 +32,7 @@ function ildeposito_ct_traduzione_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-categorie field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -62,7 +62,7 @@ function ildeposito_ct_traduzione_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-dati field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -89,7 +89,7 @@ function ildeposito_ct_traduzione_field_group_info() {
       'formatter' => 'collapsible',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-staff field-group-fieldset',
         'required_fields' => 1,
       ),
     ),

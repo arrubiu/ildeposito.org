@@ -26,8 +26,9 @@
  *     corresponding menu item.
  *   - #help: (optional) User help to be displayed in the "System help" block
  *     via hook_help().
- *   - #menu_name: (optional) Set this to a custom menu if you don't want your
- *     item to be placed in Navigation.
+ *   - #menu_name: (optional) The machine name of a menu to place the checklist
+ *     into (e.g. "main-menu" or "navigation"). If this is omitted, Drupal will
+ *     try to infer the correct menu placement from the specified path.
  *   - #weight: (optional) A floating point number used to sort the list of
  *     checklists before being output. Lower numbers appear before higher
  *     numbers.

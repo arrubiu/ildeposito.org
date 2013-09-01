@@ -87,13 +87,18 @@ function ildeposito_ct_autore_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'default',
     ),
+    'facet_localizzazioni' => array(
+      'weight' => '5',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
     'facet_sezioni' => array(
-      'weight' => '4',
+      'weight' => '6',
       'label' => 'hidden',
       'format' => 'default',
     ),
     'service_links_not_node' => array(
-      'weight' => '0',
+      'weight' => '4',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -165,25 +170,27 @@ function ildeposito_ct_autore_ds_layout_settings_info() {
   $ds_layout->layout = 'ds_2col_stacked';
   $ds_layout->settings = array(
     'regions' => array(
-      'right' => array(
-        0 => 'service_links_not_node',
-        5 => 'facet_sezioni',
-      ),
       'header' => array(
-        1 => 'header',
-        2 => 'current_center_notext',
+        0 => 'header',
+        1 => 'current_center_notext',
       ),
       'left' => array(
-        3 => 'rows',
-        4 => 'pager',
+        2 => 'rows',
+        3 => 'pager',
+      ),
+      'right' => array(
+        4 => 'service_links_not_node',
+        5 => 'facet_localizzazioni',
+        6 => 'facet_sezioni',
       ),
     ),
     'fields' => array(
-      'service_links_not_node' => 'right',
       'header' => 'header',
       'current_center_notext' => 'header',
       'rows' => 'left',
       'pager' => 'left',
+      'service_links_not_node' => 'right',
+      'facet_localizzazioni' => 'right',
       'facet_sezioni' => 'right',
     ),
     'classes' => array(),

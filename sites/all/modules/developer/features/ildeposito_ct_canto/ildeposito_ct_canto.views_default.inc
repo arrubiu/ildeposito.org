@@ -77,6 +77,17 @@ function ildeposito_ct_canto_views_default_views() {
 
   /* Display: Canti */
   $handler = $view->new_display('page', 'Canti', 'eventi_elenco');
+  $handler->display->display_options['metatags'] = array(
+    'title' => array(
+      'value' => '[view:title] - tutti i canti dell\'archivio - Pagina [current-page:page-number] | [site:name]',
+    ),
+    'description' => array(
+      'value' => 'L\'elenco completo di tutti i canti e le canzoni di lotta, di protesta, rivoluzionarie di tutto il mondo, testi accordi musica e spartiti. Canti comunisti, anarchici, socialisti, femministi, contro la guerra, etc.',
+    ),
+    'abstract' => array(
+      'value' => 'L\'elenco completo di tutti i canti e le canzoni di lotta, di protesta, rivoluzionarie di tutto il mondo, testi accordi musica e spartiti. Canti comunisti, anarchici, socialisti, femministi, contro la guerra, etc.',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/canti';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Canti';

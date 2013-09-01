@@ -619,6 +619,17 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['description']['field'] = 'description';
   $handler->display->display_options['fields']['description']['label'] = '';
   $handler->display->display_options['fields']['description']['element_label_colon'] = FALSE;
+  $handler->display->display_options['metatags'] = array(
+    'title' => array(
+      'value' => 'Le sezioni dell\'archivio | i canti, gli eventi, gli autori, le traduzioni [site:name]',
+    ),
+    'description' => array(
+      'value' => 'L\'elenco delle sezioni dell\'archivio, il punto di partenza per navigare nei canti, nelle canzoni, negli eventi. La resistenza, il risorgimento, gli anni \'70, gli anni di piombo, la rivoluzione russa etc.',
+    ),
+    'abstract' => array(
+      'value' => 'L\'elenco delle sezioni dell\'archivio, il punto di partenza per navigare nei canti, nelle canzoni, negli eventi. La resistenza, il risorgimento, gli anni \'70, gli anni di piombo, la rivoluzione russa etc.',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/sezioni';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Sezioni';
@@ -673,6 +684,17 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['filters']['vid']['value'] = array(
     2 => '2',
   );
+  $handler->display->display_options['metatags'] = array(
+    'title' => array(
+      'value' => '[view:title] - i canti, le traduzioni | [site:name]',
+    ),
+    'description' => array(
+      'value' => 'L\'elenco delle lingue dell\'archivio, per cercare canti, canzoni, traduzioni dei canti di lotta, di protesta, rivoluzionari di tutto il mondo.',
+    ),
+    'abstract' => array(
+      'value' => 'L\'elenco delle lingue dell\'archivio, per cercare canti, canzoni, traduzioni dei canti di lotta, di protesta, rivoluzionari di tutto il mondo.',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/lingue';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Lingue';
@@ -686,6 +708,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['title'] = 'Le localizzazioni dell\'archivio';
   $handler->display->display_options['defaults']['css_class'] = FALSE;
   $handler->display->display_options['css_class'] = 'elenco-termini elenco-localizzazioni';
+  $handler->display->display_options['display_description'] = 'Le localizzazioni dell\'archivio de ilDeposito.org';
   $handler->display->display_options['defaults']['header'] = FALSE;
   /* Intestazione: Entità: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
@@ -700,6 +723,17 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['filters']['vid']['field'] = 'vid';
   $handler->display->display_options['filters']['vid']['value'] = array(
     3 => '3',
+  );
+  $handler->display->display_options['metatags'] = array(
+    'title' => array(
+      'value' => '[view:title] - gli autori, gli eventi | [site:name]',
+    ),
+    'description' => array(
+      'value' => 'Le localizzazioni dell\'archivio, per cercare canti, canzoni, autori, eventi in base alla localizzazione geografico. La geografia delle lotte, delle rivolte, delle rivoluzioni nel mondo.',
+    ),
+    'abstract' => array(
+      'value' => 'Le localizzazioni dell\'archivio, per cercare canti, canzoni, autori, eventi in base alla localizzazione geografico. La geografia delle lotte, delle rivolte, delle rivoluzioni nel mondo.',
+    ),
   );
   $handler->display->display_options['path'] = 'archivio/localizzazioni';
   $handler->display->display_options['menu']['type'] = 'normal';
@@ -765,6 +799,17 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['filters']['vid']['value'] = array(
     4 => '4',
   );
+  $handler->display->display_options['metatags'] = array(
+    'title' => array(
+      'value' => '[view:title] - gli eventi e i canti della Storia Cantata | [site:name]',
+    ),
+    'description' => array(
+      'value' => 'I percorsi della Storia cantata, il punto di partenza per navigare nella storia del movimento operaio, rivoluzionario, di tutto il mondo.',
+    ),
+    'abstract' => array(
+      'value' => 'I percorsi della Storia cantata, il punto di partenza per navigare nella storia del movimento operaio, rivoluzionario, di tutto il mondo.',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/storiacantata/percorsi';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Percorsi';
@@ -793,6 +838,17 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['filters']['vid']['value'] = array(
     1 => '1',
   );
+  $handler->display->display_options['metatags'] = array(
+    'title' => array(
+      'value' => '[view:title] - canti, eventi, traduzioni, autori | [site:name]',
+    ),
+    'description' => array(
+      'value' => 'I tag dell\'archivio: tutti i canti, canzoni, autori, eventi, traduzioni sono raggruppati per tag. I più comuni: anarchici, comunisti, socialisti, femministi, contro la guerra, etc. ',
+    ),
+    'abstract' => array(
+      'value' => 'I tag dell\'archivio: tutti i canti, canzoni, autori, eventi, traduzioni sono raggruppati per tag. I più comuni: anarchici, comunisti, socialisti, femministi, contro la guerra, etc. ',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/tags';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Tags';
@@ -818,6 +874,7 @@ function ildeposito_tassonomie_views_default_views() {
     t('Le lingue dell\'archivio'),
     t('Localizzazioni'),
     t('Le localizzazioni dell\'archivio'),
+    t('Le localizzazioni dell\'archivio de ilDeposito.org'),
     t('Percorsi'),
     t('I percorsi dell\'archivio'),
     t('Tags'),

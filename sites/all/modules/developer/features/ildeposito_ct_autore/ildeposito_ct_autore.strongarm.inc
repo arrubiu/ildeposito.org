@@ -149,7 +149,7 @@ else {
       'display' => array(
         'title' => array(
           'default' => array(
-            'weight' => '0',
+            'weight' => '30',
             'visible' => FALSE,
           ),
         ),
@@ -201,6 +201,30 @@ else {
         'custom_settings' => FALSE,
       ),
       'riferimento_evento' => array(
+        'custom_settings' => FALSE,
+      ),
+      'email_plain' => array(
+        'custom_settings' => FALSE,
+      ),
+      'email_html' => array(
+        'custom_settings' => FALSE,
+      ),
+      'email_textalt' => array(
+        'custom_settings' => FALSE,
+      ),
+      'articolo' => array(
+        'custom_settings' => FALSE,
+      ),
+      'articolo_home' => array(
+        'custom_settings' => FALSE,
+      ),
+      'canti_capoversi' => array(
+        'custom_settings' => FALSE,
+      ),
+      'percorso' => array(
+        'custom_settings' => FALSE,
+      ),
+      'print_canzoniere' => array(
         'custom_settings' => FALSE,
       ),
     ),
@@ -311,7 +335,7 @@ else {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_type_autore';
-  $strongarm->value = '';
+  $strongarm->value = '[current-page:page-title]  | Testi, accordi, musica e spartiti di [current-page:page-title] | [site:name]';
   $export['page_title_type_autore'] = $strongarm;
 
   $strongarm = new stdClass();

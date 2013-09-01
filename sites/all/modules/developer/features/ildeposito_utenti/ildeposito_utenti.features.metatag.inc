@@ -17,6 +17,15 @@ function ildeposito_utenti_metatag_export_default() {
       'title' => array(
         'value' => '[user:name] | [site:name]',
       ),
+      'og:type' => array(
+        'value' => 'profile',
+      ),
+      'og:title' => array(
+        'value' => '[user:name]',
+      ),
+      'og:image' => array(
+        'value' => '[user:picture:url]',
+      ),
     ),
   );
 

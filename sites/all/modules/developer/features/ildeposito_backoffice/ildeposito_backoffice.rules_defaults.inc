@@ -72,10 +72,13 @@ function ildeposito_backoffice_default_rules_configuration() {
           }
         },
         { "privatemsg_rules_new_role" : {
-            "roles" : { "value" : { "4" : "4" } },
-            "author" : [ "entity-fetched" ],
-            "subject" : "\\u00c8 stato creato un nuovo contenuto",
-            "body" : "Ciao,\\r\\nl\\u0027utente [node:author] ha creato un nuovo contenuto.\\r\\nPer visualizzarlo clicca qui:\\r\\n[node:url]\\r\\n\\r\\nLo Staff de ilDeposito.org"
+            "USING" : {
+              "roles" : { "value" : { "4" : "4" } },
+              "author" : [ "entity-fetched" ],
+              "subject" : "\\u00c8 stato creato un nuovo contenuto",
+              "body" : "Ciao,\\r\\nl\\u0027utente [node:author] ha creato un nuovo contenuto.\\r\\nPer visualizzarlo clicca qui:\\r\\n[node:url]\\r\\n\\r\\nLo Staff de ilDeposito.org"
+            },
+            "PROVIDE" : { "thread_id" : { "thread_id" : "ID of new thread" } }
           }
         },
         { "drupal_message" : {
@@ -121,10 +124,13 @@ function ildeposito_backoffice_default_rules_configuration() {
           }
         },
         { "privatemsg_rules_new_role" : {
-            "roles" : { "value" : { "4" : "4" } },
-            "author" : [ "entity-fetched" ],
-            "subject" : "Contenuto modificato: [node:title]",
-            "body" : "Ciao,\\r\\nl\\u0027utente [site:current-user] ha modificato un nuovo contenuto.\\r\\nPer visualizzarlo clicca qui:\\r\\n[node:url]\\r\\n\\r\\nLo Staff de ilDeposito.org"
+            "USING" : {
+              "roles" : { "value" : { "4" : "4" } },
+              "author" : [ "entity-fetched" ],
+              "subject" : "Contenuto modificato: [node:title]",
+              "body" : "Ciao,\\r\\nl\\u0027utente [site:current-user] ha modificato un nuovo contenuto.\\r\\nPer visualizzarlo clicca qui:\\r\\n[node:url]\\r\\n\\r\\nLo Staff de ilDeposito.org"
+            },
+            "PROVIDE" : { "thread_id" : { "thread_id" : "ID of new thread" } }
           }
         },
         { "drupal_message" : {

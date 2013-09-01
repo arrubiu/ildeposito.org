@@ -28,13 +28,14 @@ function ildeposito_ct_autore_field_group_info() {
       2 => 'field_nome',
       3 => 'field_sezione',
       4 => 'title',
+      5 => 'field_localizzazione',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
       'formatter' => 'collapsible',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-principale field-group-fieldset',
         'required_fields' => 1,
       ),
     ),
@@ -70,7 +71,7 @@ function ildeposito_ct_autore_field_group_info() {
       'formatter' => 'collapsible',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-staff field-group-fieldset',
         'required_fields' => 1,
       ),
     ),

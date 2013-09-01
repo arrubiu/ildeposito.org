@@ -149,6 +149,16 @@ function geolocation_html5_field_widget_error($element, $error, $form, &$form_st
   }
 }
 
+/**
+ * Implements hook_modernizr_info().
+ */
+function geolocation_html5_modernizr_info() {
+  $tests = array();
+  $tests[] = 'geolocation';
+
+  return $tests;
+}
+
 
 /**
  * Helper function converts latitude to mercator value (Mercator projection).

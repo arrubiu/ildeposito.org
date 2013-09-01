@@ -32,7 +32,7 @@ function ildeposito_ct_evento_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-categorie field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -57,7 +57,7 @@ function ildeposito_ct_evento_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-impostazioni field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -85,7 +85,7 @@ function ildeposito_ct_evento_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-localizzazioni field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -116,7 +116,7 @@ function ildeposito_ct_evento_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-principale field-group-tab',
         'required_fields' => 1,
       ),
     ),
@@ -145,7 +145,7 @@ function ildeposito_ct_evento_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-staff field-group-tab',
         'required_fields' => 1,
       ),
     ),

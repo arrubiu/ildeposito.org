@@ -289,7 +289,7 @@ function ildeposito_ct_traduzione_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_type_traduzione';
-  $strongarm->value = '';
+  $strongarm->value = '[node:title], traduzione in [node:field-lingua] di "[node:field-canto-riferimento]" | [site:name]';
   $export['page_title_type_traduzione'] = $strongarm;
 
   $strongarm = new stdClass();

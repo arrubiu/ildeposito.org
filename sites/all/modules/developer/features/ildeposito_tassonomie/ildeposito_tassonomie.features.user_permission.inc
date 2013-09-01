@@ -10,14 +10,14 @@
 function ildeposito_tassonomie_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: administer rh_taxonomy.
+  // Exported permission: 'administer rh_taxonomy'.
   $permissions['administer rh_taxonomy'] = array(
     'name' => 'administer rh_taxonomy',
     'roles' => array(),
     'module' => 'rabbit_hole',
   );
 
-  // Exported permission: administer taxonomy.
+  // Exported permission: 'administer taxonomy'.
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
     'roles' => array(
@@ -27,7 +27,7 @@ function ildeposito_tassonomie_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: administer taxonomy display.
+  // Exported permission: 'administer taxonomy display'.
   $permissions['administer taxonomy display'] = array(
     'name' => 'administer taxonomy display',
     'roles' => array(
@@ -36,7 +36,7 @@ function ildeposito_tassonomie_user_default_permissions() {
     'module' => 'taxonomy_display',
   );
 
-  // Exported permission: bypass rh_taxonomy.
+  // Exported permission: 'bypass rh_taxonomy'.
   $permissions['bypass rh_taxonomy'] = array(
     'name' => 'bypass rh_taxonomy',
     'roles' => array(
@@ -45,9 +45,61 @@ function ildeposito_tassonomie_user_default_permissions() {
     'module' => 'rabbit_hole',
   );
 
-  // Exported permission: delete terms in 1.
-  $permissions['delete terms in 1'] = array(
-    'name' => 'delete terms in 1',
+  // Exported permission: 'delete terms in forums'.
+  $permissions['delete terms in forums'] = array(
+    'name' => 'delete terms in forums',
+    'roles' => array(
+      'staff' => 'staff',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in lingue'.
+  $permissions['delete terms in lingue'] = array(
+    'name' => 'delete terms in lingue',
+    'roles' => array(
+      'staff' => 'staff',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in localizzazione'.
+  $permissions['delete terms in localizzazione'] = array(
+    'name' => 'delete terms in localizzazione',
+    'roles' => array(
+      'staff' => 'staff',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in newsletter'.
+  $permissions['delete terms in newsletter'] = array(
+    'name' => 'delete terms in newsletter',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in percorsi'.
+  $permissions['delete terms in percorsi'] = array(
+    'name' => 'delete terms in percorsi',
+    'roles' => array(
+      'staff' => 'staff',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in sezioni'.
+  $permissions['delete terms in sezioni'] = array(
+    'name' => 'delete terms in sezioni',
+    'roles' => array(
+      'staff' => 'staff',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in tags'.
+  $permissions['delete terms in tags'] = array(
+    'name' => 'delete terms in tags',
     'roles' => array(
       'administrator' => 'administrator',
       'staff' => 'staff',
@@ -55,70 +107,70 @@ function ildeposito_tassonomie_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: delete terms in 2.
-  $permissions['delete terms in 2'] = array(
-    'name' => 'delete terms in 2',
+  // Exported permission: 'delete terms in tematiche'.
+  $permissions['delete terms in tematiche'] = array(
+    'name' => 'delete terms in tematiche',
     'roles' => array(
       'staff' => 'staff',
     ),
     'module' => 'taxonomy',
   );
 
-  // Exported permission: delete terms in 3.
-  $permissions['delete terms in 3'] = array(
-    'name' => 'delete terms in 3',
+  // Exported permission: 'edit terms in forums'.
+  $permissions['edit terms in forums'] = array(
+    'name' => 'edit terms in forums',
     'roles' => array(
       'staff' => 'staff',
     ),
     'module' => 'taxonomy',
   );
 
-  // Exported permission: delete terms in 4.
-  $permissions['delete terms in 4'] = array(
-    'name' => 'delete terms in 4',
+  // Exported permission: 'edit terms in lingue'.
+  $permissions['edit terms in lingue'] = array(
+    'name' => 'edit terms in lingue',
     'roles' => array(
       'staff' => 'staff',
     ),
     'module' => 'taxonomy',
   );
 
-  // Exported permission: delete terms in 5.
-  $permissions['delete terms in 5'] = array(
-    'name' => 'delete terms in 5',
+  // Exported permission: 'edit terms in localizzazione'.
+  $permissions['edit terms in localizzazione'] = array(
+    'name' => 'edit terms in localizzazione',
     'roles' => array(
       'staff' => 'staff',
     ),
     'module' => 'taxonomy',
   );
 
-  // Exported permission: delete terms in 6.
-  $permissions['delete terms in 6'] = array(
-    'name' => 'delete terms in 6',
-    'roles' => array(
-      'staff' => 'staff',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: delete terms in 7.
-  $permissions['delete terms in 7'] = array(
-    'name' => 'delete terms in 7',
-    'roles' => array(
-      'staff' => 'staff',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: delete terms in 8.
-  $permissions['delete terms in 8'] = array(
-    'name' => 'delete terms in 8',
+  // Exported permission: 'edit terms in newsletter'.
+  $permissions['edit terms in newsletter'] = array(
+    'name' => 'edit terms in newsletter',
     'roles' => array(),
     'module' => 'taxonomy',
   );
 
-  // Exported permission: edit terms in 1.
-  $permissions['edit terms in 1'] = array(
-    'name' => 'edit terms in 1',
+  // Exported permission: 'edit terms in percorsi'.
+  $permissions['edit terms in percorsi'] = array(
+    'name' => 'edit terms in percorsi',
+    'roles' => array(
+      'staff' => 'staff',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in sezioni'.
+  $permissions['edit terms in sezioni'] = array(
+    'name' => 'edit terms in sezioni',
+    'roles' => array(
+      'staff' => 'staff',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in tags'.
+  $permissions['edit terms in tags'] = array(
+    'name' => 'edit terms in tags',
     'roles' => array(
       'administrator' => 'administrator',
       'staff' => 'staff',
@@ -126,68 +178,16 @@ function ildeposito_tassonomie_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: edit terms in 2.
-  $permissions['edit terms in 2'] = array(
-    'name' => 'edit terms in 2',
+  // Exported permission: 'edit terms in tematiche'.
+  $permissions['edit terms in tematiche'] = array(
+    'name' => 'edit terms in tematiche',
     'roles' => array(
       'staff' => 'staff',
     ),
     'module' => 'taxonomy',
   );
 
-  // Exported permission: edit terms in 3.
-  $permissions['edit terms in 3'] = array(
-    'name' => 'edit terms in 3',
-    'roles' => array(
-      'staff' => 'staff',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: edit terms in 4.
-  $permissions['edit terms in 4'] = array(
-    'name' => 'edit terms in 4',
-    'roles' => array(
-      'staff' => 'staff',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: edit terms in 5.
-  $permissions['edit terms in 5'] = array(
-    'name' => 'edit terms in 5',
-    'roles' => array(
-      'staff' => 'staff',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: edit terms in 6.
-  $permissions['edit terms in 6'] = array(
-    'name' => 'edit terms in 6',
-    'roles' => array(
-      'staff' => 'staff',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: edit terms in 7.
-  $permissions['edit terms in 7'] = array(
-    'name' => 'edit terms in 7',
-    'roles' => array(
-      'staff' => 'staff',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: edit terms in 8.
-  $permissions['edit terms in 8'] = array(
-    'name' => 'edit terms in 8',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: php redirect rh_taxonomy.
+  // Exported permission: 'php redirect rh_taxonomy'.
   $permissions['php redirect rh_taxonomy'] = array(
     'name' => 'php redirect rh_taxonomy',
     'roles' => array(),

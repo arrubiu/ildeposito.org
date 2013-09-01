@@ -66,7 +66,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 10,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -102,7 +102,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1472,108 +1472,6 @@ function ildeposito_ct_canto_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-canto-field_localizzazione'
-  $field_instances['node-canto-field_localizzazione'] = array(
-    'bundle' => 'canto',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'canti_capoversi' => array(
-        'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 26,
-      ),
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 16,
-      ),
-      'elenco_archivio' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 18,
-      ),
-      'elenco_termini_contenuti' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 17,
-      ),
-      'ical' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'print' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 15,
-      ),
-      'print_canzoniere' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 16,
-      ),
-      'riferimento_evento' => array(
-        'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 17,
-      ),
-      'rss' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 20,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 17,
-      ),
-      'search_result' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 20,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_label_plurals_singular' => 'Localizzazione',
-    'field_name' => 'field_localizzazione',
-    'label' => 'Localizzazioni',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_select',
-      'weight' => 12,
-    ),
-  );
-
   // Exported field_instance: 'node-canto-field_old_id'
   $field_instances['node-canto-field_old_id'] = array(
     'bundle' => 'canto',
@@ -2688,7 +2586,6 @@ function ildeposito_ct_canto_field_default_field_instances() {
   t('Informazioni');
   t('Lingue');
   t('Links');
-  t('Localizzazioni');
   t('Numero canti');
   t('Old ID');
   t('Presenza accordi');

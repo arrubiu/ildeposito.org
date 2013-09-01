@@ -2,7 +2,6 @@ name = Homepage
 description = Gestione homepage
 core = 7.x
 package = ilDeposito.org
-php = 5.2.4
 version = 7.x-1.0
 project = ildeposito_home
 dependencies[] = ildeposito_layout

@@ -10,7 +10,7 @@
 function ildeposito_media_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: administer file types.
+  // Exported permission: 'administer file types'.
   $permissions['administer file types'] = array(
     'name' => 'administer file types',
     'roles' => array(
@@ -19,7 +19,7 @@ function ildeposito_media_user_default_permissions() {
     'module' => 'file_entity',
   );
 
-  // Exported permission: administer files.
+  // Exported permission: 'administer files'.
   $permissions['administer files'] = array(
     'name' => 'administer files',
     'roles' => array(
@@ -29,7 +29,7 @@ function ildeposito_media_user_default_permissions() {
     'module' => 'file_entity',
   );
 
-  // Exported permission: bypass file access.
+  // Exported permission: 'bypass file access'.
   $permissions['bypass file access'] = array(
     'name' => 'bypass file access',
     'roles' => array(
@@ -39,7 +39,7 @@ function ildeposito_media_user_default_permissions() {
     'module' => 'file_entity',
   );
 
-  // Exported permission: create files.
+  // Exported permission: 'create files'.
   $permissions['create files'] = array(
     'name' => 'create files',
     'roles' => array(
@@ -50,47 +50,7 @@ function ildeposito_media_user_default_permissions() {
     'module' => 'file_entity',
   );
 
-  // Exported permission: delete any files.
-  $permissions['delete any files'] = array(
-    'name' => 'delete any files',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'staff' => 'staff',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: delete own files.
-  $permissions['delete own files'] = array(
-    'name' => 'delete own files',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'staff' => 'staff',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: edit any files.
-  $permissions['edit any files'] = array(
-    'name' => 'edit any files',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'staff' => 'staff',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: edit own files.
-  $permissions['edit own files'] = array(
-    'name' => 'edit own files',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'staff' => 'staff',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: import media.
+  // Exported permission: 'import media'.
   $permissions['import media'] = array(
     'name' => 'import media',
     'roles' => array(
@@ -99,7 +59,7 @@ function ildeposito_media_user_default_permissions() {
     'module' => 'media',
   );
 
-  // Exported permission: view files.
+  // Exported permission: 'view files'.
   $permissions['view files'] = array(
     'name' => 'view files',
     'roles' => array(
@@ -110,7 +70,7 @@ function ildeposito_media_user_default_permissions() {
     'module' => 'file_entity',
   );
 
-  // Exported permission: view own files.
+  // Exported permission: 'view own files'.
   $permissions['view own files'] = array(
     'name' => 'view own files',
     'roles' => array(
@@ -120,7 +80,7 @@ function ildeposito_media_user_default_permissions() {
     'module' => 'file_entity',
   );
 
-  // Exported permission: view own private files.
+  // Exported permission: 'view own private files'.
   $permissions['view own private files'] = array(
     'name' => 'view own private files',
     'roles' => array(

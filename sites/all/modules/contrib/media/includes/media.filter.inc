@@ -32,6 +32,87 @@ function media_filter($text) {
 }
 
 /**
+ * Filter callback for media url filter.
+ * @TODO: There are currently problems with this. For instance, if a file is
+ * to be loaded from a remote location here, it will be recreated multiple
+ * times, each time this filter is called. If we want to continue supporting
+ * this feature, we would need to probably create a new stream or other way
+ * to lookup a remote file w/ its local version. Probably best as a contributed
+ * module because of this difficulty. ~ aaron.
+ *
+ * @deprecated
+ */
+function media_url_filter($text, $filter) {
+  $text = ' ' . $text . ' ';
+
+  // Need to attach the variables to the callback after the regex.
+  $callback = _media_url_curry('_media_url_parse_full_links', 1);
+
+  // Match absolute URLs.
+  $text = preg_replace_callback("`(<p>|<li>|<br\s*/?>|[ \n\r\t\(])((http://|https://)([a-zA-Z0-9@:%_+*~#?&=.,/;-]*[a-zA-Z0-9@:%_+*~#&=/;-]))([.,?!]*?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))`i", $callback, $text);
+
+  return $text;
+}
+
+/**
+ * If one of our allowed providers knows what to do with the url,
+ * then let it embed the video.
+ *
+ * @param int $filter
+ *  The filter id.
+ * @param array $match
+ *  The matched text from our regex.
+ *
+ * @return string
+ *  The replacement text for the url.
+ *
+ * @deprecated
+ */
+function _media_url_parse_full_links($match) {
+  // Get just the URL.
+  $match[2] = check_url(decode_entities($match[2]));
+  try {
+    $file = media_parse_to_file($match[2]);
+  }
+  catch (Exception $e) {
+    // Ignore errors; pass the original text for other filters to deal with.
+    return $match[0];
+  }
+
+  if ($file->fid) {
+    $file = file_load($file->fid);
+
+    // Generate a preview of the file
+    // @TODO: Allow user to change the formatter in the filter settings.
+    $preview = file_view_file($file, 'media_large');
+    $preview['#show_names'] = TRUE;
+
+    return drupal_render($preview);
+  }
+
+  // Nothing was parsed; return the original text.
+  return $match[0];
+}
+
+/**
+ * @deprecated
+ */
+function _media_url_curry($func, $arity) {
+  return create_function('', "
+    \$args = func_get_args();
+    if(count(\$args) >= $arity)
+        return call_user_func_array('$func', \$args);
+    \$args = var_export(\$args, 1);
+    return create_function('','
+        \$a = func_get_args();
+        \$z = ' . \$args . ';
+        \$a = array_merge(\$z,\$a);
+        return call_user_func_array(\'$func\', \$a);
+    ');
+  ");
+}
+
+/**
  * Parses the contents of a CSS declaration block and returns a keyed array of property names and values.
  *
  * @param $declarations
@@ -84,33 +165,11 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
     if (!isset($tag_info['fid'])) {
       throw new Exception('No file Id');
     }
-
-    // Ensure a valid view mode is being requested.
     if (!isset($tag_info['view_mode'])) {
+      // Should we log or throw an exception here instead?
+      // Do we need to validate the view mode for fields API?
       $tag_info['view_mode'] = media_variable_get('wysiwyg_default_view_mode');
     }
-    elseif ($tag_info['view_mode'] != 'default') {
-      $file_entity_info = entity_get_info('file');
-      if (!in_array($tag_info['view_mode'], array_keys($file_entity_info['view modes']))) {
-        // Media 1.x defined some old view modes that have been superseded by
-        // more semantically named ones in File Entity. The media_update_7203()
-        // function updates field settings that reference the old view modes,
-        // but it's impractical to update all text content, so adjust
-        // accordingly here.
-        static $view_mode_updates = array(
-          'media_preview' => 'preview',
-          'media_small' => 'teaser',
-          'media_large' => 'full',
-        );
-        if (isset($view_mode_updates[$tag_info['view_mode']])) {
-          $tag_info['view_mode'] = $view_mode_updates[$tag_info['view_mode']];
-        }
-        else {
-          throw new Exception('Invalid view mode');
-        }
-      }
-    }
-
 
     $file = file_load($tag_info['fid']);
     if (!$file) {
@@ -131,28 +190,27 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
     $attribute_whitelist = media_variable_get('wysiwyg_allowed_attributes');
     $settings['attributes'] = array_intersect_key($attributes, array_flip($attribute_whitelist));
 
-    if (!empty($tag_info['attributes']) && is_array($tag_info['attributes'])) {
-      $attribute_whitelist = media_variable_get('wysiwyg_allowed_attributes');
-      $settings['attributes'] = array_intersect_key($tag_info['attributes'], array_flip($attribute_whitelist));
-
-      // Many media formatters will want to apply width and height independently
-      // of the style attribute or the corresponding HTML attributes, so pull
-      // these two out into top-level settings. Different WYSIWYG editors have
-      // different behavior with respect to whether they store user-specified
-      // dimensions in the HTML attributes or the style attribute, so check both.
-      // Per http://www.w3.org/TR/html5/the-map-element.html#attr-dim-width, the
-      // HTML attributes are merely hints: CSS takes precedence.
-      if (isset($settings['attributes']['style'])) {
-        $css_properties = media_parse_css_declarations($settings['attributes']['style']);
-        foreach (array('width', 'height') as $dimension) {
-          if (isset($css_properties[$dimension]) && substr($css_properties[$dimension], -2) == 'px') {
-            $settings[$dimension] = substr($css_properties[$dimension], 0, -2);
-          }
-          elseif (isset($settings['attributes'][$dimension])) {
-            $settings[$dimension] = $settings['attributes'][$dimension];
-          }
+    // Many media formatters will want to apply width and height independently
+    // of the style attribute or the corresponding HTML attributes, so pull
+    // these two out into top-level settings. Different WYSIWYG editors have
+    // different behavior with respect to whether they store user-specified
+    // dimensions in the HTML attributes or the style attribute, so check both.
+    // Per http://www.w3.org/TR/html5/the-map-element.html#attr-dim-width, the
+    // HTML attributes are merely hints: CSS takes precedence.
+    if (isset($settings['attributes']['style'])) {
+      $css_properties = media_parse_css_declarations($settings['attributes']['style']);
+      foreach (array('width', 'height') as $dimension) {
+        if (isset($css_properties[$dimension]) && substr($css_properties[$dimension], -2) == 'px') {
+          $settings[$dimension] = substr($css_properties[$dimension], 0, -2);
+        }
+        elseif (isset($settings['attributes'][$dimension])) {
+          $settings[$dimension] = $settings['attributes'][$dimension];
         }
       }
+    }
+
+    if ($wysiwyg) {
+      $settings['wysiwyg'] = $wysiwyg;
     }
   }
   catch (Exception $e) {
@@ -160,37 +218,7 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
     return '';
   }
 
-  if ($wysiwyg) {
-    $settings['wysiwyg'] = $wysiwyg;
-    // If sending markup to a WYSIWYG, we need to pass the file infomation so
-    // that a inline macro can be generated when the WYSIWYG is detached.
-    // The WYSIWYG plugin is expecting this information in the format of a
-    // urlencoded JSON string stored in the data-file_info attribute of the
-    // element.
-    $element = media_get_file_without_label($file, $tag_info['view_mode'], $settings);
-    $data = drupal_json_encode(array(
-      'type' => 'media',
-      'fid' => $file->fid,
-      'view_mode' => $tag_info['view_mode'],
-    ));
-    $element['#attributes']['data-file_info'] = urlencode($data);
-    $element['#attributes']['class'][] = 'media-element';
-  }
-  else {
-    // Display the field elements.
-    $element = array();
-    $element['content']['file'] = media_get_file_without_label($file, $tag_info['view_mode'], $settings);
-    field_attach_prepare_view('file', array($file->fid => $file), $tag_info['view_mode']);
-    entity_prepare_view('file', array($file->fid => $file));
-    $element['content'] += field_attach_view('file', $file, $tag_info['view_mode']);
-    if (count(element_children($element['content'])) > 1) {
-      // Add surrounding divs to group them together.
-      // We dont want divs when there are no additional fields to allow them
-      // to display inline.
-      $element['content']['#prefix'] = '<div>';
-      $element['content']['#suffix'] = '</div>';
-    }
-  }
+  $element = media_get_file_without_label($file, $tag_info['view_mode'], $settings);
   drupal_alter('media_token_to_markup', $element, $tag_info, $settings);
   return drupal_render($element);
 }
@@ -351,6 +379,7 @@ function media_format_form($form, $form_state, $file) {
   $form['#attached']['library'][] = array('media', 'media_base');
   $form['#attached']['library'][] = array('system', 'form');
   $form['#attached']['js'][] = drupal_get_path('module', 'media') . '/js/media.format_form.js';
+  $form['#attached']['css'][] = drupal_get_path('module', 'media') . '/css/media-format-form.css';
 
   $form['heading'] = array(
     '#type' => 'markup',
@@ -401,6 +430,12 @@ function media_format_form($form, $form_state, $file) {
  */
 function media_get_file_without_label($file, $view_mode, $settings = array()) {
   $file->override = $settings;
+
+  // Legacy support for Styles module plugins that expect overridden HTML
+  // attributes in $file->override rather than $file->override['attributes'].
+  if (isset($settings['attributes'])) {
+    $file->override += $settings['attributes'];
+  }
 
   $element = file_view_file($file, $view_mode);
 

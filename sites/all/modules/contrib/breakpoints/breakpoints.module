@@ -45,6 +45,11 @@ function breakpoints_ctools_plugin_api($owner, $api) {
  */
 function breakpoints_enable() {
   $themes = list_themes();
+  foreach ($themes as $theme_key => $theme) {
+    if (!$theme->status) {
+      unset($themes[$theme_key]);
+    }
+  }
   breakpoints_themes_enabled(array_keys($themes));
 }
 
@@ -65,15 +70,18 @@ function breakpoints_themes_enabled($theme_list) {
       $breakpoint_group->name = $themes[$theme_key]->info['name'];
       $breakpoint_group->type = BREAKPOINTS_SOURCE_TYPE_THEME;
       foreach ($theme_settings as $name => $media_query) {
-        $breakpoint = breakpoints_breakpoint_empty_object();
-        $breakpoint->name = $name;
+        $breakpoint = breakpoints_breakpoint_load($name, $theme_key, 'theme');
+        if (!$breakpoint) {
+          $breakpoint = breakpoints_breakpoint_empty_object();
+          $breakpoint->name = $name;
+          $breakpoint->source = $theme_key;
+          $breakpoint->source_type = 'theme';
+          $breakpoint->theme = '';
+          $breakpoint->status = TRUE;
+          $breakpoint->weight = $weight++;
+          $breakpoint->machine_name = breakpoints_breakpoint_config_name($breakpoint);
+        }
         $breakpoint->breakpoint = $media_query;
-        $breakpoint->source = $theme_key;
-        $breakpoint->source_type = 'theme';
-        $breakpoint->theme = '';
-        $breakpoint->status = TRUE;
-        $breakpoint->weight = $weight++;
-        $breakpoint->machine_name = breakpoints_breakpoint_config_name($breakpoint);
         breakpoints_breakpoint_save($breakpoint);
         $breakpoint_group->breakpoints[] = $breakpoint->machine_name;
       }
@@ -334,7 +342,8 @@ function breakpoints_breakpoint_config_name($breakpoints_breakpoint) {
  * Load a single breakpoint.
  */
 function breakpoints_breakpoint_load($name, $source, $source_type) {
-  return breakpoints_breakpoint_load_by_fullkey(breakpoints_breakpoint_config_name($name, $source, $source_type));
+  $key = drupal_strtolower('breakpoints.' . $source_type . '.' . $source . '.' . $name);
+  return breakpoints_breakpoint_load_by_fullkey($key);
 }
 
 /**
@@ -703,7 +712,7 @@ function breakpoints_breakpoints_group_reload(&$group) {
       // delete all breakpoints defined by this theme.
       $breakpoints = breakpoints_breakpoint_load_all_theme($group->machine_name);
       foreach ($breakpoints as $breakpoint) {
-        breakpoints_breakpoint_delete($breakpoint, $theme_key);
+        breakpoints_breakpoint_delete($breakpoint);
       }
 
       // reload all breakpoints from theme.info.
@@ -729,15 +738,18 @@ function breakpoints_breakpoints_group_reload_from_theme($theme_key) {
     $breakpoint_group->name = $themes[$theme_key]->info['name'];
     $breakpoint_group->type = BREAKPOINTS_SOURCE_TYPE_THEME;
     foreach ($theme_settings as $name => $media_query) {
-      $breakpoint = breakpoints_breakpoint_empty_object();
-      $breakpoint->name = $name;
+      $breakpoint = breakpoints_breakpoint_load($name, $theme_key, 'theme');
+      if (!$breakpoint) {
+        $breakpoint = breakpoints_breakpoint_empty_object();
+        $breakpoint->name = $name;
+        $breakpoint->source = $theme_key;
+        $breakpoint->source_type = 'theme';
+        $breakpoint->theme = '';
+        $breakpoint->status = TRUE;
+        $breakpoint->weight = $weight++;
+        $breakpoint->machine_name = breakpoints_breakpoint_config_name($breakpoint);
+      }
       $breakpoint->breakpoint = $media_query;
-      $breakpoint->source = $theme_key;
-      $breakpoint->source_type = 'theme';
-      $breakpoint->theme = '';
-      $breakpoint->status = TRUE;
-      $breakpoint->weight = $weight++;
-      $breakpoint->machine_name = breakpoints_breakpoint_config_name($breakpoint);
       breakpoints_breakpoint_save($breakpoint);
       $breakpoint_group->breakpoints[] = $breakpoint->machine_name;
     }
@@ -813,10 +825,34 @@ function breakpoints_breakpoints_group_exporttotheme(&$group) {
 function _breakpoints_filter_styles($var) {
   static $exists = NULL;
   if (is_null($exists)) {
-    $exists = module_exists('resp_img');
+    $exists = module_exists('resp_img') && defined('RESP_IMG_STYLE_PREFIX');
   }
   if (!$exists) {
     return TRUE;
   }
   return strpos(is_array($var) ? $var['name'] : $var, RESP_IMG_STYLE_PREFIX) !== 0;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function breakpoints_form_system_theme_settings_alter(&$form, &$form_state) {
+  if (isset($form_state['build_info']['args'][0])) {
+    $form['actions']['rescan_breakpoints'] = array(
+      '#type' => 'submit',
+      '#value' => t('Scan this theme for breakpoints'),
+      '#submit' => array('breakpoints_form_system_theme_settings_alter_submit'),
+    );
+  }
+}
+
+function breakpoints_form_system_theme_settings_alter_submit(&$form, &$form_state) {
+  $theme = $form_state['build_info']['args'][0];
+  $group = breakpoints_breakpoint_group_load($theme);
+  if ($group) {
+    breakpoints_breakpoints_group_reload($group);
+  }
+  else {
+    breakpoints_themes_enabled(array($theme));
+  }
 }

@@ -83,6 +83,14 @@ function ildeposito_ct_traduzione_views_default_views() {
 
   /* Display: Elenco */
   $handler = $view->new_display('page', 'Elenco', 'traduzioni_elenco');
+  $handler->display->display_options['metatags'] = array(
+    'description' => array(
+      'value' => 'Le traduzioni dell\'archivio: traduzioni in molte lingue di canti e canzoni rivoluzionari, di lotta, di rivolta, di tutto il mondo. Comunisti, anarchici, socialisti, antimperialisti, etc.',
+    ),
+    'abstract' => array(
+      'value' => 'Le traduzioni dell\'archivio: traduzioni in molte lingue di canti e canzoni rivoluzionari, di lotta, di rivolta, di tutto il mondo. Comunisti, anarchici, socialisti, antimperialisti, etc.',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/traduzioni';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Traduzioni';

@@ -10,7 +10,7 @@
 function ildeposito_ct_canto_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: create canto content.
+  // Exported permission: 'create canto content'.
   $permissions['create canto content'] = array(
     'name' => 'create canto content',
     'roles' => array(
@@ -20,7 +20,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: delete any canto content.
+  // Exported permission: 'delete any canto content'.
   $permissions['delete any canto content'] = array(
     'name' => 'delete any canto content',
     'roles' => array(
@@ -29,7 +29,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: delete own canto content.
+  // Exported permission: 'delete own canto content'.
   $permissions['delete own canto content'] = array(
     'name' => 'delete own canto content',
     'roles' => array(
@@ -38,7 +38,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: edit any canto content.
+  // Exported permission: 'edit any canto content'.
   $permissions['edit any canto content'] = array(
     'name' => 'edit any canto content',
     'roles' => array(
@@ -48,7 +48,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: edit own canto content.
+  // Exported permission: 'edit own canto content'.
   $permissions['edit own canto content'] = array(
     'name' => 'edit own canto content',
     'roles' => array(
@@ -58,7 +58,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: enter canto revision log entry.
+  // Exported permission: 'enter canto revision log entry'.
   $permissions['enter canto revision log entry'] = array(
     'name' => 'enter canto revision log entry',
     'roles' => array(
@@ -69,7 +69,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'override_node_options',
   );
 
-  // Exported permission: override canto authored by option.
+  // Exported permission: 'override canto authored by option'.
   $permissions['override canto authored by option'] = array(
     'name' => 'override canto authored by option',
     'roles' => array(
@@ -79,7 +79,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'override_node_options',
   );
 
-  // Exported permission: override canto authored on option.
+  // Exported permission: 'override canto authored on option'.
   $permissions['override canto authored on option'] = array(
     'name' => 'override canto authored on option',
     'roles' => array(
@@ -89,7 +89,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'override_node_options',
   );
 
-  // Exported permission: override canto promote to front page option.
+  // Exported permission: 'override canto promote to front page option'.
   $permissions['override canto promote to front page option'] = array(
     'name' => 'override canto promote to front page option',
     'roles' => array(
@@ -99,7 +99,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'override_node_options',
   );
 
-  // Exported permission: override canto published option.
+  // Exported permission: 'override canto published option'.
   $permissions['override canto published option'] = array(
     'name' => 'override canto published option',
     'roles' => array(
@@ -109,7 +109,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'override_node_options',
   );
 
-  // Exported permission: override canto revision option.
+  // Exported permission: 'override canto revision option'.
   $permissions['override canto revision option'] = array(
     'name' => 'override canto revision option',
     'roles' => array(
@@ -119,7 +119,7 @@ function ildeposito_ct_canto_user_default_permissions() {
     'module' => 'override_node_options',
   );
 
-  // Exported permission: override canto sticky option.
+  // Exported permission: 'override canto sticky option'.
   $permissions['override canto sticky option'] = array(
     'name' => 'override canto sticky option',
     'roles' => array(

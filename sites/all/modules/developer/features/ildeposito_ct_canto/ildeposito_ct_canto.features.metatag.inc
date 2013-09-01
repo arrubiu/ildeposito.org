@@ -14,11 +14,14 @@ function ildeposito_ct_canto_metatag_export_default() {
   $config['node:canto'] = array(
     'instance' => 'node:canto',
     'config' => array(
+      'title' => array(
+        'value' => '[node:title] - [node:field-autore-testo] | Testo, accordi, musica e spartiti | [site:name]',
+      ),
       'description' => array(
-        'value' => '[node:field-capoverso]',
+        'value' => '"[node:field-capoverso]" - Testo, accordi, musica e spartiti di [node:title] - [node:field-autore-testo] - [node:field-sezione] - [node:field-tags] - [node:field-lingua].',
       ),
       'abstract' => array(
-        'value' => '[node:field-capoverso]',
+        'value' => '"[node:field-capoverso]" - Testo, accordi, musica e spartiti di [node:title] - [node:field-autore-testo] - [node:field-sezione] - [node:field-tags] - [node:field-lingua].',
       ),
     ),
   );

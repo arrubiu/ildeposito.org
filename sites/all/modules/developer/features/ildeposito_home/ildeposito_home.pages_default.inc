@@ -90,7 +90,7 @@ function ildeposito_home_default_page_manager_pages() {
     $pane->access = array();
     $pane->configuration = array(
       'override_title' => 1,
-      'override_title_text' => 'Social newtork',
+      'override_title_text' => 'Social network',
     );
     $pane->cache = array();
     $pane->style = array(

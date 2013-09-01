@@ -12,29 +12,6 @@ function media_internet_hook_info() {
 }
 
 /**
- * Implements hook_menu().
- */
-function media_internet_menu() {
-  $items['file/add/web'] = array(
-    'title' => 'Web',
-    'description' => 'Add internet files to your media library.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('media_internet_add'),
-    'access callback' => 'media_internet_access',
-    'type' => MENU_LOCAL_TASK,
-  );
-
-  return $items;
-}
-
-/**
- * Access callback for the media_internet media browser plugin.
- */
-function media_internet_access($account = NULL) {
-  return user_access('administer files', $account) || user_access('add media from remote sources', $account);
-}
-
-/**
  * Implement hook_permission().
  */
 function media_internet_permission() {
@@ -48,8 +25,6 @@ function media_internet_permission() {
 
 /**
  * Provides a form for adding media items from 3rd party sources.
- *
- * @todo Convert the form arguments to just one array of options/parameters.
  */
 function media_internet_add($form, &$form_state = array(), $types = NULL) {
   $form['embed_code'] = array(
@@ -61,7 +36,6 @@ function media_internet_add($form, &$form_state = array(), $types = NULL) {
     // Explorer supports upto 2083 (http://support.microsoft.com/kb/208427), so
     // we assume publicly available media URLs are within this limit.
     '#maxlength' => 2083,
-    '#required' => TRUE,
   );
 
 
@@ -100,10 +74,7 @@ function media_internet_add($form, &$form_state = array(), $types = NULL) {
   );
 
   $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Submit'),
-  );
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
   return $form;
 }
 
@@ -196,22 +167,8 @@ function media_internet_add_submit($form, &$form_state) {
     form_set_error('embed_code', t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $embed_code)));
     return;
   }
-  else {
-    $form_state['file'] = $file;
-  }
 
-  // Redirect to the file edit page after submission.
-  if (file_entity_access('update', $file)) {
-    $destination = array('destination' => 'admin/content/file');
-    if (isset($_GET['destination'])) {
-      $destination = drupal_get_destination();
-      unset($_GET['destination']);
-    }
-    $form_state['redirect'] = array('file/' . $file->fid . '/edit', array('query' => $destination));
-  }
-  else {
-    $form_state['redirect'] = 'admin/content/file';
-  }
+  $form_state['redirect'] = array('media/browser', array('query' => array('render' => 'media-popup', 'fid' => $file->fid)));
 }
 
 /**

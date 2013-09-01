@@ -7,24 +7,19 @@
 /**
  * Implements hook_ctools_plugin_api().
  */
-function ildeposito_media_ctools_plugin_api() {
-  list($module, $api) = func_get_args();
+function ildeposito_media_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "breakpoints" && $api == "default_breakpoint_group") {
     return array("version" => "1");
   }
-  list($module, $api) = func_get_args();
   if ($module == "breakpoints" && $api == "default_breakpoints") {
     return array("version" => "1");
   }
-  list($module, $api) = func_get_args();
   if ($module == "ds" && $api == "ds") {
     return array("version" => "1");
   }
-  list($module, $api) = func_get_args();
   if ($module == "file_entity" && $api == "file_default_displays") {
     return array("version" => "1");
   }
-  list($module, $api) = func_get_args();
   if ($module == "picture" && $api == "default_picture_mapping") {
     return array("version" => "1");
   }
@@ -39,6 +34,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: articolo.
   $styles['articolo'] = array(
     'name' => 'articolo',
+    'label' => 'articolo',
     'effects' => array(
       25 => array(
         'label' => 'Scala',
@@ -62,6 +58,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: articolo_home.
   $styles['articolo_home'] = array(
     'name' => 'articolo_home',
+    'label' => 'articolo_home',
     'effects' => array(
       32 => array(
         'label' => 'Scala e ritaglia',
@@ -84,6 +81,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: elenco_termine.
   $styles['elenco_termine'] = array(
     'name' => 'elenco_termine',
+    'label' => 'elenco_termine',
     'effects' => array(
       3 => array(
         'label' => 'Scala e ritaglia',
@@ -106,6 +104,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: intestazione.
   $styles['intestazione'] = array(
     'name' => 'intestazione',
+    'label' => 'intestazione',
     'effects' => array(
       1 => array(
         'label' => 'Scala e ritaglia',
@@ -128,6 +127,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: resp_articolobreakpoints_theme_ildeposito_mobile_1x.
   $styles['resp_articolobreakpoints_theme_ildeposito_mobile_1x'] = array(
     'name' => 'resp_articolobreakpoints_theme_ildeposito_mobile_1x',
+    'label' => 'resp_articolobreakpoints_theme_ildeposito_mobile_1x',
     'effects' => array(
       26 => array(
         'label' => 'Scala',
@@ -151,6 +151,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: resp_articolobreakpoints_theme_ildeposito_narrow_1x.
   $styles['resp_articolobreakpoints_theme_ildeposito_narrow_1x'] = array(
     'name' => 'resp_articolobreakpoints_theme_ildeposito_narrow_1x',
+    'label' => 'resp_articolobreakpoints_theme_ildeposito_narrow_1x',
     'effects' => array(
       27 => array(
         'label' => 'Scala',
@@ -174,6 +175,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: resp_articolobreakpoints_theme_ildeposito_normal_1x.
   $styles['resp_articolobreakpoints_theme_ildeposito_normal_1x'] = array(
     'name' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
+    'label' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
     'effects' => array(
       28 => array(
         'label' => 'Scala',
@@ -197,6 +199,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: resp_articolobreakpoints_theme_ildeposito_tv_1x.
   $styles['resp_articolobreakpoints_theme_ildeposito_tv_1x'] = array(
     'name' => 'resp_articolobreakpoints_theme_ildeposito_tv_1x',
+    'label' => 'resp_articolobreakpoints_theme_ildeposito_tv_1x',
     'effects' => array(
       29 => array(
         'label' => 'Scala',
@@ -220,6 +223,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: respbreakpoints_theme_ildeposito_mobile_1x.
   $styles['respbreakpoints_theme_ildeposito_mobile_1x'] = array(
     'name' => 'respbreakpoints_theme_ildeposito_mobile_1x',
+    'label' => 'respbreakpoints_theme_ildeposito_mobile_1x',
     'effects' => array(
       20 => array(
         'label' => 'Scala e ritaglia',
@@ -242,6 +246,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: respbreakpoints_theme_ildeposito_narrow_1x.
   $styles['respbreakpoints_theme_ildeposito_narrow_1x'] = array(
     'name' => 'respbreakpoints_theme_ildeposito_narrow_1x',
+    'label' => 'respbreakpoints_theme_ildeposito_narrow_1x',
     'effects' => array(
       21 => array(
         'label' => 'Scala e ritaglia',
@@ -264,6 +269,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: respbreakpoints_theme_ildeposito_normal_1x.
   $styles['respbreakpoints_theme_ildeposito_normal_1x'] = array(
     'name' => 'respbreakpoints_theme_ildeposito_normal_1x',
+    'label' => 'respbreakpoints_theme_ildeposito_normal_1x',
     'effects' => array(
       22 => array(
         'label' => 'Scala e ritaglia',
@@ -286,6 +292,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: respbreakpoints_theme_ildeposito_tv_1x.
   $styles['respbreakpoints_theme_ildeposito_tv_1x'] = array(
     'name' => 'respbreakpoints_theme_ildeposito_tv_1x',
+    'label' => 'respbreakpoints_theme_ildeposito_tv_1x',
     'effects' => array(
       23 => array(
         'label' => 'Scala e ritaglia',
@@ -308,6 +315,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: sezioni_homebreakpoints_theme_ildeposito_mobile_1x.
   $styles['sezioni_homebreakpoints_theme_ildeposito_mobile_1x'] = array(
     'name' => 'sezioni_homebreakpoints_theme_ildeposito_mobile_1x',
+    'label' => 'sezioni_homebreakpoints_theme_ildeposito_mobile_1x',
     'effects' => array(
       41 => array(
         'label' => 'Scala e ritaglia',
@@ -330,6 +338,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: sezioni_homebreakpoints_theme_ildeposito_narrow_1x.
   $styles['sezioni_homebreakpoints_theme_ildeposito_narrow_1x'] = array(
     'name' => 'sezioni_homebreakpoints_theme_ildeposito_narrow_1x',
+    'label' => 'sezioni_homebreakpoints_theme_ildeposito_narrow_1x',
     'effects' => array(
       39 => array(
         'label' => 'Scala e ritaglia',
@@ -352,6 +361,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: sezioni_homebreakpoints_theme_ildeposito_normal_1x.
   $styles['sezioni_homebreakpoints_theme_ildeposito_normal_1x'] = array(
     'name' => 'sezioni_homebreakpoints_theme_ildeposito_normal_1x',
+    'label' => 'sezioni_homebreakpoints_theme_ildeposito_normal_1x',
     'effects' => array(
       38 => array(
         'label' => 'Scala e ritaglia',
@@ -374,6 +384,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: sezioni_homebreakpoints_theme_ildeposito_tv_1x.
   $styles['sezioni_homebreakpoints_theme_ildeposito_tv_1x'] = array(
     'name' => 'sezioni_homebreakpoints_theme_ildeposito_tv_1x',
+    'label' => 'sezioni_homebreakpoints_theme_ildeposito_tv_1x',
     'effects' => array(
       37 => array(
         'label' => 'Scala e ritaglia',
@@ -396,6 +407,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: termine_singolo.
   $styles['termine_singolo'] = array(
     'name' => 'termine_singolo',
+    'label' => 'termine_singolo',
     'effects' => array(
       5 => array(
         'label' => 'Scala e ritaglia',
@@ -418,6 +430,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: utente_profile.
   $styles['utente_profile'] = array(
     'name' => 'utente_profile',
+    'label' => 'utente_profile',
     'effects' => array(
       42 => array(
         'label' => 'Javascript crop',
@@ -445,6 +458,7 @@ function ildeposito_media_image_default_styles() {
   // Exported image style: utente_thumb.
   $styles['utente_thumb'] = array(
     'name' => 'utente_thumb',
+    'label' => 'utente_thumb',
     'effects' => array(
       24 => array(
         'label' => 'Scala e ritaglia',

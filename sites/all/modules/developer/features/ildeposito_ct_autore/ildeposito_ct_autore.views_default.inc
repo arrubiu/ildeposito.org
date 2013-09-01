@@ -133,6 +133,14 @@ function ildeposito_ct_autore_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'autore' => 'autore',
   );
+  $handler->display->display_options['metatags'] = array(
+    'description' => array(
+      'value' => 'Tutti gli autori dei canti e delle canzoni di lotta, di protesta, rivoluzionarie, da tutto il mondo. Della resistenza, del risorgimento, degli anni \'60 e \'70 fino ai giorni nostri.',
+    ),
+    'abstract' => array(
+      'value' => 'Tutti gli autori dei canti e delle canzoni di lotta, di protesta, rivoluzionarie, da tutto il mondo. Della resistenza, del risorgimento, degli anni \'60 e \'70 fino ai giorni nostri.',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/autori';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Autori';

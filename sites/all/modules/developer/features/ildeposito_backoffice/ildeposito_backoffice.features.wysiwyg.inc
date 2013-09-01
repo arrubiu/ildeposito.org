@@ -44,6 +44,9 @@ function ildeposito_backoffice_wysiwyg_default_profiles() {
           'blockquote' => 1,
           'removeformat' => 1,
         ),
+        'autoresize' => array(
+          'autoresize' => 1,
+        ),
         'wordcount' => array(
           'wordcount' => 1,
         ),

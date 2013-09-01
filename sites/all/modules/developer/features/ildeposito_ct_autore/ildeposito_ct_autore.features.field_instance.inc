@@ -66,7 +66,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 6,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -137,7 +137,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 7,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -167,7 +167,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -208,7 +208,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 5,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -238,7 +238,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -279,7 +279,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 2,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -309,7 +309,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -348,7 +348,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 1,
+        'weight' => 3,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -378,7 +378,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -419,6 +419,65 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-autore-field_localizzazione'
+  $field_instances['node-autore-field_localizzazione'] = array(
+    'bundle' => 'autore',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 0,
+      ),
+      'elenco_termini_contenuti' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'rss' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_label_plurals_singular' => 'Localizzazione',
+    'field_name' => 'field_localizzazione',
+    'label' => 'Localizzazioni',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_select',
+      'weight' => 7,
+    ),
+  );
+
   // Exported field_instance: 'node-autore-field_nome'
   $field_instances['node-autore-field_nome'] = array(
     'bundle' => 'autore',
@@ -430,7 +489,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 4,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -460,7 +519,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -499,7 +558,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 9,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -529,7 +588,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -566,10 +625,11 @@ function ildeposito_ct_autore_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
+        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 9,
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 1,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -601,7 +661,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -638,7 +698,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 8,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -668,7 +728,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -783,6 +843,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
   t('Indicare il nome "di persona" dell\'autore, se presente');
   t('Indicare l\'autore della fonte bibliografica, nella forma "Cognome Nome". In caso di autori multipli indicare "AA. VV.".');
   t('Links');
+  t('Localizzazioni');
   t('Nome');
   t('Old ID');
   t('Sezione');

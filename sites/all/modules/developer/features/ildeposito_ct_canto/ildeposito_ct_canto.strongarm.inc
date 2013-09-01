@@ -298,7 +298,7 @@ function ildeposito_ct_canto_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'page_title_type_canto';
-  $strongarm->value = '';
+  $strongarm->value = '[current-page:page-title], [node:field-autore-testo] | Testi, accordi, musica e spartiti | [site:name]';
   $export['page_title_type_canto'] = $strongarm;
 
   $strongarm = new stdClass();

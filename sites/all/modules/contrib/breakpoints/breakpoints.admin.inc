@@ -775,7 +775,7 @@ function breakpoints_admin_breakpoint_group_edit_form_no_breakpoints() {
 
   $form['info'] = array(
     '#type' => 'markup',
-    '#markup' => t("There're no breakpoints defined, you'll have to create them first."),
+    '#markup' => t("There're no breakpoints defined, you'll have to !create them first.", array('!create' => l(t('create'), 'admin/config/media/breakpoints'))),
   );
 
   return $form;

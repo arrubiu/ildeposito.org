@@ -12,7 +12,7 @@ function backup_migrate_dropbox_requirements($phase) {
   $requirements = array();
   $t = get_t();
   if ($phase == 'install') {
-    if (!file_exists('sites/all/libraries/Dropbox-master/Dropbox/API.php')) {
+    if (!file_exists('sites/all/libraries/dropbox/Dropbox/API.php')) {
       $requirements['dropbox'] = array(
         'title' => $t('BenTheDesigner\'s Dropbox REST API'),
         'value' => $t('Missing'),
@@ -20,7 +20,7 @@ function backup_migrate_dropbox_requirements($phase) {
           'BenTheDesigner\'s Dropbox REST API library is missing, please download it from !link and place it at !directory',
           array(
             '!link' => 'https://github.com/BenTheDesigner/Dropbox',
-            '!directory' => 'sites/all/libraries/Dropbox-master',
+            '!directory' => 'sites/all/libraries/dropbox',
           )
         ),
         'severity' => REQUIREMENT_ERROR,

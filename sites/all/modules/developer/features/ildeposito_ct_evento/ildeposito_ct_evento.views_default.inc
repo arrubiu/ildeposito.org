@@ -328,6 +328,14 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['date_argument']['date_fields'] = array(
     'field_data_field_data_evento.field_data_evento_value' => 'field_data_field_data_evento.field_data_evento_value',
   );
+  $handler->display->display_options['metatags'] = array(
+    'description' => array(
+      'value' => 'Il calendario cantato: gli eventi del movimento operaio, le lotte, le rivoluzioni, navigabili come un calendario che racconta il movimento di emancipazione delle classi oppresse.',
+    ),
+    'abstract' => array(
+      'value' => 'Il calendario cantato: gli eventi del movimento operaio, le lotte, le rivoluzioni, navigabili come un calendario che racconta il movimento di emancipazione delle classi oppresse.',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/storiacantata/calendario/anno';
   $handler->display->display_options['menu']['title'] = 'Annuale';
   $handler->display->display_options['menu']['weight'] = '4';
@@ -702,6 +710,17 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['header']['block']['table'] = 'views';
   $handler->display->display_options['header']['block']['field'] = 'block';
   $handler->display->display_options['header']['block']['block_to_insert'] = 'menu:menu-eventi';
+  $handler->display->display_options['metatags'] = array(
+    'title' => array(
+      'value' => '[view:title] - Tutti gli eventi della Storia Cantata - Pagina [current-page:page-number] | [site:name]',
+    ),
+    'description' => array(
+      'value' => 'L\'elenco degli eventi della Storia Cantata: gli eventi della storia del movimento operaio, delle lotte, delle rivolte.',
+    ),
+    'abstract' => array(
+      'value' => 'L\'elenco degli eventi della Storia Cantata: gli eventi della storia del movimento operaio, delle lotte, delle rivolte.',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/storiacantata/elenco';
 
   /* Display: Mappa */
@@ -730,6 +749,17 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_entity'] = 1;
+  $handler->display->display_options['metatags'] = array(
+    'title' => array(
+      'value' => '[view:title] - Tutti gli eventi della Storia Cantata - Pagina [current-page:page-number] | [site:name]',
+    ),
+    'description' => array(
+      'value' => 'La mappa degli eventi della storia cantata: per navigare tra gli eventi del movimento operaio, le rivolte, le ribellioni, le rivoluzioni.',
+    ),
+    'abstract' => array(
+      'value' => 'La mappa degli eventi della storia cantata: per navigare tra gli eventi del movimento operaio, le rivolte, le ribellioni, le rivoluzioni.',
+    ),
+  );
   $handler->display->display_options['path'] = 'archivio/storiacantata/mappa';
 
   /* Display: Overlay */

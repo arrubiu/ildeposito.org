@@ -20,6 +20,12 @@ function ildeposito_tassonomie_metatag_export_default() {
       'description' => array(
         'value' => '[term:description]',
       ),
+      'og:title' => array(
+        'value' => '[term:name]',
+      ),
+      'og:description' => array(
+        'value' => '[term:description]',
+      ),
     ),
   );
 
