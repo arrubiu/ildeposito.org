@@ -58,8 +58,9 @@ function ildeposito_ct_traduzione_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'hidden',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'text_default',
         'weight' => 5,
       ),
       'elenco_archivio' => array(

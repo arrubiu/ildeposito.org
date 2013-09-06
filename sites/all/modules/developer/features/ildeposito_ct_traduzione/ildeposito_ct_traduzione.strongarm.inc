@@ -173,6 +173,30 @@ function ildeposito_ct_traduzione_strongarm() {
       'riferimento_evento' => array(
         'custom_settings' => TRUE,
       ),
+      'email_plain' => array(
+        'custom_settings' => FALSE,
+      ),
+      'email_html' => array(
+        'custom_settings' => FALSE,
+      ),
+      'email_textalt' => array(
+        'custom_settings' => FALSE,
+      ),
+      'articolo' => array(
+        'custom_settings' => FALSE,
+      ),
+      'articolo_home' => array(
+        'custom_settings' => FALSE,
+      ),
+      'canti_capoversi' => array(
+        'custom_settings' => FALSE,
+      ),
+      'percorso' => array(
+        'custom_settings' => FALSE,
+      ),
+      'print_canzoniere' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(

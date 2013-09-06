@@ -63,6 +63,13 @@ function ildeposito_forum_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 11,
       ),
+      'search_result' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 11,
+      ),
       'teaser' => array(
         'label' => 'hidden',
         'module' => 'text',

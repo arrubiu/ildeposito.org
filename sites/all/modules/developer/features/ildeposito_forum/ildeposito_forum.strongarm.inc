@@ -127,7 +127,7 @@ function ildeposito_forum_strongarm() {
         'custom_settings' => FALSE,
       ),
       'search_result' => array(
-        'custom_settings' => FALSE,
+        'custom_settings' => TRUE,
       ),
       'print' => array(
         'custom_settings' => FALSE,
@@ -145,6 +145,30 @@ function ildeposito_forum_strongarm() {
         'custom_settings' => FALSE,
       ),
       'revision' => array(
+        'custom_settings' => FALSE,
+      ),
+      'email_plain' => array(
+        'custom_settings' => FALSE,
+      ),
+      'email_html' => array(
+        'custom_settings' => FALSE,
+      ),
+      'email_textalt' => array(
+        'custom_settings' => FALSE,
+      ),
+      'articolo' => array(
+        'custom_settings' => FALSE,
+      ),
+      'articolo_home' => array(
+        'custom_settings' => FALSE,
+      ),
+      'canti_capoversi' => array(
+        'custom_settings' => FALSE,
+      ),
+      'percorso' => array(
+        'custom_settings' => FALSE,
+      ),
+      'print_canzoniere' => array(
         'custom_settings' => FALSE,
       ),
     ),
@@ -245,7 +269,7 @@ function ildeposito_forum_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_forum_pattern';
-  $strongarm->value = '';
+  $strongarm->value = 'forum/[node:title]';
   $export['pathauto_node_forum_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
