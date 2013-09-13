@@ -64,11 +64,10 @@ function ildeposito_forum_field_default_field_instances() {
         'weight' => 11,
       ),
       'search_result' => array(
-        'label' => 'hidden',
-        'module' => 'text',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 11,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'hidden',

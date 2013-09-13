@@ -96,15 +96,6 @@ function ildeposito_backoffice_filter_default_formats() {
     'status' => 1,
     'weight' => 1,
     'filters' => array(
-      'filter_html' => array(
-        'weight' => -50,
-        'status' => 1,
-        'settings' => array(
-          'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <br> <p> <div> <span> <h1> <h2> <h3> <h4> <h5> <h6> <img>',
-          'filter_html_help' => 1,
-          'filter_html_nofollow' => 0,
-        ),
-      ),
       'filter_url' => array(
         'weight' => -47,
         'status' => 1,
@@ -139,27 +130,6 @@ function ildeposito_backoffice_filter_default_formats() {
         'weight' => -39,
         'status' => 1,
         'settings' => array(),
-      ),
-      'htmlpurifier_basic' => array(
-        'weight' => -38,
-        'status' => 1,
-        'settings' => array(
-          'htmlpurifier_help' => 1,
-          'htmlpurifier_basic_config' => array(
-            'Attr.EnableID' => 0,
-            'AutoFormat.AutoParagraph' => 1,
-            'AutoFormat.Linkify' => 1,
-            'AutoFormat.RemoveEmpty' => 0,
-            'Null_HTML.Allowed' => 1,
-            'HTML.ForbiddenAttributes' => '',
-            'HTML.ForbiddenElements' => '',
-            'HTML.SafeObject' => 0,
-            'Output.FlashCompat' => 0,
-            'URI.DisableExternalResources' => 0,
-            'URI.DisableResources' => 0,
-            'Null_URI.Munge' => 1,
-          ),
-        ),
       ),
     ),
   );
