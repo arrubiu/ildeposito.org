@@ -1714,3 +1714,9 @@ form#user-login-form label {
 a.invisibile {
   display: hidden;
 }
+
+.field-name-body img.left {
+  float: left;
+  margin-top: 5px;
+  margin-right: 10px;
+}

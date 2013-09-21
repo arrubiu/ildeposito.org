@@ -324,6 +324,12 @@ function alterator_init() {
       get_path_term('sezioni', $_GET['id_sez'], 'MOVED');
       break;
 
+    // Tematica vecchia
+    case 'sezioni/view_tematica.php':
+      get_path_term('tags', $_GET['id'], 'MOVED');
+      break;
+
+
     // Tematica
     case 'archivio/tematiche/tematica.php':
       get_path_term('tags', $_GET['id_tem'], 'MOVED');
@@ -335,7 +341,7 @@ function alterator_init() {
       break;
 
     // Localizzazione
-    case 'archivio/canti/canto.php':
+    case 'archivio/nazioni/nazione.php':
       get_path_term('localizzazione', $_GET['id_nazione'], 'MOVED');
       break;
 
@@ -358,6 +364,7 @@ function get_path_nodo($old_id, $type, $move) {
 
 function get_path_term($voc, $old_id, $move) {
   $path = views_get_view_result('redirect_term', 'block', $voc, $old_id);
+  //print count($path);
   if (count($path) > 0) {
     $url = url('taxonomy/term/' . $path[0]->tid, array('absolute' => TRUE));
     exec_redirect($url, $move);

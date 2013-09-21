@@ -169,10 +169,10 @@ function ildeposito_media_file_default_displays() {
   $file_display->api_version = 1;
   $file_display->name = 'image__articolo_home__file_picture';
   $file_display->weight = 0;
-  $file_display->status = FALSE;
+  $file_display->status = TRUE;
   $file_display->settings = array(
-    'picture_group' => 'ildeposito',
-    'fallback_image_style' => '',
+    'picture_group' => 'articolo',
+    'fallback_image_style' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
     'alt' => '',
     'title' => '',
   );

@@ -62,7 +62,6 @@ features[field_base][] = field_old_id
 features[field_base][] = field_percorso
 features[field_base][] = field_periodo
 features[field_base][] = field_presenza_accordi
-features[field_base][] = field_prova_data
 features[field_base][] = field_sezione
 features[field_base][] = field_simplenews_term
 features[field_base][] = field_tags
