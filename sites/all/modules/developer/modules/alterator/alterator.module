@@ -311,7 +311,9 @@ function alterator_init() {
 
     // Canto
     case 'archivio/canti/canto.php':
-      get_path_nodo($_GET['id'], 'canto', 'MOVED');
+      if (isset($_GET['id'])) {
+        get_path_nodo($_GET['id'], 'canto', 'MOVED');
+      }
       break;
 
     // Autore
