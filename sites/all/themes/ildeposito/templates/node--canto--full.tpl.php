@@ -17,7 +17,7 @@
     <?php
     // We hide the comments and links now so that we can render them later.
 
-
+    print render($content['field_radioactiviy']);
     print render($content['field_sezione']);
     print render($content['field_autore_testo']);
     print render($content['field_anno']);

@@ -1,0 +1,179 @@
+<?php
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function watchdog_digest_form_system_logging_settings_alter(&$form, $form_state) {
+  $form['watchdog_digest'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Watchdog Digest'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  $form['watchdog_digest']['watchdog_digest_entries'] = array(
+    '#type' => 'select',
+    '#title' => t('Messages per e-mail'),
+    '#default_value' => variable_get('watchdog_digest_entries', 100),
+    '#options' => array(0 => t('Disabled')) + drupal_map_assoc(array(10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000)),
+    '#description' => t('The maximum number of messages to send in a Watchdog Digest e-mail. Should be less than %dblog_setting', array('%dblog_setting' => t('Database log messages to keep'))),
+  );
+  $form['watchdog_digest']['watchdog_digest_recipents'] = array(
+    '#type' => 'textfield',
+    '#title' => t('E-mail recipent(s)'),
+    '#default_value' => variable_get('watchdog_digest_recipents', ''),
+    '#description' => t('Digest email recipent or recipents. Separate multiple e-mail addresses with comma, example: <em>info@example.com,watchdog@example.com</em><br />Leave empty for site email address, which is %site_mail.', array('%site_mail' => variable_get('site_mail', ''))),
+  );
+  $seveirty_options = watchdog_severity_levels();
+  $seveirty_options[WATCHDOG_DEBUG] .= ' (' .t('all') .')';
+  $form['watchdog_digest']['watchdog_digest_severity'] = array(
+    '#type' => 'select',
+    '#title' => t('Severity level treshold'),
+    '#default_value' => variable_get('watchdog_digest_severity', WATCHDOG_DEBUG),
+    '#options' => $seveirty_options,
+    '#description' => t('Lowest level of severity to include. It is recommended to leave the default value: <em>debug</em>.'),
+  );
+}
+
+/**
+ * Implementation of hook_cron()
+ */
+function watchdog_digest_cron() {
+  if (variable_get('watchdog_digest_entries', 100) == 0) {
+    return;
+  }
+  
+  $params = db_query("SELECT COUNT(wid) AS cnt, MAX(wid) AS latest_wid, MAX(timestamp) AS latest_ts, MIN(wid) AS last_wid, MIN(timestamp) AS last_ts FROM {watchdog} WHERE wid >= :last AND severity <= :severity", array(
+    ':last' => variable_get('watchdog_digest_last_wid', 0),
+    ':severity' => variable_get('watchdog_digest_severity', WATCHDOG_DEBUG),
+  ))->fetchAssoc();
+    
+  if ($params['last_wid'] == variable_get('watchdog_digest_last_wid', 0) && $params['cnt'] - 1 < variable_get('watchdog_digest_entries', 100)) {
+    return 'skip';
+  }
+
+  $recipents  = variable_get('watchdog_digest_recipents', NULL);
+  $recipents  = !empty($recipents) ? $recipents : variable_get('site_mail');
+  $recipents  = explode(',', $recipents);
+  $recipents  = array_map('trim', $recipents);
+  $recipents  = array_filter($recipents);
+
+  foreach ($recipents as $recipent) {
+    $mail = drupal_mail('watchdog_digest', 'default', $recipent, language_default(), $params, NULL, TRUE);
+  }
+
+  if ($mail['result']) {
+    variable_set('watchdog_digest_last_wid', $params['latest_wid']);
+  }
+}
+
+
+/**
+ * Implementation of hook_mail()
+ */
+function watchdog_digest_mail($key, &$message, $params) {
+  if ($key == 'default') {
+    if ($params['last_wid'] == variable_get('watchdog_digest_last_wid', 0)) {
+      $count = $params['cnt'] - 1;
+    }
+    else {
+      $count = $params['cnt'];
+    }
+    $message['subject'] = sprintf('[watchdog digest] %d etries for website %s', $count, variable_get('site_name'));
+    
+    $message['body'] = array();
+    
+    $message['body'][] = _watchdog_digest_title('Site: '. variable_get('site_name', NULL));
+    
+    if (variable_get('watchdog_digest_last_wid', 0) == 0) {
+      $message['body'][] =
+        "This is the first digest.";
+    }
+    else if ($params['last_wid'] != variable_get('watchdog_digest_last_wid', 0)) {
+      $message['body'][] =
+        "Warning! Some messages fell out from database! Connsider increasing database logging limit at admin/config/development/logging.";
+    }
+
+    $language = language_default();
+    $message['body'][] =
+      "# of entries:    $count\n".
+      "time elapsed:    ". format_interval($_SERVER['REQUEST_TIME'] - $params['last_ts'], 3, $language->language);
+
+    /**
+     * Group by type
+     */ 
+    $message['body'][] = _watchdog_digest_title('Number of entries by type');
+
+    $printf_tpl = "%8s  %4s  %-60.60s";
+    $lines = array();
+    $lines[] = sprintf($printf_tpl, 'Count', 'Sev.', 'Type');
+    $lines[] = str_repeat('-', 77);
+
+    $result = db_query(
+      "SELECT type, COUNT(wid) AS cnt, MIN(severity) AS severity_min, MAX(severity) AS severity_max
+        FROM {watchdog}
+        WHERE wid <= :latest_wid AND wid > :last_wid AND severity <= :severity
+        GROUP BY type
+        ORDER BY COUNT(wid) DESC",
+      array(
+        ':latest_wid'   => $params['latest_wid'],
+        ':last_wid'     => $params['last_wid'],
+        ':severity'     => variable_get('watchdog_digest_severity', WATCHDOG_DEBUG),
+      ),
+      array(
+        'fetch' => PDO::FETCH_ASSOC
+      )
+    );
+    foreach ($result as $row) {
+      $lines[] = sprintf(
+        $printf_tpl,
+        trim($row['cnt']),
+        ($row['severity_min'] == $row['severity_max'] ? $row['severity_min'] : $row['severity_min'] .'-'. $row['severity_max']),
+        $row['type']
+      );
+    }
+    $message['body'][] = implode("\n", $lines);
+    
+    /**
+     * Group by type and message
+     */ 
+    
+    $message['body'][] = _watchdog_digest_title('Most frequent messages');
+    
+    $printf_tpl = "%8s  %4s  %-18.18s  %-40.40s";
+    $lines = array();
+    $lines[] = sprintf($printf_tpl, 'Count', 'Sev.', 'Type', 'Message');
+    $lines[] = str_repeat('-', 77);
+
+    $result = db_query(
+      "SELECT type, message, COUNT(wid) AS cnt, MIN(severity) AS severity_min, MAX(severity) AS severity_max
+        FROM {watchdog}
+        WHERE wid <= :latest_wid AND wid > :last_wid AND severity <= :severity
+        GROUP BY type, message
+        ORDER BY COUNT(wid) DESC
+        LIMIT 0, 100",
+      array(
+        ':latest_wid'   => $params['latest_wid'],
+        ':last_wid'     => $params['last_wid'],
+        ':severity'     => variable_get('watchdog_digest_severity', WATCHDOG_DEBUG),
+      ),
+      array(
+        'fetch' => PDO::FETCH_ASSOC
+      )
+    );
+    foreach ($result as $row) {
+      $lines[] = sprintf(
+        $printf_tpl,
+        $row['cnt'],
+        ($row['severity_min'] == $row['severity_max'] ? $row['severity_min'] : $row['severity_min'] .'-'. $row['severity_max']),
+        $row['type'],
+        $row['message']
+      );
+    }
+    $message['body'][] = implode("\n", $lines);
+  }
+}
+
+function _watchdog_digest_title($title) {
+  return '###   '. $title .'   '. str_repeat('#', 68 - mb_strlen($title));
+}
+
