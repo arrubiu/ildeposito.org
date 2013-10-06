@@ -16,8 +16,19 @@
       // We hide the comments and links now so that we can render them later.
       hide($content['comments']);
       hide($content['links']);
-      print render($content);
       
+	//print render($content);
+	?>
+	<div class="autore-img">
+		<?php //print render($content['field_immagini']); ?>
+	</div>
+	<div class="autore-info">
+		<?php 
+		print render($content['field_localizzazione']);
+		print render($content['field_sezione']);
+		?>
+      	</div>
+	<?php 
       print views_embed_view('contenuti_autore', 'autore_singolo');
 
     ?>

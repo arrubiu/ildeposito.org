@@ -167,6 +167,12 @@ function social_count() {
     'title' => 'Seguici su Facebook',
           ));
 
+  $google_img = theme('image', array(
+    'path' => drupal_get_path('theme', 'ildeposito') . '/images/home_google.png',
+    'alt' => 'google',
+    'title' => 'Seguici su Google Plus',
+          ));
+
   $twitter_img = theme('image', array(
     'path' => drupal_get_path('theme', 'ildeposito') . '/images/home_twitter.png',
     'alt' => 'twitter',
@@ -175,9 +181,15 @@ function social_count() {
   $output = '';
   $output .= '<div class="social">' . l($facebook_img, 'http://www.facebook.com/ildeposito.org', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Facebook', 'http://www.facebook.com/ildeposito.org', array('absolute' => TRUE)) . '<br /><strong>ildeposito.org</strong><br /><strong> ' . $count_facebook . '</strong> mi piace</div>';
 
+
   $output .= '<div class="social">' . l($twitter_img, 'http://twitter.com/ildeposito', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Twitter', 'http://twitter.com/ildeposito', array('absolute' => TRUE)) . '<br /><strong>@ildeposito</strong><br /></div>';
 
+  $output .= '<div class="social">' . l($google_img, 'https://plus.google.com/u/0/113629455468042353975/', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Google Plus', 'https://plus.google.com/u/0/113629455468042353975/', array('absolute' => TRUE)) . '<br /><strong>ilDeposito</strong><br /></div>';
+
+
+
   return $output;
+
 }
 
 function facebook_follow() {
