@@ -1,0 +1,6 @@
+# Ignore report still in development
+reports/intel.report_visitor_clickstream.inc
+
+nbproject
+*~
+.DS_Store

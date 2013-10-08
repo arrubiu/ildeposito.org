@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * Implements hook_intel_intel_script
+ */
+function intel_mailchimp_intel_intel_script() {
+  $scripts['mailchimp'] = array(
+    'title' => t('MailChimp'),
+    'description' => t('Use on any pages that MailChip emails might link.'),
+    'path' => libraries_get_path('intel') . '/js/intel_mailchimp.js',
+    'site_enabled' => true,
+  );
+  return $scripts;
+}

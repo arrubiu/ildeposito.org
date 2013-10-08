@@ -1,0 +1,132 @@
+<?php
+
+function intel_webform_menu() {
+  $items = array();
+
+  $items['node/%webform_menu/webform/intel'] = array(
+    'title' => 'Intelligence',
+    'page callback' => 'intel_webform_manage',
+    'page arguments' => array(1),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
+    'file' => 'intel_webform.admin.inc',
+    'weight' => 10,
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['intel_webform/admin_submission_results_alter_js'] = array(
+    'title' => '',
+    'page callback' => 'intel_webform_admin_submission_results_alter_js',
+    'access callback' => 'user_access',
+    'access arguments' => array('view all intel reports'),
+    'type' => MENU_CALLBACK,
+    'file' => 'intel_webform.reports.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_page_alter
+ * 
+ * @param $page
+ */
+function intel_webform_page_alter(&$page) {
+  if ((arg(0) == 'node') && (arg(2) == 'webform-results')) {
+    drupal_add_js(drupal_get_path('module', 'intel_webform') . '/intel_webform.admin_submission_results_alter.js');
+  }
+}
+
+/**
+ * Modify a Webform submission, prior to saving it in the database.
+ *
+ * @param $node
+ *   The Webform node on which this submission was made.
+ * @param $submission
+ *   The Webform submission that is about to be saved to the database.
+ */
+function intel_webform_webform_submission_presave($node, &$submission) {
+  global $base_path;
+  $visitor = intel_visitor_load();
+  $wf_settings = variable_get('intel_webform_settings_' . $node->nid, array());
+  $merge_data = array();
+  
+  if (!empty($node->webform['components']) && is_array($node->webform['components'])) {
+    foreach ($node->webform['components'] AS $cid => $component) {
+      if ($component['form_key'] == 'intel_vid') {
+        $submission->data[$cid]['value'][0] = $visitor->vid;
+      }
+      if ($component['form_key'] == 'intel_vtk') {
+        $submission->data[$cid]['value'][0] = $visitor->vtk;
+      }
+      if ($component['form_key'] == 'intel_visitor_url') {
+        $submission->data[$cid]['value'][0] ='http://' . $_SERVER['HTTP_HOST'] . $base_path. '/visitor/' . $visitor->vid;
+      }
+      if ($key = array_search($component['form_key'], $wf_settings)) {
+        $merge_data[$key] = $submission->data[$cid]['value'][0];
+      }
+    }
+  }
+  if (!empty($merge_data['field_visitor_email'])) {
+    $visitor->setEmail($merge_data['field_visitor_email']);
+    if (empty($visitor->contact_created) && !empty($visitor->email)) {
+      $visitor->setContactCreated(time());
+    }
+  }
+  if (!empty($merge_data['field_visitor_name'])) {
+    $name = $merge_data['field_visitor_name'] . ((!empty($merge_data['field_visitor_name2'])) ? " " . $merge_data['field_visitor_name2'] : '');
+    $visitor->setName($name);
+  }
+  $visitor->merge();
+}
+
+
+/**
+ * Respond to a node deleted, only on webforms.
+ */
+function intel_webform_node_delete($node) {
+  if ($node->type !== 'webform') {
+    return;
+  }
+  variable_del('intel_webform_settings_' . $node->nid);
+}
+
+/**
+ * Implements hook_intel_intel_script
+ */
+function intel_webform_intel_intel_script() {
+  $scripts['webform'] = array(
+    'title' => t('Webform'),
+    'description' => t('Used to track Webform submissions.'),
+    'path' => drupal_get_path('module', 'intel_webform') . '/intel_webform.intel_webform.js',
+    'enabled' => 1,
+  );
+  return $scripts;
+}
+
+/**
+ * Implements hook_intel_form_submission_check
+ */
+function intel_webform_intel_form_submission_check(&$submission, &$submission_data, &$track, &$link_query) {
+  if (empty($_GET['sid'])) {
+    return;
+  }
+  
+  require_once './' . drupal_get_path('module', 'webform') . "/includes/webform.submissions.inc";
+  $wfsubmissions = webform_get_submissions(array('sid' => $_GET['sid']));
+  $wfsubmission = $wfsubmissions[$_GET['sid']];    // check if submission exists and if it is recent    
+  if (isset($wfsubmission->submitted)) {
+    $link_query = array('sid' => $_GET['sid']);
+    $wf_node = node_load($wfsubmission->nid);
+    if (isset($wf_node->field_track_submission[$wf_node->language][0]['value'])) {
+      $track['category_id'] = $wf_node->field_track_submission[$wf_node->language][0]['value'];
+    }
+    if (isset($wf_node->field_track_submission_value[$wf_node->language][0]['value'])) {
+      $track['category_id'] = $wf_node->field_track_submission_value[$wf_node->language][0]['value'];
+    }
+    $submission->type = 'webform';
+    $submission->fid = $wfsubmission->nid;
+    $submission->fsid = $wfsubmission->sid;
+    $submission->details_url = "node/{$wfsubmission->nid}/submission/{$wfsubmission->sid}";
+    $track['form_title'] = $wf_node->title;
+    $track['submission_path'] = $submission->details_url;      
+  }
+}

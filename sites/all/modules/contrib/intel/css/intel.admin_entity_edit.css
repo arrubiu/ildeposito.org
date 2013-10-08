@@ -1,0 +1,17 @@
+/* Used to hide redirect module fieldset in Field collections */
+
+.intel-vert-tab .redirect-list {
+  display: none;
+}
+
+.intel-vert-tab .field-multiple-table .form-wrapper {
+  float: left;
+  margin-right: 6px;
+}
+
+.intel-vert-tab .field-multiple-table .form-submit {
+  clear: left;
+  float: left;
+  margin-top: 4px;
+  vertical-align: bottom;
+}

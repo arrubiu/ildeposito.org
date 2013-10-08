@@ -1,0 +1,299 @@
+<?php
+/**
+ * @file
+ * Installation file for LevelTen Intelligence
+ * 
+ * @author Tom McCracken <tomm@getlevelten.com>
+ */
+
+/**
+ *  Implementation of hook_install().
+ */
+function intel_install() {
+
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function intel_uninstall() {
+
+}
+
+/**
+ *  Implementation of hook_schema
+ */
+function intel_schema() {
+  $schema['intel_visitor'] = array(
+    'description' => 'Stores select tracking events for site visitors',
+    'fields' => array(
+      'vid' => array(
+        'description' => 'internal id',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'user id',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'vtkid' => array(
+        'description' => 'id part of vtk',
+        'type' => 'varchar',
+        'length' => '20',
+        'not null' => TRUE,
+      ),
+      'vtkc' => array(
+        'description' => 'validation code for vtk',
+        'type' => 'varchar',
+        'length' => '12',
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'the visitors full name',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'email' => array(
+        'description' => 'the visitors primary email address',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created' => array(
+        'description' => 'timestamp when visitor was created',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'updated' => array(
+        'description' => 'last update date',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'contact_created' => array(
+        'description' => 'timestamp when visitor became a contact',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'last_activity' => array(
+        'description' => 'timestamp of last activity',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'data_updated' => array(
+        'description' => 'last data update timestamp',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'data' => array(
+        'description' => 'saved data',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => TRUE,
+        'serialize' => TRUE,
+      ),
+      'ext_updated' => array(
+        'description' => 'last ext update timestamp',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'ext_data' => array(
+        'description' => 'saved analytics data',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => TRUE,
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('vid'),
+    'indexes' => array(
+      'uid' => array('uid'),
+      'vtkid' => array(array('vtkid', 10)),
+      'email' => array('email'),
+    ),
+  );
+  
+  $schema['intel_visitor_alias'] = array(
+    'description' => 'Stores alternative values of visitor fields values',
+    'fields' => array(
+      'vid' => array(
+        'description' => 'l10insight_visitor id',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'vtkid' => array(
+        'description' => 'alternate visitor token id',
+        'type' => 'varchar',
+        'length' => '20',
+        'not null' => TRUE,
+      ),
+      'vtkc' => array(
+        'description' => 'visitor token checksum',
+        'type' => 'varchar',
+        'length' => '12',
+        'not null' => TRUE,
+      ),
+      'email' => array(
+        'description' => 'alternative email address',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'updated' => array(
+        'description' => 'unix timestamp of when it was last updated',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'vid' => array('vid'),
+      'vtkid' => array(array('vtkid', 10)),
+      'email' => array('email'),      
+    ),
+  );
+  
+  $schema['intel_submission'] = array(
+    'description' => 'Stores form submission data for multiple form types',
+    'fields' => array(
+      'sid' => array(
+        'description' => 'internal id',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'Foriegn key for intel_visitor table',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'submitted' => array(
+        'description' => 'unix timestamp for when the submission was made',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'type of form. E.g. webform, hubspot',
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+      ),
+      'fid' => array(
+        'description' => 'the identifier of the form. IDs are type specific.',
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ),
+      'fsid' => array(
+        'description' => 'submission id. IDs are type specific',
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+      ),
+      'details_url' => array(
+        'description' => 'the url/sytem path to access the form submission data',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'response_page_host' => array(
+        'description' => 'the domain of the thankyou page',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'response_page_path' => array(
+        'description' => 'the path of the thankyou page',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'response_page_id' => array(
+        'description' => 'the nid if the thankyou page is a node',
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+      ),
+      'form_page_host' => array(
+        'description' => 'the domain of the page the form was submitted from',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'form_page_path' => array(
+        'description' => 'the path of the page the form was submitted from',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'form_page_id' => array(
+        'description' => 'the nid of the of the page the form was submitted from if a node',
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+      ),
+      'cta_page_host' => array(
+        'description' => 'the domain of the page displaying the cta',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'cta_page_path' => array(
+        'description' => 'the path of the page displaying the cta',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'cta_page_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'cta_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'data' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('sid'),
+    'indexes' => array(
+      'vid' => array('vid'),
+      'fid' => array('fid'),
+      'fsid' => array('fsid'),
+      'form_page_id' => array('form_page_id'),
+      'form_page_path' => array('form_page_path'),
+      'response_page_id' => array('response_page_id'),
+      'response_page_path' => array('response_page_path'),
+      'cta_id' => array('cta_id'),
+      'cta_page_id' => array('cta_page_id'),
+      'cta_page_path' => array('cta_page_path'),
+    ),
+  );  
+
+  return $schema;
+}

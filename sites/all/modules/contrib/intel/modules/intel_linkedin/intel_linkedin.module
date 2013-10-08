@@ -1,0 +1,65 @@
+<?php
+
+function intel_linkedin_menu() {
+  $items = array();
+  $items['admin/config/services/intel/modules/linkedin'] = array(
+    'title' => 'Modules',
+    'description' => 'Add on module configuration',
+    'page callback' => 'intel_admin_modules',
+    //'page arguments' => array('intel_admin_external_tracking'),
+    'access callback' => 'user_access',
+    'access arguments' => array('admin intel'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+    'file' => 'intel_linkedin.admin.inc',
+  );
+  
+  $items['visitor/%intel_visitor/disqus'] = array(
+    'title' => 'LinkedIn',
+    'description' => 'LinkedIn profile.',
+    'page callback' => 'intel_linkedin_visitor_page',
+    'page arguments' => array(1),
+    //'access callback' => 'user_access',
+    //'access arguments' => array('view all intel reports'),
+    'access callback' => 'intel_linkedin_show_visitor_menu_tab',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'intel_disqus.admin.inc',  
+  );
+
+  return $items;
+}
+
+function intel_linkedin_show_visitor_menu_tab($visitor) {
+  //return user_access('view all intel reports');
+  return user_access('view all intel reports') && intel_linkedin_is_linked($visitor);
+}
+
+function intel_linkedin_is_linked($visitor) {
+  if (is_string($visitor->ext_data)) {
+    $visitor->ext_data = unserialize($visitor->ext_data);
+  }
+  if (is_string($visitor->data)) {
+    $visitor->data = unserialize($visitor->data);
+  }
+  return !empty($visitor->ext_data['linkedin']['publicProfileUrl']) || !empty($visitor->data['linkedin']['profile_url']);
+}
+
+/**
+ * Implements hook_intel_intel_script
+ */
+function intel_linkedin_intel_intel_script() {
+  $scripts['linkedin'] = array(
+    'title' => t('LinkedIn'),
+    'description' => t('TODO.'),
+    'path' => libraries_get_path('intel') . '/intel_linkedin.js',
+  );
+  return $scripts;
+}
+
+/**
+ * Implements hook_intel_page_js
+ */
+function intel_linkedin_intel_page_settings_js_alter(&$js, &$page) {
+  $js['intel']['linkedin']['apikey'] = 'k4937j4f9z85';
+}

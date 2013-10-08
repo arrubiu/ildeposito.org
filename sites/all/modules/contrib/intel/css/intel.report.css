@@ -1,0 +1,448 @@
+/* $Id: intel.css,v 1.1.2.1 2010/12/28 17:45:39 randallknutson Exp $ */
+
+#intel-report {
+  font-family: arial,sans-serif;
+}
+
+#report-gauges {
+  float: left;
+  width: 15%;
+}
+
+#report-main-chart {
+  float: left;
+  width: 100%;
+}
+
+.chart-main-wrapper {
+  height: 150px;  
+  width: 100%;
+}
+
+.chart-sources-wrapper {
+  height: 150px;    
+  width: 100%;
+}
+
+.chart-refferrers-wrapper {
+  height: 150px;    
+  width: 100%;
+}
+
+.chart-map-wrapper {
+  height: 150px;    
+  width: 100%;
+}
+
+.label-header {
+  text-align: left; 
+}
+
+.numeric-header {
+  text-align: right;    
+}
+
+.text-header {
+  text-align: right;    
+}
+
+.label-cell {
+  text-align: left; 
+}
+
+.numeric-cell {
+  text-align: right;  
+}
+
+.text-cell {
+  text-align: right;    
+}
+
+#intel-dashboard {
+  color: #000000;
+}
+
+.dashboard-links {
+  font-size: .9em;
+  margin-bottom: 8px;  
+}
+
+#intel-report h3  {
+  padding: 2px 0px 2px 6px;
+  margin-top: 6px;
+  background-color: #666666;
+  color: #FFFFFF;
+  font-size: 1.1em;
+  font-weight: bold;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-topright: 3px;
+}
+
+#intel-report h4  {
+  border-color: #ccc;
+  text-shadow: #fff 0px 1px 0px;
+  font-size: 11px;
+  text-align: left;
+  font-weight: normal;
+  color: #666;
+  background: #eee;
+  padding: 5px;
+}
+
+#chart-visits {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.report-section {
+  clear: left;
+  float: left;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.pane-left {
+  float: left;
+  width: 49%;
+}
+
+.pane-spacer {
+  float: left;
+  width: 2%;
+}
+
+.pane-right {
+  float: left;
+  width: 49%;
+}
+
+.pane-left-40 {
+  float: left;
+  width: 39%;
+}
+
+.pane-right-60 {
+  float: left;
+  width: 59%;
+}
+
+.pane-left-30 {
+  float: left;
+  width: 36%;
+}
+
+.pane-right-70 {
+  float: left;
+  width: 62%;
+}
+
+.report-summary-element {
+  font-size: 1.3em;  
+  vertical-align: middle;
+  font-weight: bold;
+  margin: 4px 0px 0px 0px;
+  width: 19em;
+  white-space: nowrap; 
+  line-height: 30px; 
+  float: left;
+}
+
+.kpis {
+  width: 19em;
+  float: left;
+}
+
+.report-summary-element a {
+  font-size: .8em; 
+}
+
+.report-summary-element-chart {
+  float: left;  
+  margin-right: .4em;
+}
+
+.report-summary-element-value {
+  margin-left: 104px;
+  margin-right: 12px;
+}
+
+.report-summary-element-value a, .report-summary-element-value .label {
+  font-size: .8em; 
+}
+
+
+
+#visits-cell {
+  float: left;
+  width: 48%;
+}
+
+#pageviews-cell {
+  clear: left;
+  float: left;
+  width: 48%;
+}
+
+#average_pageviews-cell {
+  clear: left;
+  float: left;
+  width: 48%;
+}
+
+#goals-cell {
+  clear: left;
+  float: left;
+  width: 48%;
+}
+
+#addthis_shares-cell {
+  clear: left;
+  float: left;
+  width: 48%;
+}
+
+#bounce_rate-cell {
+  float: left;  
+  width: 48%;
+  margin-left: 2%;
+  padding-left: 1%;
+}
+
+#time_on_site-cell {
+  float: left;  
+  width: 48%;
+  margin-left: 2%;
+  padding-left: 1%;
+}
+
+#vistor_type-cell {
+  float: left;  
+  width: 48%;
+  margin-left: 2%;
+  padding-left: 1%;
+}
+
+#goal_conversion_rate-cell {
+  float: left;  
+  width: 48%;
+  margin-left: 2%;
+  padding-left: 1%;
+}
+
+#addthis_clicks-cell {
+  float: left;  
+  width: 48%;
+  margin-left: 2%;
+  padding-left: 1%;
+}
+
+.known-visitor {
+  font-weight:bold;
+}
+
+#edit-filters .filter-fieldset input.fluid {
+  width: 400px;
+  margin-left: 10px;
+}
+
+#edit-filters .filter-fieldset {
+  clear: left;
+}
+
+#edit-filters .filter-fieldset label {
+  width: 10%;
+  white-space:nowrap;
+}
+
+#edit-filters .filter-fieldset .form-item {
+  float: left;
+}
+
+#edit-filters .filter-fieldset .form-item:first-child {
+  width: 200px;
+}
+
+#edit-filters .form-submit {
+  clear: left;
+  display: block;
+}
+
+#intel-report .google-visualization-table-table {
+  padding: 2px;
+}
+
+#intel-report .google-visualization-table-tr-head td {
+  border-top-color: #ccc;
+  text-shadow: #fff 0px 1px 0px;
+  
+  text-align: left;
+  font-size: 11px;
+  font-weight: normal;
+  color: #666;
+  background: #eee;
+}
+
+#intel-report .google-visualization-table-tr-head td.numeric-header {
+  text-align: right;
+}
+
+#intel-report .google-visualization-table-table td {  
+  vertical-align: middle;
+  border-width: 1px 0px;
+  border-style: solid;
+  border-color: #ddd;
+  padding: 4px;
+}
+
+#intel-report .google-visualization-table-table td.google-visualization-table-seq {
+  padding-left: 0px;
+}
+
+#intel-report .summary-box {  
+  clear: left;
+  float: left;
+  width: 100%;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+#intel-report .summary-box .key-metric-box {
+  float: left;
+  width: 50%;
+  height: 4em;
+  text-align: right;
+  padding-right: 6%;
+}
+
+#intel-report .summary-box .key-metric-change-box {
+  float: left;
+  width: 44%;
+  height: 4em;
+  margin-top: auto;
+  margin-bottom: auto;
+  vertical-align:middle;
+}
+
+#intel-report .summary-box .key-metric-value {
+  font-size: 3.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.25em;
+  font-weight: bold;  
+}
+
+#intel-report .summary-box .key-metric-change-value {
+  font-size: 1.0em;
+  font-weight: bold;  
+  padding-top: 5px;
+}
+
+#intel-report .summary-box .key-metric-desc {
+  font-size: 1em;
+  color: #888888;
+  font-weight: normal;
+}
+
+#intel-report .summary-box .key-metric-change-desc {
+  font-size: 1em;
+  color: #888888;
+  font-weight: normal;
+}
+
+#intel-report .delta-value-positive {
+  padding-right: 3px;
+}
+
+#intel-report .delta-value-negative {
+  padding-right: 5px;
+}
+
+#intel-report .delta-value-value {
+  font-size: 1.5em;
+}
+
+#intel-score .value {
+  font-size: 4em;
+  color: #333333;
+  text-align: center;
+  width: 150px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+#intel-score .complete {  
+  color: #333333;    
+  background-color: #DDFFAA;  
+}
+
+#intel-score .warning {  
+  color: #333333;  
+  background-color: #FFFFCC;  
+}
+
+#intel-score .error {  
+  color: #333333;  
+  background-color: #FFCCCC;  
+}
+
+/*
+ * Styling for intel page report
+ */
+
+div.intel-report-value {
+  font-weight: bold;
+  border:1px solid #DDDDDD;
+  width: 3em;
+  height: 1.5em;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  background-image: none;
+  color: #FFFFFF;
+}
+
+.intel-report-value.none {
+  color: #CCCCCC;
+}
+
+.intel-report-value.complete {
+  background-color: #468A01;
+  color: #FFFFFF;
+  border:1px solid #DDDDDD;
+}
+
+.intel-report-value.warning {
+  background-color: #DEC259;
+  color: #FFFFFF;
+  border:1px solid #DDDDDD;
+}
+
+.intel-report-value.error {
+  background-color: #BB0000;
+  color: #FFFFFF;
+  border:1px solid #DDDDDD;
+}
+
+.intel-report-value.complete.inactive {
+  background-color: #DDDDDD;
+}
+
+.intel-report-value.warning.inactive {
+  background-color: #DDDDDD;
+}
+
+.intel-report-value.error.inactive {
+  background-color: #DDDDDD;
+}
+
+#intel-report-container {
+  width: 100%;  
+}
+
+#intel-report-container .loader {
+    width: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 200px;
+}

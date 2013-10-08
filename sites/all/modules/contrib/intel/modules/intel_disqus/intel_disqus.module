@@ -1,0 +1,355 @@
+<?php
+
+define('SECRET_KEY', 'JXrQlG2j2H9qEbLz4fQwH5romA19KVM7ZzxxIGhllurCAmL5TgOygR6m3FRe9hlw');
+define('ACCESS_TOKEN', '4a84511d7d5c43bb96b98f87e08486d9');
+
+function intel_disqus_menu() {
+  $items = array();
+  
+  $items['admin/config/services/intel/modules/disqus'] = array(
+    'title' => 'Disqus',
+    'description' => 'Add on module configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('intel_disqus_admin_config'),
+    'access callback' => 'user_access',
+    'access arguments' => array('admin intel'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'intel_disqus.admin.inc',
+  ); 
+
+  $items['visitor/%intel_visitor/disqus'] = array(
+    'title' => 'Disqus',
+    'description' => 'HubSpot contact information.',
+    'page callback' => 'intel_disqus_visitor_page',
+    'page arguments' => array(1),
+    //'access callback' => 'user_access',
+    //'access arguments' => array('view all intel reports'),
+    'access callback' => 'intel_disqus_show_visitor_menu_tab',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'intel_disqus.admin.inc',  
+  );
+  
+  $items['intel_disqus/comment_submit_js'] = array(
+    'title' => 'L10Insight Disqus Util',
+    'description' => 'Analyze and optimize node content.',
+    'page callback' => 'intel_disqus_comment_submit_js',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  
+  $items['intel_disqus/util'] = array(
+    'title' => 'L10Insight Disqus Util',
+    'description' => 'Analyze and optimize node content.',
+    'page callback' => 'intel_disqus_util',
+    'access callback' => 'user_access',
+    'access arguments' => array('admin seo tools'),
+    'type' => MENU_CALLBACK,
+  );
+  
+  return $items;
+}
+
+function intel_disqus_util() {
+  $output = ''; 
+  
+  $secret_key = variable_get('intel_disqus_secret_key', ''); // Requires a registered DISQUS API application. Create one (free) at http://disqus.com/api/applications/
+  $access_token = variable_get('intel_disqus_access_token', ''); // Admin access tokens are required to get the email address. They can be found at http://disqus.com/api/applications/
+  $comment_id = 966089698; // The comment ID you need information for
+  
+  // construct the query with our API key and the query we want to make
+  $endpoint = 'https://disqus.com/api/3.0/posts/details.json?api_secret='.urlencode($secret_key).'&access_token='.$access_token.'&post='.$comment_id;
+//dsm($endpoint);  
+  // cURL the endpoint
+  $session = curl_init($endpoint);
+  curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec($session);
+  curl_close($session);
+//dsm($result);
+return $output;
+  // decode the json data to make it easier to parse the php
+  $results = json_decode($result);
+  if ($results === NULL) die('Error parsing json');
+
+  // Get the data we need
+  $username = $results->response->author->username;
+  $email = $results->response->author->email; // This will be blank if you aren't using the right access_token, or are not using the secret key
+  $display_name = $results->response->author->name;
+  $avatar_url = $results->response->author->avatar->cache;
+  
+  // Return it formatted
+  $output =  '<p><img src="'.$avatar_url.'"/></p><ul><li>'.$display_name.'</li><li>'.$username.'</li><li>'.$email.'</li></ul>';  
+return $output;    
+    $disqus = intel_disqus_api_construct();
+  $threads = $disqus->forums->listPopular();
+  dsm($threads);
+  return $output;
+}
+
+function intel_disqus_show_visitor_menu_tab($visitor) {
+  //return user_access('view all intel reports');
+  return user_access('view all intel reports') && intel_disqus_visitor_is_linked($visitor);
+}
+
+function intel_disqus_visitor_is_linked($visitor) {
+  $vp = $visitor->getProperties();
+  $linked = !empty($vp->ext_data['disqus']['profileUrl']) ? 1 : 0;
+  if (!empty($vp->ext_data['disqus']['last_commentid'])) {
+    $linked = 1;
+  }
+  return $linked;  
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function intel_disqus_node_view($node, $view_mode) {
+  if (
+    ($view_mode == 'full')
+    && isset($node->disqus) 
+    && user_access('view disqus comments') 
+    && ($node->disqus['status'] == 1)
+  ) {
+    drupal_add_js(drupal_get_path('module', 'intel_disqus') . '/intel_disqus.js');
+  }
+}
+
+function intel_disqus_api_construct() {
+  $disqus = &drupal_static(__FUNCTION__);
+  if (isset($disqus)) {
+    return $disqus;
+  }
+  require_once libraries_get_path('disqus-php') . '/disqusapi/disqusapi.php';
+  $secret_key = variable_get('intel_disqus_secret_key', '');
+  if (!$secret_key) {
+    return FALSE;
+  }
+  $disqus = new DisqusAPI($secret_key);
+  return $disqus;
+}
+
+
+/**
+ * Implements hook_intel_intel_script
+ */
+function intel_disqus_intel_intel_script() {
+  $scripts['disqus_comment_submit'] = array(
+    'title' => t('Disqus (comment submissions)'),
+    'description' => t('Creates form submissions from comments.'),
+    'path' => drupal_get_path('module', 'intel_disqus') . '/intel.intel_disqus.js',
+    'enabled' => 1,
+  );
+  return $scripts;
+}
+
+function intel_disqus_comment_submit_js() {
+  if (empty($_GET['vtk']) || empty($_GET['commentid'])) {
+    $response = array(
+      'status' => 0,
+      'message' => t('Invalid input.'),
+    );
+    intel_json_output($response); 
+    return;   
+  }
+  $vtk = $_GET['vtk'];
+  $commentid = $_GET['commentid'];
+  
+  $location = !empty($_GET['location']) ? $_GET['location'] : '';
+  $system_path = !empty($_GET['system_path']) ? $_GET['system_path'] : '';
+  $submission = intel_submission_construct();
+  $submission->type = 'disqus_comment';
+  $submission->fid = '';
+  $submission->fsid = $commentid;
+  $vars = array(
+    'type' => $submission->type,
+    'fsid' => $submission->fsid,
+  );
+  $submission0 = intel_submission_load_by_vars($vars);
+  if (!empty($submission0)) {
+    $response = array(
+      'status' => 1,
+      'message' => t('Comment has already been processed'),
+    );
+    intel_json_output($response);
+  }
+
+  $visitor = intel_visitor_load($vtk);
+  $visitor->apiLoad();
+  $fsi = $visitor->getVar('api_session', 'comment_submit', '_updated');
+  $submit_context = $visitor->getVar('api_session', 'comment_submit', $fsi);
+
+  if (empty($submit_context)) {
+    $response = array(
+      'status' => 0,
+      'message' => t('Unable to find submit context.'),
+    );
+    intel_json_output($response); 
+    return;     
+  }
+  if (!$location) {
+    $location = $submit_context['location'];
+  }
+  if (!$system_path) {
+    $system_path = $submit_context['system_path'];
+  }
+  $submission->submitted = $submit_context['submitted'];
+  if ($submit_context['text']) {
+    $submission->data['text'] = $submit_context['text'];
+  }
+
+  $urlc = parse_url($location);
+//dsm($urlc);
+  $submission->form_page_host = $urlc['host'];
+  $submission->form_page_path = $urlc['path'];
+  $submission->details_url =  'http://' . $submission->form_page_host . $submission->form_page_path . '#comment-' . $commentid;   
+  if ($system_path) {
+    $a = explode('/', $system_path);
+    if (($a[0] == 'node') && is_numeric($a[1])) {
+      $submission->form_page_id = $a[1];
+      $submission->details_url = $submission->form_page_path . '#comment-' . $commentid;   
+    }
+  }   
+  
+  if (empty($visitor->vid)) {
+    $visitor->save();
+  }
+  $submission->vid = $visitor->vid;
+
+  $visitor->setVar('ext', 'disqus', 'last_commentid', $commentid);
+
+  drupal_alter('intel_submission', $submission, $visitor, $submit_context, array());
+  $sid = intel_submission_save($submission);
+  
+  $visitor->setLastActivity(time());
+  $context = 'comment_submit';
+//dsm('$visitor='); dsm($visitor->getProperties());
+  $vars = array(
+    'submit_context' => $submit_context,
+    'submission' => $submission,
+  );
+  drupal_alter('intel_visitor', $visitor, $context, $vars);
+  $visitor->merge();
+  
+  // queue to sync visitor data
+  intel_add_visitor_sync_request($visitor->vtk);
+//dsm('$comment='); dsm($comment); 
+//dsm('$visitor='); dsm($visitor->getProperties());
+//dsm('$submit_context='); dsm($submit_context);
+//dsm('$submission='); dsm($submission);
+//return '';
+  $response = array(
+    'status' => 1,
+  );
+  intel_json_output($response);
+}
+
+function intel_disqus_intel_sync_visitordata(&$visitor) {
+  //$visitor = intel_visitor_load_by_visitorid($visitorid, array('data', 'ext_data'), TRUE);
+  $ext_data = $visitor->ext_data;
+//dsm($ext_data);
+  if (empty($ext_data['disqus']) || empty($ext_data['disqus']['last_commentid'])) {
+    return TRUE;  // no id to sync with, stop trying
+  }
+  $commentid = $ext_data['disqus']['last_commentid'];
+  $comment = intel_disqus_fetch_comment($commentid);
+//dsm($comment);
+  if (!$comment) {
+    return FALSE;
+  }
+
+  $visitor->setVar('data', 'disqus', 'id', $comment->author->id);
+  $visitor->setVar('data', 'disqus', 'username', $comment->author->username);
+  $visitor->setVar('data', 'disqus', 'name', $comment->author->username);
+  $visitor->setVar('data', 'disqus', 'about', $comment->author->about);
+  $visitor->setVar('data', 'disqus', 'profileUrl', $comment->author->profileUrl);
+  $visitor->setVar('data', 'disqus', 'emailHash', $comment->author->emailHash);
+  $visitor->setVar('data', 'disqus', 'emailHash', $comment->author->emailHash);
+  $visitor->setVar('data', 'disqus', 'reputation', $comment->author->reputation);
+  $visitor->setVar('data', 'disqus', 'avatar', $comment->author->avatar);
+  $visitor->setVar('ext',  'disqus', 'id', $comment->author->id);
+  $visitor->setVar('ext',  'disqus', 'username', $comment->author->username);
+  $visitor->setVar('ext',  'disqus', 'profileUrl', $comment->author->profileUrl);
+  if (!$visitor->name) {
+    $visitor->name = $comment->author->name;
+  }
+  $visitor->merge();
+  return TRUE;
+}
+
+function intel_disqus_fetch_comment($comment_id) {
+  /*
+  $disqus = intel_disqus_api_construct();
+  $params = array(
+    'access_token' => ACCESS_TOKEN,
+    'post' => $comment_id,
+  );
+  $comment = $disqus->posts->details($params);
+  return $comment;
+  */
+  $secret_key = variable_get('intel_disqus_secret_key', ''); // Requires a registered DISQUS API application. Create one (free) at http://disqus.com/api/applications/
+  $access_token = variable_get('intel_disqus_access_token', ''); // Admin access tokens are required to get the email address. They can be found at http://disqus.com/api/applications/
+  if (!$secret_key || !$access_token) {
+    return FALSE;
+  }    
+  // construct the query with our API key and the query we want to make
+  $endpoint = 'https://disqus.com/api/3.0/posts/details.json?api_secret='.urlencode($secret_key).'&access_token='.$access_token.'&post='.$comment_id;
+  $result = file_get_contents($endpoint);
+
+  $ret = json_decode($result);
+//dsm($endpoint);  
+//dsm($result);
+//dsm($ret);
+  if (!empty($ret->response)) {
+    return $ret->response;
+  }
+
+  return FALSE;
+}
+
+function intel_disqus_api_call($url, $data = null) {
+  //$result = file_get_contents($endpoint);
+  /*
+  $session = curl_init($url);
+  curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec($session);
+  curl_close($session);
+  dsm($result);
+  return '';
+  */
+    // intialize cURL and send POST data
+  $ch = curl_init();
+  if (!empty($data)) {
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  }
+  else {
+    curl_setopt($ch, CURLOPT_POST, false);
+  }
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+  $retjson = curl_exec($ch);
+  $errno = curl_errno($ch);
+  $error = curl_error($ch);
+  curl_close($ch);
+//dsm('$retjson=');
+//dsm($retjson);
+  return '';
+
+  if ($errno > 0) {
+      //throw new intelException ('cURL error: ' . $error);
+      return FALSE;
+  } else {
+      $ret = json_decode($retjson, true);
+      if (empty($ret['status'])) {
+        $re = (strlen($retjson) > 210) ? substr($retjson, 0, 200) . '...' : $retjson;
+        throw new intelException ('API response error: returned: ' . $re);
+      }
+      return $ret;
+  }  
+}
+
+
+
+

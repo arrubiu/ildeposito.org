@@ -1,0 +1,15 @@
+This Agreement describes the terms and conditions governing your ("you", "You", "Your") use of the LevelTen Intelligence Libraries ("Libraries"). These Libraries are a part of the LevelTen Intelligence Platform and thus inherits full Terms and Conditions of use which can be found at http://api.getlevelten.com/site/?q=legal. This document serves to highlight some important terms of use for the Libraries.
+
+Grants
+LevelTen grants you a limited, non-exclusive, non-transferable, non-sublicensable, non-assignable license to access and use the LevelTen Intelligence Platform for personal or business purposes. This includes a grant to modify the source code found in the LevelTen Intelligence Libraries for your internal applications.
+
+Restrictions
+You may not:
+re-distribute any part of this code or incorporate it into software for distribution;
+
+translate, reverse engineer, decompile, disassemble, modify or create derivative works based on the LevelTen Intelligence Platform, features or ideas from the Platform, or any portion of them;
+
+sell, rent, lease, transfer, or sublicense any of the LevelTen Intelligence Platform;
+
+
+The full terms and conditions of use can be found at: http://api.getlevelten.com/site/?q=legal

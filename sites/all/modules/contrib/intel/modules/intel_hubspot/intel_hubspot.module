@@ -1,0 +1,442 @@
+<?php
+
+function intel_hubspot_menu() {
+  $items = array();
+  
+  $items['admin/config/services/intel/modules/hubspot'] = array(
+    'title' => 'HubSpot',
+    'description' => 'Add on module configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('intel_hubspot_admin_config'),
+    'access callback' => 'user_access',
+    'access arguments' => array('admin intel'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'intel_hubspot.admin.inc',
+  );  
+  
+  $items['visitor/%intel_visitor/hubspot'] = array(
+    'title' => 'HubSpot',
+    'description' => 'HubSpot contact information.',
+    'page callback' => 'intel_hubspot_contact',
+    'page arguments' => array(1),
+    //'access callback' => 'user_access',
+    //'access arguments' => array('view all intel reports'),
+    'access callback' => 'intel_hubspot_show_visitor_menu_tab',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    //'file' => 'people/intel.people.inc',  
+  );
+  $items['visitor/%intel_visitor/hubspot/view'] = array(
+    'title' => 'View',
+    'description' => 'HubSpot contact information.',
+    'page callback' => 'intel_hubspot_contact',
+    'page arguments' => array(1),
+    'access callback' => 'intel_hubspot_show_visitor_menu_tab',
+    'access arguments' => array(1),
+    'weight' => -1,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    //'file' => 'people/intel.people.inc',  
+  );
+  $items['visitor/%intel_visitor/hubspot/launch'] = array(
+    'title' => 'View in HubSpot',
+    'description' => 'HubSpot contact information.',
+    'page callback' => 'intel_hubspot_contact',
+    'page arguments' => array(1, 'launch'),
+    'access callback' => 'intel_hubspot_show_visitor_menu_tab',
+    'access arguments' => array(1),
+    'weight' => 0,
+    'type' => MENU_LOCAL_TASK,
+    //'file' => 'people/intel.people.inc',  
+  );
+  $items['visitor/%intel_visitor/hubspot/resync'] = array(
+    'title' => 'Resync data',
+    'description' => 'HubSpot contact information.',
+    'page callback' => 'intel_hubspot_contact',
+    'page arguments' => array(1, 'resync'),
+    'access callback' => 'intel_hubspot_show_visitor_menu_tab',
+    'access arguments' => array(1),
+    'weight' => 0,
+    'type' => MENU_LOCAL_TASK,
+    //'file' => 'people/intel.people.inc',  
+  );
+  
+  $items['visitor/%intel_visitor/hubspot/iframe'] = array(
+    'title' => 'Resync data',
+    'description' => 'HubSpot contact information.',
+    'page callback' => 'intel_hubspot_contact_page_iframe',
+    'page arguments' => array(1),
+    'access callback' => 'intel_hubspot_show_visitor_menu_tab',
+    'access arguments' => array(1),
+    'weight' => 0,
+    'type' => MENU_CALLBACK,
+    //'file' => 'people/intel.people.inc',  
+  );  
+  
+  $items['admin/reports/hubspot'] = array(
+    'title' => 'HubSpot',
+    'description' => 'View the dashboard for SEO Tools.',
+    'page callback' => 'intel_admin_reports_hubspot_dashboard',
+    'access callback' => 'user_access',
+    'access arguments' => array('view all intel reports'),
+    'type' => MENU_NORMAL_ITEM,
+    //'file' => 'intel.report.inc',
+  );
+  
+  $items['intel_hubspot/util/fetch_contact'] = array(
+    'title' => 'SEO Tools Util',
+    'description' => 'Analyze and optimize node content.',
+    'page callback' => 'intel_hubspot_util_fetch_contact',
+    'access callback' => 'user_access',
+    'access arguments' => array('admin seo tools'),
+    'type' => MENU_CALLBACK,
+  );
+  
+  return $items;
+}
+
+function intel_hubspot_show_visitor_menu_tab($visitor) {
+  //return user_access('view all intel reports');
+  return user_access('view all intel reports') && intel_hubspot_visitor_is_linked($visitor);
+}
+
+function intel_hubspot_visitor_is_linked($visitor) {
+  $vp = $visitor->getProperties();
+  $linked = !empty($vp->ext_data['hubspot']['profile_url']) ? 1 : 0;
+  if (!empty($vp->ext_data['hubspot']['utk']) || !empty($vp->ext_data['hubspot']['lastsubmission_utk'])) {
+    $linked = 1;
+  }
+  return $linked;
+}
+
+
+//function intel_hubspot_init() {
+//  drupal_add_js(drupal_get_path('module', 'intel_hubspot') . '/intel.intel_hubspot.js');
+//}
+
+function intel_hubspot_util_fetch_contact($hsutk) {
+  require_once libraries_get_path('hubspot') . "/haPiHP/class.contacts.php"; 
+  require_once libraries_get_path('hubspot') . "/haPiHP/class.exception.php";   
+
+  $portal_id = variable_get('hubspot_portalid', '');
+
+  $HAPIKey = variable_get('intel_hubspot_api_key', '');
+  $contacts = new HubSpot_Contacts($HAPIKey);  
+  
+  $contact = $contacts->get_contact_by_usertoken($hsutk);
+  dsm($contact);
+  return '';
+}
+
+/**
+ * Implements hook_intel_intel_script
+ */
+function intel_hubspot_intel_intel_script() {
+  $scripts['hubspot'] = array(
+    'title' => t('HubSpot'),
+    'description' => t('Use on pages with HubSpot tracking or HubSpot forms.'),
+    'path' => libraries_get_path('intel') . '/js/intel_hubspot.js',
+    'enabled' => 1,
+  );
+  return $scripts;
+}
+
+/**
+ * Implements hook_intel_form_submission_check
+ */
+function intel_hubspot_intel_form_submission_check(&$submission, &$track, &$link_query) {
+  if (empty($_GET['submissionGuid'])) {
+    return;
+  }
+  $a = explode('-', $_GET['submissionGuid']);
+  // check query param format
+  if (!((count($a) == 5) && (strlen($a[1]) == 4))) {
+    return; 
+  }
+  $link_query = array('submissionGuid' => $_GET['submissionGuid']);
+  $submission->type = 'hubspot';
+  $submission->fid = '';
+  $submission->fsid = $_GET['submissionGuid'];
+  $track['form_title'] = t('HubSpot form');
+  $track['submission_path'] = "";
+}
+
+function intel_hubspot_intel_submission_alter(&$submission, $arg1, $arg2, $arg3 = '') {
+  if (($submission->type == 'hubspot') && !empty($arg2['fid'])) {
+    $submission->fid = $arg2['fid'];
+  }  
+}
+
+function intel_hubspot_intel_visitor_alter(&$visitor, $context, $vars = array()) {
+  if (($context == 'form_submit') || ($context == 'comment_submit')) {
+    $submit_context = $vars['submit_context'];
+    $submission = $vars['submission'];
+    $hsutk = intel_hubspot_extract_user_token();
+    $visitor->setVar('ext', 'hubspot', 'utk', $hsutk);
+    if (!empty($submit_context['hubspotutk'])) {
+      $visitor->setVar('ext', 'hubspot', 'lastsubmission_utk', $submit_context['hubspotutk']);
+    }
+    $visitor->setVar('ext', 'hubspot', 'ip', ip_address());
+    
+    if ((($submission->type == 'hubspot') || ($submit_context['type'] == 'hubspot')) && (empty($visitor->contact_created))) {
+      $visitor->setContactCreated(time());
+    }
+  }  
+}
+
+/**
+ * Modify a Webform submission, prior to saving it in the database.
+ *
+ * @param $node
+ *   The Webform node on which this submission was made.
+ * @param $submission
+ *   The Webform submission that is about to be saved to the database.
+ */
+/*
+function intel_hubspot_form_submission_callback(&$visitor, $submission, $hsutk, $submissionGuid) {
+//dsm($visitor);  
+  
+  if (!$hsutk) {
+    return FALSE;
+  }
+  if (!isset($visitor->ext_data['hubspot'])) {
+    $visitor->ext_data['hubspot'] = array();
+  }
+  $visitor->ext_data['hubspot']['utk'] = intel_hubspot_extract_user_token();
+  $visitor->ext_data['hubspot']['lastsubmission_utk'] = $hsutk;
+  $visitor->ext_data['hubspot']['ip'] = ip_address();
+  return TRUE;
+}
+*/
+
+function intel_hubspot_extract_user_token() {
+//dsm($_COOKIE);
+  $hsutks = '';
+  if (!empty($_COOKIE['hubspotutk'])) {
+    return $_COOKIE['hubspotutk'];
+  }
+  if (!empty($_COOKIE['__hstc'])) {
+    $a = explode('.', $_COOKIE['__hstc']);
+    return $a[1];
+  }
+  return FALSE;
+}
+
+function intel_hubspot_extract_user_tokens() {
+  $hsutks = array(
+    'domain' => intel_hubspot_extract_user_token(),
+  );
+  if (!empty($_COOKIE['l10i_ehsutk'])) {
+    $hsutks['external'] = $_COOKIE['l10i_ehsutk'];
+  }  
+  return $hsutks;  
+}
+
+function intel_hubspot_get_form_submission_path($vid, $submitted) {
+  return "intel/submission/$vid/$submitted";
+}
+
+function intel_hubspot_intel_sync_visitordata(&$visitor) {
+  if (!$HAPIKey = variable_get('intel_hubspot_api_key', '')) {
+    return TRUE;
+  }
+  $ext_data = $visitor->ext_data;
+  if (empty($ext_data['hubspot']) || (empty($ext_data['hubspot']['utk']) && empty($ext_data['hubspot']['lastsubmission_utk']))) {
+    return TRUE;
+  }
+  require_once libraries_get_path('hubspot') . "/haPiHP/class.contacts.php"; 
+  require_once libraries_get_path('hubspot') . "/haPiHP/class.exception.php"; 
+  require_once drupal_get_path('module', 'intel') . "/includes/intel.visitor_sync.inc";
+  
+  $hsdata = $ext_data['hubspot'];
+  $utk = (!empty($hsdata['utk'])) ? $hsdata['utk'] : '';
+  $last_utk = (!empty($hsdata['lastsubmission_utk'])) ? $hsdata['lastsubmission_utk'] : '';
+  $portal_id = variable_get('hubspot_portalid', '');
+
+  $contacts_api = new HubSpot_Contacts($HAPIKey);
+  $contact = new stdClass;
+  if ($last_utk) {
+    $contact = $contacts_api->get_contact_by_usertoken($last_utk);
+  }
+  if (empty($contact->properties->email) && ($utk != $last_utk)) {
+    $contact = $contacts_api->get_contact_by_usertoken($utk);
+  }
+  if (empty($contact->properties->email) && !empty($visitor->email)) {
+    $contact = $contacts_api->get_contact_by_email($visitor->email);
+  }
+  if (!empty($_GET['debug'])) {
+    dsm($visitor->getProperties());
+    dsm($contact);
+  }
+  if (empty($contact->properties->email)) {
+    // if we don't have full contact info, at least add the profile-url
+    if (!empty($contact->{'profile-url'})) {
+      $visitor->setVar('ext', 'hubspot', 'profile_url', $contact->{'profile-url'});
+    }
+    return FALSE;
+  }
+  $visitor->setEmail($contact->properties->email->value);
+  $name = $contact->properties->firstname->value . " " . $contact->properties->lastname->value;
+  $visitor->setName($name);
+  $properties = array(
+    'firstname' => 'firstname',
+    'lastname' => 'lastname',
+    'photo' => 'photo',
+    'phone' => 'phone',
+    'twitterhandel' => 'twitterhandel',
+    'kloutscore' => 'kloutscoregeneral',
+    'website' => 'website',
+    'company' => 'company',
+  );
+  foreach ($properties AS $k => $v) {
+    $visitor->setVar('data', 'contact', $k, $contact->properties->{$v}->value);
+  }
+  $visitor->setVar('ext', 'hubspot', 'profile_url', $contact->{'profile-url'});
+  $visitor->setVar('ext', 'hubspot', 'vid', $contact->{'vid'});
+  $visitor->merge();
+//dsm($visitor->getProperties());
+  
+  // sync data back to HubSpot
+  require_once libraries_get_path('hubspot') . "/haPiHP/class.properties.php"; 
+  $properties_api = new HubSpot_Properties($HAPIKey);
+  $properties = $properties_api->get_all_properties();
+  $ps = array();
+  foreach ($properties AS $i => $p) {
+    $propertynames[$p->name] = $p->label;
+  }
+  ksort($propertynames);
+//dsm($propertynames);
+//dsm($properties); 
+//dsm($contact);
+//dsm($visitor); 
+  $updates = array();
+  $visitor_data = $visitor->data;
+  if (empty($contact->properties->country->value) && !empty($visitor_data['location']['country'])) {
+    $updates['country'] = $visitor_data['location']['country'];
+  }
+  if (empty($contact->properties->state->value) && !empty($visitor_data['location']['region'])) {
+    $updates['state'] = $visitor_data['location']['region'];
+  }
+  if (empty($contact->properties->city->value) && !empty($visitor_data['location']['city'])) {
+    $updates['city'] = $visitor_data['location']['city'];
+  }
+  
+  $vars = array(
+    'api_key' => $HAPIKey,
+    'hs_contact_api' => $contacts_api,
+    'hs_contact' => $contact,
+    'hs_properties_api' => $properties_api,
+    'hs_properties' => $properties,
+    'hs_property_names' => $propertynames,
+  );  
+  foreach (module_implements('intel_hubspot_sync_visitordata') AS $module) {
+    $function = $module . '_intel_hubspot_sync_visitordata';
+    $statuses[$module] = $function($visitor, $updates, $vars);
+  } 
+dsm($updates);
+  
+  if (count($updates)) {
+    //$updatedContact = $contacts->update_contact($contact->vid, $updates);
+      $endpoint = '/contacts/v1/contact/vid/' . $contact->vid . '/profile';
+      $properties = array();
+      foreach ($updates as $key => $value) {
+        array_push($properties, array("property"=>$key,"value"=>$value));
+      }
+      $properties = json_encode(array("properties"=>$properties));
+      $options = array(
+        'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
+        'method' => 'POST',
+        'data' => $properties,
+      );
+//dsm($options);
+      $ret = drupal_http_request('https://api.hubapi.com' . $endpoint . '?hapikey=' . $HAPIKey, $options);
+//dsm($ret);      
+  }  
+  
+//dsm($updates);
+//dsm($updatedContact);
+  return TRUE;
+}
+
+function intel_hubspot_contact($visitor, $action = '') {
+  $visitor_name = (!empty($visitor->name)) ? $visitor->name : '[No Name]';
+  drupal_set_title(t('HubSpot contact: @title', array('@type' => $visitor_name, '@title' => $visitor_name)), PASS_THROUGH);
+  
+  $output = '';  
+  
+//dsm($action);
+  if (!empty($_GET['debug'])) {
+    dsm($visitor->getProperties());
+  }
+  $ext_data = $visitor->ext_data;
+  if (($action == 'resync')
+      && (!empty($ext_data['hubspot']['utk']) || !empty($ext_data['hubspot']['lastsubmission_utk']))
+    ) {
+    intel_hubspot_intel_sync_visitordata($visitor);
+    $visitor->load();
+    $ext_data = $visitor->ext_data;
+    drupal_set_message(t('HubSpot data resynced.'));
+    drupal_goto('visitor/' . $visitor->vtk . '/hubspot');
+  }
+  elseif (empty($ext_data['hubspot']['profile_url']) 
+      && (!empty($ext_data['hubspot']['utk']) || !empty($ext_data['hubspot']['lastsubmission_utk']))
+    ) {
+    intel_hubspot_intel_sync_visitordata($visitor);
+    $visitor->load();
+    $ext_data = $visitor->ext_data;
+    drupal_set_message(t('HubSpot data resynced.'));
+  }
+  
+  if (empty($ext_data['hubspot']['profile_url'])) {
+    drupal_set_message('This contact has not been linked to a HubSpot contact.', 'error');
+    $output = 'Unable to fetch contact from HubSpot.';
+    return $output;
+  }
+  
+  if ($action == 'launch') {
+    //$script = "window.open('{$visitor->ext_data['hubspot']['profile_url']}', 'hubspot');";
+    //drupal_add_js($script, array('type' => 'inline', 'scope' => 'header'));
+    drupal_goto($ext_data['hubspot']['profile_url']);
+  }
+
+  $vars = array(
+    'src' => $ext_data['hubspot']['profile_url'],
+    'id' => 'hubspot-page',
+  );
+  //$output .= theme_intel_iframe($vars);
+  
+  //return $output;
+  //drupal_add_js($script, array('type' => 'inline', 'scope' => 'header'));
+  
+
+$script = <<<EOD
+jQuery('#hubspot-iframe').load(function() {
+  alert('hi');
+  this.style.height = this.contentWindow.document.body.offsetHeight + 'px';
+  alert(this.style.height);
+});
+EOD;
+  $output .= '<style>iframe #hubspot-iframe { visibility:hidden; }</style>';
+  //drupal_add_js($script, array('type' => 'inline', 'scope' => 'header'));
+  $output .= '<iframe src="' . $ext_data['hubspot']['profile_url'] . '" id="hubspot-iframe" scrolling="no" frameborder="0" style="width: 100%; height: 2500px;"></iframe>';
+  drupal_add_js($script, array('type' => 'inline', 'scope' => 'header'));
+  
+  
+  return $output;
+}
+
+function intel_admin_reports_hubspot_dashboard() {
+  $portal_id = variable_get('hubspot_portalid', '');
+  $output = '';
+$script = <<<EOD
+jQuery('#hubspot-page').load(function() {
+  this.style.height = this.contentWindow.document.body.offsetHeight + 'px';
+});
+EOD;
+  //$output .= '<style>iframe #hubspot-page .hs-nav-section { visibility:hidden; }</style>';
+  //drupal_add_js($script, array('type' => 'inline', 'scope' => 'header'));
+  $output .= '<iframe src="https://app.hubspot.com/dashboard/' . $portal_id . '" id="hubspot-page" scrolling="no" frameborder="0" style="width: 100%; height: 2500px;"></iframe>';
+  drupal_add_js($script, array('type' => 'inline', 'scope' => 'header'));
+  
+  
+  return $output;
+}
