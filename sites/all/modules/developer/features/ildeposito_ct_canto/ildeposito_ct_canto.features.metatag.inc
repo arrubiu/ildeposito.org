@@ -23,6 +23,15 @@ function ildeposito_ct_canto_metatag_export_default() {
       'abstract' => array(
         'value' => '"[node:field-capoverso]" - Testo, accordi, musica e spartiti di [node:title] - [node:field-autore-testo] - [node:field-sezione] - [node:field-tags] - [node:field-lingua].',
       ),
+      'keywords' => array(
+        'value' => '[node:field-tags], testi, accordi, musica, spartiti',
+      ),
+      'publisher' => array(
+        'value' => 'https://plus.google.com/b/113629455468042353975/',
+      ),
+      'author' => array(
+        'value' => 'https://plus.google.com/b/113629455468042353975/',
+      ),
     ),
   );
 

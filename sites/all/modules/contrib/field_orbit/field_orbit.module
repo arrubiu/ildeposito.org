@@ -1,0 +1,783 @@
+<?php
+
+/**
+ * @file
+ * Implement a orbit formatter for fields.
+ */
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function field_orbit_field_formatter_info() {
+  $formatters = array(
+    'orbit' => array(
+      'label'       => t('Orbit slideshow'),
+      'field types' => array('image', 'file'),
+      'settings'    => array(
+        'animation' => 'fade',
+        'timer_speed' => 10000,
+        'pause_on_hover' => true,
+        'resume_on_mouseout' => false,
+        'animation_speed' => 500,
+        'stack_on_small' => true,
+        'navigation_arrows' => true,
+        'slide_number' => true,
+        'container_class' => 'orbit-container',
+        'stack_on_small_class' => 'orbit-stack-on-small',
+        'next_class' => 'orbit-next',
+        'prev_class' => 'orbit-prev',
+        'timer_container_class' => 'orbit-timer',
+        'timer_paused_class' => 'paused',
+        'timer_progress_class' => 'orbit-progress',
+        'slides_container_class' => 'orbit-slides-container',
+        'bullets_container_class' => 'orbit-bullets',
+        'bullets_active_class' => 'active',
+        'slide_number_class' => 'orbit-slide-number',
+        'caption_class' => 'orbit-caption',
+        'active_slide_class' => 'active',
+        'orbit_transition_class' => 'orbit-transitioning',
+        'bullets' => true,
+        'bulletThumbs' => false,
+        'timer' => true,
+        'variable_height' => false,
+        'before_slide_change' => '',
+        'after_slide_change' => '',
+        'orbit_field_collection_image' => '',
+        'orbit_image_style'            => '',
+        'orbit_link'                   => '',
+        'orbit_title'                  => '',
+        'orbit_caption'                => '',
+        'orbit_caption_link'           => '',
+        'orbit_bullet_thumbs'          => '',
+      ),
+    ),
+  );
+
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function field_orbit_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $element = array(
+    '#type' => 'fieldset',
+    '#title' => t('Orbit settings'),
+  );
+
+  $element['animation'] = array(
+    '#type' => 'select',
+    '#title' => t('Animation'),
+    '#default_value' => $settings['animation'],
+    '#options' => array(
+      'fade' => t('fade'),
+      'horizontal-slide' => t('horizontal-slide'),
+      'vertical-slide' => t('vertical-slide'),
+      'horizontal-push' => t('horizontal-push')
+    ),
+  );
+
+  $element['timer_speed'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Timer speed'),
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#default_value' => $settings['timer_speed'],
+  );
+
+  $element['pause_on_hover'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Pause on hover'),
+    '#default_value' => $settings['pause_on_hover'],
+    '#description' => t('Pause slideshow when you hover on the slide.'),
+  );
+
+  $element['resume_on_mouseout'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Resume on mouseout'),
+    '#default_value' => $settings['resume_on_mouseout'],
+    '#description' => t('Resume slideshow when you hover off the slide.'),
+  );
+
+  $element['animation_speed'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Animation speed'),
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#default_value' => $settings['animation_speed'],
+  );
+
+  $element['stack_on_small'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Stack on small'),
+    '#default_value' => $settings['stack_on_small'],
+    '#description' => t('Stack the slides for small'),
+  );
+
+  $element['navigation_arrows'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Naviagtion Arrows'),
+    '#default_value' => $settings['navigation_arrows'],
+    '#description' => t('Hide navigation arrows.'),
+  );
+
+  $element['slide_number'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Slide Numbers'),
+    '#default_value' => $settings['slide_number'],
+    '#description' => t('Hide slide numbers.'),
+  );
+
+  $element['container_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Container Class'),
+    '#default_value' => $settings['container_class'],
+  );
+
+  $element['stack_on_small_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Stack on small class'),
+    '#default_value' => $settings['stack_on_small_class'],
+  );
+
+  $element['next_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Next arrow class'),
+    '#default_value' => $settings['next_class'],
+  );
+  $element['prev_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Previous arrow class'),
+    '#default_value' => $settings['prev_class'],
+  );
+
+  $element['timer_container_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Timer conatiner class'),
+    '#default_value' => $settings['timer_container_class'],
+  );
+
+  $element['timer_paused_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Timer paused class'),
+    '#default_value' => $settings['timer_paused_class'],
+  );
+
+  $element['timer_progress_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Timer progress class'),
+    '#default_value' => $settings['timer_progress_class'],
+  );
+
+  $element['slides_container_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Slide container class'),
+    '#default_value' => $settings['slides_container_class'],
+  );
+
+  $element['bullets_container_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Bullets container class'),
+    '#default_value' => $settings['bullets_container_class'],
+  );
+
+  $element['bullets_active_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Bullets active class'),
+    '#default_value' => $settings['bullets_active_class'],
+  );
+
+  $element['slide_number_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Slide number class'),
+    '#default_value' => $settings['slide_number_class'],
+  );
+
+  $element['caption_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Caption class'),
+    '#default_value' => $settings['caption_class'],
+  );
+
+  $element['active_slide_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Active slide class'),
+    '#default_value' => $settings['active_slide_class'],
+  );
+
+  $element['orbit_transition_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Orbit transition class'),
+    '#default_value' => $settings['orbit_transition_class'],
+  );
+
+  $element['bullets'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show Navigational Bullets'),
+    '#default_value' => $settings['bullets'],
+    '#description' => t('Shows Orbits default navigational bullets below the slideshow.'),
+  );
+
+  $element['bulletThumbs'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use custom thumbnails for Bullets'),
+    '#default_value' => $settings['bulletThumbs'],
+    '#description' => t('Use custom thumbnails for bullets. The image style can be set below. You do not need the "Show navigational bullets" option set for this to work.'),
+  );
+
+  $element['timer'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide Timer'),
+    '#default_value' => $settings['timer'],
+    '#description' => t('Hides the timer.'),
+  );
+
+  $element['variable_height'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Variable height'),
+    '#default_value' => $settings['variable_height'],
+    '#description' => t('Show variable height.'),
+  );
+
+  $element['orbit_image_style'] = array(
+    '#title'          => t('Image style'),
+    '#type'           => 'select',
+    '#default_value'  => $settings['orbit_image_style'],
+    '#empty_option'   => t('None (original image)'),
+    '#options'        => image_style_options(FALSE),
+  );
+
+  $element['orbit_bullet_thumbs'] = array(
+    '#title'          => t('Orbit bullets thumbnails image style'),
+    '#description'    => t('If set, Orbit will show bullet thumbnails instead of the default disc bullets. Select the image style size to apply to the images.'),
+    '#type'           => 'select',
+    '#default_value'  => $settings['orbit_bullet_thumbs'],
+    '#empty_option'   => t('None (use default Orbit bullets)'),
+    '#options'        => image_style_options(FALSE),
+  );
+
+  $links = array();
+
+  if ($field['type'] == 'file' || $field['type'] == 'image') {
+    $links += _field_orbit_get_fields(array('link_field', 'text'), $field['type'], $field['field_name']);
+    $element['orbit_link'] = array(
+      '#title'          => t('Link image to'),
+      '#type'           => 'select',
+      '#default_value'  => $settings['orbit_link'],
+      '#empty_option'   => t('Nothing'),
+      '#options'        => $links,
+    );
+  }
+
+  if ($field['type'] == 'file' || $field['type'] == 'image') {
+    $text_fields = _field_orbit_get_fields(array('text', 'text_long'), $field['type'], $field['field_name']);
+  }
+
+  if (!isset($text_fields)) {
+    $text_fields = array();
+  }
+
+  $element['orbit_title'] = array(
+    '#title'          => t('Title'),
+    '#type'           => 'select',
+    '#default_value'  => $settings['orbit_title'],
+    '#empty_option'   => t('Nothing'),
+    '#options'        => $text_fields,
+  );
+
+  $element['orbit_caption'] = array(
+    '#title'          => t('Caption'),
+    '#type'           => 'select',
+    '#default_value'  => $settings['orbit_caption'],
+    '#empty_option'   => t('Nothing'),
+    '#options'        => $text_fields,
+  );
+
+  $element['orbit_caption_link'] = array(
+    '#title'          => t('Caption link'),
+    '#type'           => 'select',
+    '#default_value'  => $settings['orbit_caption_link'],
+    '#empty_option'   => t('Nothing'),
+    '#options'        => $links,
+    '#states' => array(
+      'invisible' => array(
+        ':input[name$="[settings_edit_form][settings][orbit_caption]"]' => array('value' => ''),
+      ),
+    ),
+  );
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function field_orbit_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = array();
+
+  $summary[] = t('Animation: @effect', array('@effect' => $settings['animation']));
+  $summary[] = t('Timer speed: @speedms', array('@speed' => $settings['timer_speed']));
+  $summary[] = t('Pause on hover: @pause', array('@pause' => $settings['pause_on_hover'] ? 'yes' : 'no'));
+  $summary[] = t('Resume on mouseOut: @start', array('@start' => $settings['resume_on_mouseout'] ? 'yes' : 'no'));
+  $summary[] = t('Animation speed: @speedms', array('@speed' => $settings['animation_speed']));
+  $summary[] = t('Stack on small: @stack', array('@stack' => $settings['stack_on_small'] ? 'yes' : 'no'));
+  $summary[] = t('Navigation arrows: @arrow', array('@arrow' => $settings['navigation_arrows'] ? 'yes' : 'no'));
+  $summary[] = t('Slide numbers: @number', array('@number' => $settings['slide_number'] ? 'yes' : 'no'));
+  $summary[] = t('Container class: @class', array('@class' => $settings['container_class']));
+  $summary[] = t('Stack on small class: @class', array('@class' => $settings['stack_on_small_class']));
+  $summary[] = t('Next arrow class: @class', array('@class' => $settings['next_class']));
+  $summary[] = t('Previous arrow class: @class', array('@class' => $settings['prev_class']));
+  $summary[] = t('Timer container class: @class', array('@class' => $settings['timer_container_class']));
+  $summary[] = t('Timer paused class: @class', array('@class' => $settings['timer_paused_class']));
+  $summary[] = t('Timer progress class: @class', array('@class' => $settings['timer_progress_class']));
+  $summary[] = t('Slide container class: @class', array('@class' => $settings['slides_container_class']));
+  $summary[] = t('Bullet container class: @class', array('@class' => $settings['bullets_container_class']));
+  $summary[] = t('Bullet active class: @class', array('@class' => $settings['bullets_active_class']));
+  $summary[] = t('Slide number class: @class', array('@class' => $settings['slide_number_class']));
+  $summary[] = t('Caption class: @class', array('@class' => $settings['caption_class']));
+  $summary[] = t('Active slide class: @class', array('@class' => $settings['active_slide_class']));
+  $summary[] = t('Orbit transition class: @class', array('@class' => $settings['orbit_transition_class']));
+  $summary[] = t('Bullets: @bullets', array('@bullets' => $settings['bullets'] ? 'yes' : 'no'));
+  $summary[] = t('Timer: @timer', array('@timer' => $settings['timer'] ? 'yes' : 'no'));
+  $summary[] = t('Variable height: @height', array('@height' => $settings['variable_height']));
+
+  $image_styles = image_style_options(FALSE);
+  // Unset possible 'No defined styles' option.
+  unset($image_styles['']);
+
+  // Styles could be lost because of enabled/disabled modules that defines
+  // their styles in code.
+  if (isset($image_styles[$settings['orbit_image_style']])) {
+    $summary[] = t('Image style: @style', array('@style' => $image_styles[$settings['orbit_image_style']]));
+  } else {
+    $summary[] = t('Original image');
+  }
+
+  $link_types = array(
+    'content'   => t('content'),
+    'file'      => t('file'),
+  );
+
+  if ($field['type'] == 'file') {
+    $link_types += _field_orbit_get_fields(array('link_field', 'node_reference'), $field['type'], $field['field_name']);
+  }
+
+  // Display this setting only if image is linked.
+  if (isset($link_types[$settings['orbit_link']])) {
+    $link_type_message = t('Link to: @link', array('@link' => $link_types[$settings['orbit_link']]));
+    $summary[] = $link_type_message;
+  }
+
+  if ($field['type'] == 'file') {
+    $caption_types = _field_orbit_get_fields(array('text'), $field['type'], $field['field_name']);
+  }
+  else {
+    $caption_types = array(
+      'title' => t('Title text'),
+      'alt'   => t('Alt text'),
+    );
+  }
+
+  // Display this setting only if there's a caption.
+  if (isset($caption_types[$settings['orbit_caption']])) {
+    $caption_message = t('Caption: @caption', array('@caption' => $caption_types[$settings['orbit_caption']]));
+
+    if (isset($link_types[$settings['orbit_caption_link']])) {
+      $caption_message .= ' (' . t('Link to: @link', array('@link' => $link_types[$settings['orbit_caption_link']])) . ')';
+    }
+
+    $summary[] = $caption_message;
+  }
+
+  return implode('<br />', $summary);
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function field_orbit_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $settings = $display['settings'];
+
+  if (module_exists('field_multiple_limit') && isset($settings['field_multiple_limit']) && $settings['field_multiple_limit'] != FIELD_MULTIPLE_LIMIT_ALL) {
+    $items = array_slice($items, 0, $settings['field_multiple_limit']);
+  }
+
+  $element = array();
+
+  // Get the correct caption and set title and alt text
+  // We only caption images - and in Media 2.x it applies a Title and Alt field for us.
+  if ($settings['orbit_caption'] != '') {
+    foreach ($items as $delta => $item) {
+      if ($field['type'] == 'file' || $field['type'] == 'image') {
+        $wrapper = entity_metadata_wrapper('file', $items[$delta]['fid']);
+        if (isset($wrapper->{$settings['orbit_caption']})) {
+          $items[$delta]['caption'] = $wrapper->{$settings['orbit_caption']}->value();
+          $items[$delta]['alt'] = $wrapper->{$settings['orbit_caption']}->value();
+        }
+      }
+    }
+  }
+
+  $links = array(
+    'orbit_link'          => $settings['orbit_link'],
+    'orbit_caption_link'  => 'caption_path',
+  );
+
+  $content_uri = entity_uri($entity_type, $entity);
+  // Get the correct field for identifying entity (used to get correct links)
+  $entity_info = entity_get_info($entity_type);
+  $entity_id_field = $entity_info['entity keys']['id'];
+
+  // Loop through required links (because image and caption can have different links).
+  foreach ($links as $setting => $path) {
+    // Check if the formatter involves a link.
+    $link_type = '';
+
+    if (($field['type'] == 'file') && drupal_substr($settings[$setting], 0, 6) == 'field_') {
+      $infos = field_info_field($settings[$setting]);
+      $link_type = $infos['type'];
+    }
+
+    // Generate special links (other than node)
+    foreach ($items as $delta => $item) {
+      switch ($link_type) {
+        case 'link_field':
+          if ($field['type'] == 'file') {
+            if (isset($items[$delta][$path]) && !empty($items[$delta][$path][LANGUAGE_NONE][0]['url'])) {
+              $external_url = url_is_external($items[$delta][$path][LANGUAGE_NONE][0]['url']);
+              $items[$delta]['slide_link'] = array(
+                'path' => $items[$delta][$path][LANGUAGE_NONE][0]['url'],
+                'external' => $external_url,
+                'options' => array(
+                  'attributes' => array(
+                    'target' => $external_url ? '_blank' : '_self',
+                  ),
+                ),
+              );
+            }
+          }
+          break;
+      }
+    }
+  }
+
+  if (count($items)) {
+
+    $element[] = array(
+      '#theme'                => 'field_orbit',
+      '#items'                => $items,
+      '#options'              => array(
+        'animation'                 => $settings['animation'],
+        'timer_speed'               => $settings['timer_speed'],
+        'pause_on_hover'            => $settings['pause_on_hover'],
+        'resume_on_mouseout'        => $settings['resume_on_mouseout'],
+        'animation_speed'           => $settings['animation_speed'],
+        'stack_on_small'            => $settings['stack_on_small'],
+        'navigation_arrows'         => $settings['navigation_arrows'],
+        'slide_number'              => $settings['slide_number'],
+        'container_class'           => $settings['container_class'],
+        'stack_on_small_class'      => $settings['stack_on_small_class'],
+        'next_class'                => $settings['next_class'],
+        'prev_class'                => $settings['prev_class'],
+        'bullets'                   => $settings['bullets'],
+        'bulletThumbs'              => $settings['bulletThumbs'],
+        'timer_container_class'     => $settings['timer_container_class'],
+        'timer_paused_class'        => $settings['timer_paused_class'],
+        'timer_progress_class'    => $settings['timer_progress_class'],
+        'slides_container_class'  => $settings['slides_container_class'],
+        'bullets_container_class' => $settings['bullets_container_class'],
+        'bullets_active_class'    => $settings['bullets_active_class'],
+        'slide_number_class'      => $settings['slide_number_class'],
+        'caption_class'           => $settings['caption_class'],
+        'active_slide_class'      => $settings['active_slide_class'],
+        'orbit_transition_class'  => $settings['orbit_transition_class'],
+        'timer'                   => $settings['timer'],
+        'variable_height'         => $settings['variable_height'],
+        'orbit_image_style'         => $settings['orbit_image_style'],
+        'orbit_title'               => $settings['orbit_title'],
+        'orbit_caption'             => $settings['orbit_caption'],
+        'orbit_link'                => $settings['orbit_link'],
+        'orbit_bullet_thumbs'              => $settings['orbit_bullet_thumbs'],
+      ),
+      '#entity'               => $entity,
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function field_orbit_theme() {
+  return array(
+    'field_orbit' => array(
+      'variables' => array(
+        'items'   => NULL,
+        'options' => NULL,
+        'entity'  => NULL,
+      ),
+      'template'  => 'templates/field-orbit',
+    ),
+  );
+}
+
+/**
+ * Implements template_preprocess().
+ */
+function template_preprocess_field_orbit(&$variables) {
+  drupal_add_js(drupal_get_path('module', 'field_orbit') . '/js/froogaloop.min.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 3000));
+  drupal_add_js(drupal_get_path('module', 'field_orbit') . '/js/vimeo.js', array('scope' => 'footer', 'group' => JS_THEME, 'weight' => 5000));
+
+  if ($variables['is_front']) {
+    $variables['theme_hook_suggestions'][] = 'field_orbit__front';
+  } else {
+    $variables['theme_hook_suggestions'][] = 'field_orbit__content';
+  }
+
+  if (isset($variables['entity']->type)) {
+    $variables['theme_hook_suggestions'][] = 'field_orbit__content__' . $variables['entity']->type;
+  }
+
+  // Generate classes
+  $variables['classes_array'][] = 'field-orbit-' . $variables['id'];
+
+  // Generate slides
+  $field_orbit_zebra = 'odd';
+  $variables['slides_max_width'] = 0;
+  $variables['slides_max_height'] = 0;
+
+  if (count($variables['options'])) {
+    $variables['data_options'] = '';
+
+    foreach ($variables['options'] as $key => $value) {
+      if (drupal_strlen($value)) {
+        $variables['data_options'] .= $key . ': ' . str_replace("'", '', $value) . '; ';
+      }
+    }
+
+    if ($variables['options']['bulletThumbs'] && drupal_strlen($variables['options']['orbit_bullet_thumbs'])) {
+      $variables['options']['orbit_bullets'] = true;
+    }
+  }
+
+  foreach ($variables['items'] as $num => $item) {
+    if (isset($item[$variables['options']['orbit_title']]) && !empty($item[$variables['options']['orbit_caption']])) {
+      $variables['items'][$num]['orbit_title'] = check_plain($item[$variables['options']['orbit_title']][LANGUAGE_NONE][0]['value']);
+    }
+
+    if (isset($item[$variables['options']['orbit_caption']]) && !empty($item[$variables['options']['orbit_caption']])) {
+      $variables['items'][$num]['orbit_caption'] = check_plain($item[$variables['options']['orbit_caption']][LANGUAGE_NONE][0]['value']);
+    }
+
+    if (isset($item[$variables['options']['orbit_link']]) && !empty($item[$variables['options']['orbit_link']])) {
+      $variables['items'][$num]['orbit_link'] = array(
+        'url' => check_plain($item[$variables['options']['orbit_link']][LANGUAGE_NONE][0]['url']),
+        'target' => $item[$variables['options']['orbit_link']][LANGUAGE_NONE][0]['attributes']['target'],
+      );
+
+      if (!$item['slide_link']['external']) {
+        $variables['items'][$num]['orbit_link']['url'] = '/' . $variables['items'][$num]['orbit_link']['url'];
+      }
+    }
+
+    if (!empty($item['type']) && $item['type'] == 'video') {
+      _field_orbit_format_video($num, $field_orbit_zebra, $item, $variables);
+    }
+
+    if (!empty($item['type']) && $item['type'] == 'image') {
+      _field_orbit_format_image($num, $field_orbit_zebra, $item, $variables);
+    }
+  }
+}
+
+/**
+ * Formats videos for Orbit.
+ * @param $num
+ * @param $field_orbit_zebra
+ * @param $item
+ * @param $variables
+ */
+function _field_orbit_format_video($num, $field_orbit_zebra, $item, &$variables) {
+  // Generate classes
+  $classes = array('field-orbit-slide', 'field-orbit-slide-' . ($num));
+  $field_orbit_zebra = ($field_orbit_zebra == 'odd') ? 'even' : 'odd';
+  $classes[] = $field_orbit_zebra;
+
+  if ($num == 0) {
+    $classes[] = 'first';
+  } elseif ($num == count($variables['items']) - 1) {
+    $classes[] = 'last';
+  }
+
+  $variables['items'][$num]['classes'] = implode(' ', $classes);
+  $width = 1200;
+  $height = 675;
+
+  if (isset($variables['options']['orbit-image-style'])) {
+    $style = image_style_load($variables['options']['orbit-image-style']);
+
+    if (isset($style['data']) && isset($style['data']['width']) && isset($style['data']['height'])) {
+      $width = $style['data']['width'];
+      $height = $style['data']['height'];
+    }
+  }
+
+  switch ($item['filemime']) {
+    case 'video/vimeo':
+      $variables['items'][$num]['media'] = _field_orbit_format_vimeo_embed_code($num, $item['uri'], $width, $height);
+      break;
+    case 'video/youtube':
+      $variables['items'][$num]['media'] = _field_orbit_format_youtube_embed_code($num, $item['uri'], $width, $height);
+      break;
+  }
+}
+
+/**
+ * Formats Images for Orbit.
+ * @param $num
+ * @param $field_orbit_zebra
+ * @param $item
+ * @param $variables
+ */
+function _field_orbit_format_image($num, $field_orbit_zebra, $item, &$variables) {
+  // Generate classes
+  $classes = array('field-orbit-slide', 'field-orbit-slide-' . ($num));
+  $field_orbit_zebra = ($field_orbit_zebra == 'odd') ? 'even' : 'odd';
+  $classes[] = $field_orbit_zebra;
+
+  if ($num == 0) {
+    $classes[] = 'first';
+  } elseif ($num == count($variables['items']) - 1) {
+    $classes[] = 'last';
+  }
+
+  $variables['items'][$num]['classes'] = implode(' ', $classes);
+
+  $wrapper = entity_metadata_wrapper('file', $item['fid']);
+
+  // Generate the image html
+  $image = array();
+  $image['path'] = $item['uri'];
+  $image['attributes']['class'] = array('field-orbit-image', 'field-orbit-image-' . ($num));
+
+  if (!empty($item['caption'])) {
+    $image['attributes']['data-caption'] = '#field-orbit-image-' . ($num) . '-caption';
+    $variables['items'][$num]['caption_id'] = 'field-orbit-image-' . ($num) . '-caption';
+    $variables['items'][$num]['caption'] = $item['caption'];
+  }
+
+  if (isset($variables['options']['orbit_image_style']) && $variables['options']['orbit_image_style'] != '') {
+    $image['style_name'] = $variables['options']['orbit_image_style'];
+    $variables['items'][$num]['media'] = theme('image_style', $image);
+  }
+  else {
+    $variables['items'][$num]['media'] = theme('image', $image);
+  }
+
+  if ($variables['options']['bulletThumbs']) {
+    $thumb = array();
+    $thumb['path'] = $item['uri'];
+    $thumb['style_name'] = $variables['options']['orbit_bullet_thumbs'];
+    $thumb['attributes']['class'] = array('field-orbit-thumb', 'field-orbit-thumb-' . ($num));
+    $variables['items'][$num]['thumb'] = theme('image_style', $thumb);
+  }
+
+  if (isset($variables['image_style']) && $variables['image_style'] != '') {
+    if (function_exists('image_style_transform_dimensions')) {
+      image_style_transform_dimensions($image['style_name'], $dimensions);
+    }
+  }
+
+  // Add links if needed
+  $links = array('slide_link' => 'media');
+
+  if (isset($item['caption']) && $item['caption'] != '') {
+    $links['caption_path'] = 'caption';
+  }
+
+  // Loop thru required links (because image and caption can have different links)
+  foreach ($links as $link => $out) {
+    if (!empty($item[$link])) {
+      $path = $item[$link]['path'];
+      $options = $item[$link]['options'];
+
+      // When displaying an image inside a link, the html option must be TRUE.
+      $options['html'] = TRUE;
+
+      if (isset($variables['items'][$num]['caption_id'])) {
+        $options['attributes']['data-caption'] = '#' . $variables['items'][$num]['caption_id'];
+      }
+
+      // Generate different rel attribute for image and caption, so colorbox doesn't double the image list
+      if (isset($options['attributes']['rel'])) {
+        $options['attributes']['rel'] .= $out;
+      }
+
+      $options = array_merge($options, drupal_parse_url($path));
+      $variables['items'][$num][$out] = l($variables['items'][$num][$out], $options['path'], $options);
+    }
+  }
+}
+
+/**
+ * Format a Vimeo player link from a Media: Vimeo stream wrapper uri.
+ * @param $number
+ * @param $uri
+ * @param $width
+ * @param $height
+ * @return string
+ */
+function _field_orbit_format_vimeo_embed_code($number, $uri, $width, $height) {
+  $id = explode('v/', $uri);
+  $id = end($id);
+  return '<div class="flex-video vimeo widescreen"><iframe width="' . $width . '" height="' . $height . '" id="player_' . $number . '" class="orbit-slide" src="http://player.vimeo.com/video/' . $id . '?api=1&player_id='. $number .'&title=0&amp;byline=0&amp;portrait=0" frameborder="0"></iframe></div>';
+}
+
+/**
+ * Format a YouTube player link from a Media: YouTube stream wrapper URI.
+ * @param $number
+ * @param $uri
+ * @param $width
+ * @param $height
+ * @return string
+ */
+function _field_orbit_format_youtube_embed_code($number, $uri, $width, $height) {
+  $id = explode('v/', $uri);
+  $id = end($id);
+  return '<div class="flex-video widescreen"><iframe id="player_' . $number . '" class="orbit-slide" src="http://www.youtube.com/embed/' . $id . '?api=1&player_id='. $number .'" frameborder="0"></iframe></div>';
+}
+
+/**
+ * Helper function to retrieve field information.
+ * @param $field_types
+ * @param $entity_type
+ * @param string $field_name
+ * @return array
+ */
+function _field_orbit_get_fields($field_types, $entity_type, $field_name = '') {
+  $links = array();
+  $fields = field_info_fields();
+
+  switch ($entity_type) {
+    case 'file':
+    case 'image':
+      $bundle = 'file';
+      $bundle_instance = 'image';
+      $entity_label = t('File Entity field:');
+      break;
+  }
+
+  foreach ($fields as $name => $field) {
+    if (in_array($bundle, array_keys($field['bundles'])) && in_array($bundle_instance, $field['bundles'][$bundle]) && in_array($field['type'], $field_types)) {
+      $infos = field_info_instance($bundle, $name, $bundle_instance);
+      $links[$name] = $entity_label . ' ' . $infos['label'];
+    }
+  }
+
+  return $links;
+}

@@ -2,7 +2,6 @@ name = Layout
 description = Configurazioni generali di layout: context, campi, etc.
 core = 7.x
 package = ilDeposito.org
-php = 5.2.4
 version = 7.x-1.0
 project = ildeposito_layout
 dependencies[] = alterator

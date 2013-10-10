@@ -35,7 +35,12 @@ function ildeposito_layout_default_box() {
   $box->description = 'Footer Left';
   $box->options = array(
     'body' => array(
-      'value' => '<p>ilDeposito.org - archivio online dal 4 ottobre 2004, Ideato e realizzato da Sergio Durzu con la collaborazione dello staff de ilDeposito <br />Per informazione e contatti visitare la pagina <a href="contatti">Contatti</a><br />Sito realizzato e gestito con <a href="informazioni/informazioni-tecniche">Software Libero</a> - <a href="informazioni">Licenze, disclaimer e condizioni d\'uso</a></p>',
+      'value' => '<p>ilDeposito.org - archivio online dal 4 ottobre 2004, Ideato e realizzato da Sergio Durzu con la collaborazione dello staff de ilDeposito<br />
+Per informazione e contatti visitare la pagina <a href="contatti">Contatti</a> | <a href="https://https://plus.google.com/u/0/b/113629455468042353975?
+   rel=author">di ilDeposito.org</a></p>
+
+<p>Sito realizzato e gestito con <a href="informazioni/informazioni-tecniche">Software Libero</a> - <a href="informazioni">Licenze, disclaimer e condizioni d\'uso</a></p>
+',
       'format' => 'full_html',
     ),
     'additional_classes' => '',

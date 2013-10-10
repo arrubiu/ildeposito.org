@@ -83,7 +83,7 @@ function ildeposito_newsletter_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 31,
+      'weight' => 4,
     ),
   );
 
@@ -136,7 +136,43 @@ function ildeposito_newsletter_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 32,
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-simplenews-field_ultimi_contenuti'
+  $field_instances['node-simplenews-field_ultimi_contenuti'] = array(
+    'bundle' => 'simplenews',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'viewreference',
+        'settings' => array(),
+        'type' => 'viewreference_default',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_ultimi_contenuti',
+    'label' => 'Ultimi contenuti',
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'viewreference',
+      'settings' => array(),
+      'type' => 'viewreference_select',
+      'weight' => 5,
     ),
   );
 
@@ -145,6 +181,7 @@ function ildeposito_newsletter_field_default_field_instances() {
   t('Body');
   t('Comment');
   t('Newsletter category');
+  t('Ultimi contenuti');
 
   return $field_instances;
 }

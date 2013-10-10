@@ -207,7 +207,7 @@ function ildeposito_ct_canto_strongarm() {
           'weight' => '7',
         ),
         'metatags' => array(
-          'weight' => '10',
+          'weight' => '13',
         ),
         'redirect' => array(
           'weight' => '9',
@@ -293,20 +293,6 @@ function ildeposito_ct_canto_strongarm() {
   $strongarm->name = 'node_submitted_canto';
   $strongarm->value = 0;
   $export['node_submitted_canto'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_canto';
-  $strongarm->value = '[current-page:page-title], [node:field-autore-testo] | Testi, accordi, musica e spartiti | [site:name]';
-  $export['page_title_type_canto'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_canto_showfield';
-  $strongarm->value = 0;
-  $export['page_title_type_canto_showfield'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

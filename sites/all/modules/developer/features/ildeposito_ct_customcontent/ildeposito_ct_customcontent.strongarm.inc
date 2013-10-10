@@ -205,20 +205,6 @@ function ildeposito_ct_customcontent_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_custom_content';
-  $strongarm->value = '';
-  $export['page_title_type_custom_content'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_custom_content_showfield';
-  $strongarm->value = 0;
-  $export['page_title_type_custom_content_showfield'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_custom_content_pattern';
   $strongarm->value = '';
   $export['pathauto_node_custom_content_pattern'] = $strongarm;

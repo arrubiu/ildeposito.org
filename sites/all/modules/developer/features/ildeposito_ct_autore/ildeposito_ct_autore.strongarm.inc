@@ -237,7 +237,7 @@ else {
           'weight' => '5',
         ),
         'metatags' => array(
-          'weight' => '11',
+          'weight' => '12',
         ),
         'redirect' => array(
           'weight' => '10',
@@ -330,20 +330,6 @@ else {
   $strongarm->name = 'node_submitted_autore';
   $strongarm->value = 0;
   $export['node_submitted_autore'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_autore';
-  $strongarm->value = '[current-page:page-title]  | Testi, accordi, musica e spartiti di [current-page:page-title] | [site:name]';
-  $export['page_title_type_autore'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_autore_showfield';
-  $strongarm->value = 0;
-  $export['page_title_type_autore_showfield'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

@@ -18,6 +18,7 @@ dependencies[] = media
 dependencies[] = pathologic
 dependencies[] = php
 dependencies[] = privatemsg_rules
+dependencies[] = rules
 dependencies[] = views
 features[ctools][] = linkit:linkit_profiles:1
 features[ctools][] = views:views_default:3.0

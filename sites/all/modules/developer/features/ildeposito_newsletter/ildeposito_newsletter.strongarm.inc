@@ -164,7 +164,20 @@ function ildeposito_newsletter_strongarm() {
       ),
     ),
     'extra_fields' => array(
-      'form' => array(),
+      'form' => array(
+        'title' => array(
+          'weight' => '0',
+        ),
+        'path' => array(
+          'weight' => '3',
+        ),
+        'redirect' => array(
+          'weight' => '2',
+        ),
+        'xmlsitemap' => array(
+          'weight' => '1',
+        ),
+      ),
       'display' => array(),
     ),
   );
@@ -229,20 +242,6 @@ function ildeposito_newsletter_strongarm() {
   $strongarm->name = 'node_submitted_simplenews';
   $strongarm->value = 0;
   $export['node_submitted_simplenews'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_simplenews';
-  $strongarm->value = '';
-  $export['page_title_type_simplenews'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_simplenews_showfield';
-  $strongarm->value = 0;
-  $export['page_title_type_simplenews_showfield'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

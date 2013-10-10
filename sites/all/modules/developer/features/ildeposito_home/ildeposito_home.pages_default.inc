@@ -206,7 +206,7 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'title' => '6° Raduno ilDeposito.org',
       'body' => '<p><strong>Il 19 ottobre 2013 a Roma, al Circolo Gianni Bosio, si terrà il 6° raduno de ilDeposito.org!</strong></p>
 
-<p><strong><a href="raduno2013roma">Visualizza tutte le informazioni</a></strong><br />
+<p><strong><a href="raduno2013roma">Visualizza tutte le informazioni</a>&nbsp;| <a href="https://www.facebook.com/events/680456091967510/680465925299860/">Evento su Facebook</a></strong><br />
 &nbsp;</p>
 ',
       'format' => 'filtered_html',

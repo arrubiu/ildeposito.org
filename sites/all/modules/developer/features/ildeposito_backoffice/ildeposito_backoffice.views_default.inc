@@ -944,7 +944,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filtro contestuale: Contenuto: Canti collegati (field_canto_riferimento) */
+  /* Filtro contestuale: Contenuto: Canto di riferimento (field_canto_riferimento) */
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['id'] = 'field_canto_riferimento_nid';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['table'] = 'field_data_field_canto_riferimento';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['field'] = 'field_canto_riferimento_nid';
@@ -1226,12 +1226,14 @@ function ildeposito_backoffice_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Intestazione: Globale: Area di testo */
-  $handler->display->display_options['header']['area']['id'] = 'area';
-  $handler->display->display_options['header']['area']['table'] = 'views';
-  $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = 'Gestione dei contenuti dell\'archivio: canti, autori, traduzioni, eventi.';
-  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
+  /* Intestazione: Globale: Riassunto del risultato */
+  $handler->display->display_options['header']['result']['id'] = 'result';
+  $handler->display->display_options['header']['result']['table'] = 'views';
+  $handler->display->display_options['header']['result']['field'] = 'result';
+  $handler->display->display_options['header']['result']['content'] = '<p>Gestione dei contenuti dell\'archivio soggetti a moderazione: canti, autori, eventi, traduzioni.<br />
+<strong>Di default l\'elenco comprende l\'ultima revisione, in modo da verificare subito se ci sono contenuti con revisioni da approvare.</strong></p>
+
+Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.';
   /* Relazione: Revisione del contenuto: Utente */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node_revision';
@@ -1269,7 +1271,7 @@ function ildeposito_backoffice_views_default_views() {
       'label' => '',
     ),
     'action::views_bulk_operations_script_action' => array(
-      'selected' => 0,
+      'selected' => 1,
       'postpone_processing' => 0,
       'skip_confirmation' => 0,
       'override_label' => 0,
@@ -1374,20 +1376,6 @@ function ildeposito_backoffice_views_default_views() {
       'override_label' => 0,
       'label' => '',
     ),
-    'action::support_client_fetch_all_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::support_client_fetch_one_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
   );
   /* Campo: Revisione del contenuto: Titolo */
   $handler->display->display_options['fields']['title']['id'] = 'title';
@@ -1402,6 +1390,11 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['alter']['ellipsis'] = FALSE;
+  /* Campo: Workbench Moderation: Stato */
+  $handler->display->display_options['fields']['state']['id'] = 'state';
+  $handler->display->display_options['fields']['state']['table'] = 'workbench_moderation_node_history';
+  $handler->display->display_options['fields']['state']['field'] = 'state';
+  $handler->display->display_options['fields']['state']['machine_name'] = 0;
   /* Campo: Workbench Moderation: Corrente */
   $handler->display->display_options['fields']['current']['id'] = 'current';
   $handler->display->display_options['fields']['current']['table'] = 'workbench_moderation_node_history';
@@ -1471,9 +1464,39 @@ function ildeposito_backoffice_views_default_views() {
     4 => 0,
     5 => 0,
   );
+  /* Criterio del filtro: Workbench Moderation: Stato */
+  $handler->display->display_options['filters']['state']['id'] = 'state';
+  $handler->display->display_options['filters']['state']['table'] = 'workbench_moderation_node_history';
+  $handler->display->display_options['filters']['state']['field'] = 'state';
+  $handler->display->display_options['filters']['state']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
+  $handler->display->display_options['filters']['state']['expose']['label'] = 'Stato';
+  $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
+  $handler->display->display_options['filters']['state']['expose']['identifier'] = 'state';
+  $handler->display->display_options['filters']['state']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['state']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '100';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_label'] = 'Voci per pagina';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all_label'] = '- Tutto -';
+  $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Scostamento';
+  $handler->display->display_options['pager']['options']['tags']['first'] = '« prima';
+  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ precedente';
+  $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
+  $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
   $handler->display->display_options['path'] = 'gestione-archivio';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Gestione archivio';
@@ -1497,10 +1520,14 @@ function ildeposito_backoffice_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('Gestione dei contenuti dell\'archivio: canti, autori, traduzioni, eventi.'),
+    t('<p>Gestione dei contenuti dell\'archivio soggetti a moderazione: canti, autori, eventi, traduzioni.<br />
+<strong>Di default l\'elenco comprende l\'ultima revisione, in modo da verificare subito se ci sono contenuti con revisioni da approvare.</strong></p>
+
+Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'),
     t('utente revisione'),
     t('Titolo'),
     t('Data modifica'),
+    t('Stato'),
     t('Ultima revisione'),
     t('Revisione pubblica'),
     t('Autore revisione'),

@@ -14,7 +14,7 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'additional_settings__active_tab_fonte_bibliografica';
-  $strongarm->value = 'edit-workflow';
+  $strongarm->value = 'edit-seo-checker';
   $export['additional_settings__active_tab_fonte_bibliografica'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -234,20 +234,6 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_fonte_bibliografica';
-  $strongarm->value = '';
-  $export['page_title_type_fonte_bibliografica'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_fonte_bibliografica_showfield';
-  $strongarm->value = 0;
-  $export['page_title_type_fonte_bibliografica_showfield'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_fonte_bibliografica_pattern';
   $strongarm->value = '';
   $export['pathauto_node_fonte_bibliografica_pattern'] = $strongarm;
@@ -355,7 +341,7 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'xmlsitemap_settings_node_fonte_bibliografica';
   $strongarm->value = array(
-    'status' => '1',
+    'status' => '0',
     'priority' => '0.5',
   );
   $export['xmlsitemap_settings_node_fonte_bibliografica'] = $strongarm;

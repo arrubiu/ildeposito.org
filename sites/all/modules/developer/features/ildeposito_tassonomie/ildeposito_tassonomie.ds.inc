@@ -702,11 +702,13 @@ function ildeposito_tassonomie_ds_layout_settings_info() {
       'left' => array(
         0 => 'description',
         1 => 'field_immagine',
+        2 => 'field_radioactiviy',
       ),
     ),
     'fields' => array(
       'description' => 'left',
       'field_immagine' => 'left',
+      'field_radioactiviy' => 'left',
     ),
     'classes' => array(),
     'wrappers' => array(
@@ -716,6 +718,8 @@ function ildeposito_tassonomie_ds_layout_settings_info() {
     'layout_wrapper' => 'div',
     'layout_attributes' => '',
     'layout_attributes_merge' => 0,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
   );
   $export['taxonomy_term|sezioni|default'] = $ds_layout;
 

@@ -280,6 +280,61 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-sezioni-field_descrizione_metatag'
+  $field_instances['taxonomy_term-sezioni-field_descrizione_metatag'] = array(
+    'bundle' => 'sezioni',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 13,
+      ),
+      'elenco_termini_contenuti' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_label_plurals_singular' => '',
+    'field_name' => 'field_descrizione_metatag',
+    'label' => 'Descrizione metatag',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'enable' => 0,
+        'insert_plugin' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 12,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-sezioni-field_images'
   $field_instances['taxonomy_term-sezioni-field_images'] = array(
     'bundle' => 'sezioni',
@@ -288,13 +343,9 @@ function ildeposito_tassonomie_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'image',
-        'settings' => array(
-          'image_link' => '',
-          'image_style' => '',
-        ),
-        'type' => 'image',
-        'weight' => 1,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 10,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -419,7 +470,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
@@ -434,7 +485,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 11,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -471,7 +522,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -486,7 +537,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 12,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -518,6 +569,60 @@ function ildeposito_tassonomie_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-tags-field_descrizione_metatag'
+  $field_instances['taxonomy_term-tags-field_descrizione_metatag'] = array(
+    'bundle' => 'tags',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
+      ),
+      'elenco_termini_contenuti' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_label_plurals_singular' => '',
+    'field_name' => 'field_descrizione_metatag',
+    'label' => 'Descrizione metatag',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'enable' => 0,
+        'insert_plugin' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 9,
     ),
   );
 
@@ -566,7 +671,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 42,
+      'weight' => 8,
     ),
   );
 
@@ -722,6 +827,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Descrizione metatag');
   t('Immagine');
   t('Immagini');
   t('Old ID');

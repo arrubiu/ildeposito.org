@@ -24,9 +24,9 @@ function ildeposito_ct_canto_field_group_info() {
     'weight' => '4',
     'children' => array(
       0 => 'field_lingua',
-      1 => 'field_localizzazione',
-      2 => 'field_sezione',
-      3 => 'field_tags',
+      1 => 'field_sezione',
+      2 => 'field_tags',
+      3 => 'metatags',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -116,11 +116,12 @@ function ildeposito_ct_canto_field_group_info() {
     'label' => 'Staff only',
     'weight' => '6',
     'children' => array(
-      0 => 'field_evento',
-      1 => 'field_old_id',
-      2 => 'field_presenza_accordi',
-      3 => 'field_tematica',
+      0 => 'field_old_id',
+      1 => 'field_presenza_accordi',
+      2 => 'field_tematica',
+      3 => 'field_evento',
       4 => 'field_traduzione',
+      5 => 'field_radioactiviy',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

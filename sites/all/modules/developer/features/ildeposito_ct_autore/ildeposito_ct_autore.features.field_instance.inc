@@ -66,7 +66,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -137,7 +137,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -208,7 +208,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -279,7 +279,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -337,6 +337,95 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-autore-field_immagini'
+  $field_instances['node-autore-field_immagini'] = array(
+    'bundle' => 'autore',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => 'foto_autore',
+        ),
+        'type' => 'image',
+        'weight' => 0,
+      ),
+      'elenco_termini_contenuti' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'rss' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_label_plurals_singular' => '',
+    'field_name' => 'field_immagini',
+    'label' => 'Immagini',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 69,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'imagecrop' => array(
+        'foto_autore' => 'foto_autore',
+        'utente_profile' => 0,
+      ),
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '200x200',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'media',
+      'settings' => array(
+        'allowed_schemes' => array(
+          'private' => 'private',
+          'public' => 'public',
+        ),
+        'allowed_types' => array(
+          0 => 0,
+          'audio' => 0,
+          'document' => 0,
+          'image' => 'image',
+          'video' => 0,
+        ),
+        'browser_plugins' => array(
+          'media_default--media_browser_1' => 'media_default--media_browser_1',
+          'media_default--media_browser_my_files' => 0,
+          'upload' => 'upload',
+        ),
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'media_generic',
+      'weight' => 11,
+    ),
+  );
+
   // Exported field_instance: 'node-autore-field_links'
   $field_instances['node-autore-field_links'] = array(
     'bundle' => 'autore',
@@ -348,7 +437,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -431,7 +520,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 0,
+        'weight' => 1,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -489,7 +578,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -558,7 +647,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -629,7 +718,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'weight' => 2,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -698,7 +787,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -838,6 +927,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
   t('Biografia');
   t('Cognome (o nome del gruppo)');
   t('Commento');
+  t('Immagini');
   t('Indicare eventuali altri nomi o pseudonimi dell\'autore');
   t('Indicare il cognome dell\'autore o il nome del gruppo.');
   t('Indicare il nome "di persona" dell\'autore, se presente');

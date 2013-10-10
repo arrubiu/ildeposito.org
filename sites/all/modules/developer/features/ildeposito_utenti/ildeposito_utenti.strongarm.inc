@@ -13,20 +13,6 @@ function ildeposito_utenti_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_user';
-  $strongarm->value = '';
-  $export['page_title_user'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_user_showfield';
-  $strongarm->value = 0;
-  $export['page_title_user_showfield'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_user_pattern';
   $strongarm->value = 'utente/[user:name]';
   $export['pathauto_user_pattern'] = $strongarm;

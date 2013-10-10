@@ -226,41 +226,6 @@ function ildeposito_forum_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_forum_root_title';
-  $strongarm->value = '';
-  $export['page_title_forum_root_title'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_forum';
-  $strongarm->value = '';
-  $export['page_title_type_forum'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_forum_showfield';
-  $strongarm->value = 0;
-  $export['page_title_type_forum_showfield'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_vocab_forums';
-  $strongarm->value = '';
-  $export['page_title_vocab_forums'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_vocab_forums_showfield';
-  $strongarm->value = 0;
-  $export['page_title_vocab_forums_showfield'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_forum_pattern';
   $strongarm->value = '[term:vocabulary]/[term:name]';
   $export['pathauto_forum_pattern'] = $strongarm;

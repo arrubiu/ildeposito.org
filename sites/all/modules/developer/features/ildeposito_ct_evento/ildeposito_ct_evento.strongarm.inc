@@ -314,20 +314,6 @@ function ildeposito_ct_evento_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_evento';
-  $strongarm->value = '[current-page:page-title] - [node:field-percorso] - [node:field-localizzazione] | [site:name]';
-  $export['page_title_type_evento'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_title_type_evento_showfield';
-  $strongarm->value = 0;
-  $export['page_title_type_evento_showfield'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_evento_pattern';
   $strongarm->value = 'archivio/storiacantata/[node:title]';
   $export['pathauto_node_evento_pattern'] = $strongarm;

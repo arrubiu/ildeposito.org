@@ -66,7 +66,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 11,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -820,7 +820,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'node_reference_autocomplete',
-      'weight' => 8,
+      'weight' => 20,
     ),
   );
 
@@ -1580,7 +1580,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 18,
+      'weight' => 24,
     ),
   );
 
@@ -1681,7 +1681,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 17,
+      'weight' => 23,
     ),
   );
 
@@ -1898,7 +1898,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 13,
+      'weight' => 12,
     ),
   );
 
@@ -2004,7 +2004,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 14,
+      'weight' => 21,
     ),
   );
 
@@ -2315,7 +2315,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'node_reference_autocomplete',
-      'weight' => 16,
+      'weight' => 22,
     ),
   );
 
@@ -2409,74 +2409,6 @@ function ildeposito_ct_canto_field_default_field_instances() {
       ),
       'type' => 'noderefcreate_autocomplete',
       'weight' => 5,
-    ),
-  );
-
-  // Exported field_instance: 'node-fonte_bibliografica-field_canto_riferimento'
-  $field_instances['node-fonte_bibliografica-field_canto_riferimento'] = array(
-    'bundle' => 'fonte_bibliografica',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'node_reference',
-        'settings' => array(),
-        'type' => 'node_reference_default',
-        'weight' => 6,
-      ),
-      'elenco_archivio' => array(
-        'label' => 'above',
-        'module' => 'node_reference',
-        'settings' => array(),
-        'type' => 'node_reference_default',
-        'weight' => 6,
-      ),
-      'elenco_termini_contenuti' => array(
-        'label' => 'above',
-        'module' => 'node_reference',
-        'settings' => array(),
-        'type' => 'node_reference_default',
-        'weight' => 6,
-      ),
-      'ical' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_result' => array(
-        'label' => 'above',
-        'module' => 'node_reference',
-        'settings' => array(),
-        'type' => 'node_reference_default',
-        'weight' => 6,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_canto_riferimento',
-    'label' => 'Canti collegati',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'noderefcreate',
-      'settings' => array(
-        'autocomplete_match' => 'contains',
-        'autocomplete_path' => 'node_reference/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'noderefcreate_autocomplete',
-      'weight' => 9,
     ),
   );
 
