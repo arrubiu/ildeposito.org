@@ -1,0 +1,7 @@
+See OVERVIEW.txt for a general introduction.
+
+Some hints to remember:
+- We want to let other modules inherit from all of our classes.
+- Use camelcase at conceptual boundaries.
+- For now  do not use SplFileInfo as a parent class for VersioncontrolItem, but maybe in near future when it's considered a need(maybe performance).
+- The future of source items in the main API module (we want them as an optional bonus instead of a log-parse-time requirement).

@@ -1,0 +1,20 @@
+#!/usr/bin/php
+<?php
+
+// Set required variables
+if (file_exists('hooks/local.php')) {
+  // Declare all the needed variables. See local.php.example
+  require_once 'hooks/local.php';
+}
+else {
+  die('Please add a local.php file to the git hooks directory. See local.php.example for details of its content.');
+}
+
+// Use drush command to enqueue the code arrival.
+$descspec = array(
+  0 => array('file', 'php://stdin', 'r'),
+  1 => array('file', 'php://stdout', 'w'),
+);
+$pipes = array();
+$proc = proc_open('drush vcapi-enqueue-codearrival --uid=' . $pusher_uid . ' --repo-id=' . $repo_id . ' --timestamp=' . time(), $descspec, $pipes, $drupal_root);
+proc_close($proc);

@@ -1,0 +1,62 @@
+name = "Version Control API"
+package = Version Control
+description = "An interface to version control systems whose functionality is provided by pluggable back-end modules."
+core = 7.x
+php = 5.2
+dependencies[] = ctools
+dependencies[] = views
+; base entities
+files[] = includes/VersioncontrolBackend.php
+files[] = includes/VersioncontrolBranch.php
+files[] = includes/VersioncontrolItem.php
+files[] = includes/VersioncontrolOperation.php
+files[] = includes/VersioncontrolRepository.php
+files[] = includes/VersioncontrolTag.php
+files[] = includes/VersioncontrolEvent.php
+files[] = includes/interfaces.inc
+files[] = includes/controllers.inc
+files[] = includes/views_sets.inc
+files[] = includes/VersioncontrolLockedRepositoryException.php
+files[] = includes/VersioncontrolSynchronizationException.php
+files[] = includes/VersioncontrolNeedsFullSynchronizationException.php
+; views handlers
+files[] = includes/views/handlers/versioncontrol_handler_argument_operation_attribution_uid.inc
+files[] = includes/views/handlers/versioncontrol_handler_argument_repository_repo_id.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_item_revision_action.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_item_revision_lines_changed.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_item_revision_path.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_item_revision_visual_diffstat.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_operation_attribution.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_operation_date.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_operation_labels.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_operation_message.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_operation_person.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_operation_revision.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_operation_type.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_repository_actions.inc
+files[] = includes/views/handlers/versioncontrol_handler_field_repository_manual_fetch.inc
+files[] = includes/views/handlers/versioncontrol_handler_filter_operation_type_label.inc
+files[] = includes/views/handlers/versioncontrol_handler_filter_operation_type.inc
+files[] = includes/views/handlers/versioncontrol_handler_filter_repo_backend.inc
+files[] = includes/views/handlers/versioncontrol_plugin_style_operations.inc
+; ctools plugins
+files[] = includes/plugins/user_mapping_methods/VersioncontrolUserMapperNone.class.php
+files[] = includes/plugins/user_mapping_methods/VersioncontrolUserMapperSimpleMail.class.php
+; tests
+files[] = tests/VersioncontrolAccountAuthPlugin.test
+files[] = tests/VersioncontrolBackendTests.test
+files[] = tests/VersioncontrolBranchUnitTestingTestCase.test
+files[] = tests/VersioncontrolItemUnitTestingTestCase.test
+files[] = tests/VersioncontrolOperationUnitTestingTestCase.test
+files[] = tests/VersioncontrolRepositoryManagementTestCase.test
+files[] = tests/VersioncontrolRepositoryUnitTestingTestCase.test
+files[] = tests/VersioncontrolTagUnitTestingTestCase.test
+files[] = tests/VersioncontrolTestCase.test
+files[] = tests/VersioncontrolTokenTests.test
+
+; Information added by drupal.org packaging script on 2013-10-29
+version = "7.x-1.0-rc1"
+core = "7.x"
+project = "versioncontrol"
+datestamp = "1383082245"
+

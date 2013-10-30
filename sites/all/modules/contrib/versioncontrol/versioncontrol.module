@@ -1,0 +1,686 @@
+<?php
+/**
+ * @file
+ * Version Control API - An interface to version control systems
+ * whose functionality is provided by pluggable back-end modules.
+ *
+ * Copyright 2006, 2007 Derek Wright ("dww" , http://drupal.org/user/46549)
+ * Copyright 2007, 2008, 2009 by Jakob Petsovits ("jpetso", http://drupal.org/user/56020)
+ */
+
+/**
+ * @name backend capabilities
+ * Optional capabilities that backend modules can provide.
+ */
+//@{
+define('VERSIONCONTROL_CAPABILITY_ATOMIC_COMMITS',          1);
+define('VERSIONCONTROL_CAPABILITY_DIRECTORY_REVISIONS',     4);
+//@}
+
+/**
+ * @name VCS actions
+ * for a single item (file or directory) in a commit, or for branches and tags.
+ */
+//@{
+define('VERSIONCONTROL_ACTION_ADDED',    1);
+define('VERSIONCONTROL_ACTION_MODIFIED', 2);
+define('VERSIONCONTROL_ACTION_MOVED',    3); //< == renamed
+define('VERSIONCONTROL_ACTION_COPIED',   4);
+define('VERSIONCONTROL_ACTION_MERGED',   5);
+define('VERSIONCONTROL_ACTION_DELETED',  6);
+define('VERSIONCONTROL_ACTION_REPLACED', 7);
+define('VERSIONCONTROL_ACTION_OTHER',    8); //< for example, SVN revprop-only changes
+//@}
+
+/**
+ * @name VCS label types
+ * Use same values as VERSIONCONTROL_OPERATION_* for backward compatibility
+ */
+//@{
+define('VERSIONCONTROL_LABEL_BRANCH', 2);
+define('VERSIONCONTROL_LABEL_TAG',    3);
+//@}
+
+/**
+ * @name VCS operations
+ * a.k.a. stuff that is recorded for display purposes.
+ */
+//@{
+define('VERSIONCONTROL_OPERATION_COMMIT', 1);
+define('VERSIONCONTROL_OPERATION_BRANCH', 2);
+define('VERSIONCONTROL_OPERATION_TAG',    3);
+//@}
+
+/**
+ * @name VCS item types.
+ */
+//@{
+define('VERSIONCONTROL_ITEM_FILE',              1);
+define('VERSIONCONTROL_ITEM_DIRECTORY',         2);
+//@}
+/**
+ * @name VCS "Deleted" item types.
+ * Only used for items that don't exist in the repository (anymore), at least
+ * not in the given revision. That is mostly the case with items that
+ * were deleted by a commit and are returned as result by
+ * VersioncontrolOperation::getItems(). A "deleted file" can also be
+ * returned by directory listings for CVS, representing "dead files".
+ */
+//@{
+define('VERSIONCONTROL_ITEM_FILE_DELETED',      3);
+define('VERSIONCONTROL_ITEM_DIRECTORY_DELETED', 4);
+//@}
+
+/**
+ * Implements hook_flush_caches().
+ *
+ * Triggers backend mode determination.
+ *
+ */
+function versioncontrol_flush_caches() {
+  versioncontrol_determine_backend_mode();
+}
+
+/**
+ * Implements hook_theme().
+ */
+function versioncontrol_theme() {
+  $base = array('file' => 'versioncontrol.theme.inc');
+
+  $theme = array();
+  $theme['versioncontrol_account_username'] = array(
+    'arguments' => array('uid' => NULL, 'username' => NULL, 'repository' => NULL, 'options' => array()),
+  ) + $base;
+  $theme['versioncontrol_user_statistics_table'] = array(
+    'arguments' => array('statistics' => NULL, 'options' => array()),
+  ) + $base;
+  $theme['versioncontrol_user_statistics_item_list'] = array(
+    'arguments' => array('statistics' => NULL, 'more_link' => NULL),
+  ) + $base;
+  $theme['versioncontrol_user_statistics_account'] = array(
+    'arguments' => array('user_stats' => NULL),
+  ) + $base;
+  $theme['versioncontrol_diffstat'] = array(
+    'variables' => array('places' => NULL, 'results' => NULL),
+  ) + $base;
+  $theme['versioncontrol_view_row_operation_rss'] = array(
+    'variables' => array('view' => NULL, 'options' => NULL, 'item' => NULL),
+  ) + $base;
+
+  return $theme;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function versioncontrol_menu() {
+  $items = array();
+
+  $admin = array(
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('administer version control systems'),
+    'file' => 'versioncontrol.admin.inc',
+  );
+
+  $items['admin/config/development/versioncontrol-settings'] = array(
+    'title' => 'Version Control settings',
+    'description' => 'Configure settings for Version Control API and related modules.',
+    'page arguments' => array('versioncontrol_admin_settings'),
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('administer version control systems'),
+    'file' => 'versioncontrol.admin.inc',
+  );
+
+  $items['admin/config/development/versioncontrol-settings/general'] = array(
+    'title' => 'General',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  $items['admin/config/development/versioncontrol-settings/views-sets'] = array(
+    'title' => 'Views sets',
+    'description' => 'Configure the sets of Views used by Version Control API and related modules.',
+    'page arguments' => array('versioncontrol_admin_views_sets_edit'),
+    'type' => MENU_LOCAL_TASK,
+  ) + $admin;
+
+  $items['admin/config/development/versioncontrol-settings/plugins'] = array(
+    'title' => 'Plugins',
+    'description' => 'Default plugins and its configuration per backend.',
+    'page arguments' => array('versioncontrol_admin_settings_plugins'),
+    'type' => MENU_LOCAL_TASK,
+  ) + $admin;
+
+  $items['admin/content/versioncontrol-repositories'] = array(
+    'title' => 'VCS Repositories',
+    'description' => 'Define and manage the Version Control repositories known to your site.',
+    'page arguments' => array('versioncontrol_admin_repository_list'),
+    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+  ) + $admin;
+
+  $weight = 1;
+  $items['admin/content/versioncontrol-repositories/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => $weight,
+  );
+
+  // former !$may_cache
+  /// TODO: Backend specific stuff was done in !$may_cache, as it once
+  ///       screwed up after activating a new backend in admin/build/modules.
+  ///       Make sure this works now.
+  foreach (versioncontrol_get_backends() as $vcs => $backend) {
+    $items['admin/content/versioncontrol-repositories/add-' . $vcs] = array(
+      'title' => 'Add @vcs repository',
+      'title arguments' => array('@vcs' => $backend->name),
+      'page arguments' => array('versioncontrol_admin_repository_edit',
+        FALSE, $vcs
+      ),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => ++$weight,
+    ) + $admin;
+  }
+  // end former !$may_cache
+
+  $items['admin/content/versioncontrol-repositories/edit/%versioncontrol_repository'] = array(
+    'title' => 'Edit repository',
+    'page arguments' => array('versioncontrol_admin_repository_edit', 4),
+    'type' => MENU_CALLBACK,
+  ) + $admin;
+  $items['admin/content/versioncontrol-repositories/delete/%versioncontrol_repository'] = array(
+    'title' => 'Delete repository',
+    'page arguments' => array('versioncontrol_admin_repository_delete_confirm', 4),
+    'type' => MENU_CALLBACK,
+  ) + $admin;
+  $items['admin/content/versioncontrol-repositories/clearlock/%versioncontrol_repository'] = array(
+    'title' => 'Clear lock',
+    'page arguments' => array('versioncontrol_admin_repository_clearlock_confirm', 4),
+    'type' => MENU_CALLBACK,
+  ) + $admin;
+  $items['admin/content/versioncontrol-repositories/fetch/%versioncontrol_repository'] = array(
+    'title' => 'Fetch logs',
+    'page arguments' => array('versioncontrol_admin_repository_fetch_confirm', 4),
+    'type' => MENU_CALLBACK,
+  ) + $admin;
+
+  return $items;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function versioncontrol_module_implements_alter(&$implementations, $hook) {
+  // The ctools implementation of `hook_registry_files_alter` instantiates
+  // our plugin classes on install before our includes/interfaces.inc has been
+  // included causing fatal errors.  Here we ensure that our implementation
+  // runs first so that we may always ensure that our interfaces exist
+  // when the module is installed.
+  if ($hook == 'registry_files_alter') {
+    $group = $implementations['versioncontrol'];
+    $implementations = array('versioncontrol' => $group) + $implementations;
+  }
+}
+
+/**
+ * Implements hook_registry_files_alter().
+ */
+function versioncontrol_registry_files_alter(&$files, $modules) {
+  require_once('includes/interfaces.inc');
+}
+
+/**
+ * Implements hook_views_api().
+ *
+ * @return array
+ */
+function versioncontrol_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'versioncontrol') . '/includes/views',
+  );
+}
+
+/**
+ * General helper function to get an array relating type id to string
+ */
+function versioncontrol_operation_types() {
+  return array(
+    VERSIONCONTROL_OPERATION_COMMIT => t('Commit'),
+    VERSIONCONTROL_OPERATION_BRANCH => t('Branch'),
+    VERSIONCONTROL_OPERATION_TAG    => t('Tag'),
+  );
+}
+
+/**
+ * General helper function to get an array of revision actions.
+ */
+function versioncontrol_revision_actions() {
+  return array(
+    VERSIONCONTROL_ACTION_ADDED => t('Added'),
+    VERSIONCONTROL_ACTION_MODIFIED => t('Modified'),
+    VERSIONCONTROL_ACTION_MOVED => t('Renamed'),
+    VERSIONCONTROL_ACTION_COPIED => t('Copied'),
+    VERSIONCONTROL_ACTION_MERGED => t('Merged'),
+    VERSIONCONTROL_ACTION_DELETED => t('Removed'),
+    VERSIONCONTROL_ACTION_REPLACED => t('Replaced'),
+    VERSIONCONTROL_ACTION_OTHER => t('Other'),
+  );
+}
+
+/**
+ * Determine if we are operating in single or multi-backend mode, and set a
+ * $conf variable accordingly.
+ *
+ */
+function versioncontrol_determine_backend_mode() {
+  $single = count(versioncontrol_get_backends()) <= 1;
+  variable_set('versioncontrol_single_backend_mode', $single);
+}
+
+/**
+ * Implements hook_permission().
+ */
+function versioncontrol_permission() {
+  return array(
+    'administer version control systems' => array(
+      'title' => t('Administer version control systems'),
+      'description' => t('Perform administration tasks for my version control entities.'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ *
+ * Inform the job queueing system about our worker callback.
+ */
+function versioncontrol_cron_queue_info() {
+  $queues = array();
+
+  $queues['versioncontrol_repomgr'] = array(
+    'worker callback' => 'versioncontrol_repomgr_run_worker',
+  );
+
+  $queues['versioncontrol_reposync'] = array(
+    'worker callback' => 'versioncontrol_reposync_run_worker',
+  );
+
+  return $queues;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function versioncontrol_cron() {
+  $constraints = array('cron' => 1);
+  $repositories = versioncontrol_repository_load_multiple(array(), $constraints);
+
+  // Set timeout limit to 3600 seconds as it can take a long time to process
+  // the log initially. (And hook_cron() might be called by poormanscron.)
+  if (!ini_get('safe_mode')) {
+    drupal_set_time_limit(3600);
+  }
+  foreach ($repositories as $repository) {
+    $repository->sync();
+  }
+}
+
+/**
+ * Process a versioncontrol_repomgr queue job.
+ *
+ * Passthrough to _versioncontrol_repomgr_run_worker().
+ *
+ * @see _versioncontrol_repomgr_run_worker()
+ *
+ * @param array $data
+ *   The array of job data to be processed.
+ */
+function versioncontrol_repomgr_run_worker($data) {
+  ctools_include('worker', 'versioncontrol');
+  return _versioncontrol_repomgr_run_worker($data);
+}
+
+/**
+ * Process a versioncontrol_reposync queue job.
+ *
+ * Passthrough to _versioncontrol_reposync_run_worker().
+ *
+ * @see _versioncontrol_reposync_run_worker()
+ *
+ * @param array $data
+ *   The array of job data to be processed.
+ */
+function versioncontrol_reposync_run_worker($data) {
+  ctools_include('worker', 'versioncontrol');
+  return _versioncontrol_reposync_run_worker($data);
+}
+
+
+// API functions start here.
+
+/**
+ * Menu wildcard loader for repository ids ('%versioncontrol_repository').
+ *
+ * @return VersioncontrolRepository
+ *   Returns the top VersioncontrolRepository object from the array returned
+ *   given the query conditions, or FALSE if no such objects were found given
+ *   the conditions.
+ */
+function versioncontrol_repository_load($repo_id, $conditions = array(), $options = array()) {
+  if (!is_array($repo_id)) {
+    $repo_id = array($repo_id);
+  }
+  $repository = versioncontrol_repository_load_multiple($repo_id, $conditions, $options);
+  return empty($repository) ? FALSE : reset($repository);
+}
+
+/**
+ * Load multiple versioncontrol repositories, given provided conditions and
+ * options.
+ *
+ * This function statically caches a global VersioncontrolRepositoryController
+ * entity controller, and uses it to load repositories.
+ *
+ * @param $ids
+ * @param $conditions
+ * @param $options
+ * @return array
+ *
+ */
+function versioncontrol_repository_load_multiple($ids = array(), $conditions = array(), $options = array()) {
+  $entities = array();
+
+  // Let all backends load the repositories they support.
+  foreach (versioncontrol_get_backends() as $type => $backend) {
+    $entities += $backend->loadEntities('repo', $ids, $conditions, $options);
+  }
+
+  // For all repositories that don't have a backend specific controller, use
+  // the default one.
+  $default_controller = new VersioncontrolRepositoryController();
+  $entities += $default_controller->load($ids, $conditions, $options);
+
+  return $entities;
+}
+
+/**
+ * Get a list of all backends with its detailed information.
+ *
+ * @param string $backend
+ *   Optional; the backend type's backend object to be returned. If not
+ *   specified, all backend types are returned.
+ *
+ * @return mixed
+ *   Either a structured array containing backend objects from each backend,
+ *   keyed on the unique string identifier corresponding to that backend (e.g.
+ *   'cvs', 'svn').
+ *   The backend objects are all descendents of VersioncontrolBackend.
+ *
+ *   An example of the result array can be found in the FakeVCS example module.
+ */
+function versioncontrol_get_backends($backend = '', $reset = FALSE) {
+  $backends = &drupal_static(__FUNCTION__);
+
+  if (!isset($backends) || $reset) {
+    $backends = module_invoke_all('versioncontrol_backends');
+  }
+
+  if (!empty($backend)) {
+    return isset($backends[$backend]) ? $backends[$backend] : array();
+  }
+  else {
+    return $backends;
+  }
+}
+
+/**
+ * Get the list of available views sets.
+ */
+function versioncontrol_get_views_sets() {
+  $sets = &drupal_static('versioncontrol_views_sets_assembled', array());
+  $db_set_data = &drupal_static('versioncontrol_views_sets_db_data', array());
+  // Only build the set list if it's empty.
+  if (empty($sets)) {
+      ctools_include('plugins');
+      // get all the site-specific settings stored in the db
+      $result = db_select('versioncontrol_views_sets', 'base')
+        ->fields('base')
+        ->execute();
+
+      // Store the db-retrieved data in a static var; we need to source it later.
+      foreach ($result as $row) {
+        if (empty($db_set_data[$row->views_set])) {
+          $db_set_data[$row->views_set] = array();
+        }
+        $db_set_data[$row->views_set][$row->vcs] = $row->view_name;
+      }
+
+      // Grab all available views set plugins.
+      $plugins = ctools_get_plugins('versioncontrol', 'views_sets');
+      foreach ($plugins as $plugin_name => $plugin_definition) {
+        $class = ctools_plugin_get_class($plugin_definition, 'handler');
+        $sets[$plugin_name] = new $class();
+      }
+      $backends = versioncontrol_get_backends();
+      // Process each set.
+      foreach ($sets as $set_name => $handler) {
+        $set = array();
+
+        // Process each backend.
+        foreach ($backends as $vcs => $backend) {
+          // Attach defaults set by the backends themselves, if they exist.
+          if (!empty($backend->defaultViews[$set_name])) {
+            $set[$vcs] = $backend->defaultViews[$set_name];
+          }
+          // Allow hook implementors to specify defaults, too.
+          if ($handler->getDefaultViews($vcs)) {
+            $set[$vcs] = $handler->getDefaultViews($vcs);
+          }
+        }
+
+        // Merge the db values overtop of all defaults
+        if (!empty($db_set_data[$set_name])) {
+          $set = array_merge($set, $db_set_data[$set_name]);
+        }
+        $handler->setSet($set);
+      }
+    }
+
+  return $sets;
+}
+
+/**
+ * Get a single views set by name.
+ */
+function versioncontrol_get_views_set($set) {
+  $sets = versioncontrol_get_views_sets();
+  if (!empty($sets[$set])) {
+    return $sets[$set];
+  }
+  return FALSE;
+}
+
+/**
+ * Implements ctools hook_ctools_plugin_directory().
+ */
+function versioncontrol_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'versioncontrol') {
+    return "includes/plugins/$plugin";
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_type().
+ */
+function versioncontrol_ctools_plugin_type() {
+  return array(
+    'views_sets' => array(
+      'cache' => TRUE,
+      'use hooks' => TRUE,
+      'classes' => array('handler'),
+    ),
+    'webviewer_url_handlers' => array(
+      'classes' => array('handler'),
+    ),
+    'vcs_auth' => array(
+      'classes' => array('handler'),
+    ),
+    'user_mapping_methods' => array(
+      'classes' => array('mapper'),
+    ),
+    'reposync' => array(
+      'classes' => array('worker'),
+    ),
+    'repomgr' => array(
+      'classes' => array('worker'),
+    ),
+  );
+}
+
+/**
+ * Retrieves plugin titles indexed by plugin name.
+ *
+ * It's a helper to re-use on plugin names getter functions.
+ *
+ * @param string $plugin_type
+ *   This can be: user_mapping_methods, vcs_auth, repomgr, reposync.
+ *
+ * @return array
+ *   The list of plugin titles indexed by plugin name.
+ */
+function versioncontrol_plugin_get_names($plugin_type) {
+  ctools_include('plugins');
+
+  $names = array();
+  foreach (ctools_get_plugins('versioncontrol', $plugin_type) as $name => $plugin) {
+    $names[$name] = $plugin['title'];
+  }
+
+  asort($names);
+  return $names;
+}
+
+/**
+ * Load the names of all 'user_mapping_methods' for use at forms.
+ */
+function versioncontrol_user_mapping_methods_get_names() {
+  return versioncontrol_plugin_get_names('user_mapping_methods');
+}
+
+/**
+ * Load the names of all 'vcs_auth' for use at forms.
+ */
+function versioncontrol_auth_handlers_get_names() {
+  return versioncontrol_plugin_get_names('vcs_auth');
+}
+
+/**
+ * Load the names of all 'reposync' for use at forms.
+ */
+function versioncontrol_reposync_get_names() {
+  return versioncontrol_plugin_get_names('reposync');
+}
+
+/**
+ * Load the names of all 'repomgr' for use at forms.
+ */
+function versioncontrol_repomgr_get_names() {
+  return versioncontrol_plugin_get_names('repomgr');
+}
+
+/**
+ * Load the names of all 'webviewer_url_handlers' for use at forms.
+ *
+ * @todo: Let all plugins to define an optional vcs, so this can live inside
+ *        versioncontrol_plugin_get_names().
+ */
+function versioncontrol_webviewer_url_handlers_get_names($vcs='') {
+  ctools_include('plugins');
+
+  $names = array();
+  foreach (ctools_get_plugins('versioncontrol', 'webviewer_url_handlers') as $name => $plugin) {
+    if (!empty($vcs)) {
+      if ($plugin['vcs'] == $vcs) {
+        $names[$name] = $plugin['title'];
+      }
+    }
+    else {
+      $names[$name] = $plugin['title'];
+    }
+  }
+
+  asort($names);
+  return $names;
+}
+
+/**
+ * Retrieves the default 'webviewer_url_handlers' plugin.
+ *
+ * @param string $vcs
+ *   Version Control System machine name as defined by
+ *   hook_versioncontrol_backends().
+ *
+ * @return mixed
+ *   A plugin machine name or NULL if not default is set.
+ */
+function versioncontrol_webviewer_url_handlers_get_default_plugin($vcs) {
+  ctools_include('plugins');
+  $default_url_handler = variable_get('versioncontrol_repository_plugin_default_webviewer_url_handler', FALSE);
+  if (!$default_url_handler) {
+    $default_url_handler = 'none';
+  }
+
+  $valid_plugins = array();
+  foreach (ctools_get_plugins('versioncontrol', 'webviewer_url_handlers') as $name => $plugin) {
+    if ($plugin['vcs'] == $vcs) {
+      $valid_plugins[] = $name;
+    }
+  }
+  asort($valid_plugins);
+
+  if (in_array($default_url_handler, $valid_plugins)) {
+    return $default_url_handler;
+  }
+  return NULL;
+}
+
+/**
+ * Helper function for handlin plugin settings.
+ */
+function versioncontrol_plugins_get_information() {
+  return array(
+    'repository' => array(
+      'author_mapper' => array(
+        'name' => t('Repository author mapping'),
+        'fetcher' => 'versioncontrol_user_mapping_methods_get_names',
+      ),
+      'committer_mapper'   => array(
+        'name' => t('Repository committer mapping'),
+        'fetcher' => 'versioncontrol_user_mapping_methods_get_names',
+      ),
+      'auth_handler' => array(
+        'name' => t('Repository versioncontrol authentication'),
+        'fetcher' => 'versioncontrol_auth_handlers_get_names',
+      ),
+      'webviewer_url_handler' => array(
+        'name' => t('Repository webviewer URL handler'),
+        'fetcher' => 'versioncontrol_webviewer_url_handlers_get_names',
+      ),
+      'repomgr' => array(
+        'name' => t('Repository manager'),
+        'fetcher' => 'versioncontrol_repomgr_get_names',
+      ),
+      'reposync' => array(
+        'name' => t('Repository syncronization'),
+        'fetcher' => 'versioncontrol_reposync_get_names',
+      ),
+    ),
+    'view' => array(
+      'view_sets' => array(
+        'name' => t('View sets'),
+        'fetcher' => FALSE,
+      ),
+    ),
+  );
+}

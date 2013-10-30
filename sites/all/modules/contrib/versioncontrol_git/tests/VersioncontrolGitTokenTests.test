@@ -1,0 +1,61 @@
+<?php
+/**
+ * @file
+ * Tests ensuring proper behavior of the integration with Token.
+ */
+
+require_once drupal_get_path('module', 'versioncontrol_git') . '/tests/VersioncontrolGitTestCase.test';
+
+class VersioncontrolGitTokenTests extends VersioncontrolGitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Git token integration tests'),
+      'description' => t('Tests on Token integration.'),
+      'group' => t('Version Control Git'),
+    );
+  }
+
+  /**
+   * Tests if the event-git token is properly replaced.
+   */
+  function testVersioncontrolEventTokens() {
+    $repo = $this->versioncontrolCreateRepoFromTestRepo(array(), FALSE);
+
+    // Simulate a push where the existing branch is updated and pushed forward,
+    // and a new branch that contains some commits that were in the previous
+    // push.
+    $data = '0000000000000000000000000000000000000000 28e2c35b6f7626d662ffda2c344a782e639f76e7 refs/heads/enhancements' . PHP_EOL .
+            '0000000000000000000000000000000000000000 06ed7cc29f4afd3473b3905cc8dce6471b963e5a refs/heads/master' . PHP_EOL .
+            '0000000000000000000000000000000000000000 b1e97e0f979c5e3580942b335e85bf17c3216397 refs/tags/annotated' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $repo));
+
+    $message = '[event-git:refschanges]';
+
+    // Simulate push that deletes the first branch and brings the second
+    // branch forward.
+    $data = '28e2c35b6f7626d662ffda2c344a782e639f76e7 0000000000000000000000000000000000000000 refs/heads/enhancements' . PHP_EOL .
+            '06ed7cc29f4afd3473b3905cc8dce6471b963e5a 0f0280aefe4d0c3384cb04a0bbb15c9543f46a69 refs/heads/master' . PHP_EOL .
+            '0000000000000000000000000000000000000000 61dda575c87a2bd1553f4b503370b724b432d64e refs/heads/feature' . PHP_EOL .
+            'b1e97e0f979c5e3580942b335e85bf17c3216397 0000000000000000000000000000000000000000 refs/tags/annotated' . PHP_EOL .
+            '0000000000000000000000000000000000000000 b1e97e0f979c5e3580942b335e85bf17c3216397 refs/tags/simple' . PHP_EOL;
+    $object = $this->versioncontrolSimulatePush($data, array('repository' => $repo));
+
+    $expected = <<<EOMSG
+<div class="item-list"><ul><li class="first">Branch enhancements was deleted.</li>
+<li>Branch master was updated.</li>
+<li>Branch feature was created.</li>
+<li>Tag annotated was deleted.</li>
+<li class="last">Tag simple was created and points to b1e97e0: algo de contenido 2
+
+Signed-off-by: Marco Antonio Villegas Vega &lt;marvil07@gmail.com&gt;
+.</li>
+</ul></div>
+EOMSG;
+
+    $output = token_replace($message, array('VersioncontrolEvent' => $object));
+
+    $this->assertEqual($expected, $output, t('Token integration has returned the expected value.'));
+  }
+
+}

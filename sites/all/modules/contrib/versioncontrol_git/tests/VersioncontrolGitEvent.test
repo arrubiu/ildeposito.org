@@ -1,0 +1,175 @@
+<?php
+/**
+ * @file
+ *
+ * Tests ensuring that VersioncontrolGitEvent works.
+ */
+
+require_once drupal_get_path('module', 'versioncontrol_git') . '/tests/VersioncontrolGitTestCase.test';
+
+class VersioncontrolGitEventTests extends VersioncontrolGitTestCase {
+  /**
+   * Re-use one repository for all our tests.
+   *
+   * @var VersioncontrolGitRepository
+   */
+  protected $repository;
+
+  /**
+   * Implements getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Git event tests'),
+      'description' => t('Tests ensuring that Git events work.'),
+      'group' => t('Version Control Git'),
+    );
+  }
+
+  public function setUp() {
+    parent::setUp();
+    // Build and insert a repository.
+    $this->repository = $this->versioncontrolCreateRepoFromTestRepo();
+  }
+
+  /**
+   * Creates an array of event data where we know the structure.
+   */
+  public function createEventData() {
+    // Build one event data with two ref changes, one branch and one tag.
+    $ref_changes_data = array();
+    $ref_changes_data[] = $this->versioncontrolCreateGitRefChangeData(array(
+      'repository' => $this->repository,
+      'reftype' => VERSIONCONTROL_GIT_REFTYPE_BRANCH,
+      'ff' => 0,
+    ));
+    $ref_changes_data[] = $this->versioncontrolCreateGitRefChangeData(array(
+      'repository' => $this->repository,
+      'reftype' => VERSIONCONTROL_GIT_REFTYPE_TAG,
+      'old_sha1' => GIT_NULL_REV,
+    ));
+    return array(
+      'repository' => $this->repository,
+      'refs' => $ref_changes_data,
+    );
+  }
+
+  /**
+   * Tests if VersioncontrolGitEvents are properly created and inserted in the database.
+   */
+  public function testCreation() {
+    $event_data = $this->createEventData();
+    $event = $this->versioncontrolCreateEvent('git', $event_data);
+
+    // Verify refs are stored correctly.
+    foreach ($event_data['refs'] as $ref_data) {
+      $db_git_event_data = db_select('versioncontrol_git_event_data', 'ged')
+        ->fields('ged')
+        ->condition('elid', $event->elid)
+        ->condition('refname', $ref_data['refname'])
+        ->condition('reftype', $ref_data['reftype'])
+        ->execute()
+        ->fetchObject();
+      foreach ($ref_data as $key => $value) {
+        if ($key != 'repository') {
+          $this->assertEqual($value, $db_git_event_data->$key, t('%key git event attribute is stored correctly', array('%key' => $key)), t('Creation'));
+        }
+      }
+    }
+  }
+
+  public function testUpdate() {
+    // Create an event.
+    $event_data = $this->createEventData();
+    $event = $this->versioncontrolCreateEvent('git', $event_data);
+    $pre_update_counter = db_query('SELECT COUNT(*) FROM {versioncontrol_git_event_data}')->fetchField();
+
+    // Update some of the git specific event data.
+    $new_ref_data[0] = array(
+      'refname' => $this->randomString(255),
+      'label_id' => mt_rand(0, 100),
+      'old_sha1' => $this->randomString(40),
+      'new_sha1' => $this->randomString(40),
+      'ff' => 0,
+    ) + $event_data['refs'][0];
+    $new_ref_data[1] = array(
+      'refname' => $this->randomString(255),
+      'label_id' => mt_rand(0, 100),
+      'new_sha1' => $this->randomString(40),
+    ) + $event_data['refs'][1];
+    $event->refs[0]->refname = $new_ref_data[0]['refname'];
+    $event->refs[0]->label_id = $new_ref_data[0]['label_id'];
+    $event->refs[0]->old_sha1 = $new_ref_data[0]['old_sha1'];
+    $event->refs[0]->new_sha1 = $new_ref_data[0]['new_sha1'];
+    $event->refs[1]->refname = $new_ref_data[1]['refname'];
+    $event->refs[1]->label_id = $new_ref_data[1]['label_id'];
+    $event->refs[1]->new_sha1 = $new_ref_data[1]['new_sha1'];
+
+    $event->update();
+    $post_update_counter = db_query('SELECT COUNT(*) FROM {versioncontrol_git_event_data}')->fetchField();
+    $this->assertEqual($pre_update_counter, $post_update_counter, 'The number of git event data entries is consistent.');
+
+    // Verify we actually updated the database as expected.
+    foreach ($new_ref_data as $ref_data) {
+      $db_git_event_data = db_select('versioncontrol_git_event_data', 'ged')
+        ->fields('ged')
+        ->condition('elid', $event->elid)
+        ->condition('refname', $ref_data['refname'])
+        ->condition('reftype', $ref_data['reftype'])
+        ->execute()
+        ->fetchObject();
+      foreach ($ref_data as $key => $value) {
+        if ($key != 'repository') {
+          $this->assertEqual($value, $db_git_event_data->$key, t('%key git event attribute was updated correctly', array('%key' => $key)), t('Update'));
+        }
+      }
+    }
+
+    // Now, let's try to add two more refs.
+    $pre_update_counter = db_query('SELECT COUNT(*) FROM {versioncontrol_git_event_data}')->fetchField();
+    $event->refs[] = new VersioncontrolGitBranchChange($this->versioncontrolCreateGitRefChangeData(array(
+      'repository' => $this->repository,
+      'reftype' => VERSIONCONTROL_GIT_REFTYPE_BRANCH,
+      'ff' => 0,
+    )));
+    $event->refs[] = new VersioncontrolGitTagChange($this->versioncontrolCreateGitRefChangeData(array(
+      'repository' => $this->repository,
+      'reftype' => VERSIONCONTROL_GIT_REFTYPE_TAG,
+      'old_sha1' => GIT_NULL_REV,
+    )));
+    $event->update();
+    $post_update_counter = db_query('SELECT COUNT(*) FROM {versioncontrol_git_event_data}')->fetchField();
+    $this->assertEqual($pre_update_counter + 2, $post_update_counter, 'The number of git event data entries is consistent.');
+  }
+
+  public function testDelete() {
+    $event_data = $this->createEventData();
+    $event = $this->versioncontrolCreateEvent('git', $event_data);
+    $event->delete();
+    $result = db_select('versioncontrol_git_event_data', 'el')
+      ->fields('el')
+      ->condition('elid', $event->elid)
+      ->execute();
+    foreach ($result as $db_event) {
+      $this->fail(t('The git event was not deleted correctly.'), t('Delete'));
+    }
+  }
+
+  public function testRefLoading() {
+    // Create an event.
+    $event_data = $this->createEventData();
+    $event = $this->versioncontrolCreateEvent('git', $event_data);
+
+    $refs = $event->getLabelChanges();
+    $this->assertEqual(count($refs), 2, t('getLabelChanges method returns the correct amount of ref changes.'));
+
+    // Verify we have the right information on refs data member.
+    foreach ($event_data['refs'] as $ref_key => $ref_data) {
+      foreach ($ref_data as $key => $value) {
+        if ($key != 'repository') {
+          $this->assertEqual($value, $refs[$ref_key]->$key, t('%key git event attribute was loaded correctly', array('%key' => $key)), t('Loading'));
+        }
+      }
+    }
+  }
+}

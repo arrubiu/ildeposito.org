@@ -1,0 +1,128 @@
+<?php
+/**
+ * @file
+ * Unit tests for repository class.
+ */
+require_once drupal_get_path('module', 'versioncontrol') . '/tests/VersioncontrolTestCase.test';
+
+/**
+ * Unit tests for VersioncontrolRepository class
+ */
+class VersioncontrolRepositoryUnitTestingTestCase extends VersioncontrolTestCase {
+
+  /**
+   * Implements getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Repository class unit tests'),
+      'description' => t('Unit tests for the VersioncontrolRepository class.'),
+      'group' => t('Version Control API'),
+    );
+  }
+
+  /**
+   * Implements setUp().
+   */
+  function setUp() {
+    $this->useBackends = self::BACKENDS_TEST;
+    parent::setUp();
+  }
+
+  public function testCreation() {
+    // Build and insert.
+    $data = array(
+      'name' => $this->randomName(),
+      'root' => '/fake/path/to/repository',
+      'cron' => 0,
+      'updated' => 0,
+      'locked' => 0,
+      'data' => array(),
+      'plugins' => array('auth_handler' => 'ffa', 'author_mapper' => 'simple_name', 'committer_mapper' => 'simple_mail'),
+    );
+    $repository = $this->testBackend->buildEntity('repo', $data);
+    $repository->insert();
+
+    // Verify.
+    $db_repository = db_select('versioncontrol_repositories', 'r')
+      ->fields('r')
+      ->condition('repo_id', $repository->repo_id)
+      ->execute()
+      ->fetchObject();
+    foreach ($data as $key => $val) {
+      if ($key == 'data' || $key == 'plugins') {
+        $db_repository->$key = unserialize($db_repository->$key);
+      }
+      $this->assertEqual($val, $db_repository->$key, t('%key repository attribute is stored correctly', array('%key' => $key)), t('Creation'));
+    }
+  }
+
+  public function testRead() {
+    $controller = new VersioncontrolRepositoryController();
+    // no repo, test we get valid output
+    $repositories = $controller->load(array(''));
+    $this->assertTrue(empty($repositories), t('Make sure we get an empty array when trying to get a repository with empty repo_id'), t('Read'));
+
+    $repositories = $controller->load(NULL);
+    $this->assertTrue(empty($repositories), t('Make sure we get an empty array when trying to get a repository with a NULL repo_id'), t('Read'));
+
+    $repositories = $controller->load(array(1));
+    $this->assertTrue(empty($repositories), t('Make sure we get an empty array when trying to get a repository which do not exit'), t('Read'));
+
+    // Create repository and test again.
+    $test_repository = $this->versioncontrolCreateRepository('test');
+    $repositories = $controller->load(array($test_repository->repo_id));
+    $this->assertEqual(count($repositories), 1, t('Only one repository found'), t('Read'));
+    $repository = reset($repositories);
+    $this->assertTrue(isset($repository) && is_a($repository, 'VersioncontrolRepository'), t('Make sure we get a valid return when passing a good repo_id.'), t('Read'));
+    $this->assertEqual($repository->repo_id, $test_repository->repo_id, t('Make sure we get the right repository.'), t('Read'));
+  }
+
+  public function testUpdate() {
+    $repository = $this->versioncontrolCreateRepository('test');
+
+    $data = array(
+      'name' => $this->randomName(),
+      'root' => '/updated/path',
+      'updated' => time(),
+      'cron' => 1,
+      'locked' => TRUE,
+      'plugins' => array('auth_handler' => 'account') + $repository->plugins,
+    );
+
+    $repository->name = $data['name'];
+    $repository->root = $data['root'];
+    $repository->updated = $data['updated'];
+    $repository->cron = $data['cron'];
+    $repository->locked = $data['locked'];
+    $repository->plugins = $data['plugins'];
+    $repository->update();
+
+    $db_repository = db_select('versioncontrol_repositories', 'r')
+      ->fields('r')
+      ->condition('repo_id', $repository->repo_id)
+      ->execute()
+      ->fetchObject();
+    foreach ($data as $key => $val) {
+      if ($key == 'data' || $key == 'plugins') {
+        $db_repository->$key = unserialize($db_repository->$key);
+      }
+      $this->assertEqual($val, $db_repository->$key, t('%key repository attribute is updated correctly', array('%key' => $key)), t('Update'));
+    }
+
+  }
+
+  public function testDelete() {
+    $repository = $this->versioncontrolCreateRepository('test');
+    $repository->delete();
+
+    $result = db_select('versioncontrol_repositories', 'r')
+      ->fields('r')
+      ->condition('repo_id', $repository->repo_id)
+      ->execute();
+    foreach ($result as $db_repository) {
+      $this->fail(t('The repository was not deleted correctly.'), t('Delete'));
+    }
+  }
+
+}

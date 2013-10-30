@@ -1,0 +1,568 @@
+<?php
+/**
+ * @file
+ * Git backend for Version Control API - Provides Git commit information and
+ * account management as a pluggable backend.
+ *
+ * Copyright 2008 by Jimmy Berry ("boombatower", http://drupal.org/user/214218)
+ * Copyright 2009 by Cornelius Riemenschneider ("CorniI", http://drupal.org/user/136353)
+ */
+
+define('VERSIONCONTROL_GIT_REQUIRED_GIT_VERSION', '1.7.0.5');
+
+/**
+ * Implements hook_uninstall().
+ */
+function versioncontrol_git_uninstall() {
+  $variables = array(
+    'versioncontrol_git_repo_manager_repository_base_path',
+    'versioncontrol_git_repo_manager_manage_repos_for_projects',
+    'versioncontrol_git_repo_manager_manage_repos_for_projects',
+  );
+  foreach ($variables as $variable) {
+    variable_del($variable);
+  }
+}
+
+/**
+ * Implements hook_enable().
+ */
+function versioncontrol_git_enable() {
+  $requirements = versioncontrol_git_requirements('runtime');
+  if ($requirements['versioncontrol_git']['severity'] !== REQUIREMENT_OK) {
+    drupal_set_message($requirements['versioncontrol_git']['description'], 'warning');
+  }
+}
+
+
+/**
+ * Implements hook_requirements().
+ */
+function versioncontrol_git_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  $t_args = array();
+  if ($phase == 'runtime') {
+    $requirements['versioncontrol_git'] = array(
+      'title' => $t('Version Control Git'),
+    );
+    try {
+      // Try to ask git for the version installed.
+      $version = shell_exec(_versioncontrol_git_get_binary_path() . ' --version');
+      $version = _versioncontrol_git_check_version_string($version);
+      $t_args['@version'] = $version['version'];
+      $t_args['@required_version'] = VERSIONCONTROL_GIT_REQUIRED_GIT_VERSION;
+      if (empty($version['status'])) {
+        $message = 'Git version @version installed but a minimum of @required_version is required for local history synchronization.';
+        $severity = REQUIREMENT_WARNING;
+      }
+    }
+    catch (Exception $e) {
+      $message = 'Git could not be found, it is either not installed or not in your path.';
+      $severity = REQUIREMENT_ERROR;
+    }
+    if (!empty($version['status'])) {
+      try {
+        $path_version = shell_exec('git --version');
+        $path_version = _versioncontrol_git_check_version_string($path_version);
+        if ($path_version['status']) {
+          $message = 'Git version @version installed.';
+          $severity = REQUIREMENT_OK;
+        }
+        else {
+          $message = 'Git version @version installed and configured for use but @path_version installed in the system path so tests may not run properly.';
+          $t_args['@path_version'] = $path_version['version'];
+          $severity = REQUIREMENT_WARNING;
+        }
+      }
+      catch (Exception $e) {
+        $message = 'Git version @version installed but not in the path, unit tests may not run properly but the module should operate correctly.';
+        $severity = REQUIREMENT_INFO;
+      }
+    }
+  }
+  if (!empty($version['version'])) {
+    $requirements['versioncontrol_git']['value'] = $version['version'];
+  }
+  else {
+    $requirements['versioncontrol_git']['value'] = $t('Not found');
+  }
+  if (!empty($message)) {
+    $requirements['versioncontrol_git']['description'] = $t($message, $t_args);
+    $requirements['versioncontrol_git']['severity'] = $severity;
+  }
+  $iconv_status = 'Not available';
+  $iconv_severity = REQUIREMENT_ERROR;
+  if (function_exists('iconv')) {
+    $iconv_status = 'Enabled';
+    $iconv_severity = REQUIREMENT_OK;
+  }
+  $requirements['versioncontrol_git_iconv'] = array(
+    'title' => $t('Versioncontrol Git iconv module'),
+    'value' => $t($iconv_status),
+    'description' => $t('The <a href="http://php.net/manual/en/book.iconv.php">iconv module</a> is required for Versioncontrol Git to function properly.'),
+    'severity' => $iconv_severity,
+  );
+  return $requirements;
+}
+
+/**
+ * Compare a version string to our requirements.
+ *
+ * @param $version
+ *   The version of git optionally including the string "git version" as
+ *   returned by `git --version`.
+ *
+ * @return array
+ *   An array with the following keys:
+ *   - version: the string representing the version (without the "git version"
+ *   string).
+ *   - status: TRUE if the requirement is met, FALSE if not.
+ */
+function _versioncontrol_git_check_version_string($version) {
+  $return = array();
+  if (strpos($version, 'git version') !== FALSE) {
+    $return['version'] = substr($version, 12);
+  }
+  else {
+    $return['version'] = $version;
+  }
+  $return['status'] = version_compare($return['version'], VERSIONCONTROL_GIT_REQUIRED_GIT_VERSION, '>=');
+  return $return;
+}
+
+/**
+ * Implements hook_schema().
+ */
+function versioncontrol_git_schema() {
+  $schema = array();
+  $schema['versioncontrol_git_operations'] = array(
+    'description' => 'A one-to-one table extending {versioncontrol_operations} with some additional git-specific data.',
+    'fields' => array(
+      'vc_op_id' => array(
+        'description' => 'Foreign key to {versioncontrol_operations}.vc_op_id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'author_name' => array(
+        'description' => "Author's user.name field from a git commit or tag object.",
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'committer_name' => array(
+        'description' => "Committer's user.name field from a git commit or tag object.",
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'parent_commit' => array(
+        'description' => 'SHA-1 hash of the parent commit. Same as the value recorded in {versioncontrol_operations}.revision',
+        'type' => 'char',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'merge' => array(
+        'description' => 'Boolean indicating whether or not the operation is a merge commit.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('vc_op_id'),
+  );
+
+  $schema['versioncontrol_git_item_revisions'] = array(
+    'description' => 'A one-to-one table extending {versioncontrol_item_revisions} with some additional git-specific data.',
+    'fields' => array(
+      'item_revision_id' => array(
+        'description' => 'Foreign key to {versioncontrol_item_revisions}.item_revision_id',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'blob_hash' => array(
+        'description' => 'This item blob hash.',
+        'type' => 'char',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('item_revision_id'),
+  );
+
+  $schema['versioncontrol_git_repositories'] = array(
+    'description' => 'A one-to-one table extending {versioncontrol_repositories} with additional git-specific data.',
+    'fields' => array(
+      'repo_id' => array(
+        'description' => 'Foreign key to {versioncontrol_repositories}.repo_id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'default_branch' => array(
+        'description' => 'The default (HEAD) branch of the git repository.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('repo_id'),
+  );
+
+  $schema['versioncontrol_git_event_data'] = array(
+    'description' => 'Links Version control events, as represented by the {versioncontrol_event_log} table, with real Git commit, branch and tag data.',
+    'fields' => array(
+      'elid' => array(
+        'description' => 'Foreign key to {versioncontrol_event_log}.elid; identifies the Git event to which this extended linking data corresponds.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'refname' => array(
+        'description' => 'The name of the ref that was updated.',
+        'type' => 'varchar',
+        'not null' => TRUE,
+      ),
+      'label_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'reftype' => array(
+        'description' => '2 == branch, 3 == tag.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+      ),
+      'old_sha1' => array(
+        'description' => 'The object to which this ref pointed before the push.',
+        'type' => 'char',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'new_sha1' => array(
+        'description' => 'The object to which this ref pointed after the push.',
+        'type' => 'char',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'ff' => array(
+        'description' => 'For branch updates, indicates whether or not the ref update was a fast-forward.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('elid', 'refname', 'reftype'),
+    'indexes' => array(
+      'old_sha1' => array('old_sha1'),
+      'new_sha1' => array('new_sha1'),
+    ),
+  );
+
+  // @fixme Use new schema field binary key for this.
+  //        Wait until we have a D7 release with it(7.13).
+  //        Details on http://drupal.org/node/1237252.
+  if (in_array(db_driver(), array('mysql', 'mysqli'))) {
+    // This is evil, but there is not standard way to change a field collation.
+    $schema['versioncontrol_git_event_data']['fields']['refname']['mysql_type'] = "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin";
+  }
+  else {
+    $schema['versioncontrol_git_event_data']['fields']['refname']['length'] = 255;
+  }
+
+  return $schema;
+}
+
+function versioncontrol_git_update_6201() {
+  $schema = array(
+    'description' => 'A one-to-one table extending {versioncontrol_operations} with some additional git-specific data.',
+    'fields' => array(
+      'vc_op_id' => array(
+        'description' => 'Foreign key to {versioncontrol_operations}.vc_op_id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'author_name' => array(
+        'description' => "Author's user.name field from a git commit or tag object.",
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'committer_name' => array(
+        'description' => "Committer's user.name field from a git commit or tag object.",
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'parent_commit' => array(
+        'description' => 'SHA-1 hash of the parent commit. Same as the value recorded in {versioncontrol_operations}.revision',
+        'type' => 'char',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'merge' => array(
+        'description' => 'Boolean indicating whether or not the operation is a merge commit.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('vc_op_id'),
+  );
+
+  db_create_table('versioncontrol_git_operations', $schema);
+
+  return t('versioncontrol_git_operations table created.');
+}
+
+/**
+ * Add versioncontrol_git_item_revisions table.
+ */
+function versioncontrol_git_update_6202() {
+  $versioncontrol_git_item_revisions_schema = array(
+    'description' => 'A one-to-one table extending {versioncontrol_item_revisions} with some additional git-specific data.',
+    'fields' => array(
+      'item_revision_id' => array(
+        'description' => 'Foreign key to {versioncontrol_item_revisions}.item_revision_id',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'blob_hash' => array(
+        'description' => 'This item blob hash.',
+        'type' => 'char',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('item_revision_id'),
+  );
+
+  db_create_table('versioncontrol_git_item_revisions', $versioncontrol_git_item_revisions_schema);
+
+  module_load_include('inc', 'versioncontrol_git', 'versioncontrol_git.log');
+
+  $git_backend = versioncontrol_get_backends('git', TRUE);
+  $repositories = $git_backend->loadEntities('repo', FALSE, array('vcs' => 'git'));
+
+  foreach ($repositories as $repo) {
+    $root = escapeshellcmd($repo->root);
+    putenv("GIT_DIR=$root");
+    $item_revisions = $repo->getBackend()->loadEntities('item', array(), array('repo_id' => $repo->repo_id));
+    foreach ($item_revisions as $item_revision) {
+      $command = 'ls-tree -r ' . escapeshellarg($item_revision->revision) . ' ' . escapeshellarg(substr($item_revision->path, 1));
+      $logs = _versioncontrol_git_log_exec($command);
+      $blob_hash = _versioncontrol_git_parse_item_blob($logs);
+      if (!empty($blob_hash)) {
+        // blob is empty when at delete
+        db_query("INSERT INTO {versioncontrol_git_item_revisions}(item_revision_id, blob_hash) VALUES (%d, '%s')", array($item_revision->item_revision_id, $blob_hash));
+      }
+    }
+  }
+
+  return t('versioncontrol_git_item_revisions table created and updated.');
+}
+
+/**
+ * Adds the versioncontrol_git_repositories table.
+ */
+function versioncontrol_git_update_6203() {
+  $versioncontrol_git_repositories_schema = array(
+    'description' => 'A one-to-one table extending {versioncontrol_repositories} with additional git-specific data.',
+    'fields' => array(
+      'repo_id' => array(
+        'description' => 'Foreign key to {versioncontrol_repositories}.repo_id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'default_branch' => array(
+        'description' => 'The default (HEAD) branch of the git repository.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('repo_id'),
+  );
+
+  db_create_table('versioncontrol_git_repositories', $versioncontrol_git_repositories_schema);
+
+  return t('versioncontrol_git_repositories_schema table created.');
+}
+
+/**
+ * Reads the default branches from all existing Git repositories to synchronize
+ * the database.
+ */
+function versioncontrol_git_update_6204() {
+  // Clear the autoload caches to make the new classes available.
+  cache_clear_all();
+
+  // Get the repository manager queue.
+  $queue = DrupalQueue::get('versioncontrol_repomgr');
+
+  // Load all git repositories and add them to the queue.
+  $repos = versioncontrol_repository_load_multiple(NULL, array('vcs' => 'git'));
+  foreach ($repos as $repo) {
+    $queue->createItem(array(
+      'operation' => array(
+        'fetchDefaultBranch' => array(),
+        'save' => array(),
+      ),
+      'repository' => $repo,
+    ));
+  }
+
+  return t('Created queues for repositories.');
+}
+
+/**
+ * When adding the versioncontrol_git_repositories table in
+ * versioncontrol_git_update_6203() it should have been populated with empty
+ * rows. Truncate it, do that and run versioncontrol_git_update_6204() again.
+ */
+function versioncontrol_git_update_6205() {
+  db_truncate('versioncontrol_git_repositories');
+  db_query("INSERT INTO {versioncontrol_git_repositories} (repo_id, default_branch) SELECT repo_id, '' FROM {versioncontrol_repositories} WHERE vcs = 'git'");
+
+  // Call the old update function instead of copying the code here.
+  return versioncontrol_git_update_6204();
+}
+
+/**
+ * Introduce the {versioncontrol_git_event_data} table, which stores extended
+ * "event" (e.g., push) data in tandem with {versioncontrol_event_log}.
+ */
+function versioncontrol_git_update_6206() {
+  $schema = array(
+    'description' => 'Links Version control events, as represented by the {versioncontrol_event_log} table, with real Git commit, branch and tag data.',
+    'fields' => array(
+      'elid' => array(
+        'description' => 'Foreign key to {versioncontrol_event_log}.elid; identifies the Git event to which this extended linking data corresponds.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'refname' => array(
+        'description' => 'The name of the ref that was updated.',
+        'type' => 'varchar',
+        'not null' => TRUE,
+      ),
+      'label_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'reftype' => array(
+        'description' => '2 == branch, 3 == tag.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+      ),
+      'old_sha1' => array(
+        'description' => 'The object to which this ref pointed before the push.',
+        'type' => 'char',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'new_sha1' => array(
+        'description' => 'The object to which this ref pointed after the push.',
+        'type' => 'char',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'commits' => array(
+        'description' => 'For incremental branch updates (i.e., excluding branch creation and deletion), a serialized list of all the commits contained in the push.',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('elid', 'refname'),
+    'indexes' => array(
+      'old_sha1' => array('old_sha1'),
+      'new_sha1' => array('new_sha1'),
+    ),
+  );
+
+  if (in_array($GLOBALS['db_type'], array('mysql', 'mysqli'))) {
+    // This is evil, but there is not standard way to change a field collation.
+    $schema['fields']['refname']['mysql_type'] = "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin";
+  }
+  else {
+    $schema['fields']['refname']['length'] = 255;
+  }
+
+  db_create_table('versioncontrol_git_event_data', $schema);
+  return t('versioncontrol_git_event_data created.');
+}
+
+/**
+ * Add the 'ff' field to {versioncontrol_git_event_data}, which records whether
+ * a branch ref update was fast-forward or not.
+ */
+function versioncontrol_git_update_6207() {
+  $spec = array(
+    'description' => 'For branch updates, indicates whether or not the ref update was a fast-forward.',
+    'type' => 'int',
+    'size' => 'tiny',
+    'not null' => FALSE,
+  );
+
+  db_add_field('versioncontrol_git_event_data', 'ff', $spec);
+  return t('The ff field has been added to versioncontrol_git_event_data.');
+}
+
+/**
+ * Remove {versioncontrol_git_event_data}.commits field.
+ */
+function versioncontrol_git_update_6208() {
+  if (db_drop_field('versioncontrol_git_event_data', 'commits')) {
+    return t('The commits field has been removed from versioncontrol_git_event_data.');
+  }
+  throw new DrupalUpdateException('The commits field could not be removed, please try to re-run this update or manually remove the field.');
+}
+
+/**
+ * Add reftype as part of the {versioncontrol_git_event_data} PK.
+ */
+function versioncontrol_git_update_6209() {
+  if (!db_drop_primary_key('versioncontrol_git_event_data')) {
+    throw new DrupalUpdateException('The {versioncontrol_git_event_data} PK could not be dropped.');
+  }
+  db_add_primary_key('versioncontrol_git_event_data', array('elid', 'refname', 'reftype'));
+  return t('Added reftype as part of the {versioncontrol_git_event_data} PK.');
+}
+
+/**
+ * Allows {versioncontrol_git_repositories}.default_branch to be NULL.
+ */
+function versioncontrol_git_update_7100() {
+  $default_branch_shema = array(
+    'description' => 'The default (HEAD) branch of the git repository.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+    'default' => '',
+  );
+  db_change_field('versioncontrol_git_repositories', 'default_branch', 'default_branch', $default_branch_shema);
+}

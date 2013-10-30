@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * @file
+ * Install files for Push Notifications module.
+ */
+
+/**
+ * Implements hook_field_scheme().
+ */
+function push_notifications_schema() {
+  $schema = array();
+
+  $schema['push_notifications_queue'] = array(
+    'description' => 'Queue for scheduled push notifications',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'User ID',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'payload' => array(
+        'description' => 'Message',
+        'type' => 'varchar',
+        'length' => '256',
+        'not null' => TRUE,
+      ),
+      'timestamp' => array(
+        'description' => 'Timestamp when message was added',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('uid'),
+    'indexes' => array(
+      'timestamp' => array('timestamp'),
+    ),
+  );
+
+  $schema['push_notifications_tokens'] = array(
+    'description' => 'Stores device tokens',
+    'fields' => array(
+      'token' => array(
+        'description' => 'Device Token',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'User ID',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'Device Type (iPhone, Android)',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'timestamp' => array(
+        'description' => 'Timestamp token was added',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'language' => array(
+        'description' => 'Language',
+        'type' => 'varchar',
+        'length' => 11,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('token', 'uid'),
+    'indexes' => array(
+      'timestamp' => array('timestamp'),
+      'token' => array('token'),
+      'type' => array('type'),
+      'language' => array('language'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_update_n.
+ */
+function push_notifications_update_7001() {
+  $table = 'push_notifications_tokens';
+
+  // Add a language field to push_notifications_tokens.
+  $spec = array(
+    'type' => 'varchar',
+    'description' => 'Language',
+    'length' => 2,
+    'not null' => TRUE,
+  );
+  db_add_field($table, 'language', $spec);
+
+  // Add an index for the language field.
+  db_add_index($table, 'language', array('language'));
+}
+
+/**
+ * Implements hook_update_n.
+ */
+function push_notifications_update_7002() {
+  $table = 'push_notifications_tokens';
+  $field = 'token';
+
+  // Drop all indexes using the token field.
+  db_drop_primary_key($table);
+  db_drop_index($table, $field);
+
+  // Recreate the field with the correct
+  // length and upated
+  $token_new = array(
+    'description' => 'Device Token',
+    'type' => 'varchar',
+    'length' => '255',
+    'not null' => TRUE,
+  );
+  $indexes_new = array(
+    'primary key' => array('token', 'uid'),
+    'indexes' => array(
+      'token' => array('token'),
+    ),
+  );
+  db_change_field($table, $field, $field, $token_new, $indexes_new);
+}
+
+/**
+ * Update the language field to allow 11 characters.
+ */
+function push_notifications_update_7003() {
+  $table = 'push_notifications_tokens';
+  $field = 'language';
+
+  $language_new = array(
+    'description' => 'Language',
+    'type' => 'varchar',
+    'length' => 11,
+    'not null' => TRUE,
+  );
+
+  db_change_field($table, $field, $field, $language_new);
+}

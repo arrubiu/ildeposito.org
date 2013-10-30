@@ -1,0 +1,7 @@
+name = "Fake backend"
+description = "Example backend for Version Control API."
+core = 7.x
+dependencies[] = versioncontrol
+package = Version Control
+vcapi-backend = 1
+files[] = includes/classes.inc

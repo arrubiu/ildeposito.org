@@ -1,0 +1,327 @@
+<?php
+
+require_once drupal_get_path('module', 'versioncontrol') . '/tests/VersioncontrolTestCase.test';
+
+abstract class VersioncontrolGitTestCase extends VersioncontrolTestCase {
+  const TESTREPO_COUNT_BRANCHES = 4;
+  const TESTREPO_COUNT_TAGS = 3;
+  const TESTREPO_COUNT_OPERATIONS = 16;
+  // feature: 7, fixes: 11, enhacements: 11, master: 16
+  const TESTREPO_COUNT_OPERATION_BRANCH_MAP = 45;
+  // annotated: 2, signed: 2, simple: 2
+  const TESTREPO_COUNT_OPERATION_TAG_MAP = 6;
+  const TESTREPO_COUNT_ITEM_REVISIONS = 18;
+
+  /**
+   * An internal counter used to prevent filesystem collisions when creating
+   * multiple git repositories.
+   *
+   * @var int
+   */
+  protected $repocount = 0;
+
+  /**
+   * State var indicating whether the test repo syncing logic has already been
+   * run; no point in running it more than once, just generates noise.
+   *
+   * @var bool
+   */
+  protected $testRepoChecked = FALSE;
+
+  public function setUp() {
+    // Each test cleans up its repos, so ensure we start over at 0. This might
+    // be superfluous if SimpleTest creates a new test object for each test.
+    $this->repocount = 0;
+    $args = func_get_args();
+    if (array_search('versioncontrol_git', $args) === FALSE) {
+      $args[] = 'versioncontrol_git';
+    }
+    call_user_func_array(array('VersioncontrolGitTestCase', 'parent::setUp'), $args);
+
+    // Get the git path before clearing all vars. If no git binary is found, the
+    // function will throw an error that safely terminates the test.
+    $gitpath = _versioncontrol_git_get_binary_path();
+
+    // Set the git path in the sandboxed $conf so it gets used properly
+    variable_set('versioncontrol_git_binary_path', $gitpath);
+  }
+
+  /**
+   * Create a new Git repository on disk & in the db using the well-known,
+   * structured sample test repository.
+   *
+   * The repository is created at a derived location on disk that ensures it
+   * will be automatically cleaned up when the test is completed.
+   *
+   * @param array $data
+   *   An optional array of data to be passed to the entity builder for the
+   *   repository. @see VersioncontrolTestCase::versioncontrolCreateRepository()
+   *
+   * @param bool $sync
+   *   If TRUE, repository is synced after creation.
+   *
+   * @return VersioncontrolGitRepository
+   */
+  public function versioncontrolCreateRepoFromTestRepo($data = array(), $sync = TRUE) {
+    $this->repocount++;
+    $path = drupal_realpath('public://') . '/vc_git/repositories/' . $this->repocount . '.git';
+    $tarball = drupal_get_path('module', 'versioncontrol_git') . '/tests/testrepo.tar.gz';
+    mkdir($path, 0777, TRUE);
+    exec("tar -xf $tarball -C $path");
+
+    $data = array(
+      'root' => $path,
+      'plugins' => array(
+        'reposync' => 'git_default',
+      ),
+    ) + $data;
+
+    $repo = $this->versioncontrolCreateRepository('git', $data);
+    $this->assertTrue($repo->isValidGitRepo(), 'Valid git repository created at the expected location.');
+
+    if ($sync) {
+      $this->versioncontrolSyncTestRepository($repo);
+    }
+
+    return $repo;
+  }
+
+  /**
+   * Create a new Git repository on disk & in the db by cloning an existing
+   * repository from some remote location.
+   *
+   * The repository is created at a derived location on disk that ensures it
+   * will be automatically cleaned up when the test is completed.
+   *
+   * @param string $remote
+   *   A string representing a valid git remote url (e.g.,
+   *   git://git.drupal.org/project/versioncontrol.git), from which the new
+   *   repository should be cloned.
+   *
+   * @param array $data
+   *   An optional array of data to be passed to the entity builder for the
+   *   repository. @see VersioncontrolTestCase::versioncontrolCreateRepository()
+   *
+   * @return VersioncontrolGitRepository
+   */
+  public function versioncontrolCreateRepoFromClone($remote, $data = array()) {
+    $this->repocount++;
+    $path = file_directory_path() . '/vc_git/repositories/' . $this->repocount . '.git';
+
+    $data = array(
+      'root' => $path,
+      'plugins' => array(
+        'reposync' => 'git_default',
+      ),
+    ) + $data;
+
+    $repo = $this->versioncontrolCreateRepository('git', $data);
+    $repo->exec("clone --bare $remote $path");
+    $this->assertTrue($repo->isValidGitRepo(), 'Valid git repository created at the expected location.');
+
+    return $repo;
+  }
+
+  /**
+   * Run history synchronization on an instance of the standard test repository.
+   *
+   * See VersioncontrolGitTestCase::TESTREPO_COUNT_* constants for repository
+   * characteristics.
+   *
+   * @param VersioncontrolGitRepository $repository
+   *   The VersioncontrolGitRepository object representing the test repository
+   *   to synchronize.
+   */
+  public function versioncontrolSyncTestRepository(VersioncontrolGitRepository $repository) {
+    $synced = $repository->sync();
+
+    if (FALSE === $this->testRepoChecked) {
+      // It's pointless to run these checks more than once.
+      $this->testRepoChecked = TRUE;
+      $this->assertTrue($synced, t('Sync of test repository completed successfully.'));
+      $this->assertEqual(count($repository->loadCommits()), VersioncontrolGitTestCase::TESTREPO_COUNT_OPERATIONS, t('Sync of test repository resulted in correct number of commits.'));
+      $this->assertEqual(count($repository->loadBranches()), VersioncontrolGitTestCase::TESTREPO_COUNT_BRANCHES, t('Sync of test repository resulted in correct number of branches.'));
+      $this->assertEqual(count($repository->loadTags()), VersioncontrolGitTestCase::TESTREPO_COUNT_TAGS, t('Sync of test repository resulted in correct number of tags.'));
+      $op_label_count = db_query('SELECT COUNT(*) FROM {versioncontrol_operation_labels} vol INNER JOIN {versioncontrol_labels} vl ON vol.label_id = vl.label_id WHERE vl.repo_id = :repo_id', array('repo_id' => $repository->repo_id))->fetchField();
+      // By default the reposync plugin use 0x03, which means
+      // VersioncontrolGitRepositoryHistorySynchronizerDefault::MAP_COMMIT_BRANCH_RELATIONS |
+      // VersioncontrolGitRepositoryHistorySynchronizerDefault::MAP_COMMIT_TAG_RELATIONS
+      $test_repository_operation_label_mappings = VersioncontrolGitTestCase::TESTREPO_COUNT_OPERATION_BRANCH_MAP + VersioncontrolGitTestCase::TESTREPO_COUNT_OPERATION_TAG_MAP;
+      $this->assertEqual($op_label_count, $test_repository_operation_label_mappings, t('Sync of test repository resulted in correct number of commit/label mappings.'));
+    }
+  }
+
+  /**
+   * Simulates a git push given a blob containing the arguments passed to the
+   * git {pre,post}-receive hook.
+   *
+   * @param string $blob
+   *    A string containing the arguments passed to the git {pre,post}-receive
+   *    hook. One refchange per line, arguments seperated by a space.
+   *
+   * @param array $data
+   *   An optional array of data to be passed to the entity builder for the
+   *   event.
+   *
+   * @param bool $write_repo
+   *   Write changes to the repository on-disk so that its state adheres to the
+   *   changes described in the blob.
+   *
+   * @return VersioncontrolGitEvent
+   */
+  protected function versioncontrolSimulatePush($blob, $data = array(), $write_repo = TRUE, $sync = TRUE) {
+    $data += array(
+      'repository' => NULL,
+      'uid' => 0,
+      'data' => $blob,
+    );
+
+    if (empty($data['repository'])) {
+      $data['repository'] = $this->versioncontrolCreateRepoFromTestRepo();
+    }
+
+    if (TRUE === $write_repo) {
+      // Update the repo on disk so that its refs are in the state dictated by
+      // the blob. We could use the event, but this is just way easier.
+      foreach (array_filter(explode("\n", $blob)) as $refdata) {
+        list($start, $end, $name) = explode(' ', $refdata);
+        if (GIT_NULL_REV === $end) {
+          $this->writeRepoDeleteRef($data['repository'], $name);
+        }
+        else {
+          $this->writeRepoUpdateRef($data['repository'], $name, $end);
+        }
+      }
+    }
+
+    return $this->versioncontrolGenerateCodeArrivalEvent('git', $data, TRUE, $sync);
+  }
+
+  /**
+   * Create a dummy refchange data array.
+   *
+   * @param array $data
+   *   The ref change data members with known values.
+   */
+  public function versioncontrolCreateGitRefChangeData($data = array()) {
+    $default_data = array(
+      'refname' => $this->randomString(255),
+      'label_id' => 0,
+      'reftype' => VERSIONCONTROL_GIT_REFTYPE_BRANCH,
+      'old_sha1' => $this->randomString(40),
+      'new_sha1' => $this->randomString(40),
+    );
+    $data += $default_data;
+
+    if ('reftype' == VERSIONCONTROL_GIT_REFTYPE_BRANCH) {
+      $data += array('ff' => 1);
+    }
+
+    if (!isset($data['repository']) || !is_subclass_of($data['repository'], 'VersioncontrolRepository')) {
+      $data['repository'] = $this->versioncontrolCreateRepository('git');
+    }
+
+    return $data;
+  }
+
+  /**
+   * Delete all refs from a repository.
+   *
+   * This is useful for creating a repository which has no refs, but still has
+   * commit objects with known hashes in a known DAG.
+   *
+   * @param VersioncontrolGitRepository $repository
+   */
+  public function versioncontrolZeroOutRefs(VersioncontrolGitRepository $repository) {
+    $logs = $repository->exec('show-ref');
+    while (($branchdata = next($logs)) !== FALSE) {
+      list(, $name) = explode(' ', trim($branchdata));
+      $this->writeRepoDeleteRef($repository, $name);
+    }
+  }
+
+  /**
+   * Resets a test repository to a particular state.
+   *
+   * @param VersioncontrolGitRepository
+   *   The object representing the test repository on whch to work.
+   *
+   * @param array $refmap
+   *   An array of ref/rev, indicating the rev to which each ref should point.
+   *   Any refs not specified here will be reset to the rev to which they
+   *   normally point, unless $defaults is FALSE.
+   *
+   * @param bool $defaults
+   *   A boolean indicating whether or not to append the default ref map.
+   *
+   * @param bool $sync
+   *   Whether or not to perform a sync once the repo state has been rejiggered.
+   */
+  public function versioncontrolResetTestRepo(VersioncontrolGitRepository $repository, $refmap = array(), $defaults = TRUE, $sync = TRUE) {
+    if ($defaults) {
+      // Append the default refmap. we have to skip the signed & annotated tag
+      $refmap += array(
+        'refs/heads/enhancements' => '28e2c35b6f7626d662ffda2c344a782e639f76e7',
+        'refs/heads/feature' => '3b225dfda13090853f744cc1209f392442a6ab13',
+        'refs/heads/fixes' => '82add9c8b2f9740874192cec11737221d9691812',
+        'refs/heads/master' => '0f0280aefe4d0c3384cb04a0bbb15c9543f46a69',
+        'refs/tags/simple' => 'b1e97e0f979c5e3580942b335e85bf17c3216397',
+      );
+    }
+
+    $repository->purgeData();
+    $this->versioncontrolZeroOutRefs($repository);
+    foreach ($refmap as $ref => $rev) {
+      if (GIT_NULL_REV === $rev) {
+        $this->writeRepoDeleteRef($repository, $ref);
+      }
+      else {
+        $this->writeRepoUpdateRef($repository, $ref, $rev);
+      }
+    }
+
+    if ($sync) {
+      $this->assertTrue($repository->sync(), t('Repository synchronization was run correctly.'));
+    }
+  }
+
+  /**
+   * Force a ref to be reset to the provided ref. Can also create new refs.
+   *
+   * Really just a thin wrapper on git-update-ref.
+   *
+   * @param VersioncontrolGitRepository $repository
+   *   The repository on which to perform the update-ref operation.
+   *
+   * @param string $name
+   *   The name of the ref to update. Must be fully-qualified, e.g. 'master'
+   *   will fail, 'refs/heads/master' must be passed instead.
+   *
+   * @param string $to
+   * 	 The ref to which $name should be updated. This can be a SHA1 or a
+   *   symbolic ref, which will be appropriately dereferenced.
+   *
+   * @return null
+   */
+  protected function writeRepoUpdateRef(VersioncontrolGitRepository $repository, $name, $to) {
+    $repository->exec('update-ref ' . $name . ' ' . $to);
+  }
+
+  /**
+  * Delete the named ref.
+  *
+  * Really just a thin wrapper on git-update-ref.
+  *
+  * @param VersioncontrolGitRepository $repository
+  *   The repository on which to perform the update-ref operation.
+  *
+  * @param string $name
+  *   The name of the ref to delete. Must be fully-qualified, e.g. 'master'
+  *   will fail, 'refs/heads/master' must be passed instead.
+  *
+  * @return null
+  */
+  protected function writeRepoDeleteRef(VersioncontrolGitRepository $repository, $name) {
+    $repository->exec('update-ref -d ' . $name);
+  }
+}

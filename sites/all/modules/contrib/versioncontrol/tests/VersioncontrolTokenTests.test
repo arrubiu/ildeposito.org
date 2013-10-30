@@ -1,0 +1,142 @@
+<?php
+/**
+ * @file
+ *   Tests ensuring proper behavior of the integration with Token.
+ *
+ *   @todo test when sanitized option is passed?
+ *   @todo test chained tokens
+ */
+require_once drupal_get_path('module', 'versioncontrol') . '/tests/VersioncontrolTestCase.test';
+
+class VersioncontrolTokenTests extends VersioncontrolTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Token integration tests'),
+      'description' => t('Tests on Token integration.'),
+      'group' => t('Version Control API'),
+    );
+  }
+
+  function setUp() {
+    $this->useBackends = self::BACKENDS_ALL;
+    parent::setUp();
+  }
+
+  function testVersioncontrolBackendTokens() {
+    $object = $this->testBackend;
+    $tokens = array(
+      '[versioncontrol-backend:name]' => $object->name,
+      '[versioncontrol-backend:type]' => $object->type,
+      '[versioncontrol-backend:description]' => $object->description,
+    );
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tokens)), t('No empty tokens generated.'));
+    foreach ($tokens as $name => $value) {
+      $render = token_replace($name, array('versioncontrol-backend' => $object));
+      $this->assertEqual($render, $value, t('Token %name generated correctly.', array('%name' => $name)));
+    }
+  }
+
+  function testVersioncontrolRepositoryTokens() {
+    $object = $this->versioncontrolCreateRepository();
+    $viewer_url = l($object->name, $object->getUrlHandler()->getRepositoryViewUrl());
+    $tokens = array(
+      '[versioncontrol-repository:id]' => $object->repo_id,
+      '[versioncontrol-repository:name]' => $object->name,
+      '[versioncontrol-repository:backend]' => $object->vcs,
+      '[versioncontrol-repository:viewer]' => $viewer_url,
+    );
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tokens)), t('No empty tokens generated.'));
+    foreach ($tokens as $name => $value) {
+      $render = token_replace($name, array('versioncontrol-repository' => $object));
+      $this->assertEqual($render, $value, t('Token %name generated correctly.', array('%name' => $name)));
+    }
+  }
+
+  function testVersioncontrolOperationTokens() {
+    $object = $this->versioncontrolCreateOperation();
+    $tokens = array(
+      '[versioncontrol-operation:id]' => $object->vc_op_id,
+      '[versioncontrol-operation:revision]' => $object->revision,
+      '[versioncontrol-operation:author_date]' => format_date($object->author_date, 'medium'),
+      '[versioncontrol-operation:committer_date]' => format_date($object->committer_date, 'medium'),
+      '[versioncontrol-operation:author]' => $object->author,
+      '[versioncontrol-operation:committer]' => $object->committer,
+      '[versioncontrol-operation:message]' => check_plain($object->message),
+    );
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tokens)), t('No empty tokens generated.'));
+    foreach ($tokens as $name => $value) {
+      $render = token_replace($name, array('versioncontrol-operation' => $object));
+      $this->assertEqual($render, $value, t('Token %name generated correctly.', array('%name' => $name)));
+    }
+  }
+
+  function testVersioncontrolBranchTokens() {
+    $object = $this->versioncontrolCreateBranch();
+    $tokens = array(
+      '[versioncontrol-branch:id]' => $object->label_id,
+      '[versioncontrol-branch:name]' => $object->name,
+    );
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tokens)), t('No empty tokens generated.'));
+    foreach ($tokens as $name => $value) {
+      $render = token_replace($name, array('versioncontrol-branch' => $object));
+      $this->assertEqual($render, $value, t('Token %name generated correctly.', array('%name' => $name)));
+    }
+  }
+
+  function testVersioncontrolTagTokens() {
+    $object = $this->versioncontrolCreateTag();
+    $tokens = array(
+      '[versioncontrol-tag:id]' => $object->label_id,
+      '[versioncontrol-tag:name]' => $object->name,
+    );
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tokens)), t('No empty tokens generated.'));
+    foreach ($tokens as $name => $value) {
+      $render = token_replace($name, array('versioncontrol-tag' => $object));
+      $this->assertEqual($render, $value, t('Token %name generated correctly.', array('%name' => $name)));
+    }
+  }
+
+  function testVersioncontrolItemTokens() {
+    $object = $this->versioncontrolCreateItem();
+    $action_strings = versioncontrol_revision_actions();
+    $tokens = array(
+      '[versioncontrol-item:id]' => $object->item_revision_id,
+      '[versioncontrol-item:operation]' => $object->vc_op_id,
+      '[versioncontrol-item:repository]' => $object->repo_id,
+      '[versioncontrol-item:path]' => $object->path,
+      '[versioncontrol-item:revision]' => $object->revision,
+      '[versioncontrol-item:source_item]' => $object->source_item_revision_id,
+      '[versioncontrol-item:action]' => $action_strings[$object->action],
+      '[versioncontrol-item:line_changes_added]' => $object->line_changes_added,
+      '[versioncontrol-item:line_changes_removed]' => $object->line_changes_removed,
+    );
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tokens)), t('No empty tokens generated.'));
+    foreach ($tokens as $name => $value) {
+      $render = token_replace($name, array('versioncontrol-item' => $object));
+      $this->assertEqual($render, $value, t('Token %name generated correctly.', array('%name' => $name)));
+    }
+  }
+
+  function testVersioncontrolEventTokens() {
+    $object = $this->versioncontrolCreateEvent();
+    $tokens = array(
+      '[versioncontrol-event:id]' => $object->elid,
+      '[versioncontrol-event:repository]' => $object->repo_id,
+      '[versioncontrol-event:date]' => format_date($object->timestamp, 'medium'),
+      '[versioncontrol-event:actor]' => $object->uid,
+    );
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tokens)), t('No empty tokens generated.'));
+    foreach ($tokens as $name => $value) {
+      $render = token_replace($name, array('versioncontrol-event' => $object));
+      $this->assertEqual($render, $value, t('Token %name generated correctly.', array('%name' => $name)));
+    }
+  }
+}

@@ -1,0 +1,54 @@
+<?php
+/**
+ * @file
+ *
+ * Tests ensuring that VersioncontrolGitEvent works.
+ */
+
+require_once drupal_get_path('module', 'versioncontrol_git') . '/tests/VersioncontrolGitTestCase.test';
+
+class VersioncontrolGitFetchTests extends VersioncontrolGitTestCase {
+  /**
+   * Re-use one repository for all our tests.
+   *
+   * @var VersioncontrolGitRepository
+   */
+  protected $repository;
+
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Git fetch tests'),
+      'description' => t('Tests ensuring that Git interactions work as expected.'),
+      'group' => t('Version Control Git'),
+    );
+  }
+
+  public function setUp() {
+    parent::setUp();
+    // Build and insert a repository.
+    $this->repository = $this->versioncontrolCreateRepoFromTestRepo();
+  }
+
+  /**
+   * Test all fetch methods on VersioncontrolGitRepository.
+   *
+   * There's no interactions here, so do it all in one test to minimize set up
+   * times. We can't do a unit test because we need to create the repo on disk.
+   *
+   * TODO the testrepo needs identically named branch and tag and we need to test against it.
+   */
+  public function testFetching() {
+    $branch = $this->repository->fetchBranch('master');
+    $this->assertTrue($branch instanceof VersioncontrolBranch, 'fetchBranch() returns a VersioncontrolBranch object.');
+    $this->assertTrue('0f0280aefe4d0c3384cb04a0bbb15c9543f46a69' === $branch->tip, '"master" branch object has the correct rev as its tip.');
+    $this->assertTrue(NULL === $branch->label_id, 'label_id has not been set on the branch, as it has not entered the db.');
+
+    $tag = $this->repository->fetchTag('simple');
+    $this->assertTrue($tag instanceof VersioncontrolTag, 'fetchTag() returns a VersioncontrolTag object.');
+    $this->assertTrue('b1e97e0f979c5e3580942b335e85bf17c3216397' === $tag->tip, '"simple" tag object points to the correct rev.');
+    $this->assertTrue(NULL === $tag->label_id, 'label_id has not been set on the tag, as it has not entered the db.');
+  }
+}

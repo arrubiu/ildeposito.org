@@ -1,0 +1,99 @@
+= Overview =
+
+The API is a mixture of retrieving information from the database and delegating to
+backend modules that provide backend specific functionality and interface with those
+systems directly.
+
+== Central concepts and objects ==
+
+In essence, the API revolves around the same concepts present in every common
+VCS, which are represented as class based Drupal entities. They can be retrieved
+and passed around using the various API calls.
+
+The following list briefly introduces those entities:
+
+Repositories::
+  Contain fundamental information about the repository, like its name, root
+  path/URL and the backend that powers this repository.
+  A repository can be local or remote, and any number of repositories can exist
+  at the same time for any given VCS backend. Most admin preferences are stored
+  per repository, or should be.
+Items (a.k.a. item revisions)::
+  Files or directories inside a specific repository, including information about
+  the path, type ('file' or 'directory') and (file-level) revision, if
+  applicable. Most item revisions, but probably not all of them, are recorded in
+  the database.
+Labels::
+  The unified term for 'branches and tags'. Originally it was a real entity, but
+  now it only helps to refer them with one word in comments, and as the name of
+  the table which stores their information.
+  Also note that as an API user, you should try not to assume any fixed label
+  names such as 'HEAD' or 'master' for the main development branch, because
+  that's not VCS independent and can change even within a single repository.
+Branches::
+  Labels intended to change over time. Its label type is 'branch'.
+Tags::
+  Labels not intended to change over time. Should refer one specific point in
+  history. Its label type is 'tag'.
+Operations::
+  In a nutshell, operations are what you see on http://drupal.org/commitlog -
+  stuff that happened in a repository at a specific time. That includes commits
+  as well as the creation and deletion of branches and tags (which is then
+  called 'branch operation' or 'tag operation'). An operation includes
+  information about revision author, repository, date/time of the operation,
+  revision number/id, and the log message.
+  An operation is also associated to any number of items ('operation items') and
+  labels ('operation labels') that they modify/affect. When referenced from an
+  operation, both labels and items feature a couple more properties, like the
+  action that was performed on it in that operation.
+
+Version Control API is based on the idea that the current state of a repository
+is essentially unknown, but all log information up to a certain point in time is
+available in complete form in the database so that commit logs can be shown (and
+commit statistics calculated) without invoking the VCS binary.
+For browsing the repository, direct interfacing with the VCS itself is required.
+Also, the association of items to branches and tags cannot possibly be recorded
+in a correct & maintainable way, so determining that is also left to on-the-fly
+invocations.
+
+Version Control API takes care of managing the above entities, and provides
+hooks for modules to act when e.g. a commit has been recorded. Those hooks are
+documented in the versioncontrol.api.php file.
+
+All entities behaviour can be extended by backends (by overriding the default
+classes) and other modules (using hooks).
+
+== On writing VCS backends ==
+
+In the 'versioncontrol_fakevcs/' subdirectory of the Version Control API
+project, there is an example backend implementation called "FakeVCS backend"
+which demonstrates how functions and their result data might look like.
+This is a free-for-all for backend module authors who can simply copy-and-paste
+apidox and function signatures into their own backends and then use the demo
+code as a template for their implementations.
+
+A backend does not need to implement all functions that the Version Control API
+defines.
+
+The idea is that functionality for retrieving fundamental log information - that
+is, operations including their associated items and labels - is mandatory and
+likely to be stored in the database. (That twist also enables detailed operation
+queries across repositories and backends.)
+
+More advanced functionality like retrieving directory/file contents or file
+annotations, and listing all branches and tags of an item, is optional for
+backends to implement.
+
+That's because it's likely to directly interface to the VCS instead of querying
+the database, and this functionality is both harder to code and potentially
+slower than the log retrieval functions.
+
+If a user of the API makes use of an optional method then that user has to check
+if the backend implements the related interface.
+
+Usually there are default values returned when the backend does not implement
+it, but probably you want to take different actions depending on the returned
+values.
+
+If the backend have example hook scripts, please add them into a 'vcs_hooks'
+subdirectory, with a 'README.txt' file explaining how they should be used.

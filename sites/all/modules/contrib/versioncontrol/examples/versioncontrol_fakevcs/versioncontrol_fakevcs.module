@@ -1,0 +1,19 @@
+<?php
+/**
+ * @file
+ *   FakeVCS backend for Version Control API
+ *   An example module illustrating how to write a VCS backend.
+ *
+ * Copyright 2007, 2008 by Jakob Petsovits ("jpetso", http://drupal.org/user/56020)
+ */
+
+/**
+ * Implementation of hook_versioncontrol_backends().
+ */
+function versioncontrol_fakevcs_versioncontrol_backends() {
+  return array(
+    // The array key is up to 8 characters long, and used as unique identifier
+    // for this VCS, in functions, URLs and in the database.
+    'fakevcs' => new VersioncontrolFakeBackend(),
+  );
+}

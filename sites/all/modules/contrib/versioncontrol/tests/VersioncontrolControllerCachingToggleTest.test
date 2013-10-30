@@ -1,0 +1,137 @@
+<?php
+
+require_once drupal_get_path('module', 'versioncontrol') . '/tests/VersioncontrolTestCase.test';
+
+/**
+ * @file
+ * Test ensuring that controller caching toggling behaves correctly on all
+ * backends.
+ */
+
+/**
+ * Unit tests ensuring all base VersioncontrolBackend behaviors work properly.
+ */
+class VersioncontrolControllerCachingToggleTest extends VersioncontrolTestCase {
+
+  /**
+   * We want to manually control when controller caching is enabled/disabled.
+   *
+   * @var bool
+   */
+  public $disableControllerCaching = FALSE;
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Controller caching toggles'),
+      'description' => t('Ensure that global, backend-level controller caching toggle functionality works as expected.'),
+      'group' => t('Version Control API'),
+    );
+  }
+
+  function setUp() {
+    $this->useBackends = self::BACKENDS_ALL;
+    parent::setUp();
+  }
+
+  /**
+   * Ensure that the controller caching toggling works properly.
+   */
+  public function testControllerCachingToggles() {
+    foreach ($this->backends as $backend) {
+      // Save the controller's caching defaults locally for comparison later.
+      $cc_defaults = array();
+      foreach ($backend->classesControllers as $type => $class) {
+        $controller = $backend->getController($type);
+        $cc_defaults[$type] = $controller->defaultOptions['may cache'];
+      }
+
+      // Now, disable caching for all controllers on this backend.
+      $backend->disableControllerCaching();
+
+      // Generate some dummy entities for this backend.
+      $repo = $this->versioncontrolCreateRepository($backend->type);
+
+      $data = array('repository' => $repo, 'repo_id' => $repo->repo_id);
+      $branch = $this->versioncontrolCreateBranch($backend->type, $data);
+      $tag = $this->versioncontrolCreateTag($backend->type, $data);
+      $op = $this->versioncontrolCreateOperation($backend->type, $data);
+      $event = $this->versioncontrolCreateEvent($backend->type, $data);
+      $data['vc_op_id'] = $op->vc_op_id;
+      $item = $this->versioncontrolCreateItem($backend->type, $data);
+
+      // Load each item with controller caching defaulting to off.
+      $set1 = array();
+      $set1['repo'] = $backend->loadEntity('repo', $repo->repo_id);
+      $set1['branch'] = $backend->loadEntity('branch', $branch->label_id);
+      $set1['tag'] = $backend->loadEntity('tag', $tag->label_id);
+      $set1['operation'] = $backend->loadEntity('operation', $op->vc_op_id);
+      $set1['event'] = $backend->loadEntity('event', $event->elid);
+      $set1['item'] = $backend->loadEntity('item', $event->elid);
+
+      // Modify each item with a dummy prop, and ensure it's the proper type.
+      foreach ($set1 as $type => $obj) {
+        $class_name = $backend->classesEntities[$type];
+        $this->assertTrue($obj instanceof $class_name, "Controller built an object with the correct class, '$class_name', for type '$type' on backend '$backend->type'.");
+        $obj->foo = TRUE;
+      }
+
+      $set2 = array();
+      $set2['repo'] = $backend->loadEntity('repo', $repo->repo_id);
+      $set2['branch'] = $backend->loadEntity('branch', $branch->label_id);
+      $set2['tag'] = $backend->loadEntity('tag', $tag->label_id);
+      $set2['operation'] = $backend->loadEntity('operation', $op->vc_op_id);
+      $set2['event'] = $backend->loadEntity('event', $event->elid);
+      $set2['item'] = $backend->loadEntity('item', $event->elid);
+
+      foreach ($set2 as $type => $obj) {
+        $this->assertTrue(!isset($obj->foo), "The $type object on backend '$backend->type' was not cached by its controller.");
+      }
+
+      unset($set1, $set2);
+
+      // double-toggle controlling caching off to ensure idempotence.
+      $backend->disableControllerCaching();
+      // Now, restore caching to default settings for this backend.
+      $backend->restoreControllerCachingDefaults();
+
+      // And re-load each item, with controller caching restored to the default.
+      $set1 = array();
+      $set1['repo'] = $backend->loadEntity('repo', $repo->repo_id);
+      $set1['branch'] = $backend->loadEntity('branch', $branch->label_id);
+      $set1['tag'] = $backend->loadEntity('tag', $tag->label_id);
+      $set1['operation'] = $backend->loadEntity('operation', $op->vc_op_id);
+      $set1['event'] = $backend->loadEntity('event', $event->elid);
+      $set1['item'] = $backend->loadEntity('item', $event->elid);
+
+      // Modify each item with a dummy prop, and ensure it's the proper type.
+      foreach ($set1 as $type => $obj) {
+        $class_name = $backend->classesEntities[$type];
+        $this->assertTrue($obj instanceof $class_name, "Controller built an object with the correct class, '$class_name', for type '$type' on backend '$backend->type'.");
+        $obj->foo = TRUE;
+      }
+
+      $set2 = array();
+      $set2['repo'] = $backend->loadEntity('repo', $repo->repo_id);
+      $set2['branch'] = $backend->loadEntity('branch', $branch->label_id);
+      $set2['tag'] = $backend->loadEntity('tag', $tag->label_id);
+      $set2['operation'] = $backend->loadEntity('operation', $op->vc_op_id);
+      $set2['event'] = $backend->loadEntity('event', $event->elid);
+      $set2['item'] = $backend->loadEntity('item', $event->elid);
+
+      foreach ($set2 as $type => $obj) {
+        // Introspect the controller to determine its default.
+        $controller = $backend->getController($type);
+        $this->assertEqual($cc_defaults[$type], $controller->defaultOptions['may cache'], "Default caching behavior was properly restored for the $type controller on backend '$backend->type'.");
+        // Use the originally saved value from the controller to determine how
+        // our final assert should work.
+        if ($cc_defaults[$type]) {
+          // Caching on by default - prop should match.
+          $this->assertEqual($set1[$type]->foo, $obj->foo, "The '$type' object on backend '$backend->type' WAS not cached by its controller after reverting to default caching behavior, as intended.");
+        }
+        else {
+          $this->assertTrue(!isset($obj->foo), "The '$type' object on backend '$backend->type' WAS NOT cached by its controller after reverting to default caching behavior, as intended.");
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,275 @@
+<?php
+
+/**
+ * @file
+ *
+ * Tests ensuring that actions which produce or destroy vcapi data (that is,
+ * creating or deleting commits & labels) do their job correctly.
+ */
+
+require_once drupal_get_path('module', 'versioncontrol_git') . '/tests/VersioncontrolGitTestCase.test';
+
+class VersioncontrolGitPushTests extends VersioncontrolGitTestCase {
+
+  /**
+   * @var VersioncontrolGitRepository
+   */
+  protected $repository;
+
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Git push tests'),
+      'description' => t('Tests ensuring that history synchronizers work across all possible push scenarios.'),
+      'group' => t('Version Control Git'),
+    );
+  }
+
+  /**
+   * Perform various normal evented operations on an empty repository.
+   *
+   * We do all these in one test to cut down on setup/teardown time.
+   *
+   * Individual tests should be implemented in a submethod beginning with 'ti'.
+   */
+  public function testEmptyRepoInitialPushes() {
+    // First, set up a new test repo without synchronizing it.
+    $this->repository = $this->versioncontrolCreateRepoFromTestRepo(array(), FALSE);
+    // Zero out all refs in the repo.
+    $this->versioncontrolZeroOutRefs($this->repository);
+    $this->tiInitialPushSingleBranch();
+    $this->tiInitialPushMultipleBranches();
+  }
+
+  /**
+   * Sub-test that ensures pushing to a single branch as an initial push
+   * works correctly.
+   */
+  protected function tiInitialPushSingleBranch() {
+    // Simulate push to default branch with one commit.
+    $data = '0000000000000000000000000000000000000000 4817efad5041c7ce8de84fb1013d859eec5231d6 refs/heads/master' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repository));
+
+    $branch = $this->repository->loadBranch('master');
+
+    $this->assertEqual($branch->name, 'master', t('The branch added by the test is in the database.'));
+
+    $commits = $branch->loadCommits();
+    $commit = reset($commits);
+
+    $this->assertEqual($commit->revision, '4817efad5041c7ce8de84fb1013d859eec5231d6', t('The commit that introduced the branch is in the database.'));
+    $this->assertTrue((count($commits) == 1), t('There is only one commit associated with the branch.'));
+
+    // Purge the repo data and re-zero the repo.
+    $this->repository->purgeData();
+    $this->versioncontrolZeroOutRefs($this->repository);
+
+    // Now another push, but this time with multiple commits to the default.
+    $data = '0000000000000000000000000000000000000000 61dda575c87a2bd1553f4b503370b724b432d64e refs/heads/master' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repository));
+
+    $branch = $this->repository->loadBranch('master');
+
+    $this->assertEqual($branch->name, 'master', t('The branch added by the test is in the database.'));
+
+    $commits = $branch->loadCommits();
+
+    $this->assertTrue((count($commits) == 3), t('There are three commits associated with the new branch.'));
+
+    // One last push, but to a non-default branch, with multiple commits.
+    $this->repository->purgeData();
+    $this->versioncontrolZeroOutRefs($this->repository);
+
+    $data = '0000000000000000000000000000000000000000 61dda575c87a2bd1553f4b503370b724b432d64e refs/heads/nb1' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repository));
+
+    $branch = $this->repository->loadBranch('nb1');
+
+    $this->assertEqual($branch->name, 'nb1', t('The branch added by the test is in the database.'));
+
+    $commits = $branch->loadCommits();
+
+    $this->assertTrue((count($commits) == 3), t('There are three commits associated with the new branch.'));
+
+    // Purge the repo data and re-zero the repo for the next sub-test.
+    $this->repository->purgeData();
+    $this->versioncontrolZeroOutRefs($this->repository);
+  }
+
+  /**
+   * Sub-test that ensures initial pushes to multiple refs work correctly.
+   */
+  protected function tiInitialPushMultipleBranches() {
+    // Simulate an initial push to multiple branches, with each branch pointing
+    // to the same tip (the root commit). One of the branches is the default.
+    $data = '0000000000000000000000000000000000000000 4817efad5041c7ce8de84fb1013d859eec5231d6 refs/heads/master' . PHP_EOL .
+            '0000000000000000000000000000000000000000 4817efad5041c7ce8de84fb1013d859eec5231d6 refs/heads/nb1' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repository));
+
+    $branches = $this->repository->loadBranches();
+
+    $this->assertEqual(count($branches), 2, 'The two branches in the simulated push made it into the database.');
+    $commits = reset($branches)->loadCommits();
+    $this->assertEqual(count($commits), 1, 'Two branches came in, but only one unique commit object.');
+
+    $commit = reset($commits);
+    $this->assertEqual($commit->revision, '4817efad5041c7ce8de84fb1013d859eec5231d6', 'Synced commit has expected hash.');
+    // diff between the arrays should be nil
+    $this->assertFalse(array_diff(array_keys($commit->labels), array('master', 'nb1')), 'Commit is properly attached to both pushed branches.');
+
+    // Purge, then test initial push to multiple branches with different tips.
+    $this->repository->purgeData();
+    $this->versioncontrolZeroOutRefs($this->repository);
+
+    $data = '0000000000000000000000000000000000000000 4817efad5041c7ce8de84fb1013d859eec5231d6 refs/heads/master' . PHP_EOL .
+            '0000000000000000000000000000000000000000 61dda575c87a2bd1553f4b503370b724b432d64e refs/heads/nb1' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repository));
+
+    $master = $this->repository->loadBranch('master');
+    $master_commits = $master->loadCommits();
+    $this->assertEqual(count($master_commits), 1, 'master branch has one commit.');
+    $commit = reset($master_commits);
+    $this->assertEqual($commit->revision, '4817efad5041c7ce8de84fb1013d859eec5231d6', 'Synced commit has expected hash.');
+    // diff between the arrays should be nil
+    $this->assertFalse(array_diff(array_keys($commit->labels), array('master', 'nb1')), 'Commit is properly attached to both pushed branches.');
+
+    $nb1 = $this->repository->loadBranch('nb1');
+    $nb1_commits = $nb1->loadCommits();
+    $this->assertEqual(count($nb1_commits), 3, 'nb1 branch has three commits.');
+
+    $commits = $this->repository->loadCommits();
+    $this->assertEqual(count($commits), 3, 'Three total commits in the entire repository.');
+
+    // Purge the repo data and re-zero the repo for the next sub-test.
+    $this->repository->purgeData();
+    $this->versioncontrolZeroOutRefs($this->repository);
+  }
+
+  /**
+   * Test expected push patterns. 'expected' is not about how normal it is for
+   * someone to make a push like this, but whether vcapi is in a good data state
+   * when such a push comes in.
+   *
+   * All of these test patterns should be non-initial pushes.
+   *
+   * Individual tests should be implemented in a submethod beginning with 'tn'.
+   *
+   * TODO single branch create with known commits
+   * TODO single branch create with unknown commits (a new root commit -- weird)
+   * TODO multi branch ff update
+   * TODO single branch deletion
+   * TODO single branch non-ff update, no orphan commits
+   * TODO single branch non-ff update, leaves orphan commits
+   * TODO multi branch non-ff update
+   * TODO multi branch, one update one delete
+   * TODO multi branch, one create one delete
+   * TODO new tag (simple, signed, annotated)
+   * TODO tag change (simple, signed, annotated)
+   * TODO tag deletion (simple, signed, annotated)
+   * TODO single branch ff update + new tag
+   * TODO single branch ff update + tag change
+   */
+  public function testNormalPushPatterns() {
+    // First, set up a new test repo without synchronizing it.
+    $this->repository = $this->versioncontrolCreateRepoFromTestRepo(array(), FALSE);
+    $this->tnSingleBranchFFKnownCommits();
+    $this->tnSingleBranchFFUnknownCommits();
+  }
+
+  public function tnSingleBranchFFKnownCommits() {
+    $this->versioncontrolResetTestRepo($this->repository);
+
+    $data = '28e2c35b6f7626d662ffda2c344a782e639f76e7 0f0280aefe4d0c3384cb04a0bbb15c9543f46a69 refs/heads/enhancements' . PHP_EOL;
+    $event = $this->versioncontrolSimulatePush($data, array('repository' => $this->repository));
+
+    $commit = $this->repository->loadCommit('0f0280aefe4d0c3384cb04a0bbb15c9543f46a69');
+    if (empty($commit->labels['enhancements'])) {
+      $this->fail('Enhancements branch is not attached to the pre-existing commit object representing its new tip.');
+    }
+    else {
+      $this->pass('Enhancements branch is properly attached to the pre-existing commit object representing its new tip.');
+    }
+  }
+
+  public function tnSingleBranchFFUnknownCommits() {
+    $map = array('refs/heads/enhancements' => '28e2c35b6f7626d662ffda2c344a782e639f76e7');
+    $this->versioncontrolResetTestRepo($this->repository, $map, FALSE);
+
+    $this->assertEqual(count($this->repository->loadBranches()), 1, 'Only one branch in db after reset.');
+    $this->assertEqual(count($this->repository->loadCommits()), 11, 'Eleven commits in db after reset.');
+
+    $data = '28e2c35b6f7626d662ffda2c344a782e639f76e7 0f0280aefe4d0c3384cb04a0bbb15c9543f46a69 refs/heads/enhancements' . PHP_EOL;
+    $event = $this->versioncontrolSimulatePush($data, array('repository' => $this->repository));
+
+    $commit = $this->repository->loadCommit('0f0280aefe4d0c3384cb04a0bbb15c9543f46a69');
+    // ensure tip exists
+    $this->assertTrue($commit instanceof VersioncontrolGitOperation, 'Object built from from database representing newly-parsed commit that is the new tip fo the branch.');
+  }
+
+  /**
+   * Test atypical push patterns that indicate some inconsistency or error on
+   * vcapi's part.
+   *
+   * Individual tests should be implemented in a submethod beginning with 'ta'.
+   *
+   * TODO branch update where old sha1 does not match db
+   * TODO branch update where no record of branch exists in db
+   * TODO branch deletion where no record of branch exists in db
+   * TODO branch creation where branch already exists in db
+   * TODO branch update where new sha1 cannot be found in repo
+   * TODO tag update where old sha1 does not match db
+   * TODO tag update where no record of branch exists in db
+   * TODO tag deletion where no record of branch exists in db
+   * TODO tag creation where branch already exists in db
+   * TODO tag update where new sha1 cannot be found in repo
+   */
+  public function testAbnormalPushPatterns() {
+    // First, set up a new test repo without synchronizing it.
+    $this->repository = $this->versioncontrolCreateRepoFromTestRepo(array(), FALSE);
+    $this->taInitPushButBranchHasOldHash();
+    $this->taBranchHasOldHashButNoDbRecord();
+  }
+
+  /**
+   * Repo thinks it's an initial push, but event indicates the branch should
+   * already exist.
+   */
+  public function taInitPushButBranchHasOldHash() {
+    // Completely zero out the test repo.
+    $this->versioncontrolResetTestRepo($this->repository, array(), FALSE, FALSE);
+
+    $data = '28e2c35b6f7626d662ffda2c344a782e639f76e7 0f0280aefe4d0c3384cb04a0bbb15c9543f46a69 refs/heads/enhancements' . PHP_EOL;
+    $event = $this->versioncontrolSimulatePush($data, array('repository' => $this->repository), TRUE, FALSE);
+
+    // First, grab the syncer to directly ensure we get the expected exception.
+    $sync_options = $this->repository->getSynchronizerOptions();
+    $sync = $this->repository->getSynchronizer();
+    try {
+      $sync->syncEvent($event, $sync_options);
+      $this->fail('Synchronization plugin did not ask for full sync via exception.');
+    }
+    catch (VersioncontrolNeedsFullSynchronizationException $e) {
+      $this->pass('Synchronization plugin asked for full sync via exception.');
+      $this->repository->unlock();
+    }
+
+    // Now just make it go with syncFull.
+    $success = $sync->syncFull($sync_options);
+    if ($success !== TRUE) {
+      $this->fail('Repository method reported that synchronization failed.');
+      return FALSE;
+    }
+
+    $branch = $this->repository->loadBranch('enhancements');
+
+    $this->assertTrue($branch instanceof VersioncontrolBranch, 'Synchronization logic automatically recovered and created enhancements branch, even though the event was wonky.');
+    $commits = $branch->loadCommits();
+    $this->assertTrue(count($commits), 16, 'All commits were correctly synchronized despite only a subset being reported in the event.');
+  }
+
+  public function taBranchHasOldHashButNoDbRecord() {
+
+  }
+}

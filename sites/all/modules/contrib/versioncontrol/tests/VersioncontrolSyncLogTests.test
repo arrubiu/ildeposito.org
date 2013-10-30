@@ -1,0 +1,57 @@
+<?php
+
+require_once drupal_get_path('module', 'versioncontrol') . '/tests/VersioncontrolTestCase.test';
+
+/**
+ * @file
+ * Tests ensuring that the sync logger captures everything it should, correctly.
+ */
+
+class VersioncontrolSyncLogTests extends VersioncontrolTestCase {
+  protected $useBackends = self::BACKENDS_TEST;
+
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Sync log tests.'),
+      'description' => t('Ensure that the sync logger captures everything correctly.'),
+      'group' => t('Version Control API'),
+    );
+  }
+
+  /**
+   * Test that the sync logger captures all sync conditions correctly.
+   *
+   * TODO successful syncEvent
+   * TODO successful normal sync
+   * TODO successful cron-triggered sync
+   * TODO successful failover on syncEvent to syncFull
+   * TODO failed failover on syncEvent to syncFull
+   * TODO failed failover of syncEvent to syncInitial
+   * TODO successful failover on syncEvent to syncInitial
+   * TODO failed with unexpected exception
+   */
+  public function testEnsureProperSyncLogInfo() {
+    $rdata = array(
+      'plugins' => array(
+        'reposync' => 'exceptioner',
+      )
+    );
+
+    // First, test a simple failure on fullSync().
+    $repository = $this->versioncontrolCreateRepository('test', $rdata);
+    $sync = $repository->getSynchronizer();
+
+    $logs = $repository->getSyncLogs();
+
+    $edata = array(
+      'repository' => $repository,
+    );
+
+    // now, test simple success on syncEvent().
+    $event = $this->versioncontrolGenerateCodeArrivalEvent('test', $edata);
+    $log = $repository->getEventSyncLog($event);
+  }
+}

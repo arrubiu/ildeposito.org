@@ -1,0 +1,58 @@
+<?php
+/**
+ * @file
+ *   Fake backend installation file.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function versioncontrol_fakevcs_schema() {
+  $schema = array();
+  $schema['versioncontrol_fakevcs_operations'] = array(
+    'description' => 'A one-to-one table extending {versioncontrol_operations} with some additional fake-vcs-specific data.',
+    'fields' => array(
+      'vc_op_id' => array(
+        'description' => 'Foreign key to {versioncontrol_operations}.vc_op_id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'parent_commit' => array(
+        'description' => 'Fake vcs parent commit id',
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('vc_op_id'),
+  );
+  $schema['versioncontrol_fakevcs_event'] = array(
+    'description' => 'A one-to-one table extending {versioncontrol_event_log} with some additional fake-vcs-specific data.',
+    'fields' => array(
+      'elid' => array(
+        'description' => 'Foreign key to {versioncontrol_event_log}.elid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'push_revision' => array(
+        'description' => 'Fake vcs revision for push',
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'foo' => array(
+        'description' => 'Fake vcs foo data',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('elid'),
+  );
+  return $schema;
+}

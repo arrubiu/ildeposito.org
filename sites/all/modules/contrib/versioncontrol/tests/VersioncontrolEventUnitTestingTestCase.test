@@ -1,0 +1,111 @@
+<?php
+/**
+ * @file
+ * Unit tests for repository class.
+ */
+require_once drupal_get_path('module', 'versioncontrol') . '/tests/VersioncontrolTestCase.test';
+
+/**
+ * Unit tests for VersioncontrolRepository class
+ */
+class VersioncontrolEventUnitTestingTestCase extends VersioncontrolTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Event class unit tests'),
+      'description' => t('Unit tests for the VersioncontrolEvent class.'),
+      'group' => t('Version Control API'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    $this->useBackends = self::BACKENDS_TEST;
+    parent::setUp();
+  }
+
+  public function testCreation() {
+    // Build and insert.
+    $repository = $this->versioncontrolCreateRepository('test');
+    $data = array(
+      'uid' => 0,
+      'timestamp' => time(),
+      'repo_id' => $repository->repo_id,
+    );
+    $event = $repository->generateCodeArrivalEvent($data);
+    $event->insert();
+
+    // Verify.
+    $db_event = db_select('versioncontrol_event_log', 'el')
+      ->fields('el')
+      ->condition('elid', $event->elid)
+      ->execute()
+      ->fetchObject();
+    foreach ($data as $key => $val) {
+      $this->assertEqual($val, $db_event->$key, t('%key event attribute is stored correctly', array('%key' => $key)), t('Creation'));
+    }
+  }
+
+  public function testRead() {
+    // No repository, test we get valid output.
+    $events = $this->testBackend->loadEntities('event', array(''));
+    $this->assertTrue(empty($events), t('Make sure we get an empty array when trying to get a event with empty elid'), t('Read'));
+
+    $events = $this->testBackend->loadEntities('event', NULL);
+    $this->assertTrue(empty($events), t('Make sure we get an empty array when trying to get a event with a NULL elid'), t('Read'));
+
+    $events = $this->testBackend->loadEntities('event', array(1));
+    $this->assertTrue(empty($events), t('Make sure we get an empty array when trying to get a event which do not exist'), t('Read'));
+
+    // create event and test again
+    $event = $this->versioncontrolCreateEvent('test');
+    $events = $this->testBackend->loadEntities('event', array($event->elid));
+    $this->assertEqual(count($events), 1, t('Only one event found'), t('Read'));
+    $_event = reset($events);
+    $this->assertTrue(isset($_event) && is_a($_event, 'VersioncontrolEvent'), t('Make sure we get a valid return when passing a good elid.'), t('Read'));
+    $this->assertEqual($_event->elid, $event->elid, t('Make sure we get the right event.'), t('Read'));
+  }
+
+  public function testUpdate() {
+    $event = $this->versioncontrolCreateEvent('test');
+
+    $data = array(
+      'timestamp' => time(),
+      'uid' => 0,
+    );
+
+    $event->timestamp = $data['timestamp'];
+    $event->uid = $data['uid'];
+
+    $event->update();
+
+    $db_event = db_select('versioncontrol_event_log', 'el')
+      ->fields('el')
+      ->condition('elid', $event->elid)
+      ->execute()
+      ->fetchObject();
+    foreach ($data as $key => $val) {
+      $this->assertEqual($val, $db_event->$key, t('%key event attribute is updated correctly', array('%key' => $key)), t('Update'));
+    }
+
+  }
+
+  public function testDelete() {
+    $event = $this->versioncontrolCreateEvent('test');
+    $event->delete();
+
+    $result = db_select('versioncontrol_event_log', 'el')
+      ->fields('el')
+      ->condition('elid', $event->elid)
+      ->execute();
+    foreach ($result as $db_event) {
+      $this->fail(t('The event was not deleted correctly.'), t('Delete'));
+    }
+  }
+
+}

@@ -1,0 +1,170 @@
+<?php
+/**
+ * @file
+ * Git backend for Version Control API - Provides Git commit information and
+ * account management as a pluggable backend.
+ *
+ * Copyright 2008 by Jimmy Berry ("boombatower", http://drupal.org/user/214218)
+ * Copyright 2009 by Cornelius Riemenschneider ("CorniI", http://drupal.org/user/136353)
+ */
+
+/**
+ * The string of 40 zeroes that git uses to represent a null revision.
+ */
+define('GIT_NULL_REV', '0000000000000000000000000000000000000000');
+
+/**
+ * @name Git ref types
+ */
+//@{
+define('VERSIONCONTROL_GIT_REFTYPE_BRANCH', 2);
+define('VERSIONCONTROL_GIT_REFTYPE_TAG', 3);
+//@}
+
+// The admin and user edit pages.
+require_once drupal_get_path('module', 'versioncontrol_git') . '/versioncontrol_git.admin.inc';
+
+/**
+ * Implements hook_versioncontrol_backends().
+ */
+function versioncontrol_git_versioncontrol_backends() {
+  if (!class_exists('VersioncontrolGitBackend')) {
+    // We're in some weird environment where autoload hasn't done its thing yet.
+    require_once drupal_get_path('module', 'versioncontrol') . '/includes/VersioncontrolBackend.php';
+    require_once drupal_get_path('module', 'versioncontrol_git') . '/includes/VersioncontrolGitBackend.php';
+  }
+  return array(
+    'git' => new VersioncontrolGitBackend()
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ *
+ */
+function versioncontrol_git_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'versioncontrol_git') . '/includes/views',
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function versioncontrol_git_theme($existing, $type, $theme, $path) {
+  return array(
+    'versioncontrol_git_event' => array(
+      'variables' => array('event' => NULL),
+      'file' => 'versioncontrol_git.theme.inc',
+    ),
+    'versioncontrol_git_operation' => array(
+      'variables' => array('operation' => NULL),
+      'file' => 'versioncontrol_git.theme.inc',
+    ),
+  );
+}
+
+/**
+ * Get & verify the path to the git binary.
+ *
+ * @param bool $error
+ *   Whether or not to throw an error if the git binary could not be found.
+ *
+ * @return string
+ *   The string path to the git binary, or FALSE if none could be verified.
+ */
+function _versioncontrol_git_get_binary_path($error = TRUE) {
+  $git_bin = variable_get('versioncontrol_git_binary_path', 'git');
+  if ($errors = _versioncontrol_git_binary_check_path($git_bin)) {
+    watchdog('versioncontrol_git', '!errors', array('!errors' => implode('<br />', $errors)), WATCHDOG_ERROR);
+    if ($error) {
+      throw new Exception('No git binary could be found at the specified location, "' . $git_bin . '"', E_ERROR);
+    }
+    else {
+      return FALSE;
+    }
+  }
+  return $git_bin;
+}
+
+/**
+ * Validate the path supplied for the git binary.
+ */
+function _versioncontrol_git_binary_check_path($path) {
+  $dynamic_path = &drupal_static(__FUNCTION__);
+  $errors = array();
+  // Special case for using evironment $PATH to determine git executable.
+  if ($path == 'git') {
+    if (!isset($dynamic_path)) {
+      $dynamic_path = trim(shell_exec('which git'));
+    }
+    $path = $dynamic_path;
+    if (empty($path)) {
+      $errors[] = t('<code>git</code> binary was not found on the <code>$PATH</code>, try to manually set the absolute path to the git binary at !link', array('!link' => l('configuration', 'admin/settings/versioncontrol-settings')));
+      return $errors;
+    }
+  }
+  if (!is_file($path)) {
+    $errors[] = t('The specified git path %file does not exist.', array('%file' => $path));
+  }
+  elseif (!is_executable($path)) {
+    $errors[] = t('The specified git path %file is not executable.', array('%file' => $path));
+  }
+  if ($errors && $open_basedir = ini_get('open_basedir')) {
+    $errors[] = t('PHP\'s <a href="!open-basedir">open_basedir</a> security restriction is set to %open-basedir, which may be interfering with attempts to locate git.', array('%file' => $path, '%open-basedir' => $open_basedir, '!info-link' => url('http://php.net/features.safe-mode#ini.open-basedir')));
+  }
+  return $errors;
+}
+
+/**
+ * Implements ctools hook_ctools_plugin_directory().
+ */
+function versioncontrol_git_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'versioncontrol') {
+    return "includes/plugins/$plugin";
+  }
+}
+
+
+/**
+ * Implements hook_token_info().
+ *
+ * @todo: We probably want to revisit this when versioncontrol project recovers
+ * token support.
+ */
+function versioncontrol_git_token_info() {
+  $type = array(
+    'name' => t('Git event'),
+    'description' => t('Tokens related to Version Control Git events.'),
+    'needs-data' => 'VersioncontrolEvent',
+  );
+  $event['refschanges'] = array(
+    'name' => t('Refs changes'),
+    'description' => t('A list of reference changes this event introduced'),
+  );
+  return array(
+    'types' => array('event-git' => $type),
+    'tokens' => array('event-git' => $event),
+  );
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function versioncontrol_git_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+
+  if ($type == 'event-git' && !empty($data['VersioncontrolEvent'])) {
+    $event = $data['VersioncontrolEvent'];
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'refschanges':
+          $replacements[$original] = theme('versioncontrol_git_event', array('event' => $event));
+          break;
+      }
+    }
+  }
+
+  return $replacements;
+}

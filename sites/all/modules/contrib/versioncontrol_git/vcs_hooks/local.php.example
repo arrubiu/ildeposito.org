@@ -1,0 +1,15 @@
+<?php
+
+// For the enqueue code arrival, it is __required__ to declare the following
+// variables:
+//
+// $repo_id
+//   The {versioncontrol_repositories}.repo_id that identifies the repository
+//   where the code is arriving.
+// $drupal_root
+//   The full path to the drupal root directory with versioncontrol module.
+// $pusher_uid
+//   The {users}.uid that identifies who is making the push.
+
+// Remove this line after making sure all the mentioned variables are declared.
+die('Please declare the missing variables');

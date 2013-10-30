@@ -1,0 +1,14 @@
+name = "Commit Log"
+description = "Display a history of commits, branches and tags, optionally filtered by a set of constraint arguments."
+dependencies[] = versioncontrol
+dependencies[] = views (>=3.4)
+dependencies[] = views_field_view
+package = Version Control
+core = 7.x
+
+; Information added by drupal.org packaging script on 2013-10-29
+version = "7.x-1.0-rc1"
+core = "7.x"
+project = "versioncontrol"
+datestamp = "1383082245"
+

@@ -1,0 +1,168 @@
+<?php
+
+/**
+ * @file
+ *
+ * Tests ensuring that actions which produce or destroy vcapi data (that is,
+ * creating or deleting commits & labels) do their job correctly.
+ */
+
+require_once drupal_get_path('module', 'versioncontrol_git') . '/tests/VersioncontrolGitTestCase.test';
+
+class VersioncontrolGitEventDataIntegrityTests extends VersioncontrolGitTestCase {
+
+  /**
+   * @var VersioncontrolGitRepository
+   */
+  protected $repo;
+
+  /**
+   * Implements getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Git event data integrity tests'),
+      'description' => t('Tests ensuring that synced Git repository data is maintained properly through various operations.'),
+      'group' => t('Version Control Git'),
+    );
+  }
+
+  /**
+   * Introduce a new branch with one commit.
+   */
+  public function testIntroduceBranch() {
+    $this->repo = $this->versioncontrolCreateRepoFromTestRepo(array(), TRUE);
+    // Simulate push containing new branch with one commit.
+    $data = '0000000000000000000000000000000000000000 4817efad5041c7ce8de84fb1013d859eec5231d6 refs/heads/nb1' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repo));
+
+    $branch = $this->repo->loadBranch('nb1');
+
+    $this->assertEqual($branch->name, 'nb1', t('The branch inserted by the test is in the database.'));
+
+    $commits = $branch->loadCommits();
+    $commit = reset($commits);
+
+    $this->assertEqual($commit->revision, '4817efad5041c7ce8de84fb1013d859eec5231d6', t('The commit that introduced the branch is in the database.'));
+    $this->assertTrue((count($commits) == 1), t('There is only one commit associated with the branch.'));
+  }
+
+  /**
+   * Introduce a new branch and update it.
+   */
+  public function testUpdateBranch() {
+    $this->repo = $this->versioncontrolCreateRepoFromTestRepo(array(), FALSE);
+    // Simulate push containing new branch with one commit.
+    $data = '0000000000000000000000000000000000000000 4817efad5041c7ce8de84fb1013d859eec5231d6 refs/heads/nb1' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repo));
+
+    // Simulate push containing update to existing branch and 15 additional commits.
+    $data = '4817efad5041c7ce8de84fb1013d859eec5231d6 0f0280aefe4d0c3384cb04a0bbb15c9543f46a69 refs/heads/nb1' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repo));
+
+    $branches = $this->repo->loadBranches();
+    $branch = reset($branches);
+
+    $this->assertEqual($branch->name, 'nb1', t('The branch inserted by the test is in the database.'));
+    $this->assertTrue((count($branches) == 1), t('The branch inserted by the test is the only branch in the database.'));
+
+    $commits = $this->repo->loadCommits();
+  }
+
+  /**
+   * Delete one of the branches known to be in the test repository.
+   */
+  public function testDeleteBranch() {
+    $this->repo = $this->versioncontrolCreateRepoFromTestRepo(array(), TRUE);
+    // Simulate a push that deletes the master branch.
+    $data = '0f0280aefe4d0c3384cb04a0bbb15c9543f46a69 0000000000000000000000000000000000000000 refs/heads/master' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repo));
+
+    $branches = $this->repo->loadBranches(array(), array('name' => 'master'));
+    $this->assertTrue(empty($branches), t('The master branch is no longer in the database.'));
+  }
+
+  /**
+   * Introduce a branch, update it and introduce another that share some commits.
+   * Eventually delete the first branch.
+   */
+  public function testBranchOffAndDelete() {
+    $this->repo = $this->versioncontrolCreateRepoFromTestRepo(array(), FALSE);
+    // Simulate push containing new branch with 9 commits.
+    $data = '0000000000000000000000000000000000000000 7d5e9ebb5f647f8097323468c671176c154e2f5e refs/heads/enhancements' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repo));
+
+    $branches = $this->repo->loadBranches();
+    $branch = reset($branches);
+
+    $this->assertEqual($branch->name, 'enhancements', t('The branch inserted by the test is in the database.'));
+    $this->assertTrue((count($branches) == 1), t('The branch inserted by the test is the only branch in the database.'));
+
+    $commits = $this->repo->loadCommits();
+
+    $this->assertTrue((count($commits) == 9), t('The correct number of commits are in the database.'));
+
+    // Simulate a push where the existing branch is updated and pushed forward, and a new branch
+    // that contains some commits that were in the previous push.
+    $data = '7d5e9ebb5f647f8097323468c671176c154e2f5e 28e2c35b6f7626d662ffda2c344a782e639f76e7 refs/heads/enhancements' . PHP_EOL .
+            '0000000000000000000000000000000000000000 06ed7cc29f4afd3473b3905cc8dce6471b963e5a refs/heads/newbranch' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repo));
+
+    $branches = $this->repo->loadBranches();
+
+    $this->assertTrue((count($branches) == 2), t('The correct number of branches are in the database.'));
+
+    $branch = reset($branches);
+    $this->assertEqual($branch->name, 'enhancements', t('The branch inserted by the test is in the database.'));
+
+    $branch = next($branches);
+    $this->assertEqual($branch->name, 'newbranch', t('The branch inserted by the test is in the database.'));
+
+    $commits = $this->repo->loadCommits();
+
+    $this->assertTrue((count($commits) == 12), t('The correct number of commits are in the database.'));
+
+    // Simulate push that deletes the first branch and brings the second branch forward.
+    $data = '28e2c35b6f7626d662ffda2c344a782e639f76e7 0000000000000000000000000000000000000000 refs/heads/enhancements' . PHP_EOL .
+            '06ed7cc29f4afd3473b3905cc8dce6471b963e5a 0f0280aefe4d0c3384cb04a0bbb15c9543f46a69 refs/heads/newbranch' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repo));
+
+    $branches = $this->repo->loadBranches();
+    $branch = reset($branches);
+
+    $this->assertEqual($branch->name, 'newbranch', t('The branch inserted by the test is in the database.'));
+    $this->assertTrue((count($branches) == 1), t('The branch inserted by the test is the only branch in the database.'));
+  }
+
+  /**
+   * Introduce a new tag.
+   */
+  public function testIntroduceTag() {
+    $this->repo = $this->versioncontrolCreateRepoFromTestRepo(array(), FALSE);
+    // Simulate a push that contains a new tag.
+    $data = '0000000000000000000000000000000000000000 b1e97e0f979c5e3580942b335e85bf17c3216397 refs/tags/annotated' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repo));
+
+    $branches = $this->repo->loadBranches();
+    $this->assertTrue((count($branches) == 0), t('There are no branches in the database.'));
+
+    $tags = $this->repo->loadTags();
+    $tag = reset($tags);
+
+    $this->assertEqual($tag->name, 'annotated', t('The tag inserted by the test is in the database.'));
+    $this->assertTrue((count($tags) == 1), t('The tag inserted by the test is the only branch in the database.'));
+  }
+
+  /**
+   * Delete one of the tags known to be in the test repository.
+   */
+  public function testDeleteTag() {
+    $this->repo = $this->versioncontrolCreateRepoFromTestRepo(array(), TRUE);
+    // Simulate a push that deletes a known tag.
+    $data = 'b1e97e0f979c5e3580942b335e85bf17c3216397 0000000000000000000000000000000000000000 refs/tags/annotated' . PHP_EOL;
+    $this->versioncontrolSimulatePush($data, array('repository' => $this->repo));
+
+    $tags = $this->repo->loadTags(array(), array('name' => 'annotated'));
+    $this->assertTrue((count($tags) == 0), t('There are no tags in the database.'));
+  }
+}

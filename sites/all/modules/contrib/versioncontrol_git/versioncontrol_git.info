@@ -1,0 +1,32 @@
+name = "Git backend"
+description = "Git backend for Version Control API."
+core = 7.x
+dependencies[] = versioncontrol
+package = Version Control
+vcapi-backend = 1
+files[] = includes/VersioncontrolGitAccount.php
+files[] = includes/VersioncontrolGitBackend.php
+files[] = includes/VersioncontrolGitRepository.php
+files[] = includes/VersioncontrolGitRepositoryController.php
+files[] = includes/VersioncontrolGitItem.php
+files[] = includes/VersioncontrolGitItemController.php
+files[] = includes/VersioncontrolGitOperation.php
+files[] = includes/VersioncontrolGitOperationController.php
+files[] = includes/VersioncontrolGitRepositoryManagerWorkerInterface.php
+files[] = includes/VersioncontrolGitEvent.php
+files[] = includes/VersioncontrolGitEventController.php
+files[] = includes/VersioncontrolGitRefChange.php
+files[] = includes/VersioncontrolGitBranchChange.php
+files[] = includes/VersioncontrolGitTagChange.php
+files[] = tests/VersioncontrolGitDataIntegrityTests.test
+files[] = tests/VersioncontrolGitEvent.test
+files[] = tests/VersioncontrolGitEventDataIntegrityTests.test
+files[] = tests/VersioncontrolGitTestCase.test
+files[] = tests/VersioncontrolGitTokenTests.test
+
+; Information added by drupal.org packaging script on 2013-10-29
+version = "7.x-1.0-rc1"
+core = "7.x"
+project = "versioncontrol_git"
+datestamp = "1383082547"
+
