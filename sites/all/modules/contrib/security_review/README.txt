@@ -11,7 +11,7 @@ on unique factors, this module does not make your site more secure. You should
 use the results of the checklist and its resources to manually secure your site.
 
 Refer to the support section below if you are interested in securing your Drupal
-site. 
+site.
 
 -- INSTALLATION --
 
@@ -52,6 +52,34 @@ If a check is enabled it will be run. You can enable or skip a check on this
 page only after it has been run. Clicking on the 'Help' link beside each check
 will provide details on why the check exists and what was found on the last run.
 
+-- DRUSH USAGE --
+
+Running the Security Review checklist using Drush is a great way to build
+automated security audits of your site into your site development lifecycle and
+as part of continuous integration.
+
+With the module installed invoke 'drush secrev' from within your Drupal root.
+
+Call 'drush help secrev' to see available options.
+
+For running specific checks pass the '--check' option. Be sure to remove any
+whitespace characters separating check names.
+
+Consult implementations of hook_security_checks() for exact list of available
+check options. Standard Security Review checks are:
+
+file_perms, input_formats, field, error_reporting, private_files, query_errors,
+failed_logins, upload_extensions, admin_permissions, untrusted_php,
+executable_php, base_url_set, temporary_files
+
+For custom checks you may prefix the check name with the module name and
+colon (:) character. For example:
+
+'drush secrev --check=my_module:my_check'
+
+Note, custom checks require that its module be enabled. Also, should you be
+skipping any check the 'store' option will not allow that check to be run.
+
 -- SUPPORT --
 
 Please use the issue queue at http://drupal.org/project/security_review for all
@@ -62,8 +90,8 @@ Acquia, the provider of this module, offers detailed,
 targetted security review and support for Drupal websites and can be contacted
 at http://wwww.acquia.com or via email at sales@acquia.com.
 
-You can read more about our Drupal security review service at 
-http://www.acquia.com/products-services/acquia-professional-services/service-offerings
+You can read more about our Drupal security review service at
+http://www.acquia.com/products-services/professional-services/offerings#security_audit
 
 
 -- CREDIT --

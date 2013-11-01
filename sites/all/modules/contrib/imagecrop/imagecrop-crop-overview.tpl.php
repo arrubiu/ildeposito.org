@@ -5,7 +5,6 @@
  *
  */
 ?>
-
 <div id="imagecrop-selection" class="clearfix">
   <?php print drupal_render($style_selection); ?>
   <div id="imagecrop-edit" class="form-item imagecrop-form-link">

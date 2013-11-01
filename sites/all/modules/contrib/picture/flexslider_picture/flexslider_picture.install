@@ -8,7 +8,16 @@ function flexslider_picture_schema() {
   $schema = array();
   $schema['flexslider_picture_optionset'] = array(
     'description' => 'Saves which flexslider optionsets use picture mappings and which use image styles.',
-    'export' => array(),
+    'export' => array(
+      'key' => 'flexslider_optionset',
+      'identifier' => 'flexslider_picture_optionset',
+      'api' => array(
+        'owner' => 'flexslider_picture',
+        'api' => 'flexslider_picture_optionset',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
     'fields' => array(
       'id' => array(
         'type' => 'serial',
@@ -55,6 +64,20 @@ function flexslider_picture_schema_alter(&$schema) {
     'load' => array(
       'imagestyle_type',
       'mapping',
+    ),
+    'fields' => array(
+      'imagestyle_type' => array(
+        'description' => 'One of image_style or picture_mapping.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'mapping' => array(
+        'description' => 'The picture mapping for this optionset.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
     ),
   );
 }

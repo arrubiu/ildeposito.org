@@ -68,6 +68,7 @@ function security_review_schema() {
 function security_review_uninstall() {
   variable_del('security_review_untrusted_roles');
   variable_del('security_review_log');
+  variable_del('security_review_last_run');
 }
 
 /**
@@ -76,4 +77,45 @@ function security_review_uninstall() {
 function security_review_update_7000(&$sandbox) {
   db_truncate('security_review')->execute();
   return t('Security Review table truncated.');
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function security_review_requirements($phase) {
+
+  $requirements = array();
+
+  switch ($phase) {
+    case 'runtime':
+    $failed_checks = FALSE;
+      $checks = security_review_get_stored_results();
+      foreach ($checks as $check) {
+        if ($check['result'] === FALSE && !$check['skip']) {
+          $failed_checks = TRUE;
+          break;
+        }
+      }
+      $url = url('admin/reports/security-review');
+      if (empty($checks)) {
+        $severity = REQUIREMENT_WARNING;
+        $value = t('The Security Review checklist has not been run. <a href="!url">Run the checklist</a>', array('!url' => $url));
+      }
+      elseif ($failed_checks) {
+        $severity = REQUIREMENT_WARNING;
+        $value = t('There are failed Security Review checks. <a href="!url">Review the checklist</a>', array('!url' => $url));
+      }
+      else {
+        $severity = REQUIREMENT_OK;
+        $value = t('Passing all non-ignored Security Review checks. <a href="!url">Review the checklist</a>', array('!url' => $url));
+      }
+      $requirements['security_review'] = array(
+        'title' => t('Security Review'),
+        'severity' => $severity,
+        'value' => $value,
+      );
+      break;
+  }
+
+  return $requirements;
 }

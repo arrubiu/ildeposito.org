@@ -3,8 +3,8 @@
   float: left;
   width: 16px;
   height: 16px;
-  opacity: 0.75;
-  filter: alpha(opacity=75);
+  opacity: 0.5;
+  filter: alpha(opacity=50);
 }
 .hybridauth-icon-hybridauth-16:hover {
   opacity: 1;
@@ -103,4 +103,9 @@
 }
 .hybridauth-yandex-hybridauth-16 {
   background: transparent url(icons/yandex.png) 0px 0px no-repeat;
+}
+/* Last used provider */
+.hybridauth-last-provider .hybridauth-icon-hybridauth-16 {
+  opacity: 1;
+  filter: alpha(opacity=100);
 }

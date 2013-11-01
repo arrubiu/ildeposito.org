@@ -4,6 +4,8 @@
  * Main file for the HybridAuth module.
  */
 
+define('HYBRIDAUTH_HASH_SALT', 'hybridauth_hash_salt');
+
 /**
  * Implements hook_hook_info().
  */
@@ -11,8 +13,13 @@ function hybridauth_hook_info() {
   $hooks = array(
     'hybridauth_username_alter',
     'hybridauth_profile_alter',
-    'hybridauth_registration_form',
     'hybridauth_userinfo_alter',
+    'hybridauth_registration_form',
+    'hybridauth_registration_block',
+    'hybridauth_identity_added',
+    'hybridauth_identity_deleted',
+    'hybridauth_user_insert',
+    'hybridauth_user_login',
   );
 
   return array_fill_keys($hooks, array('group' => 'hybridauth'));
@@ -52,6 +59,7 @@ function hybridauth_menu() {
     'page arguments' => array('hybridauth_admin_provider_settings', 5),
     'access arguments' => array('administer site configuration'),
     'file' => 'hybridauth.admin.inc',
+    'type' => MENU_CALLBACK,
   );
   $items['admin/reports/hybridauth'] = array(
     'title' => 'HybridAuth identities',
@@ -111,6 +119,8 @@ function hybridauth_menu() {
  */
 function hybridauth_block_info() {
   $blocks['hybridauth']['info'] = t('User login - HybridAuth widget only');
+  // Shouldn't be cached.
+  $blocks['hybridauth']['cache'] = DRUPAL_NO_CACHE;
 
   return $blocks;
 }
@@ -119,7 +129,7 @@ function hybridauth_block_info() {
  * Implements hook_block_view().
  */
 function hybridauth_block_view($delta = '') {
-  if ($delta == 'hybridauth' && !user_is_logged_in()) {
+  if ($delta == 'hybridauth' && !user_is_logged_in() && user_access('use hybridauth')) {
     $block = array();
     $block['subject'] = t('User login');
     $element['#type'] = 'hybridauth_widget';
@@ -197,7 +207,7 @@ function hybridauth_form_comment_form_alter(&$form, &$form_state, $form_id) {
  * Adds HybridAuth widget to enabled forms.
  */
 function _hybridauth_form_alter(&$form, &$form_state, $form_id) {
-  if (user_access('use hybridauth') && user_is_anonymous() &&
+  if (!user_is_logged_in() && user_access('use hybridauth') &&
     in_array($form_id, array_filter(variable_get('hybridauth_forms', array('user_login', 'user_login_block'))))) {
     $form['hybridauth'] = array(
       '#type' => 'hybridauth_widget',
@@ -234,6 +244,7 @@ function hybridauth_user_profile_form_validate_filter($value) {
  */
 function hybridauth_element_info() {
   $types = array();
+  $path = drupal_get_path('module', 'hybridauth');
 
   $types['hybridauth_widget'] = array(
     '#input' => FALSE,
@@ -242,24 +253,26 @@ function hybridauth_element_info() {
     '#hybridauth_id' => 'hybridauth',
     '#title' => variable_get('hybridauth_widget_title', 'Or log in with...'),
     '#weight' => variable_get('hybridauth_widget_weight', 100),
-    '#hybridauth_window_type' => variable_get('hybridauth_window_type', 'current'),
     '#hybridauth_widget_type' => variable_get('hybridauth_widget_type', 'list'),
     '#hybridauth_widget_use_overlay' => variable_get('hybridauth_widget_use_overlay', 1),
     '#hybridauth_widget_link_text' => variable_get('hybridauth_widget_link_text', 'Social network account'),
     '#hybridauth_widget_link_title' => variable_get('hybridauth_widget_link_title', 'Social network account'),
     '#hybridauth_widget_icon_pack' => variable_get('hybridauth_widget_icon_pack', 'hybridauth_32'),
     '#hybridauth_destination' => variable_get('hybridauth_destination', ''),
+    //'#hybridauth_destination_error' => '',
     '#hybridauth_onclick' => '',
     '#attached' => array(
+      // Add cookie library for last used provider feature.
+      'library' => array(
+        array('system', 'jquery.cookie'),
+      ),
       'js' => array(
-        drupal_get_path('module', 'hybridauth') . '/js/hybridauth.js' => array(
-          'type' => 'file',
-        ),
+        $path . '/js/hybridauth.modal.js',
+        $path . '/js/hybridauth.onclick.js',
       ),
       'css' => array(
-        drupal_get_path('module', 'hybridauth') . '/css/hybridauth.css' => array(
-          'type' => 'file',
-        ),
+        $path . '/css/hybridauth.css',
+        $path . '/css/hybridauth.modal.css',
       ),
     ),
   );
@@ -302,12 +315,14 @@ function hybridauth_username_alter(&$name, $account) {
     return;
   }
 
-  $account2 = user_load($account->uid);
-  if (!empty($account2->data['hybridauth']) && !module_exists('realname')) {
-    $hybridauth_pattern = variable_get('hybridauth_display_name', '[user:hybridauth:firstName] [user:hybridauth:lastName]');
-    $pattern = str_replace('[user:name]', $account2->name, $hybridauth_pattern);
-    $hybridauth_name = token_replace($pattern, array('user' => $account2), array('clear' => TRUE));
-    $name = trim(strip_tags($hybridauth_name));
+  $hybridauth_pattern = variable_get('hybridauth_display_name', '[user:hybridauth:firstName] [user:hybridauth:lastName]');
+  if (!empty($hybridauth_pattern) && !module_exists('realname')) {
+    $account2 = user_load($account->uid);
+    if (!empty($account2->data['hybridauth'])) {
+      $pattern = str_replace('[user:name]', $account2->name, $hybridauth_pattern);
+      $hybridauth_name = token_replace($pattern, array('user' => $account2), array('clear' => TRUE));
+      $name = trim(strip_tags($hybridauth_name));
+    }
   }
 }
 
@@ -317,25 +332,10 @@ function hybridauth_username_alter(&$name, $account) {
 function hybridauth_realname_alter(&$realname, $account) {
   if (!empty($account->data['hybridauth']) && variable_get('hybridauth_override_realname', 0)) {
     $hybridauth_pattern = variable_get('hybridauth_display_name', '[user:hybridauth:firstName] [user:hybridauth:lastName]');
-    $pattern = str_replace('[user:name]', $realname, $hybridauth_pattern);
-    $hybridauth_name = token_replace($pattern, array('user' => $account), array('clear' => TRUE));
-    $realname = trim(strip_tags($hybridauth_name));
-  }
-}
-
-/**
- * Implements hook_page_alter().
- */
-function hybridauth_page_alter(&$page) {
-  // Destroy the session of anonymous user if it was started by HybridAuth.
-  if (!user_is_logged_in() && isset($_SESSION) && array_key_exists('hybridauth_session', $_SESSION)) {
-    if ($_SESSION['hybridauth_session']) {
-      // Set this to FALSE first time so that we can show Drupal messages.
-      $_SESSION['hybridauth_session'] = FALSE;
-    }
-    else {
-      // Destroy the session.
-      session_destroy();
+    if (!empty($hybridauth_pattern)) {
+      $pattern = str_replace('[user:name]', $realname, $hybridauth_pattern);
+      $hybridauth_name = token_replace($pattern, array('user' => $account), array('clear' => TRUE));
+      $realname = trim(strip_tags($hybridauth_name));
     }
   }
 }
@@ -382,6 +382,9 @@ function hybridauth_user_view($account, $view_mode, $langcode) {
     '#rows' => $rows,
     '#sticky' => FALSE,
     '#empty' => t('There are no connected identities.'),
+    // Adding the #name property so that our container has the 'form-item-hybridauth' class.
+    // @see theme_form_element().
+    '#name' => 'hybridauth',
   );
 }
 
@@ -627,15 +630,18 @@ function hybridauth_get_config() {
   $config = &drupal_static(__FUNCTION__, NULL);
 
   if (!isset($config)) {
-    if (variable_get('hybridauth_debug', FALSE) && !file_exists(file_directory_temp() . '/hybridauth.debug.log')) {
-      file_put_contents(file_directory_temp() . '/hybridauth.debug.log', '');
+    $logfile = file_directory_temp() . '/hybridauth.debug.log';
+    if (variable_get('hybridauth_debug', 0)) {
+      if (file_put_contents($logfile, PHP_EOL . 'HYBRIDAUTH DEBUG LOG START' . PHP_EOL . PHP_EOL, FILE_APPEND) === FALSE) {
+        watchdog('hybridauth', 'Failed to write to debug log file @logfile.', array('@logfile' => $logfile), WATCHDOG_ERROR);
+      }
     }
 
     $config = array(
       'base_url' => url('hybridauth/endpoint', array('absolute' => TRUE)),
       'providers' => array(),
-      'debug_mode' => variable_get('hybridauth_debug', FALSE),
-      'debug_file' => file_directory_temp() . '/hybridauth.debug.log',
+      'debug_mode' => variable_get('hybridauth_debug', 0),
+      'debug_file' => $logfile,
     );
 
     foreach (hybridauth_providers_list() as $provider_id => $provider_name) {
@@ -652,22 +658,26 @@ function hybridauth_get_config() {
  * Returns provider config.
  */
 function hybridauth_get_provider_config($provider_id, $enabled_only = TRUE) {
+  $config = NULL;
   $enabled = variable_get('hybridauth_provider_' . $provider_id . '_enabled', 0);
   if (!$enabled_only || $enabled) {
-    return array(
+    $config = array(
       'enabled' => $enabled,
       'keys' => array(
         'id' => trim(variable_get('hybridauth_provider_' . $provider_id . '_keys_id', '')),
         'key' => trim(variable_get('hybridauth_provider_' . $provider_id . '_keys_key', '')),
         'secret' => trim(variable_get('hybridauth_provider_' . $provider_id . '_keys_secret', '')),
       ),
-      'scope' => array_filter(variable_get('hybridauth_provider_' . $provider_id . '_scope', array())),
-      'display' => variable_get('hybridauth_provider_' . $provider_id . '_display', 'popup'),
+      'scope' => variable_get('hybridauth_provider_' . $provider_id . '_scope', ''),
+      'display' => variable_get('hybridauth_provider_' . $provider_id . '_display', ''),
       'hauth_return_to' => url('hybridauth/endpoint'),
     );
+    if (is_array($config['scope'])) {
+      $config['scope'] = array_filter($config['scope']);
+    }
   }
 
-  return NULL;
+  return $config;
 }
 
 /**
@@ -769,11 +779,16 @@ function _hybridauth_user_login_access_by_uid($uid) {
   return !($result->login == 280281600);
 }
 
+function _hybridauth_provider_identifier($identifier) {
+  $provider_identifier = (strlen($identifier) > 32) ? md5($identifier . HYBRIDAUTH_HASH_SALT) : $identifier;
+  return $provider_identifier;
+}
+
 function _hybridauth_identity_save($data, $uid = NULL) {
   global $user;
   $uid = $uid ? $uid : $user->uid;
   db_merge('hybridauth_identity')
-    ->key(array('uid' => $uid, 'provider' => $data['provider'], 'provider_identifier' => $data['identifier']))
+    ->key(array('uid' => $uid, 'provider' => $data['provider'], 'provider_identifier' => _hybridauth_provider_identifier($data['identifier'])))
     ->fields(array('data' => serialize($data)))
     ->execute();
 }
@@ -782,7 +797,7 @@ function _hybridauth_identity_load($data) {
   $result = db_select('hybridauth_identity', 'ha_id')
     ->fields('ha_id')
     ->condition('provider', $data['provider'], '=')
-    ->condition('provider_identifier', $data['identifier'], '=')
+    ->condition('provider_identifier', _hybridauth_provider_identifier($data['identifier']), '=')
     ->execute()
     ->fetchAssoc();
   return $result;
@@ -843,4 +858,30 @@ function _hybridauth_session_delete_by_uid($uid) {
     ->condition('uid', $uid, '=')
     ->execute();
   return $result;
+}
+
+function _hybridauth_registration_block($data) {
+  $result = array_filter(module_invoke_all('hybridauth_registration_block', $data));
+  if (count($result)) {
+    return array_shift($result);
+  }
+
+  return FALSE;
+}
+
+function _hybridauth_invoke_hooks($hook, $account, $data) {
+  // Boost module compatibility; see https://drupal.org/node/2095575.
+  if ($hook == 'hybridauth_user_login') {
+    $cookie_handler_callback = 'boost_cookie_handler';
+    drupal_alter('boost_cookie_handler_callback', $cookie_handler_callback);
+    if (function_exists($cookie_handler_callback)) {
+      $cookie_handler_callback();
+    }
+  }
+  // Invoke other modules hook implementations.
+  module_invoke_all($hook, $account, $data);
+  // Invoke $hook rules event.
+  if (module_exists('rules')) {
+    rules_invoke_event($hook, $account, $data);
+  }
 }

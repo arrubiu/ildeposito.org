@@ -1,5 +1,5 @@
 name = Best Responsive
-description = Best Responsive is a premium Drupal 7 theme. Please consider a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=donation%40devsaran%2ecom&lc=US&item_name=Donations%20to%20Best%20Responsive%20Theme&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest">Small Donations</a>. <br/>Paypal ID : donation@devsaran.com. Developed by <a href="http://www.devsaran.com">devsaran.com</a>.
+description = Best Responsive is a premium Drupal 7 theme. Developed by <a href="http://www.devsaran.com">Devsaran.com</a>.
 core = 7.x
 engine = phptemplate
 stylesheets[all][] = style.css
@@ -37,9 +37,9 @@ settings[twitter_url]  = "http://www.twitter.com/saranquardz"
 settings[google_plus_url]  = "https://plus.google.com/u/0/109064032428497406718"
 settings[pinterest_url]  = "http://pinterest.com"
 
-; Information added by drupal.org packaging script on 2013-02-27
-version = "7.x-1.1"
+; Information added by drupal.org packaging script on 2013-09-02
+version = "7.x-1.2"
 core = "7.x"
 project = "best_responsive"
-datestamp = "1361992844"
+datestamp = "1378142476"
 

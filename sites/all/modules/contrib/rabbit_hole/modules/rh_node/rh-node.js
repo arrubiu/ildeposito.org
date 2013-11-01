@@ -11,7 +11,7 @@ Drupal.behaviors.rhNode = {
       var summary = $('label[for=' + $rabbitHoleAction.attr('id') + ']').text();
       return Drupal.checkPlain(summary);
     });
-  
+
   }
 }
 

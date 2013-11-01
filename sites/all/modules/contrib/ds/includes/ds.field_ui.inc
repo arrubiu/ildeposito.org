@@ -1691,7 +1691,7 @@ function _ds_field_ui_table_layouts($entity_type, $bundle, $view_mode, &$form, $
         '#weight' => 14,
         '#states' => array(
           'visible' => array(
-            ':input[name="additional_settings[region_wrapper][layout_link_attribute]"]' => array(array("value" => "tokens")),
+            ':input[name="additional_settings[region_wrapper][layout_link_attribute]"]' => array("value" => "tokens"),
           ),
         ),
       );

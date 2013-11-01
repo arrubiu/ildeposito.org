@@ -1,4 +1,4 @@
-<?php
+<div class="hybridauth-widget-wrapper"><?php
   print theme('item_list',
     array(
       'items' => $providers,
@@ -7,4 +7,4 @@
       'attributes' => array('class' => array('hybridauth-widget')),
     )
   );
-?>
+?></div>

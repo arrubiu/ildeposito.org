@@ -15,12 +15,15 @@ function hybridauth_uninstall() {
     variable_del('hybridauth_provider_' . $provider_id . '_keys_id');
     variable_del('hybridauth_provider_' . $provider_id . '_keys_key');
     variable_del('hybridauth_provider_' . $provider_id . '_keys_secret');
+    variable_del('hybridauth_provider_' . $provider_id . '_window_type');
+    variable_del('hybridauth_provider_' . $provider_id . '_window_width');
+    variable_del('hybridauth_provider_' . $provider_id . '_window_height');
+    variable_del('hybridauth_provider_' . $provider_id . '_display');
     variable_del('hybridauth_provider_' . $provider_id . '_scope');
   }
 
   variable_del('hybridauth_library_path');
   variable_del('hybridauth_required_fields');
-  variable_del('hybridauth_window_type');
   variable_del('hybridauth_widget_title');
   variable_del('hybridauth_widget_type');
   variable_del('hybridauth_widget_use_overlay');
@@ -35,6 +38,7 @@ function hybridauth_uninstall() {
   variable_del('hybridauth_email_verification');
   variable_del('hybridauth_username');
   variable_del('hybridauth_registration_username_change');
+  variable_del('hybridauth_registration_password');
   variable_del('hybridauth_display_name');
   variable_del('hybridauth_override_realname');
   variable_del('hybridauth_destination');
@@ -45,17 +49,19 @@ function hybridauth_uninstall() {
   // Some old variables not present in the code now.
   variable_del('hybridauth_registration_role_choice');
   variable_del('hybridauth_registration_roles');
+  variable_del('hybridauth_window_type');
 }
 
 /**
  * Implements hook_requirements().
  */
 function hybridauth_requirements($phase) {
+  module_load_include('module', 'hybridauth');
   $requirements = array();
   // Ensure translations don't break at install time.
   $t = get_t();
 
-  if ($phase == 'runtime') {
+  if ($phase == 'install' || $phase == 'runtime') {
     if ($lib_path = _hybridauth_library_path()) {
       try {
         require_once $lib_path . '/Hybrid/Auth.php';
@@ -68,7 +74,7 @@ function hybridauth_requirements($phase) {
       catch(Exception $e) {
         $requirements['hybridauth'] = array(
           'title' => $t('HybridAuth library'),
-          'value' => $e->getMessage(),
+          'description' => $e->getMessage(),
           'severity' => REQUIREMENT_ERROR,
         );
       }
@@ -76,7 +82,7 @@ function hybridauth_requirements($phase) {
     else {
       $requirements['hybridauth'] = array(
         'title' => $t('HybridAuth library'),
-        'value' => $t('HybridAuth library is missing'),
+        'description' => $t('HybridAuth library is missing'),
         'severity' => REQUIREMENT_ERROR,
       );
     }

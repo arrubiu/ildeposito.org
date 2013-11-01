@@ -27,32 +27,34 @@ function rh_taxonomy_rabbit_hole() {
  * be used as default for every term of this vocabulary.
  */
 function rh_taxonomy_form_taxonomy_form_vocabulary_alter(&$form, $form_state) {
-  if (!user_access('administer rh_taxonomy')) {
-    // The user doesn't have access.
+  if (isset($form_state['confirm_delete'])) {
+    // We're on the delete confirmation form.
     return;
   }
 
   // Add the Rabbit Hole form.
   rabbit_hole_form($form, 'taxonomy_term', $form['#vocabulary']->machine_name, 'rh_taxonomy');
-
-  // Add a custom submit function that allows our settings to get saved.
-  $form['#submit'][] = 'rh_taxonomy_form_vocabulary_submit';
 }
 
 /**
- * Submit callback for the vocabulary form.
+ * Submit callback for the bundle form.
  *
  * This will set the value of the variables, and update the name of the
  * variables if the machine name of the vocabulary has changed.
  */
-function rh_taxonomy_form_vocabulary_submit($form, $form_state) {
+function rh_taxonomy_bundle_form_submit($form, $form_state) {
   $values = $form_state['values'];
 
-  // Set the values of the variables.
-  variable_set('rh_taxonomy_term_action_' . $values['machine_name'], $values['rh_taxonomy_term_action']);
-  variable_set('rh_taxonomy_term_redirect_' . $values['machine_name'], $values['rh_taxonomy_term_redirect']);
-  variable_set('rh_taxonomy_term_redirect_response_' . $values['machine_name'], $values['rh_taxonomy_term_redirect_response']);
-  
+  // Set the values of the variables. This will be set to the provided values,
+  // if there are any provided values. They may be NULL if the user doesn't have
+  // the administer rh_taxonomy permission. In this case, we'll set the
+  // variables according to the stored values for the old machine name. We'll
+  // use the old machine name in case it has changed.
+  variable_set('rh_taxonomy_term_override_' . $values['machine_name'], isset($values['rh_taxonomy_term_override']) ? $values['rh_taxonomy_term_override'] : variable_get('rh_taxonomy_term_override_' . $values['old_machine_name']));
+  variable_set('rh_taxonomy_term_action_' . $values['machine_name'], isset($values['rh_taxonomy_term_action']) ? $values['rh_taxonomy_term_action'] : variable_get('rh_taxonomy_term_action_' . $values['old_machine_name']));
+  variable_set('rh_taxonomy_term_redirect_' . $values['machine_name'], isset($values['rh_taxonomy_term_redirect']) ? $values['rh_taxonomy_term_redirect'] : variable_get('rh_taxonomy_term_redirect_' . $values['old_machine_name']));
+  variable_set('rh_taxonomy_term_redirect_response_' . $values['machine_name'], isset($values['rh_taxonomy_term_redirect_response']) ? $values['rh_taxonomy_term_redirect_response'] : variable_get('rh_taxonomy_term_redirect_response_' . $values['old_machine_name']));
+
   // Delete old variables if the machine name has changed.
   if ($values['machine_name'] != $values['old_machine_name']) {
     rabbit_hole_delete_variables('taxonomy_term', $values['old_machine_name']);
@@ -66,8 +68,8 @@ function rh_taxonomy_form_vocabulary_submit($form, $form_state) {
  * be able to override the default Rabbit Hole options.
  */
 function rh_taxonomy_form_taxonomy_form_term_alter(&$form, $form_state) {
-  if (!user_access('administer rh_taxonomy')) {
-    // The user doesn't have access.
+  if (isset($form_state['confirm_delete'])) {
+    // We're on the delete confirmation form.
     return;
   }
 

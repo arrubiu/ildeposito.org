@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Theme functions for integrating the HybridAuth module.
+ * Theme functions for the HybridAuth module.
  */
 
 /**
@@ -9,38 +9,102 @@
  */
 function template_preprocess_hybridauth_widget(&$vars, $hook) {
   $element = $vars['element'];
-  $providers = array();
-  if ($element['#hybridauth_destination']) {
-    $query = array('destination' => $element['#hybridauth_destination']);
+
+  $query = array();
+  $element['#hybridauth_destination'] = trim($element['#hybridauth_destination']);
+  // Process destination; HTTP_REFERER is needed for widget in modals
+  // to return to the current page.
+  if ($element['#hybridauth_destination'] == '[HTTP_REFERER]' && isset($_SERVER['HTTP_REFERER'])) {
+    $query = array(
+      'destination' => $_SERVER['HTTP_REFERER'],
+      'destination_error' => $_SERVER['HTTP_REFERER'],
+    );
   }
-  else {
-    $query = drupal_get_destination();
+  elseif ($element['#hybridauth_destination']) {
+    $destination = drupal_get_destination();
+    $query = array(
+      'destination' => $element['#hybridauth_destination'],
+      'destination_error' => $destination['destination'],
+    );
+  }
+  if (!$query) {
+    $destination = drupal_get_destination();
+    $query = array(
+      'destination' => $destination['destination'],
+      'destination_error' => $destination['destination'],
+    );
   }
 
+  $providers = array();
   if ($element['#hybridauth_widget_type'] == 'list') {
-    $onclick = '';
-    if (!empty($element['#hybridauth_onclick'])) {
-      $onclick = $element['#hybridauth_onclick'];
-    }
-    elseif ($element['#hybridauth_window_type'] == 'current') {
-      $onclick = "jQuery(this).parents('.hybridauth-widget').after('<div>' + Drupal.t('Contacting') + ' ' + this.title + '...</div>');";
-    }
-    elseif ($element['#hybridauth_window_type'] == 'popup') {
-      $onclick = "popup_window = window.open(this.href, 'hybridauth', 'location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,titlebar=yes,toolbar=no,channelmode=yes,fullscreen=yes,width=800,height=500'); popup_window.focus(); return false;";
-    }
+    $class = array('hybridauth-widget-provider');
+    $rel = array('nofollow');
+
     foreach (hybridauth_get_enabled_providers() as $provider_id => $provider_name) {
+      $window_type = variable_get('hybridauth_provider_' . $provider_id . '_window_type', 'current');
+      $window_width = variable_get('hybridauth_provider_' . $provider_id . '_window_width', 800);
+      $window_height = variable_get('hybridauth_provider_' . $provider_id . '_window_height', 500);
+      $query_mod = $query;
+      $class_mod = $class;
+      $rel_mod = $rel;
+
+      switch ($window_type) {
+        // Add Colorbox-specific things.
+        case 'colorbox':
+          $class_mod[] = 'colorbox-load';
+          $query_mod += array(
+            'width' => $window_width,
+            'height' => $window_height,
+            'iframe' => 'true',
+          );
+          break;
+        // Add Shadowbox specific settings.
+        case 'shadowbox':
+          $rel_mod = array('shadowbox;width=' . $window_width . ';height=' . $window_height, 'nofollow');
+          break;
+        // Add fancyBox-specific settings.
+        case 'fancybox':
+          $class_mod[] = 'fancybox';
+          $class_mod[] = 'fancybox.iframe';
+          $class_mod[] = '{width:' . $window_width . ',height:' . $window_height . '}';
+          break;
+        // Add Lightbox2-specific settings.
+        case 'lightbox2':
+          $rel_mod = array('lightframe[|width:' . $window_width . 'px; height:' . $window_height . 'px;]', 'nofollow');
+          break;
+      }
+
+      // Determine onclick behavior.
+      $onclick = '';
+      if ($element['#hybridauth_onclick'] === FALSE) {}
+      elseif (!empty($element['#hybridauth_onclick'])) {
+        $onclick = $element['#hybridauth_onclick'];
+      }
+      elseif ($window_type == 'current') {
+        $class_mod[] = 'hybridauth-onclick-current';
+      }
+      elseif ($window_type == 'popup') {
+        $class_mod[] = 'hybridauth-onclick-popup';
+      }
+
+      $path = 'hybridauth/window/' . $provider_id;
       $providers[] = l(
         theme('hybridauth_provider_icon', array('icon_pack' => $element['#hybridauth_widget_icon_pack'], 'provider_id' => $provider_id, 'provider_name' => $provider_name)),
-        'hybridauth/window/' . $provider_id,
+        $path,
         array(
           'html' => TRUE,
-          'query' => $query,
+          'query' => $query_mod,
           'attributes' => array(
             'title' => $provider_name,
-            'class' => array('hybridauth-widget-provider'),
-            'rel' => array('nofollow'),
-            'onclick' => $onclick,
-          ),
+            'class' => $class_mod,
+            'rel' => $rel_mod,
+            'data-hybridauth-provider' => $provider_id,
+            // jQuery Mobile compatibility - so it doesn't use AJAX.
+            'data-ajax' => 'false',
+            // Add authentication window width and height.
+            'data-hybridauth-width' => $window_width,
+            'data-hybridauth-height' => $window_height,
+          ) + ($onclick ? array('onclick' => $onclick) : array()),
         )
       );
     }

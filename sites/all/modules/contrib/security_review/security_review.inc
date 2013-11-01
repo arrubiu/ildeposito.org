@@ -6,7 +6,7 @@
  */
 
 // Define the version of this file in case it's used outside of its module.
-define('SECURITY_REVIEW_VERSION', '7.x-1.0');
+define('SECURITY_REVIEW_VERSION', '7.x-1.1');
 
 /**
  * Public function for running Security Review checklist and returning results.
@@ -18,7 +18,7 @@ define('SECURITY_REVIEW_VERSION', '7.x-1.0');
  */
 function security_review_run($checklist = NULL, $log = FALSE, $help = FALSE) {
   if (!$checklist && module_exists('security_review')) {
-    $checklist = module_invoke_all('security_review');
+    $checklist = module_invoke_all('security_checks');
   }
   $results = _security_review_run($checklist, $log);
 
@@ -94,9 +94,12 @@ function _security_review_run_check($module, $check_name, $check, $log, $store =
 }
 
 /**
- * Implements hook_security_checks().
+ * Core Security Review's checks.
+ *
+ * @see security_review_get_checklist().
  */
 function _security_review_security_checks() {
+  $checks = array();
   $checks['file_perms'] = array(
     'title' => t('File system permissions'),
     'callback' => 'security_review_check_file_perms',
@@ -170,8 +173,43 @@ function _security_review_security_checks() {
       'failure' => t('Untrusted users have access to use the PHP input format.'),
     );
   }
+  $checks['executable_php'] = array(
+    'title' => t('Executable PHP'),
+    'callback' => 'security_review_check_executable_php',
+    'success' => t('PHP files in the Drupal files directory cannot be executed.'),
+    'failure' => t('PHP files in the Drupal files directory can be executed.'),
+  );
+  $checks['base_url_set'] = array(
+    'title' => t('Drupal base URL'),
+    'callback' => 'security_review_check_base_url',
+    'success' => t('Base URL is set in settings.php.'),
+    'failure' => t('Base URL is not set in settings.php.'),
+  );
+  $checks['temporary_files'] = array(
+    'title' => t('Temporary files'),
+    'callback' => 'security_review_check_temporary_files',
+    'success' => t('No sensitive temporary files were found.'),
+    'failure' => t('Sensitive temporary files were found on your files system.'),
+  );
 
   return array('security_review' => $checks);
+}
+
+/**
+ * Checks for security_review_get_checklist() when Views is enabled.
+ */
+function views_security_checks() {
+  $checks = array();
+  $checks['access'] = array(
+    'title' => t('Views access'),
+    'callback' => 'security_review_check_views_access',
+    'success' => t('Views are access controlled.'),
+    'failure' => t('There are Views that do not provide any access checks.'),
+    'module' => 'security_review',
+    // Specify this file because the callback is here.
+    'file' => 'security_review',
+  );
+  return array('views' => $checks);
 }
 
 /**
@@ -180,27 +218,44 @@ function _security_review_security_checks() {
 function security_review_check_file_perms() {
   $result = TRUE;
   // Extract ending folder for file directory path.
-  $file_path = rtrim(variable_get('file_public_path', conf_path() . '/files'), '/');
-  $file_path = substr($file_path, strrpos($file_path, '/') + 1);
+  $file_path = './' . rtrim(variable_get('file_public_path', conf_path() . '/files'), '/');
   // Set files to ignore.
-  $ignore = array('..', 'CVS', $file_path);
-  $files = _security_review_check_file_perms_scan('.', $ignore);
+  $ignore = array('..', 'CVS', '.git', '.svn', '.bzr', realpath($file_path));
+  // Add temporary files directory if it's set.
+  $temp_path = variable_get('file_temporary_path', '');
+  if (!empty($temp_path)) {
+    $ignore[] = realpath('./' . rtrim($temp_path, '/'));
+  }
+  // Add private files directory if it's set.
+  $private_files = variable_get('file_private_path', '');
+  if (!empty($private_files)) {
+    // Remove leading slash if set.
+    if (strrpos($private_files, '/') !== FALSE) {
+      $private_files = substr($private_files, strrpos($private_files, '/') + 1);
+    }
+    $ignore[] = $private_files;
+  }
+  drupal_alter('security_review_file_ignore', $ignore);
+  $parsed = array(realpath('.'));
+  $files = _security_review_check_file_perms_scan('.', $parsed, $ignore);
 
   // Try creating or appending files.
   // Assume it doesn't work.
   $create_status = $append_status = FALSE;
 
+  $append_message = t("Your web server should not be able to write to your modules directory. This is a security vulnerable. Consult the Security Review file permissions check help for mitigation steps.");
+
   $directory = drupal_get_path('module', 'security_review');
   // Write a file with the timestamp
   $file = './' . $directory . '/file_write_test.' . date('Ymdhis');
   if ($file_create = @fopen($file, 'w')) {
-    $create_status = fwrite($file_create, t("This is a vulnerable directory.\n"));
+    $create_status = fwrite($file_create, date('Ymdhis') . ' - ' . $append_message . "\n");
     fclose($file_create);
   }
   // Try to append to our IGNOREME file.
   $file = './'. $directory . '/IGNOREME.txt';
   if ($file_append = @fopen($file, 'a')) {
-    $append_status = fwrite($file_append, date('Ymdhis') . "\n");
+    $append_status = fwrite($file_append, date('Ymdhis') . ' - ' . $append_message . "\n");
     fclose($file_append);
   }
 
@@ -210,23 +265,25 @@ function security_review_check_file_perms() {
   return array('result' => $result, 'value' => $files);
 }
 
-function _security_review_check_file_perms_scan($directory, $ignore) {
+function _security_review_check_file_perms_scan($directory, &$parsed, $ignore) {
   $items = array();
   if ($handle = opendir($directory)) {
     while (($file = readdir($handle)) !== FALSE) {
       // Don't check hidden files or ones we said to ignore.
-      if ($file[0] != "." && !in_array($file, $ignore)) {
-        $file = $directory . "/" . $file;
-        if (is_dir($file)) {
-          $items = array_merge($items, _security_review_check_file_perms_scan($file, $ignore));
-          if (is_writable($file)) {
-            $items[] = preg_replace("/\/\//si", "/", $file);
+      $path = $directory . "/" . $file;
+      if ($file[0] != "." && !in_array($file, $ignore) && !in_array(realpath($path), $ignore)) {
+        if (is_dir($path) && !in_array(realpath($path), $parsed)) {
+          $parsed[] = realpath($path);
+          $items = array_merge($items, _security_review_check_file_perms_scan($path, $parsed, $ignore));
+          if (is_writable($path)) {
+            $items[] = preg_replace("/\/\//si", "/", $path);
           }
         }
-        elseif (is_writable($file)) {
-          $items[] = preg_replace("/\/\//si", "/", $file);
+        elseif (is_writable($path)) {
+          $items[] = preg_replace("/\/\//si", "/", $path);
         }
       }
+
     }
     closedir($handle);
   }
@@ -234,7 +291,8 @@ function _security_review_check_file_perms_scan($directory, $ignore) {
 }
 
 /**
- * Check for formats that do not have HTML filter that can be used by untrusted users.
+ * Check for formats that either do not have HTML filter that can be used by
+ * untrusted users, or if they do check if unsafe tags are allowed.
  */
 function security_review_check_input_formats() {
   $result = TRUE;
@@ -255,6 +313,7 @@ function security_review_check_input_formats() {
         // Check for unsafe tags in allowed tags.
         $allowed_tags = $filter->settings['allowed_html'];
         $unsafe_tags = security_review_unsafe_tags();
+        drupal_alter('security_review_unsafe_tags', $unsafe_tags);
         foreach ($unsafe_tags as $tag) {
           if (strpos($allowed_tags, '<' . $tag . '>') !== FALSE) {
             // Found an unsafe tag
@@ -308,7 +367,7 @@ function security_review_check_error_reporting() {
   else {
     $result = TRUE;
   }
-  return array('result' => $result);
+  return array('result' => $result, 'value' => $error_level);
 }
 
 /**
@@ -317,28 +376,18 @@ function security_review_check_error_reporting() {
  * There is ample room for the user to get around this check. @TODO get more sophisticated?
  */
 function security_review_check_private_files() {
-  // Get the default download method.
-  $scheme = variable_get('file_default_scheme', '');
-  // Most insecure configurations will be using the local private wrapper.
-  if ($scheme == 'private') {
-    $file_directory_path = variable_get('file_private_path', '');
-    if (strpos($file_directory_path, '/') === 0) {
-      // Path begins at root.
-      $result = TRUE;
-    }
-    elseif (strpos($file_directory_path, '../') === 0) {
-      // Path begins by moving up the system.
-      $result = FALSE;
-    }
-    else {
-      // Directory is relative (or crafty).
-      $result = FALSE;
-    }
+  $file_directory_path = variable_get('file_private_path', '');
+  if (empty($file_directory_path)) {
+    $result = NULL; // Ignore this check.
+  }
+  elseif (strpos(realpath($file_directory_path), DRUPAL_ROOT) === 0) {
+    // Path begins at root.
+    $result = FALSE;
   }
   else {
-    $result = NULL;
+    $result = TRUE;
   }
-  return array('result' => $result);
+  return array('result' => $result, 'value' => $file_directory_path);
 }
 
 function security_review_check_query_errors($last_check = NULL) {
@@ -450,10 +499,16 @@ function security_review_check_field($last_check = NULL) {
           $current_table = key($field['storage']['details']['sql'][FIELD_LOAD_CURRENT]);
           $revision_table = key($field['storage']['details']['sql'][FIELD_LOAD_REVISION]);
           if (!array_key_exists($current_table, $tables)) {
-            $tables[$current_table] = $field['storage']['details']['sql'][FIELD_LOAD_CURRENT][$current_table]['value'];
+            $tables[$current_table] = array(
+              'column' => $field['storage']['details']['sql'][FIELD_LOAD_CURRENT][$current_table]['value'],
+              'name' => $field['field_name'],
+            );
           }
           if (!array_key_exists($revision_table, $tables)) {
-            $tables[$revision_table] = $field['storage']['details']['sql'][FIELD_LOAD_REVISION][$revision_table]['value'];
+            $tables[$revision_table] = array(
+              'column' => $field['storage']['details']['sql'][FIELD_LOAD_REVISION][$revision_table]['value'],
+              'name' => $field['field_name'],
+            );
           }
         }
       }
@@ -463,15 +518,18 @@ function security_review_check_field($last_check = NULL) {
     return array('result' => $check_result, 'value' => $check_result_value);
   }
   // Search for PHP or Javascript tags in text columns.
-  foreach ($tables as $table => $column) {
-    $sql = "SELECT DISTINCT entity_id, entity_type FROM {" . $table . "} WHERE " . $column . " LIKE :text";
+  foreach ($tables as $table => $info) {
+    $sql = "SELECT DISTINCT entity_id, entity_type FROM {" . $table . "} WHERE " . $info['column'] . " LIKE :text";
     // Handle changed? @todo
-    foreach (array('Javascript' => '%<script%', 'PHP' => '%<?php%') as $description => $comparison) {
+    foreach (array('Javascript' => '%<script%', 'PHP' => '%<?php%') as $vuln_type => $comparison) {
       $results = db_query($sql, array(':text' => $comparison)); // @pager query?
       foreach ($results as $result) {
         $check_result = FALSE;
         if (!isset($check_result_value[$result->entity_type]) || !array_key_exists($result->entity_id, $check_result_value[$result->entity_type])) {
-          $check_result_value[$result->entity_type][$result->entity_id] = $description;
+          $check_result_value[$result->entity_type][$result->entity_id] = array(
+            'type' => $vuln_type,
+            'field' => $info['name'],
+          );
         }
       }
     }
@@ -495,7 +553,7 @@ function security_review_check_upload_extensions($last_check = NULL) {
           foreach ($unsafe_extensions as $unsafe_extension) {
             if (strpos($instance['settings']['file_extensions'], $unsafe_extension) !== FALSE) {
               // Found an unsafe extension.
-              $check_result_value[$instance['field_name']][] = $unsafe_extension;
+              $check_result_value[$instance['field_name']][$instance['bundle']] = $unsafe_extension;
               $check_result = FALSE;
             }
           }
@@ -544,46 +602,187 @@ function _security_review_weak_passwords($trusted_roles) {
   // Explicitly check uid 1 in case they have no roles.
   $weak_uid1 = db_fetch_object(db_query("SELECT u.uid, u.name, 1 AS count FROM {users} u WHERE pass = md5(name) AND uid = 1"));
   if (!empty($weak_uid1->count)) {
-    $weak_users[$weak_uid1->uid] = $weak_uid1->name; 
+    $weak_users[$weak_uid1->uid] = $weak_uid1->name;
   }
 
   return $weak_users;
 }
 
 /**
- * Helper function allows for collection of this file's security checks.
+ * Check if PHP files written to the files directory can be executed.
  */
-function security_review_get_checks() {
+function security_review_check_executable_php($last_check = NULL) {
+  global $base_url;
+  $result = TRUE;
+  $check_result_value = array();
+
+  $message = 'Security review test ' . date('Ymdhis');
+  $content = "<?php\necho '" . $message . "';";
+  $directory = variable_get('file_public_path', 'sites/default/files');
+  $file = '/security_review_test.php';
+  if ($file_create = @fopen('./' . $directory . $file, 'w')) {
+    $create_status = fwrite($file_create, $content);
+    fclose($file_create);
+  }
+  $response = drupal_http_request($base_url . '/' . $directory . $file);
+  if ($response->code == 200 && $response->data === $message) {
+    $result = FALSE;
+    $check_result_value[] = 'executable_php';
+  }
+  if (file_exists('./' . $directory . $file)) {
+    @unlink('./' . $directory . $file);
+  }
+  // Check for presence of the .htaccess file and if the contents are correct.
+  if (!file_exists($directory . '/.htaccess')) {
+    $result = FALSE;
+    $check_result_value[] = 'missing_htaccess';
+  }
+  else {
+    $contents = file_get_contents($directory . '/.htaccess');
+    // Text from includes/file.inc.
+    $expected = "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks";
+    if ($contents !== $expected) {
+      $result = FALSE;
+      $check_result_value[] = 'incorrect_htaccess';
+    }
+    if (is_writable($directory . '/.htaccess')) {
+      // Don't modify $result.
+      $check_result_value[] = 'writable_htaccess';
+    }
+  }
+
+  return array('result' => $result, 'value' => $check_result_value);
+}
+
+/**
+ * Check if $base_url is set in settings.php.
+ */
+function security_review_check_base_url($last_check = NULL) {
+  // Support different methods to check for $base_url.
+  $method = variable_get('security_review_base_url_method', 'token');
+  $result = NULL;
+  if ($method === 'token') {
+    if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
+      $content = file_get_contents(DRUPAL_ROOT . '/' . conf_path() . '/settings.php');
+      $tokens = token_get_all($content);
+    }
+    $result = FALSE;
+    foreach ($tokens as $token) {
+      if (is_array($token) && $token[0] === T_VARIABLE && $token[1] == '$base_url') {
+        $result = TRUE;
+        break;
+      }
+    }
+  }
+  elseif ($method === 'include') {
+    if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
+      include DRUPAL_ROOT . '/' . conf_path() . '/settings.php';
+    }
+    if (isset($base_url)) {
+      $result = TRUE;
+    }
+    else {
+      $result = FALSE;
+    }
+  }
+  return array('result' => $result, 'value' => '');
+}
+
+/**
+ * Check for sensitive temporary files like settings.php~.
+ */
+function security_review_check_temporary_files($last_check = NULL) {
+  $result = TRUE;
+  $check_result_value = array();
+  $files = array();
+  $dir = scandir(DRUPAL_ROOT . '/' . conf_path() . '/');
+  foreach ($dir as $file) {
+    // Set full path to only files.
+    if (!is_dir($file)) {
+      $files[] = DRUPAL_ROOT . '/' . conf_path() . '/' . $file;
+    }
+  }
+  drupal_alter('security_review_temporary_files', $files);
+  foreach ($files as $path) {
+    $matches = array();
+    if (file_exists($path) && preg_match('/.*(~|\.sw[op]|\.bak|\.orig|\.save)$/', $path, $matches) !== FALSE && !empty($matches)) {
+      $result = FALSE;
+      $check_result_value[] = $path;
+    }
+  }
+  return array('result' => $result, 'value' => $check_result_value);
+}
+
+/**
+ * Get core Security Review checks and checks from any hook_security_checks().
+ *
+ * @return array
+ *   Array of checks indexed by module name. e.g.:
+ *   'security_review' => array(
+ *     'check_name' => array(...)
+ *   )
+ */
+function security_review_get_checklist() {
   $checks = _security_review_security_checks();
+  $checks = array_merge($checks, module_invoke_all('security_checks'));
   return $checks;
+}
+
+function security_review_check_views_access($last_check = NULL) {
+  $result = TRUE;
+  $check_result_value = array();
+  $timestamp = NULL;
+  // Load and loop through every view, checking the access type in displays.
+  $views = views_get_all_views();
+  foreach ($views as $view) {
+    if ($view->disabled !== TRUE) {
+      // Access is set in display options of a display.
+      foreach ($view->display as $display_name => $display) {
+        if (isset($display->display_options['access']) && $display->display_options['access']['type'] == 'none') {
+          $check_result_value[$view->name][] = $display_name;
+        }
+      }
+    }
+  }
+  if (!empty($check_result_value)) {
+    $result = FALSE;
+  }
+  return array('result' => $result, 'value' => $check_result_value);
 }
 
 /**
  * Helper function defines HTML tags that are considered unsafe.
  *
- * Based on wysiwyg_filter_get_elements_blacklist().
+ * Based on wysiwyg_filter_get_elements_blacklist(),
+ * https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet, and
+ * html5sec.org.
  */
 function security_review_unsafe_tags() {
   return array(
     'applet',
     'area',
+    'audio',
     'base',
     'basefont',
     'body',
     'button',
+    'comment',
     'embed',
+    'eval',
     'form',
     'frame',
     'frameset',
     'head',
     'html',
     'iframe',
+    'image',
     'img',
     'input',
     'isindex',
     'label',
     'link',
     'map',
+    'math',
     'meta',
     'noframes',
     'noscript',
@@ -594,11 +793,13 @@ function security_review_unsafe_tags() {
     'script',
     'select',
     'style',
+    'svg',
     'table',
     'td',
     'textarea',
     'title',
-    'tr',
+    'video',
+    'vmlframe',
   );
 }
 

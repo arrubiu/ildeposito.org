@@ -40,7 +40,13 @@ function _popular_tags_inject(&$element, $context) {
         unset($classes[$key]);
       }
     }
-    $tag_terms .= t('<a class="@classes" href="#" title="x@count">@term</a>', array(
+    
+    // a term name containing comma needs to be quoted
+    if(strpos($term->name, ',') !== FALSE) {
+      $term->name = '"'. $term->name . '"';
+    }
+    
+    $tag_terms .= t('<a class="@classes" href="#" title="x@count" >@term</a>', array(
       '@term' => $term->name,
       '@count' => $term->count,
       '@classes' => implode(' ', $classes),

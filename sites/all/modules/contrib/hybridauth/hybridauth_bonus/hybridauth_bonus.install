@@ -12,7 +12,9 @@ function hybridauth_bonus_uninstall() {
   variable_del('hybridauth_bonus_registration_roles');
   variable_del('hybridauth_bonus_customize_widget_per_form');
 
-  module_load_include('module', 'hybridauth_bonus');
+  if (!function_exists('hybridauth_forms_list')) {
+    module_load_include('module', 'hybridauth');
+  }
   foreach (hybridauth_forms_list() as $form_id => $form_name) {
     variable_del('hybridauth_bonus_widget_title_' . $form_id);
     variable_del('hybridauth_bonus_widget_type_' . $form_id);

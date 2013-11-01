@@ -212,6 +212,7 @@ function ds_ds_fields_info($entity_type) {
       'function' => 'ds_render_date_field',
       'properties' => array(
         'formatters' => $date_formatters,
+        'entity_render_key' => 'created',
       ),
     );
 

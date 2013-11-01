@@ -66,6 +66,10 @@ function hybridauth_tokens($type, $tokens, array $data = array(), array $options
   }
 
   if ($type == 'hybridauth' && !empty($data['hybridauth'])) {
+    // Select tokens provided by HybridAuth only to avoid breaking tokens
+    // provided by other modules.
+    $tokens = array_intersect_key($tokens, hybridauth_fields_list());
+
     foreach ($tokens as $name => $original) {
       if (isset($data['hybridauth'][$name])) {
         $replacements[$original] = $sanitize ? check_plain($data['hybridauth'][$name]) : $data['hybridauth'][$name];

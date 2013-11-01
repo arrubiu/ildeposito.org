@@ -18,7 +18,6 @@ function imagecrop_image_effect_info() {
     'effect callback' => 'imagecrop_effect',
     'form callback' => 'imagecrop_effect_form',
     'summary theme' => 'imagecrop_effect_summary',
-    //'dimensions callback' => 'imagecrop_javascript_dimensions',
   );
 
   $effects['imagecrop_reuse'] = array(
@@ -27,7 +26,6 @@ function imagecrop_image_effect_info() {
     'effect callback' => 'imagecrop_reuse_effect',
     'form callback' => 'imagecrop_reuse_form',
     'summary theme' => 'theme_imagecrop_reuse',
-    //'dimensions callback' => 'imagecrop_reuse_dimensions',
   );
 
   return $effects;
@@ -46,35 +44,21 @@ function imagecrop_effect(&$image, $data) {
 
   try {
 
-    $imagecrop = ImageCrop::getInstance($image);
+    $imagecrop = new ImageCrop();
+    $imagecrop->loadFile($image->source, FALSE);
+
+    // if a global presetid is been set, it meens the image is generated from the imagecrop module
+    if (isset($GLOBALS['imagecrop_style'])) {
+      $style_name = $GLOBALS['imagecrop_style'];
+    }
+    // and if not, then get the id from list of all presets
+    else {
+      $style_name = imagecrop_get_style_name_from_url();
+    }
+
+    $imagecrop->setImageStyle($style_name);
+    $imagecrop->loadCropSettings();
     $imagecrop->applyCrop($image);
-
-  }
-  catch (Exception $e) {
-    watchdog($e->getMessage(), 'error');
-    return FALSE;
-  }
-
-  return TRUE;
-
-}
-
-/**
- * Image dimensions callback; imagecrop.
- *
- * @param $dimensions
- *   Dimensions to be modified - an array with components width and height, in
- *   pixels.
- * @param $data
- *   An array of attributes to use when performing the imagecrop effect.
- */
-function imagecrop_javascript_dimensions(array &$dimensions, array $data) {
-
-  try {
-
-    $imagecrop = ImageCrop::getInstance();
-    $dimensions['width'] = $imagecrop->getWidth();
-    $dimensions['height'] = $imagecrop->getHeight();
 
   }
   catch (Exception $e) {
@@ -91,26 +75,7 @@ function imagecrop_javascript_dimensions(array &$dimensions, array $data) {
  */
 function imagecrop_effect_form($data) {
 
-  $form = array();
-  $form['width'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Width'),
-    '#default_value' => isset($data['width']) ? $data['width'] : '',
-    '#required' => TRUE,
-    '#size' => 10,
-    '#element_validate' => array('image_crop_validate_size'),
-    '#description' => t('Enter the width in pixels or %'),
-  );
-
-  $form['height'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Height'),
-    '#default_value' => isset($data['height']) ? $data['height'] : '',
-    '#required' => TRUE,
-    '#size' => 10,
-    '#element_validate' => array('image_crop_validate_size'),
-    '#description' => t('Enter the height in pixels or %'),
-  );
+  $form = image_resize_form($data);
 
   $form['xoffset'] = array(
     '#type' => 'textfield',
@@ -124,7 +89,7 @@ function imagecrop_effect_form($data) {
     '#type' => 'textfield',
     '#title' => t('Y offset'),
     '#default_value' => isset($data['yoffset']) ? $data['yoffset'] : '',
-    '#description' => t('Enter an offset in pixels (without px) or use a keyword: <em>top</em>, <em>center</em> or <em>bottom</em>.'),
+    '#description' => t('Enter an offset in pixels (without px) or use a keyword: <em>top</em>, <em>center</em>, or <em>bottom</em>.'),
     '#element_validate' => array('imagecrop_validate_offset'),
   );
 
@@ -183,18 +148,6 @@ function imagecrop_javascript_effect_submit($form, &$form_state) {
 }
 
 /**
- * Validate the entered height / width. (can be procent or numeric)
- */
-function image_crop_validate_size($element, &$form_state) {
-
-  $value = str_replace('%', '', $element['#value']);
-  if ($value != '' && (!is_numeric($value) || intval($value) <= 0)) {
-    form_error($element, t('!name must be a correct size.', array('!name' => $element['#title'])));
-  }
-
-}
-
-/**
  * Validation function to validate an entered offset value. (numbers or left / center / right)
  */
 function imagecrop_validate_offset($element, &$form_state) {
@@ -208,15 +161,8 @@ function imagecrop_validate_offset($element, &$form_state) {
     return;
   }
 
-  if ($element['#name'] == 'data[yoffset]') {
-    $allowed_values = array('center', 'top', 'bottom');
-  }
-  else {
-    $allowed_values = array('center', 'left', 'right');
-  }
-
   // if the value is a string, check on allowed strings
-  if (!in_array($element['#value'], $allowed_values)) {
+  if ($element['#value'] != 'center' && $element['#value'] != 'left' && $element['#value'] != 'right') {
     form_error($element, t('@name must be a correct offset value', array('@name' => $element['#title'])));
   }
 
@@ -255,11 +201,11 @@ function imagecrop_reuse_form($data) {
   }
 
   if (count($presets) > 0) {
-    $form['imagecrop_style'] = array(
+    $form['imagecrop_sid'] = array(
       '#title' => t('Use the crop settings from'),
       '#type' => 'select',
       '#options' => $presets,
-      '#default_value' => isset($data['imagecrop_style']) ? $data['imagecrop_style'] : '',
+      '#default_value' => isset($data['imagecrop_sid']) ? $data['imagecrop_sid'] : '',
     );
   }
   else {
@@ -282,12 +228,12 @@ function imagecrop_reuse_form($data) {
  */
 function imagecrop_reuse_effect(&$image, $data) {
 
-  if (empty($data['imagecrop_style'])) {
+  if (empty($data['imagecrop_sid'])) {
     return FALSE;
   }
 
   // Load selected image style and apply the imagecrop_javascript action.
-  $style = image_style_load($data['imagecrop_style']);
+  $style = image_style_load(NULL, $data['imagecrop_sid']);
   foreach ($style['effects'] as $effect) {
     if ($effect['name'] == 'imagecrop_javascript') {
       $GLOBALS['imagecrop_style'] = $style['name'];

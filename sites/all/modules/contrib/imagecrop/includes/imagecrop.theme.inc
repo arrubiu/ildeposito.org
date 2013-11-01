@@ -17,30 +17,23 @@ function imagecrop_page($variables) {
     $output .= $variables['messages'];
   }
 
-  if (!module_exists('block')) {
-    $region = 'content';
-  }
-  else {
-    global $theme;
-    $query = db_select('block');
-    $query->addField('block', 'region');
-    $query->condition('theme', $theme);
-    $query->condition('module', 'system');
-    $query->condition('delta', 'main');
-    $region = $query->execute()->fetchField();
-  }
+  global $theme;
+  $query = db_select('block');
+  $query->addField('block', 'region');
+  $query->condition('theme', $theme);
+  $query->condition('module', 'system');
+  $query->condition('delta', 'main');
+  $region = $query->execute()->fetchField();
 
-  // Render only the main content.
+  global $theme;
+
   if (isset($variables['page'][$region])) {
-    $output .= imagecrop_render_main_content($variables['page'][$region]);
+    $output .= drupal_render($variables['page'][$region]);
   }
-  // Old version from Omega theme uses zones
+  // Omega theme uses zones
   elseif (isset($variables['page']['content_zone']['#regions']['content'])) {
     $variables['page']['content_zone']['#regions']['content']['#omega']['page_data']['title'] = FALSE;
     $output .= drupal_render($variables['page']['content_zone']['#regions']['content']);
-  }
-  else {
-    $output = t('The main content block was not found.');
   }
 
   return $output;

@@ -17,32 +17,11 @@ function imagecrop_schema() {
     'fields' => array(
       'fid' => array('type' => 'int', 'not null' => TRUE, 'unsigned' => TRUE),
       'style_name' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
-      'xoffset' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'unsigned' => TRUE,
-        'size' => 'big',
-      ),
-      'yoffset' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'unsigned' => TRUE,
-        'size' => 'big',
-      ),
-      'width' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'unsigned' => TRUE,
-        'size' => 'big',
-      ),
-      'height' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'unsigned' => TRUE,
-        'size' => 'big',
-      ),
+      'xoffset' => array('type' => 'int', 'not null' => TRUE, 'unsigned' => TRUE),
+      'yoffset' => array('type' => 'int', 'not null' => TRUE, 'unsigned' => TRUE),
+      'width' => array('type' => 'int', 'not null' => TRUE, 'unsigned' => TRUE),
+      'height' => array('type' => 'int', 'not null' => TRUE, 'unsigned' => TRUE),
       'scale' => array('type' => 'varchar', 'length' => '10', 'not null' => TRUE, 'default' => 'original'),
-      'rotation' => array('type' => 'int', 'not null' => TRUE, 'unsigned' => TRUE, 'default' => 0),
     ),
     'primary key' => array('fid', 'style_name'),
   );
@@ -138,36 +117,5 @@ function imagecrop_update_7001() {
     db_add_primary_key('image_crop_settings', array('fid', 'style_name'));
 
   }
-
-}
-
-/**
- * Add the rotation column to the image_crop_settings table.
- */
-function imagecrop_update_7002() {
-
-    $field_info = array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'unsigned' => TRUE);
-
-    // Use style name as identifier.
-    db_add_field('image_crop_settings', 'rotation', $field_info);
-
-}
-
-/**
- * Make the imagecrop fields BIGINT.
- */
-function imagecrop_update_7003() {
-
-  $properties = array(
-    'type' => 'int',
-    'not null' => TRUE,
-    'unsigned' => TRUE,
-    'size' => 'big',
-  );
-
-  db_change_field('image_crop_settings', 'xoffset', 'xoffset', $properties);
-  db_change_field('image_crop_settings', 'yoffset', 'yoffset', $properties);
-  db_change_field('image_crop_settings', 'width', 'width', $properties);
-  db_change_field('image_crop_settings', 'height', 'height', $properties);
 
 }

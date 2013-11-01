@@ -8,9 +8,13 @@
   w.picturefill = function(parent) {
     // Copy attributes from the source to the destination.
     function _copyAttributes(src, tar) {
-      if (src.getAttribute('width') && src.getAttribute('height')) {
-        tar.width = src.getAttribute('width');
-        tar.height = src.getAttribute('height');
+      if (src.getAttribute('data-width') && src.getAttribute('data-height')) {
+        tar.width = src.getAttribute('data-width');
+        tar.height = src.getAttribute('data-height');
+      }
+      else {
+        tar.removeAttribute('width');
+        tar.removeAttribute('height');
       }
     }
 
@@ -47,8 +51,8 @@
           // Add a new img element if one doesn't exists.
           if (!picImg) {
             picImg = w.document.createElement('img');
-            picImg.alt = ps[i].getAttribute('data-alt');
-            picImg.title = ps[i].getAttribute('data-title');
+            picImg.alt = ps[i].getAttribute('data-alt') || '';
+            picImg.title = ps[i].getAttribute('data-title') || '';
             ps[i].appendChild(picImg);
           }
 

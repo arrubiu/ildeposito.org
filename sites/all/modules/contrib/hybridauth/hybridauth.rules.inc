@@ -59,6 +59,25 @@ function hybridauth_rules_action_info() {
         ),
       ),
     ),
+    'hybridauth_set_destination' => array(
+      'label' => t('Set destination'),
+      'group' => t('HybridAuth'),
+      'parameter' => array(
+        'destination' => array(
+          'label' => t('Destination'),
+          'type' => 'text',
+          // 'description' => t(''),
+        ),
+      ),
+    ),
+    'hybridauth_session_destroy' => array(
+      'label' => t('Destroy session'),
+      'group' => t('HybridAuth'),
+    ),
+    'hybridauth_window_close' => array(
+      'label' => t('Close HybridAuth window'),
+      'group' => t('HybridAuth'),
+    ),
   );
 }
 
@@ -66,21 +85,38 @@ function hybridauth_rules_action_info() {
  * Rules action.
  */
 function hybridauth_url_managed_file($url, $directory) {
-  if ($url) {
+  if (valid_url($url, TRUE)) {
     $url_info = parse_url($url);
+    // Prepare directory.
     $directory = file_default_scheme() . '://' . $directory . '/' . $url_info['host'] . dirname($url_info['path']);
-    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+      watchdog('hybridauth', 'Error accessing directory %directory.', array('%directory' => $directory), WATCHDOG_ERROR);
+      return array('file' => '');
+    }
+    // Make a request.
     $content = drupal_http_request($url);
-    $file = file_save_data($content->data, $directory . '/' . basename($url_info['path']), FILE_EXISTS_REPLACE);
-
-    $path_info = pathinfo($url);
-    if (empty($path_info['extension'])) {
-      $info = image_get_info($file->uri);
-      $file = file_move($file, $directory . '/' . basename($url_info['path']) . '.' . $info['extension'], FILE_EXISTS_REPLACE);
+    if ($content->error) {
+      watchdog('hybridauth', 'Error while executing drupal_http_request() to %url: %error.', array('%url' => $url, '%error' => $content->error), WATCHDOG_ERROR);
+      return array('file' => '');
+    }
+    else {
+      if ($file = file_save_data($content->data, $directory . '/' . basename($url_info['path']), FILE_EXISTS_REPLACE)) {
+        $path_info = pathinfo($url);
+        if (empty($path_info['extension'])) {
+          $info = image_get_info($file->uri);
+          $file = file_move($file, $directory . '/' . basename($url_info['path']) . '.' . $info['extension'], FILE_EXISTS_REPLACE);
+        }
+        return array('file' => $file);
+      }
+      else {
+        watchdog('hybridauth', 'Failed to save file %file.', array('%file' => basename($url_info['path'])), WATCHDOG_ERROR);
+      }
     }
   }
-
-  return array('file' => $file);
+  else {
+    watchdog('hybridauth', 'Not valid url %url', array('%url' => $url), WATCHDOG_ERROR);
+  }
+  return array('file' => '');
 }
 
 /**
@@ -94,6 +130,28 @@ function hybridauth_dmy_to_date($day, $month, $year) {
   // $timestamp = mktime(0, 0, 0, $month, $day, $year);
   // date_default_timezone_set($timezone);
   return array('date' => $timestamp);
+}
+
+/**
+ * Rules action.
+ */
+function hybridauth_set_destination($destination) {
+  drupal_static_reset('drupal_get_destination');
+  $_GET['destination'] = $destination;
+}
+
+/**
+ * Rules action.
+ */
+function hybridauth_session_destroy() {
+  session_destroy();
+}
+
+/**
+ * Rules action.
+ */
+function hybridauth_window_close() {
+  _hybridauth_window_close();
 }
 
 /**
@@ -164,6 +222,21 @@ function hybridauth_rules_event_info() {
     'variables' => array(
       'hybridauth_user' => array(
         'label' => t('User deleting the identity'),
+        'type' => 'user',
+      ),
+      'hybridauth' => array(
+        'label' => t('HybridAuth identity data'),
+        'type' => 'hybridauth',
+      ),
+    ),
+    'module' => 'hybridauth',
+  );
+  $events['hybridauth_user_preinsert'] = array(
+    'label' => t('User is about to be created through HybridAuth'),
+    'group' => t('HybridAuth'),
+    'variables' => array(
+      'hybridauth_user' => array(
+        'label' => t('registering user'),
         'type' => 'user',
       ),
       'hybridauth' => array(

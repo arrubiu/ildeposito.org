@@ -155,6 +155,7 @@ function hybridauth_admin_settings() {
       0 => t('Follow core') . ': ' . $core_settings[variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)],
       1 => t('Visitors'),
       2 => t('Visitors, but administrator approval is required'),
+      3 => t('Nobody, only login for existing accounts is possible'),
     ),
     '#description' => t('Select who can register accounts through HybridAuth.') . ' '
       . t('The core settings are available at <a href="!link">Account settings</a>.',
@@ -196,25 +197,18 @@ function hybridauth_admin_settings() {
         array('!link' => l(t('Token'), 'http://drupal.org/project/token', array('attributes' => array('target' => '_blank'))))),
     '#required' => TRUE,
   );
-  $form['vtabs']['fset_account']['hybridauth_registration_username_change'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Allow username change when registering'),
-    '#description' => t('Allow users to change their username when registering through HybridAuth.'),
-    '#default_value' => variable_get('hybridauth_registration_username_change', 0),
-  );
   $form['vtabs']['fset_account']['hybridauth_display_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Display name pattern'),
     '#default_value' => variable_get('hybridauth_display_name', '[user:hybridauth:firstName] [user:hybridauth:lastName]'),
-    '#description' => t('You can use any user tokens here.') . ' '
+    '#description' => t('Leave empty to not alter display name. You can use any user tokens here.') . ' '
       . t('Install !link module to get list of all available tokens.',
         array('!link' => l(t('Token'), 'http://drupal.org/project/token', array('attributes' => array('target' => '_blank'))))),
-    '#required' => TRUE,
   );
   if (module_exists('token')) {
     $form['vtabs']['fset_account']['fset_token'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Token'),
+      '#title' => t('Tokens'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
@@ -222,8 +216,21 @@ function hybridauth_admin_settings() {
       '#theme' => 'token_tree',
       '#token_types' => array('user'),
       '#global_types' => FALSE,
+      '#dialog' => TRUE,
     );
   }
+  $form['vtabs']['fset_account']['hybridauth_registration_username_change'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow username change when registering'),
+    '#description' => t('Allow users to change their username when registering through HybridAuth.'),
+    '#default_value' => variable_get('hybridauth_registration_username_change', 0),
+  );
+  $form['vtabs']['fset_account']['hybridauth_registration_password'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Ask user for a password when registering'),
+    '#description' => t('Ask users to set password for account when registering through HybridAuth.'),
+    '#default_value' => variable_get('hybridauth_registration_password', 0),
+  );
   $form['vtabs']['fset_account']['hybridauth_override_realname'] = array(
     '#type' => 'checkbox',
     '#title' => t('Override Real name'),
@@ -263,21 +270,11 @@ function hybridauth_admin_settings() {
     '#type' => 'fieldset',
     '#title' => t('Other settings'),
   );
-  $options = array(
-    'current' => t('Use the current window'),
-    'popup' => t('Use a new popup window'),
-  );
-  $form['vtabs']['fset_other']['hybridauth_window_type'] = array(
-    '#type' => 'radios',
-    '#title' => t('Authentication window type'),
-    '#options' => $options,
-    '#default_value' => variable_get('hybridauth_window_type', 'current'),
-  );
   $form['vtabs']['fset_other']['hybridauth_destination'] = array(
     '#type' => 'textfield',
     '#title' => t('Redirect after login'),
     '#default_value' => variable_get('hybridauth_destination', ''),
-    '#description' => t('Drupal path to redirect to, like "node/1". Leave empty to return to the same page.') . ' '
+    '#description' => t('Drupal path to redirect to, like "node/1". Leave empty to return to the same page (set to [HTTP_REFERER] for widget in modal dialogs loaded by AJAX).') . '<br/>'
       . t('You can use any user or global tokens here.') . ' '
       . t('Install !link module to get list of all available tokens.',
         array('!link' => l(t('Token'), 'http://drupal.org/project/token', array('attributes' => array('target' => '_blank'))))),
@@ -285,7 +282,7 @@ function hybridauth_admin_settings() {
   if (module_exists('token')) {
     $form['vtabs']['fset_other']['fset_token'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Token'),
+      '#title' => t('Tokens'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
@@ -293,6 +290,7 @@ function hybridauth_admin_settings() {
       '#theme' => 'token_tree',
       '#token_types' => array('user'),
       '#global_types' => TRUE,
+      '#dialog' => TRUE,
     );
   }
   $options = array(
@@ -312,7 +310,7 @@ function hybridauth_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('Debug mode'),
     '#description' => t('When in debug mode, extra error information will be logged/displayed. This should be disabled when not in development.'),
-    '#default_value' => variable_get('hybridauth_debug', FALSE),
+    '#default_value' => variable_get('hybridauth_debug', 0),
   );
 
   return system_settings_form($form);
@@ -364,6 +362,11 @@ function theme_hybridauth_admin_settings_providers_table($vars) {
 
 function hybridauth_admin_provider_settings($form, &$form_state, $provider_id = NULL) {
   $form = array();
+  $form['vtabs'] = array(
+    '#type' => 'vertical_tabs',
+  );
+  $language_default = language_default();
+  $language_default->prefix = '';
 
   switch ($provider_id) {
     case 'Facebook':
@@ -378,17 +381,17 @@ function hybridauth_admin_provider_settings($form, &$form_state, $provider_id = 
         )
       );
       break;
-
     case 'Twitter':
       $help = t('
           <p>Enter your consumer key and private key. You can get these by creating a new application at <a href="!apps_uri">!apps_uri</a>.</p>
+          <p>You must set <strong>Callback URL</strong> to <strong>%callback_uri</strong>.</p>
         ',
         array(
           '!apps_uri' => 'https://dev.twitter.com/apps',
+          '%callback_uri' => url('hybridauth/endpoint', array('absolute' => TRUE, 'query' => array('hauth.done' => 'Twitter'), 'language' => $language_default)),
         )
       );
       break;
-
     case 'Google':
       $origin_uri_parts = parse_url(url('<front>', array('absolute' => TRUE)));
       $help = t('
@@ -398,56 +401,118 @@ function hybridauth_admin_provider_settings($form, &$form_state, $provider_id = 
         ',
         array(
           '!apps_uri' => 'https://code.google.com/apis/console#access',
-          '%redirect_uri' => url('hybridauth/endpoint', array('absolute' => TRUE, 'query' => array('hauth.done' => 'Google'))),
+          '%redirect_uri' => url('hybridauth/endpoint', array('absolute' => TRUE, 'query' => array('hauth.done' => 'Google'), 'language' => $language_default)),
           '%origin_uri' => $origin_uri_parts['scheme'] . '://' . $origin_uri_parts['host'],
         )
       );
       break;
-
     default:
       $help = t('Enter the application ID, consumer key, and/or secret key as required.');
   }
 
-  $form['keys'] = array(
+  $form['vtabs']['application'] = array(
     '#type' => 'fieldset',
+    '#title' => t('Application settings'),
     '#description' => $help,
   );
-  $form['keys']['hybridauth_provider_' . $provider_id . '_keys_id'] = array(
+  $form['vtabs']['application']['hybridauth_provider_' . $provider_id . '_keys_id'] = array(
     '#type' => 'textfield',
     '#title' => t('Application ID'),
-    '#description' => t('The application ID'),
+    '#description' => t('The application ID.'),
     '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_keys_id', ''),
   );
-  $form['keys']['hybridauth_provider_' . $provider_id . '_keys_key'] = array(
+  $form['vtabs']['application']['hybridauth_provider_' . $provider_id . '_keys_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Application consumer key'),
-    '#description' => t('The Application consumer key'),
+    '#description' => t('The Application consumer key.'),
     '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_keys_key', ''),
   );
-  $form['keys']['hybridauth_provider_' . $provider_id . '_keys_secret'] = array(
+  $form['vtabs']['application']['hybridauth_provider_' . $provider_id . '_keys_secret'] = array(
     '#type' => 'textfield',
     '#title' => t('Application consumer secret'),
-    '#description' => t('The application consumer secret key'),
+    '#description' => t('The application consumer secret key.'),
     '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_keys_secret', ''),
   );
 
   if (in_array($provider_id, array('LinkedIn', 'MySpace', 'Twitter', 'Yahoo'))) {
-    unset($form['keys']['hybridauth_provider_' . $provider_id . '_keys_id']);
+    unset($form['vtabs']['application']['hybridauth_provider_' . $provider_id . '_keys_id']);
   }
-  if (in_array($provider_id, array('Facebook', 'Google', 'Live', 'Vkontakte'))) {
-    unset($form['keys']['hybridauth_provider_' . $provider_id . '_keys_key']);
+  if (in_array($provider_id, array('Facebook', 'Google', 'Live', 'Vkontakte', 'QQ'))) {
+    unset($form['vtabs']['application']['hybridauth_provider_' . $provider_id . '_keys_key']);
   }
 
+  $form['vtabs']['window_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Authentication window settings'),
+  );
+  $options = array(
+    'current' => t('Current window'),
+    'popup' => t('New popup window'),
+  );
+  $modal_description = FALSE;
+  if (module_exists('colorbox')) {
+    $options['colorbox'] = t('Colorbox modal window');
+    $modal_description = TRUE;
+  }
+  if (module_exists('shadowbox')) {
+    $options['shadowbox'] = t('Shadowbox modal window');
+    $modal_description = TRUE;
+  }
+  if (module_exists('fancybox')) {
+    $options['fancybox'] = t('fancyBox modal window');
+    $modal_description = TRUE;
+  }
+  if (module_exists('lightbox2')) {
+    $options['lightbox2'] = t('Lightbox2 modal window');
+    $modal_description = TRUE;
+  }
+  $form['vtabs']['window_settings']['hybridauth_provider_' . $provider_id . '_window_type'] = array(
+    '#type' => 'radios',
+    '#title' => t('Authentication window type'),
+    '#options' => $options,
+    '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_window_type', 'current'),
+    '#description' => $modal_description ? t("Be careful with modal windows - some authentication providers (Twitter, LinkedIn) won't work with them.") : '',
+  );
+  $base = array(
+    '#type' => 'textfield',
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#size' => 4,
+    '#maxlength' => 4,
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="hybridauth_provider_' . $provider_id . '_window_type"]' => array('value' => 'current'),
+      ),
+    ),
+  );
+  $form['vtabs']['window_settings']['hybridauth_provider_' . $provider_id . '_window_width'] = array(
+    '#title' => t('Width'),
+    '#description' => t('Authentication window width (pixels).'),
+    '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_window_width', 800),
+  ) + $base;
+  $form['vtabs']['window_settings']['hybridauth_provider_' . $provider_id . '_window_height'] = array(
+    '#title' => t('Height'),
+    '#description' => t('Authentication window height (pixels).'),
+    '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_window_height', 500),
+  ) + $base;
+
   if ($provider_id == 'Facebook') {
-    $form['advanced'] = array(
-      '#type' => 'fieldset',
-      '#title' => 'Advanced settings',
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+    $form['vtabs']['window_settings']['hybridauth_provider_' . $provider_id . '_display'] = array(
+      '#type' => 'radios',
+      '#title' => t('Display type'),
+      '#options' => array(
+        'page' => t('Page'),
+        'popup' => t('Popup'),
+      ),
+      '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_display', ''),
+      '#description' => t('Determines how the authentication window is rendered.'),
     );
-    $form['advanced']['hybridauth_provider_' . $provider_id . '_scope'] = array(
+    $form['vtabs']['advanced'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Advanced settings'),
+    );
+    $form['vtabs']['advanced']['hybridauth_provider_' . $provider_id . '_scope'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Scope - Permissions to request by default'),
+      '#title' => t('Scope'),
       '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_scope', array(
         'email', 'user_about_me', 'user_birthday', 'user_hometown', 'user_website', 'offline_access',
       )),
@@ -498,6 +563,18 @@ function hybridauth_admin_provider_settings($form, &$form_state, $provider_id = 
       ),
     );
   }
+  if ($provider_id == 'Google') {
+    $form['vtabs']['advanced'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Advanced settings',
+    );
+    $form['vtabs']['advanced']['hybridauth_provider_' . $provider_id . '_scope'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Scope'),
+      '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_scope', 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'),
+      '#size' => 150,
+    );
+  }
 
   return system_settings_form($form);
 }
@@ -529,6 +606,7 @@ function hybridauth_report() {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#empty' => t('There are no HybridAuth identities yet.'),
   );
   return $form;
 }

@@ -52,12 +52,12 @@ Consult security_review.help.inc for details.
 ## Standalone use of the checklist
 
 The Security Review module need not be installed to use the checklist, though
-no logging, UI, or check result storage will be available for use.
+no logging, UI, or check result storage will be available.
 
 To run the checklist include the following code in your own module.
 
   include_once('security_review.inc');
-  $checklist = security_review_get_checks();
+  $checklist = security_review_get_checklist();
   $checklist_results = security_review_run($checklist);
 
 Note that the some checks may take long to complete, so it is advised that you
@@ -70,3 +70,7 @@ Run the checklist via Drush with the following command
 drush security-review
 
 Consult the Drush help on the security-review command for more information.
+
+You can also run the drush command without installing the module so long as the
+the security_review.drush.inc and security_review.inc files can be found by
+drush. For instance you could place these files in your ~/.drush/ directory.

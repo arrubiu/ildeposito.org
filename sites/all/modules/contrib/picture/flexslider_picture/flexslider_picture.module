@@ -2,7 +2,7 @@
 
 /**
  * @file
- *
+ * Picture formatter with flexslider support.
  */
 
 /**
@@ -12,6 +12,8 @@ function flexslider_picture_theme_registry_alter(&$registry) {
   $registry['flexslider_list']['file'] = 'flexslider_picture.theme.inc';
   $registry['flexslider_list']['theme_path'] = drupal_get_path('module', 'flexslider_picture') . '/theme';
   $registry['flexslider_list']['function'] = 'theme_flexslider_picture_list';
+  $default_processor = array_search('template_process_flexslider_list', $registry['flexslider_list']['process functions']);
+  $registry['flexslider_list']['process functions'][(int) $default_processor] = 'template_process_flexslider_picture_list';
   $registry['flexslider_list']['includes'][] = $registry['flexslider_list']['theme_path'] . '/' . $registry['flexslider_list']['file'];
 }
 
@@ -116,6 +118,7 @@ function flexslider_picture_form_ctools_export_ui_edit_item_form_alter(&$form, &
         '#type' => 'select',
         '#description' => t('Picture mapping for the main stage images.'),
         '#options' => $options,
+        '#default_value' => (!empty($form_state['item']->mapping)) ? $form_state['item']->mapping : '',
       );
     }
     else {
@@ -124,6 +127,25 @@ function flexslider_picture_form_ctools_export_ui_edit_item_form_alter(&$form, &
         '#markup' => t('There\'re no picture mappings defined, you\'ll have to !create them first.', array('!create' => l(t('create'), 'admin/config/media/picture'))),
       );
     }
+
+    // Colorbox support.
+    $form['image_style']['colorboxEnabled'] = array(
+      '#title' => t('Enable colorbox'),
+      '#type' => 'checkbox',
+      '#default_value' => (!empty($form_state['item']->options['colorboxEnabled'])) ? $form_state['item']->options['colorboxEnabled'] : '',
+    );
+    $form['image_style']['colorboxImageStyle'] = array(
+      '#title' => t('Colorbox group'),
+      '#type' => 'select',
+      '#default_value' => (!empty($form_state['item']->options['colorboxImageStyle'])) ? $form_state['item']->options['colorboxImageStyle'] : '',
+      '#required' => FALSE,
+      '#options' => $options,
+      '#states' => array(
+        'visible' => array(
+          ':input[name$="image_style[colorboxEnabled]"]' => array('checked' => TRUE),
+        ),
+      ),
+    );
 
     $form['#submit'][] = '_flexslider_picture_ctools_export_ui_edit_item_form_submit';
   }
@@ -139,6 +161,13 @@ function _flexslider_picture_ctools_export_ui_edit_item_form_submit($form, &$for
       ->key(array('flexslider_optionset' => $form_state['values']['name']))
       ->fields($fields);
   $q->execute();
+
+  // Add the colorbox options into the generic options field.
+  // @todo Should we move it into our own table or how likely is it that
+  // flexslider itself will add colorbox support and thus add "similar" options?
+  $optionset = &$form_state['optionset'];
+  $optionset->options['colorboxEnabled'] = !empty($form_state['values']['image_style']['colorboxEnabled']);
+  $optionset->options['colorboxImageStyle'] = !empty($form_state['values']['image_style']['colorboxImageStyle']) ? $form_state['values']['image_style']['colorboxImageStyle'] : '';
 }
 
 /**
