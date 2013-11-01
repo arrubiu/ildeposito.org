@@ -83,7 +83,7 @@ function ildeposito_newsletter_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 4,
+      'weight' => 31,
     ),
   );
 
@@ -136,7 +136,7 @@ function ildeposito_newsletter_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 6,
+      'weight' => 32,
     ),
   );
 

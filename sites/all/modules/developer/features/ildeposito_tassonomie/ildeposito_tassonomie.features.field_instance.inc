@@ -343,9 +343,13 @@ function ildeposito_tassonomie_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 10,
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 1,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -470,7 +474,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 4,
+      'weight' => 3,
     ),
   );
 
@@ -485,7 +489,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 2,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -522,7 +526,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 5,
+      'weight' => 4,
     ),
   );
 
@@ -537,7 +541,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 12,
+        'weight' => 5,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -671,7 +675,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 8,
+      'weight' => 42,
     ),
   );
 

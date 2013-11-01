@@ -15,6 +15,7 @@ function ildeposito_newsletter_user_default_permissions() {
     'name' => 'administer newsletters',
     'roles' => array(
       'administrator' => 'administrator',
+      'staff' => 'staff',
     ),
     'module' => 'simplenews',
   );
@@ -24,6 +25,7 @@ function ildeposito_newsletter_user_default_permissions() {
     'name' => 'administer simplenews settings',
     'roles' => array(
       'administrator' => 'administrator',
+      'staff' => 'staff',
     ),
     'module' => 'simplenews',
   );
@@ -33,6 +35,7 @@ function ildeposito_newsletter_user_default_permissions() {
     'name' => 'administer simplenews subscriptions',
     'roles' => array(
       'administrator' => 'administrator',
+      'staff' => 'staff',
     ),
     'module' => 'simplenews',
   );
@@ -42,6 +45,7 @@ function ildeposito_newsletter_user_default_permissions() {
     'name' => 'create simplenews content',
     'roles' => array(
       'staff' => 'staff',
+      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );
@@ -51,6 +55,7 @@ function ildeposito_newsletter_user_default_permissions() {
     'name' => 'delete any simplenews content',
     'roles' => array(
       'staff' => 'staff',
+      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );
@@ -60,6 +65,7 @@ function ildeposito_newsletter_user_default_permissions() {
     'name' => 'delete own simplenews content',
     'roles' => array(
       'staff' => 'staff',
+      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );
@@ -69,6 +75,7 @@ function ildeposito_newsletter_user_default_permissions() {
     'name' => 'edit any simplenews content',
     'roles' => array(
       'staff' => 'staff',
+      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );
@@ -78,6 +85,7 @@ function ildeposito_newsletter_user_default_permissions() {
     'name' => 'edit own simplenews content',
     'roles' => array(
       'staff' => 'staff',
+      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );
@@ -136,6 +144,7 @@ function ildeposito_newsletter_user_default_permissions() {
     'name' => 'send newsletter',
     'roles' => array(
       'administrator' => 'administrator',
+      'staff' => 'staff',
     ),
     'module' => 'simplenews',
   );

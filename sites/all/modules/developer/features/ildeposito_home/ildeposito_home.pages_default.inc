@@ -197,34 +197,6 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     $pane = new stdClass();
     $pane->pid = 'new-6';
     $pane->panel = 'middle';
-    $pane->type = 'custom';
-    $pane->subtype = 'custom';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'admin_title' => 'Raduno 2013',
-      'title' => '6° Raduno ilDeposito.org',
-      'body' => '<p><strong>Il 19 ottobre 2013 a Roma, al Circolo Gianni Bosio, si terrà il 6° raduno de ilDeposito.org!</strong></p>
-
-<p><strong><a href="raduno2013roma">Visualizza tutte le informazioni</a>&nbsp;| <a href="https://www.facebook.com/events/680456091967510/680465925299860/">Evento su Facebook</a></strong><br />
-&nbsp;</p>
-',
-      'format' => 'filtered_html',
-      'substitute' => TRUE,
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 0;
-    $pane->locks = array();
-    $display->content['new-6'] = $pane;
-    $display->panels['middle'][0] = 'new-6';
-    $pane = new stdClass();
-    $pane->pid = 'new-7';
-    $pane->panel = 'middle';
     $pane->type = 'block';
     $pane->subtype = 'views-home_contenuti-block_4';
     $pane->shown = TRUE;
@@ -245,12 +217,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     );
     $pane->css = array();
     $pane->extras = array();
-    $pane->position = 1;
+    $pane->position = 0;
     $pane->locks = array();
-    $display->content['new-7'] = $pane;
-    $display->panels['middle'][1] = 'new-7';
+    $display->content['new-6'] = $pane;
+    $display->panels['middle'][0] = 'new-6';
     $pane = new stdClass();
-    $pane->pid = 'new-8';
+    $pane->pid = 'new-7';
     $pane->panel = 'middle';
     $pane->type = 'node';
     $pane->subtype = 'node';
@@ -281,12 +253,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'ribelle',
     );
     $pane->extras = array();
-    $pane->position = 2;
+    $pane->position = 1;
     $pane->locks = array();
-    $display->content['new-8'] = $pane;
-    $display->panels['middle'][2] = 'new-8';
+    $display->content['new-7'] = $pane;
+    $display->panels['middle'][1] = 'new-7';
     $pane = new stdClass();
-    $pane->pid = 'new-9';
+    $pane->pid = 'new-8';
     $pane->panel = 'middle';
     $pane->type = 'custom';
     $pane->subtype = 'custom';
@@ -308,12 +280,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'ribelle',
     );
     $pane->extras = array();
-    $pane->position = 3;
+    $pane->position = 2;
     $pane->locks = array();
-    $display->content['new-9'] = $pane;
-    $display->panels['middle'][3] = 'new-9';
+    $display->content['new-8'] = $pane;
+    $display->panels['middle'][2] = 'new-8';
     $pane = new stdClass();
-    $pane->pid = 'new-10';
+    $pane->pid = 'new-9';
     $pane->panel = 'middle';
     $pane->type = 'node';
     $pane->subtype = 'node';
@@ -344,12 +316,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-first elenco-contenuti',
     );
     $pane->extras = array();
-    $pane->position = 4;
+    $pane->position = 3;
     $pane->locks = array();
-    $display->content['new-10'] = $pane;
-    $display->panels['middle'][4] = 'new-10';
+    $display->content['new-9'] = $pane;
+    $display->panels['middle'][3] = 'new-9';
     $pane = new stdClass();
-    $pane->pid = 'new-11';
+    $pane->pid = 'new-10';
     $pane->panel = 'middle';
     $pane->type = 'node';
     $pane->subtype = 'node';
@@ -374,12 +346,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-second elenco-contenuti',
     );
     $pane->extras = array();
-    $pane->position = 5;
+    $pane->position = 4;
     $pane->locks = array();
-    $display->content['new-11'] = $pane;
-    $display->panels['middle'][5] = 'new-11';
+    $display->content['new-10'] = $pane;
+    $display->panels['middle'][4] = 'new-10';
     $pane = new stdClass();
-    $pane->pid = 'new-12';
+    $pane->pid = 'new-11';
     $pane->panel = 'middle';
     $pane->type = 'block';
     $pane->subtype = 'views-home_sezioni-block';
@@ -401,12 +373,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     );
     $pane->css = array();
     $pane->extras = array();
-    $pane->position = 6;
+    $pane->position = 5;
     $pane->locks = array();
-    $display->content['new-12'] = $pane;
-    $display->panels['middle'][6] = 'new-12';
+    $display->content['new-11'] = $pane;
+    $display->panels['middle'][5] = 'new-11';
     $pane = new stdClass();
-    $pane->pid = 'new-13';
+    $pane->pid = 'new-12';
     $pane->panel = 'middle';
     $pane->type = 'block';
     $pane->subtype = 'views-home_eventi-block';
@@ -431,12 +403,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-first',
     );
     $pane->extras = array();
-    $pane->position = 7;
+    $pane->position = 6;
     $pane->locks = array();
-    $display->content['new-13'] = $pane;
-    $display->panels['middle'][7] = 'new-13';
+    $display->content['new-12'] = $pane;
+    $display->panels['middle'][6] = 'new-12';
     $pane = new stdClass();
-    $pane->pid = 'new-14';
+    $pane->pid = 'new-13';
     $pane->panel = 'middle';
     $pane->type = 'block';
     $pane->subtype = 'views-334a0f330c3cb3b95d3ca2bc3a44cf6d';
@@ -461,12 +433,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-second',
     );
     $pane->extras = array();
-    $pane->position = 8;
+    $pane->position = 7;
     $pane->locks = array();
-    $display->content['new-14'] = $pane;
-    $display->panels['middle'][8] = 'new-14';
+    $display->content['new-13'] = $pane;
+    $display->panels['middle'][7] = 'new-13';
     $pane = new stdClass();
-    $pane->pid = 'new-15';
+    $pane->pid = 'new-14';
     $pane->panel = 'middle';
     $pane->type = 'block';
     $pane->subtype = 'views-calendario_eventi-block_2';
@@ -485,12 +457,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-second',
     );
     $pane->extras = array();
-    $pane->position = 9;
+    $pane->position = 8;
     $pane->locks = array();
-    $display->content['new-15'] = $pane;
-    $display->panels['middle'][9] = 'new-15';
+    $display->content['new-14'] = $pane;
+    $display->panels['middle'][8] = 'new-14';
     $pane = new stdClass();
-    $pane->pid = 'new-16';
+    $pane->pid = 'new-15';
     $pane->panel = 'middle';
     $pane->type = 'block';
     $pane->subtype = 'views-home_contenuti-block';
@@ -515,12 +487,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-first',
     );
     $pane->extras = array();
-    $pane->position = 10;
+    $pane->position = 9;
     $pane->locks = array();
-    $display->content['new-16'] = $pane;
-    $display->panels['middle'][10] = 'new-16';
+    $display->content['new-15'] = $pane;
+    $display->panels['middle'][9] = 'new-15';
     $pane = new stdClass();
-    $pane->pid = 'new-17';
+    $pane->pid = 'new-16';
     $pane->panel = 'middle';
     $pane->type = 'block';
     $pane->subtype = 'views-home_commenti-block';
@@ -545,12 +517,12 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-second',
     );
     $pane->extras = array();
-    $pane->position = 11;
+    $pane->position = 10;
     $pane->locks = array();
-    $display->content['new-17'] = $pane;
-    $display->panels['middle'][11] = 'new-17';
+    $display->content['new-16'] = $pane;
+    $display->panels['middle'][10] = 'new-16';
     $pane = new stdClass();
-    $pane->pid = 'new-18';
+    $pane->pid = 'new-17';
     $pane->panel = 'right';
     $pane->type = 'block';
     $pane->subtype = 'views--exp-ricerca-ricerca_page';
@@ -577,10 +549,10 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     $pane->extras = array();
     $pane->position = 0;
     $pane->locks = array();
-    $display->content['new-18'] = $pane;
-    $display->panels['right'][0] = 'new-18';
+    $display->content['new-17'] = $pane;
+    $display->panels['right'][0] = 'new-17';
     $pane = new stdClass();
-    $pane->pid = 'new-19';
+    $pane->pid = 'new-18';
     $pane->panel = 'right';
     $pane->type = 'block';
     $pane->subtype = 'system-user-menu';
@@ -617,10 +589,10 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     $pane->extras = array();
     $pane->position = 1;
     $pane->locks = array();
-    $display->content['new-19'] = $pane;
-    $display->panels['right'][1] = 'new-19';
+    $display->content['new-18'] = $pane;
+    $display->panels['right'][1] = 'new-18';
     $pane = new stdClass();
-    $pane->pid = 'new-20';
+    $pane->pid = 'new-19';
     $pane->panel = 'right';
     $pane->type = 'block';
     $pane->subtype = 'user-login';
@@ -644,10 +616,10 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     $pane->extras = array();
     $pane->position = 2;
     $pane->locks = array();
-    $display->content['new-20'] = $pane;
-    $display->panels['right'][2] = 'new-20';
+    $display->content['new-19'] = $pane;
+    $display->panels['right'][2] = 'new-19';
     $pane = new stdClass();
-    $pane->pid = 'new-21';
+    $pane->pid = 'new-20';
     $pane->panel = 'right';
     $pane->type = 'block';
     $pane->subtype = 'simplenews-293';
@@ -671,10 +643,10 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     $pane->extras = array();
     $pane->position = 3;
     $pane->locks = array();
-    $display->content['new-21'] = $pane;
-    $display->panels['right'][3] = 'new-21';
+    $display->content['new-20'] = $pane;
+    $display->panels['right'][3] = 'new-20';
     $pane = new stdClass();
-    $pane->pid = 'new-22';
+    $pane->pid = 'new-21';
     $pane->panel = 'right';
     $pane->type = 'block';
     $pane->subtype = 'alterator-twitter_timeline';
@@ -692,8 +664,8 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     $pane->extras = array();
     $pane->position = 4;
     $pane->locks = array();
-    $display->content['new-22'] = $pane;
-    $display->panels['right'][4] = 'new-22';
+    $display->content['new-21'] = $pane;
+    $display->panels['right'][4] = 'new-21';
   $display->hide_title = PANELS_TITLE_NONE;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;

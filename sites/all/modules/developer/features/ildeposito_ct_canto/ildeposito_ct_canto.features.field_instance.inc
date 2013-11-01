@@ -66,7 +66,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 10,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -820,7 +820,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'node_reference_autocomplete',
-      'weight' => 20,
+      'weight' => 8,
     ),
   );
 
@@ -1580,7 +1580,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 24,
+      'weight' => 18,
     ),
   );
 
@@ -1681,7 +1681,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 23,
+      'weight' => 17,
     ),
   );
 
@@ -1898,7 +1898,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 12,
+      'weight' => 13,
     ),
   );
 
@@ -2004,7 +2004,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 21,
+      'weight' => 14,
     ),
   );
 
@@ -2315,7 +2315,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'node_reference_autocomplete',
-      'weight' => 22,
+      'weight' => 16,
     ),
   );
 

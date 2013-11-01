@@ -66,7 +66,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 6,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -137,7 +137,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 7,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -208,7 +208,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 5,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -279,7 +279,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -437,7 +437,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 3,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -520,7 +520,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'weight' => 0,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -578,7 +578,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 4,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -647,7 +647,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 9,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -718,7 +718,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -787,7 +787,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 8,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
