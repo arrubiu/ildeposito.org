@@ -1,0 +1,319 @@
+<?php
+
+/**
+ * @file
+ * A module to provide a bridge between Drupal websites and PhoneGap mobile
+ * applications.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function drupalgap_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#drupalgap':
+      // Show documentation URL.
+      $doc_msg = t(
+        'The online <a href="@doc_url">DrupalGap Documentation</a> contains
+         more information on help topics.',
+        array('@doc_url' => 'http://drupal.org/node/1603690')
+      );
+      return "<p>$doc_msg</p>";
+      break;
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function drupalgap_permission() {
+  return array(
+    'administer drupalgap' => array(
+      'title' => t('Administer DrupalGap'),
+      'description' => t('Perform administration tasks for DrupalGap.'),
+    ),
+    'drupalgap get vocabularies' => array(
+      'title' => t('Get Vocabularies'),
+      'description' => t('Retrieve basic data about vocabularies.'),
+    ),
+    'drupalgap get terms' => array(
+      'title' => t('Get Terms'),
+      'description' => t('Retrieve basic data about vocabularies terms.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function drupalgap_menu() {
+  $items = array();
+  $items['admin/config/drupalgap'] = array(
+    'title' => 'DrupalGap',
+    'description' => 'The status of DrupalGap.',
+    'page callback' => 'drupalgap_status',
+    'access arguments' => array('administer drupalgap'),
+    'file' => 'drupalgap.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function drupalgap_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'drupalgap'),
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function drupalgap_ctools_plugin_api($owner, $api) {
+  if ($owner == 'services' && $api == 'services') {
+    return array(
+      'version' => 3,
+      'file' => 'drupalgap.services.inc',
+    );
+  }
+}
+
+/**
+ * Implements hook_default_services_endpoint().
+ */
+function drupalgap_default_services_endpoint() {
+  $endpoints = array();
+
+  $endpoint = new stdClass();
+  $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
+  $endpoint->api_version = 3;
+  $endpoint->name = 'drupalgap';
+  $endpoint->server = 'rest_server';
+  $endpoint->path = 'drupalgap';
+  $endpoint->authentication = array(
+    'services' => 'services',
+  );
+  $endpoint->server_settings = array(
+    'formatters' => array(
+      'json' => TRUE,
+      'bencode' => FALSE,
+      'jsonp' => FALSE,
+      'php' => FALSE,
+      'rss' => FALSE,
+      'xml' => FALSE,
+    ),
+    'parsers' => array(
+      'application/json' => TRUE,
+      'application/x-www-form-urlencoded' => TRUE,
+      'application/xml' => TRUE,
+      'multipart/form-data' => TRUE,
+      'application/vnd.php.serialized' => FALSE,
+      'text/xml' => FALSE,
+    ),
+  );
+  $endpoint->resources = array(
+    'drupalgap_content' => array(
+      'actions' => array(
+        'content_types_list' => array(
+          'enabled' => '1',
+        ),
+        'content_types_user_permissions' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'drupalgap_system' => array(
+      'actions' => array(
+        'site_settings' => array(
+          'enabled' => '1',
+        ),
+        'connect' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'drupalgap_taxonomy' => array(
+      'actions' => array(
+        'get_vocabularies' => array(
+          'enabled' => '1',
+        ),
+        'get_terms' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'drupalgap_user' => array(
+      'actions' => array(
+        'access' => array(
+          'enabled' => '1',
+        ),
+        'login' => array(
+          'enabled' => '1',
+        ),
+        'logout' => array(
+          'enabled' => '1',
+        ),
+        'register' => array(
+          'enabled' => '1',
+        ),
+        'roles_and_permissions' => array(
+          'enabled' => '1',
+        ),
+        'permissions' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'comment' => array(
+      'operations' => array(
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'update' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+      ),
+      'actions' => array(
+        'countAll' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'file' => array(
+      'operations' => array(
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'node' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'update' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'system' => array(
+      'actions' => array(
+        'connect' => array(
+          'enabled' => '1',
+        ),
+        'get_variable' => array(
+          'enabled' => '1',
+        ),
+        'set_variable' => array(
+          'enabled' => '1',
+        ),
+        'del_variable' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'taxonomy_term' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'update' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+      'actions' => array(
+        'selectNodes' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'taxonomy_vocabulary' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'update' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+      'actions' => array(
+        'getTree' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'user' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'update' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+      ),
+      'actions' => array(
+        'login' => array(
+          'enabled' => '1',
+        ),
+        'logout' => array(
+          'enabled' => '1',
+          'settings' => array(
+            'services' => array(
+              'resource_api_version' => '1.0',
+            ),
+          ),
+        ),
+        'register' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+  );
+  $endpoint->debug = 0;
+
+  $endpoints[] = $endpoint;
+
+  return $endpoints;
+}
+

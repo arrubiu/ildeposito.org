@@ -1,0 +1,16 @@
+name = DrupalGap
+description = Provides a bridge between Drupal and mobile device applications written for PhoneGap.
+package = Mobile
+core = 7.x
+configure = admin/config/drupalgap
+dependencies[] = services
+dependencies[] = rest_server
+dependencies[] = views
+dependencies[] = views_json
+
+; Information added by drupal.org packaging script on 2013-06-08
+version = "7.x-1.4"
+core = "7.x"
+project = "drupalgap"
+datestamp = "1370663151"
+
