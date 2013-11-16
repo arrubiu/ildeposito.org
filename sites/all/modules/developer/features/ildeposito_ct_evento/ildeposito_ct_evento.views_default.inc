@@ -1213,7 +1213,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'evento' => 'evento',
   );
-  /* Criterio del filtro: Contenuto: Geofield - proximity */
+  /* Criterio del filtro: Contenuto: Geofield (field_geofield) - proximity */
   $handler->display->display_options['filters']['field_geofield_distance']['id'] = 'field_geofield_distance';
   $handler->display->display_options['filters']['field_geofield_distance']['table'] = 'field_data_field_geofield';
   $handler->display->display_options['filters']['field_geofield_distance']['field'] = 'field_geofield_distance';

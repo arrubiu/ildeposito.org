@@ -944,7 +944,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filtro contestuale: Contenuto: Canto di riferimento (field_canto_riferimento) */
+  /* Filtro contestuale: Contenuto: Canti collegati (field_canto_riferimento) */
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['id'] = 'field_canto_riferimento_nid';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['table'] = 'field_data_field_canto_riferimento';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['field'] = 'field_canto_riferimento_nid';

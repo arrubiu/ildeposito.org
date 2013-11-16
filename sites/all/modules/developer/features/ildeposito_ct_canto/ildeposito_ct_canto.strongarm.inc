@@ -197,6 +197,9 @@ function ildeposito_ct_canto_strongarm() {
       'percorso' => array(
         'custom_settings' => FALSE,
       ),
+      'drupalgap' => array(
+        'custom_settings' => TRUE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -227,6 +230,7 @@ function ildeposito_ct_canto_strongarm() {
           'print' => NULL,
           'print_canzoniere' => NULL,
           'canti_capoversi' => NULL,
+          'drupalgap' => NULL,
         ),
       ),
     ),

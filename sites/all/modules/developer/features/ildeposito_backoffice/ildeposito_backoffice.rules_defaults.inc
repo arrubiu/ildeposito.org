@@ -12,9 +12,10 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_assegnazione_ruolo_default_drupal'] = entity_import('rules_config', '{ "rules_assegnazione_ruolo_default_drupal" : {
       "LABEL" : "Assegnazione ruolo default - Drupal",
       "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
       "TAGS" : [ "utenti" ],
       "REQUIRES" : [ "rules" ],
-      "ON" : [ "user_insert" ],
+      "ON" : { "user_insert" : [] },
       "IF" : [
         { "user_has_role" : {
             "account" : [ "site:current-user" ],
@@ -30,9 +31,10 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_assegnazione_ruolo_default_social'] = entity_import('rules_config', '{ "rules_assegnazione_ruolo_default_social" : {
       "LABEL" : "Assegnazione ruolo default - Social",
       "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
       "TAGS" : [ "utenti" ],
       "REQUIRES" : [ "rules", "hybridauth" ],
-      "ON" : [ "hybridauth_user_insert" ],
+      "ON" : { "hybridauth_user_insert" : [] },
       "DO" : [
         { "user_add_role" : {
             "account" : [ "hybridauth-user" ],
@@ -45,8 +47,9 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_benenuto_generico'] = entity_import('rules_config', '{ "rules_benenuto_generico" : {
       "LABEL" : "benenuto generico",
       "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
       "REQUIRES" : [ "rules", "hybridauth" ],
-      "ON" : [ "user_login", "hybridauth_user_login" ],
+      "ON" : { "user_login" : [], "hybridauth_user_login" : [] },
       "DO" : [
         { "drupal_message" : { "message" : "Ciao [site:current-user], grazie per essere tornato su ilDeposito.org" } }
       ]
@@ -55,8 +58,9 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_contenuto_creato'] = entity_import('rules_config', '{ "rules_contenuto_creato" : {
       "LABEL" : "Contenuto creato - No Staff",
       "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
-      "ON" : [ "node_insert" ],
+      "ON" : { "node_insert" : [] },
       "IF" : [
         { "NOT user_has_role" : { "account" : [ "node:author" ], "roles" : { "value" : { "4" : "4" } } } },
         { "NOT node_is_of_type" : {
@@ -91,8 +95,9 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_registrazione_utente'] = entity_import('rules_config', '{ "rules_registrazione_utente" : {
       "LABEL" : "Registrazione utente",
       "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
-      "ON" : [ "user_insert" ],
+      "ON" : { "user_insert" : [] },
       "DO" : [
         { "mail" : {
             "to" : "info@ildeposito.org",
@@ -107,8 +112,9 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_revisione_creata_no_staff'] = entity_import('rules_config', '{ "rules_revisione_creata_no_staff" : {
       "LABEL" : "Revisione creata - No Staff",
       "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
-      "ON" : [ "node_update" ],
+      "ON" : { "node_update" : [] },
       "IF" : [
         { "NOT user_has_role" : {
             "account" : [ "site:current-user" ],
@@ -135,8 +141,9 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_utente_senza_email'] = entity_import('rules_config', '{ "rules_utente_senza_email" : {
       "LABEL" : "Utente senza email",
       "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
-      "ON" : [ "user_login" ],
+      "ON" : { "user_login" : [] },
       "IF" : [ { "data_is_empty" : { "data" : [ "account:mail" ] } } ],
       "DO" : [
         { "drupal_message" : {

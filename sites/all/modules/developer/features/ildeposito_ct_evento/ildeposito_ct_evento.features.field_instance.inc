@@ -75,6 +75,20 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'date_default',
         'weight' => 0,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'data_estesa',
+          'fromto' => 'value',
+          'multiple_from' => 0,
+          'multiple_number' => 1,
+          'multiple_to' => '',
+          'show_repeat_rule' => 'hide',
+        ),
+        'type' => 'date_default',
+        'weight' => 0,
+      ),
       'elenco_archivio' => array(
         'label' => 'inline',
         'settings' => array(),
@@ -219,6 +233,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 11,
       ),
+      'drupalgap' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 11,
+      ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
         'settings' => array(),
@@ -296,6 +317,16 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'geofield',
+        'settings' => array(
+          'data' => 'full',
+          'map_preset' => 'geofield_formatter_map',
+        ),
+        'type' => 'geofield_openlayers',
+        'weight' => 9,
+      ),
+      'drupalgap' => array(
         'label' => 'hidden',
         'module' => 'geofield',
         'settings' => array(
@@ -402,6 +433,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'geolocation_text',
         'weight' => 10,
       ),
+      'drupalgap' => array(
+        'label' => 'above',
+        'module' => 'geolocation',
+        'settings' => array(),
+        'type' => 'geolocation_text',
+        'weight' => 10,
+      ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
         'settings' => array(),
@@ -474,6 +512,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 1,
+      ),
+      'drupalgap' => array(
         'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
@@ -567,6 +612,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 3,
+      ),
+      'drupalgap' => array(
         'label' => 'hidden',
         'module' => 'link',
         'settings' => array(),
@@ -678,6 +730,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 7,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 7,
+      ),
       'elenco_archivio' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
@@ -764,6 +823,18 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 7,
+      ),
+      'drupalgap' => array(
         'label' => 'above',
         'module' => 'number',
         'settings' => array(
@@ -864,6 +935,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 6,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 6,
+      ),
       'elenco_archivio' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
@@ -949,6 +1027,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 8,
+      ),
+      'drupalgap' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(),
@@ -1048,6 +1133,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 4,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 4,
+      ),
       'elenco_archivio' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1140,6 +1232,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 5,
+      ),
+      'drupalgap' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(),

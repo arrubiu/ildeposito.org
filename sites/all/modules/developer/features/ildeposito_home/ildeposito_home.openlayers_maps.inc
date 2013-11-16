@@ -68,9 +68,9 @@ function ildeposito_home_openlayers_maps() {
         'zoomtolayer_scale' => '1',
       ),
     ),
-    'default_layer' => 'mapquest_osm',
+    'default_layer' => 'google_normal',
     'layers' => array(
-      'mapquest_osm' => 'mapquest_osm',
+      'google_normal' => 'google_normal',
       'home_eventi_eventi_home_overlay' => 'home_eventi_eventi_home_overlay',
     ),
     'layer_weight' => array(
@@ -139,7 +139,7 @@ function ildeposito_home_openlayers_maps() {
       'evento_mappa_mappa_evento_overlay_prox' => 0,
       'mappa_percorso_mappa_overlay_percorso' => 0,
     ),
-    'projection' => 'EPSG:900913',
+    'projection' => 'EPSG:3857',
     'displayProjection' => 'EPSG:4326',
     'styles' => array(
       'default' => 'default',

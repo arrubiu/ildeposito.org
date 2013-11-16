@@ -151,6 +151,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 12,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 12,
+      ),
       'elenco_archivio' => array(
         'label' => 'above',
         'settings' => array(),
@@ -249,6 +256,20 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 16,
       ),
       'default' => array(
+        'label' => 'inline',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_repeat_rule' => 'show',
+        ),
+        'type' => 'date_default',
+        'weight' => 4,
+      ),
+      'drupalgap' => array(
         'label' => 'inline',
         'module' => 'date',
         'settings' => array(
@@ -420,6 +441,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'node_reference_default',
         'weight' => 2,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 2,
+      ),
       'elenco_archivio' => array(
         'label' => 'above',
         'settings' => array(),
@@ -521,6 +549,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 13,
       ),
       'default' => array(
+        'label' => 'inline',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 1,
+      ),
+      'drupalgap' => array(
         'label' => 'inline',
         'module' => 'node_reference',
         'settings' => array(),
@@ -637,6 +672,12 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 18,
       ),
+      'drupalgap' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 18,
+      ),
       'elenco_archivio' => array(
         'label' => 'inline',
         'module' => 'text',
@@ -734,6 +775,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 0,
       ),
       'default' => array(
+        'label' => 'above',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 5,
+      ),
+      'drupalgap' => array(
         'label' => 'above',
         'module' => 'node_reference',
         'settings' => array(),
@@ -844,6 +892,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 17,
       ),
+      'drupalgap' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 17,
+      ),
       'elenco_archivio' => array(
         'label' => 'above',
         'settings' => array(),
@@ -941,6 +996,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 25,
       ),
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 15,
+      ),
+      'drupalgap' => array(
         'label' => 'hidden',
         'module' => 'node_reference',
         'settings' => array(),
@@ -1045,6 +1107,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 20,
       ),
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 10,
+      ),
+      'drupalgap' => array(
         'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
@@ -1157,6 +1226,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 6,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 6,
+      ),
       'elenco_archivio' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1253,6 +1329,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 23,
       ),
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 13,
+      ),
+      'drupalgap' => array(
         'label' => 'hidden',
         'module' => 'link',
         'settings' => array(),
@@ -1376,6 +1459,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'link_default',
         'weight' => 14,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 14,
+      ),
       'elenco_archivio' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1486,6 +1576,12 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 28,
       ),
       'default' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 19,
+      ),
+      'drupalgap' => array(
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
@@ -1607,6 +1703,12 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 20,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 20,
+      ),
       'elenco_archivio' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1699,6 +1801,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 7,
       ),
       'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 0,
+      ),
+      'drupalgap' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(),
@@ -1804,6 +1913,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 19,
       ),
       'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 8,
+      ),
+      'drupalgap' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(),
@@ -1922,6 +2038,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 7,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 7,
+      ),
       'elenco_archivio' => array(
         'label' => 'inline',
         'module' => 'ds',
@@ -2022,6 +2145,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'weight' => 15,
       ),
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 3,
+      ),
+      'drupalgap' => array(
         'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
@@ -2133,6 +2263,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 11,
       ),
+      'drupalgap' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 11,
+      ),
       'elenco_archivio' => array(
         'label' => 'above',
         'settings' => array(),
@@ -2235,6 +2372,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'type' => 'node_reference_default',
         'weight' => 8,
       ),
+      'drupalgap' => array(
+        'label' => 'above',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 8,
+      ),
       'elenco_archivio' => array(
         'label' => 'above',
         'settings' => array(),
@@ -2327,6 +2471,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
     'description' => 'Indicare i canti collegati (la stessa operazione può essere eseguita partendo dal canto)',
     'display' => array(
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 2,
+      ),
+      'drupalgap' => array(
         'label' => 'hidden',
         'module' => 'node_reference',
         'settings' => array(),
