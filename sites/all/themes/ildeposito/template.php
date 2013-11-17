@@ -38,6 +38,12 @@ function ildeposito_preprocess_page(&$vars) {
 function ildeposito_preprocess_node(&$vars) {
   $vars['human_type'] = node_type_get_name($vars['node']);
 
+  if ($vars['view_mode'] == 'rss_app' && $vars[$node]->type == 'evento') {
+    $data = new DateTime($vars['node']->field_data_evento['und'][0]['value']);
+    $data_ut = $data->format('U');
+    $vars['title'] = format_date($data_ut, 'custom', 'j F Y') . ' - ' . $vars['node']->title;
+  }
+
   if ($vars['view_mode'] == 'search_result') {
     /* gestione icona tipo contenuto */
 

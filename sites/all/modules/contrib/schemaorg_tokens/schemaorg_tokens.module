@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * @file
+ * module defining tokens for SchemaOrg fields.
+ *
+ * The Token module provides an API for providing tokens to other modules.
+ * Tokens are small bits of text that can be placed into larger documents
+ * via simple placeholders, like %site-name or [user].
+ */
