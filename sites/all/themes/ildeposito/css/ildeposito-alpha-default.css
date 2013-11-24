@@ -339,3 +339,7 @@ a > .sf-sub-indicator {
 .front .pane-views-home-sezioni-block { 
   display: block;
 }
+
+.flexslider-processed {
+  border: 0px !important;
+}
