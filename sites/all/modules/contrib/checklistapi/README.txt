@@ -12,7 +12,7 @@ INTRODUCTION
 
 Current Maintainer: Travis Carden <http://drupal.org/user/236758>
 
-Checklist API Provides a simple interface for modules to create fillable,
+Checklist API provides a simple interface for modules to create fillable,
 persistent checklists that track progress with completion times and users. See
 checklistapi_example.module for an example implementation.
 

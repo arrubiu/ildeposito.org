@@ -53,6 +53,12 @@
           return Drupal.t('Your changes will be lost if you leave the page without saving.');
         }
       });
+      $('#checklistapi-checklist-form').submit(function() {
+        $(window).unbind('beforeunload');
+      });
+      $('#checklistapi-checklist-form .clear-saved-progress').click(function() {
+        $(window).unbind('beforeunload');
+      });
     }
   };
 

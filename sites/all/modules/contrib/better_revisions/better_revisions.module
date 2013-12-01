@@ -60,7 +60,7 @@ function better_revisions_form_alter(&$form, &$form_state, $form_id) {
     if ($area != 0) {
       $fset = 'revision_information';
       if (module_exists('workbench_moderation')) {
-        if (workbench_moderation_node_type_moderated($form['#node']->type)) {
+        if (workbench_moderation_node_type_moderated($form['#node']->type) && $form['options']['#access']) {
           $fset = 'options';
         }
       }
@@ -84,14 +84,19 @@ function better_revisions_form_alter(&$form, &$form_state, $form_id) {
 /* Custom submit handler to combine list and text area values */
 function better_revisions_log_combine($form, &$form_state) {
   if (!empty($form_state['values']['log_extra'])) {
-    $form_state['values']['log'] .= ': ' . check_markup($form_state['values']['log_extra'], 'filtered_html');
+    if(filter_format_load('filtered_html')) {
+      $extra = check_markup($form_state['values']['log_extra'], 'filtered_html');
+    } else {
+      $extra = check_plain($form_state['values']['log_extra']);
+    }
+    $form_state['values']['log'] .= ': ' . $extra;
     unset($form_state['values']['log_extra']);
   }
 }
 
 /* Custom validate function */
 function _better_revisions_validate($form, &$form_state) {
-  if (!$form_state['values']['revision']) {
+  if (!$form_state['values']['revision'] || !isset($form_state['values']['revision'])) {
     return;
   }
   $req = variable_get('br_require', FALSE);

@@ -99,8 +99,8 @@ function editableviews_views_data_alter(&$data) {
       // entityreference_field_views_data_views_data_alter().
       foreach ($field['bundles'] as $entity_type => $bundles) {
         $target_entity_type = $field['settings']['target_type'];
-        $target_entity_info = $entity_info[$target_entity_type];
-        if (isset($target_entity_info['base table'])) {
+        if (isset($entity_info[$target_entity_type]['base table'])) {
+          $target_entity_info = $entity_info[$target_entity_type];
           $pseudo_field_name = 'reverse_' . $field['field_name'] . '_' . $entity_type;
           $data[$target_entity_info['base table']][$pseudo_field_name]['relationship']['editableviews_direction'] = 'reverse';
         }

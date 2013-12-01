@@ -179,7 +179,7 @@ class ChecklistapiChecklist {
    *   The Drupal variable name.
    */
   public function getSavedProgressVariableName() {
-    return 'checklistapi_checklist_' . $this->id;
+    return "checklistapi_checklist_{$this->id}";
   }
 
   /**

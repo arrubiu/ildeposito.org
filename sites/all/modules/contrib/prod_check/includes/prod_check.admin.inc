@@ -395,9 +395,9 @@ function prod_check_settings_form_validate($form, &$form_state) {
   // seem logical...
   $base = drupal_get_path('module', 'prod_check');
   drupal_add_css($base . '/css/prod-check.css');
-  drupal_add_js($base . '/js/jquery.equalheights.js', 'module', 'header');
-  drupal_add_js($base . '/js/jquery.maskedinput.min.js', 'module', 'header');
-  drupal_add_js($base . '/js/prod-check.js', 'module', 'header');
+  drupal_add_js($base . '/js/jquery.equalheights.js');
+  drupal_add_js($base . '/js/jquery.maskedinput.min.js');
+  drupal_add_js($base . '/js/prod-check.js');
 
   if (module_exists('dblog')) {
     if (!is_numeric($form_state['values']['prod_check_dblog_php_threshold'])) {
@@ -738,6 +738,297 @@ function prod_check_prod_mode_modules($options) {
 }
 
 /**
+ * Generate default key if none is present.
+ */
+function prod_check_generate_key($length = 25) {
+  $chars = 'abcdefghijklmnopqrstuxyvwzABCDEFGHIJKLMNOPQRSTUXYVWZ+-*#&@!?';
+  $size = strlen($chars);
+  $key = '';
+  for ($i = 0; $i < $length; $i++) {
+    $key .= $chars[rand(0, $size - 1)];
+  }
+
+  return $key;
+}
+
+/**
+ * Database status page.
+ */
+function prod_check_dbstatus() {
+  // Get active connection.
+  $pdo = Database::getConnection();
+  // Get database driver.
+  $db_type = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+
+  $details = array(
+    'status' => array(),
+    'tables' => array(),
+    'databases' => array(),
+  );
+
+  $add_js = FALSE;
+
+  $title = '';
+  $db = $db_type;
+  switch($db_type) {
+    case 'pgsql':
+      // Set title & version.
+      $server = db_query('SELECT version()')->fetchField();
+      $title = t('Running @version', array('@version' => $server));
+      // Get detailed status.
+      $details = _prod_check_dbstatus_pgsql($details);
+      break;
+    case 'mysql':
+      $db = 'MySQL';
+      // Get detailed status.
+      $details = _prod_check_dbstatus_mysql($details);
+      // NO break here!
+    default:
+      // Set title & version.
+      $server = $pdo->getAttribute(PDO::ATTR_SERVER_VERSION);
+      $title = t('Running @db @version', array('@db' => $db, '@version' => $server));
+      break;
+  }
+
+  // Get basic status.
+  $status = '';
+  try {
+    $status = $pdo->getAttribute(PDO::ATTR_SERVER_INFO);
+    if (is_array($status)) {
+      $status = implode("<br />\n", $status);
+    }
+    else {
+      $status = str_replace('  ', "<br />\n", $status);
+    }
+  } catch(Exception $e) {}
+
+  // Get additional status.
+  $additional = '';
+  $attributes = array(
+    'AUTOCOMMIT' => 'Auto commit',
+    'PREFETCH' => 'Prefetch',
+    'TIMEOUT' => 'Timeout',
+    'ERRMODE' => 'Error mode',
+    'CLIENT_VERSION' => 'Client version',
+    'CONNECTION_STATUS' => 'Connection status',
+    'CASE' => 'Case',
+    'CURSOR_NAME' => 'Cursor name',
+    'CURSOR' => 'Cursor',
+    'ORACLE_NULLS' => 'Oracle nulls',
+    'PERSISTENT' => 'Persistent',
+    'STATEMENT_CLASS' => 'Statement class',
+    'FETCH_CATALOG_NAMES' => 'Fatch catalog names',
+    'FETCH_TABLE_NAMES' => 'Fetch table names',
+    'STRINGIFY_FETCHES' => 'Stringify fetches',
+    'MAX_COLUMN_LEN' => 'Max column length',
+    'DEFAULT_FETCH_MODE' => 'Default fetch mode',
+    'EMULATE_PREPARES' => 'Emulate prepares',
+  );
+  foreach ($attributes as $constant => $name) {
+    try {
+      $result = $pdo->getAttribute(constant("PDO::ATTR_$constant"));
+      if (is_bool($result)) {
+        $result = $result ? 'TRUE' : 'FALSE';
+      }
+      elseif (is_array($result) || is_object($result)) {
+        $add_js = TRUE;
+        include_once DRUPAL_ROOT . '/includes/utility.inc';
+
+        $class = strtolower(str_replace('_', '-', $constant));
+
+        $link = l(
+          t('Show details'),
+          'admin/reports/status/database',
+          array(
+            'attributes' => array(
+              'class' => array('show-more'),
+              'data-details' => $class
+            )
+          )
+        );
+
+        // Seemed a bit overkill to create a css file only for this display:none
+        // thingy.
+        $result = $link . '<pre class="' . $class . '" style="display:none;">' . drupal_var_export($result) . '</pre>';
+      }
+      $additional .= $name . ': ' . $result . "<br />\n";
+    } catch (Exception $e) {}
+  }
+  $status = "$additional<br />\n$status";
+
+  if ($add_js) {
+    $base = drupal_get_path('module', 'prod_check');
+    drupal_add_js($base . '/js/prod-check-database.js');
+  }
+
+  return theme('prod_check_dbstatus', array('title' => $title, 'status' => $status, 'details' => $details));
+}
+
+/**
+ * Helper function to return MySQL detailed status info.
+ */
+function _prod_check_dbstatus_mysql($details) {
+  $db_name = '';
+  // Feels like there should be a better way of getting the current database
+  // name.
+  $db_setting = Database::getConnectionInfo();
+  foreach($db_setting as $params) {
+    if(isset($params['database'])) {
+      // We get the first name we find.
+      $db_name = $params['database'];
+      break;
+    }
+  }
+
+  // Get detailed status.
+  $rows = array();
+  try {
+    $result = db_query('SHOW STATUS');
+    foreach ($result as $row) {
+      $rows[] = array($row->Variable_name, $row->Value);
+    }
+  } catch (Exception $e) {}
+  if ($rows) {
+    $details['status'] = array(
+      'title' => t('Detailed status'),
+      'header' => array(
+        t('Variable'),
+        t('Value'),
+      ),
+      'rows' => $rows,
+    );
+  }
+
+  // Get all tables.
+  $rows = array();
+  try {
+    // We cannot use the standard db_query with arguments here as the argument
+    // should NOT be enclosed in quotes.
+    $result = db_query(sprintf('SHOW TABLES FROM %s', $db_name));
+    $property = 'Tables_in_' . $db_name;
+    foreach ($result as $row) {
+      $rows[] = array($row->$property);
+    }
+  } catch (Exception $e) {}
+  if ($rows) {
+    $details['tables'] = array(
+      'title' => t('Tables for active database %name', array('%name' => $db_name)),
+      'header' => array(
+        t('Table'),
+      ),
+      'rows' => $rows,
+    );
+  }
+
+  // Get all databases.
+  $rows = array();
+  try {
+    $result = db_query('SHOW DATABASES');
+    foreach ($result as $row) {
+      $rows[] = array($row->Database);
+    }
+  } catch (Exception $e) {}
+  if ($rows) {
+    $details['databases'] = array(
+      'title' => t('Available databases'),
+      'header' => array(
+        t('Database'),
+      ),
+      'rows' => $rows,
+    );
+  }
+
+  return $details;
+}
+
+/**
+ * Helper function to return PostgreSQL status info.
+ *
+ * Useful links for possible expansion:
+ *  http://www.php.net/manual/en/book.pgsql.php
+ *  http://www.alberton.info/postgresql_meta_info.html#.UbXmAFQW3eU
+ *  http://www.postgresql.org/docs/devel/static/catalog-pg-statistic.html
+ *  http://www.postgresql.org/docs/9.0/static/functions-info.html
+ *  http://www.postgresql.org/docs/9.0/static/functions-admin.html
+ */
+function _prod_check_dbstatus_pgsql($db_name, $details) {
+  // Get detailed status.
+  $rows = array();
+  try {
+    // See http://www.postgresql.org/docs/9.0/static/view-pg-settings.html
+    $result = db_query('SELECT * FROM pg_settings');
+    foreach ($result as $row) {
+    /* TODO: add some more detail here? This is available:
+
+         Column   | Type | Modifiers | Storage  | Description
+      ------------+------+-----------+----------+-------------
+       name       | text |           | extended |
+       setting    | text |           | extended |
+       unit       | text |           | extended |
+       category   | text |           | extended |
+       short_desc | text |           | extended |
+       extra_desc | text |           | extended |
+       context    | text |           | extended |
+       vartype    | text |           | extended |
+       source     | text |           | extended |
+       min_val    | text |           | extended |
+       max_val    | text |           | extended | */
+      $rows[] = array($row->name, $row->setting);
+    }
+  } catch (Exception $e) {}
+  if ($rows) {
+    $details['status'] = array(
+      'title' => t('Detailed status'),
+      'header' => array(
+        t('Name'),
+        t('Setting'),
+      ),
+      'rows' => $rows,
+    );
+  }
+
+  // Get all tables.
+  $rows = array();
+  try {
+    // See http://www.postgresql.org/docs/9.0/static/catalog-pg-class.html
+    // relclass: r = ordinary table, i = index, S = sequence, v = view, c = composite type, t = TOAST table
+    $result = db_query("SELECT relname FROM pg_class WHERE relname !~ '^(pg_|sql_)' AND relkind = 'r'");
+    foreach ($result as $row) {
+      $rows[] = array($row->relname);
+    }
+  } catch (Exception $e) {}
+  if ($rows) {
+    $details['tables'] = array(
+      'title' => t('Tables for active database %name', array('%name' => $db_name)),
+      'header' => array(
+        t('Table'),
+      ),
+      'rows' => $rows,
+    );
+  }
+
+  // Get all databases.
+  $rows = array();
+  try {
+    $result = db_query('SELECT datname FROM pg_database');
+    foreach ($result as $row) {
+      $rows[] = array($row->datname);
+    }
+  } catch (Exception $e) {}
+  if ($rows) {
+    $details['databases'] = array(
+      'title' => t('Available databases'),
+      'header' => array(
+        t('Database'),
+      ),
+      'rows' => $rows,
+    );
+  }
+
+  return $details;
+}
+
+/**
  * Integration of the APC status page.
  */
 function prod_check_apc() {
@@ -751,29 +1042,12 @@ function prod_check_apc() {
  * Integration of the Memcache status page.
  */
 function prod_check_memcache() {
-  global $conf;
+  // Memcache module defaults to 127.0.0.1:11211
+  $memcache_servers = variable_get('memcache_servers', array('127.0.0.1:11211' => 'default'));
 
-  if (isset($conf['memcache_servers'])) {
-    global $MEMCACHE_SERVERS;
-    $MEMCACHE_SERVERS = array_keys($conf['memcache_servers']);
-    include(drupal_get_path('module', 'prod_check') . '/includes/prod_check.memcache.inc');
-  }
-  else {
-    print 'No memcache servers found in settings.php.';
-  }
+  global $MEMCACHE_SERVERS;
+  $MEMCACHE_SERVERS = array_keys($memcache_servers);
+  include(drupal_get_path('module', 'prod_check') . '/includes/prod_check.memcache.inc');
+
   exit;
-}
-
-/**
- * Generate default key if none is present.
- */
-function prod_check_generate_key($length = 25) {
-  $chars = 'abcdefghijklmnopqrstuxyvwzABCDEFGHIJKLMNOPQRSTUXYVWZ+-*#&@!?';
-  $size = strlen($chars);
-  $key = '';
-  for ($i = 0; $i < $length; $i++) {
-    $key .= $chars[rand(0, $size - 1)];
-  }
-
-  return $key;
 }

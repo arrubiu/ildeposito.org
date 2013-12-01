@@ -135,6 +135,10 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     //dsm($result, '$result');
     // Get our edit field handlers.
     $edit_field_handlers = $this->get_edit_field_handlers();
+    if (empty($edit_field_handlers)) {
+      // There's nothing to do!
+      return;
+    }
     //dsm($edit_field_handlers, '$edit_field_handlers');
     $relationship_handlers = $this->display->handler->get_handlers('relationship');
 

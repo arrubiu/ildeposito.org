@@ -4,7 +4,7 @@
   Drupal.behaviors.prod_monitor_init = {
     attach: function(context, settings) {
       var script = document.createElement('script');
-      script.src = 'http://www.google.com/jsapi?callback=Drupal.behaviors.prod_monitor_performance.initGoogleDependencies';
+      script.src = document.location.protocol + '//www.google.com/jsapi?callback=Drupal.behaviors.prod_monitor_performance.initGoogleDependencies';
       script.type = 'text/javascript';
       $('head').append(script);
     }
@@ -14,12 +14,12 @@
   Drupal.behaviors.prod_monitor_performance = {
     initGoogleDependencies: function() {
       google.load('visualization', '1', {
-        'callback':Drupal.behaviors.prod_monitor_performance.initGraphs, 
+        'callback':Drupal.behaviors.prod_monitor_performance.initGraphs,
         'packages':['annotatedtimeline']
       })
     },
 
-    initGraphs: function() {  
+    initGraphs: function() {
       $('.performance-data').each(function() {
         var callback = $(this).attr('id').replace('-', '_');
         //console.log(Drupal.behaviors.prod_monitor_performance[callback]);

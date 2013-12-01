@@ -1,13 +1,13 @@
 <?php
 
-require_once('geofield.elements.inc');
-require_once('geofield.widgets.inc');
-require_once('geofield.formatters.inc');
-require_once('geofield.openlayers.inc');
-require_once('geofield.feeds.inc');
-require_once('geofield.apachesolr.inc');
-require_once('geofield.schemaorg.inc');
-require_once('geofield.microdata.inc');
+module_load_include('inc', 'geofield', 'geofield.elements');
+module_load_include('inc', 'geofield', 'geofield.widgets');
+module_load_include('inc', 'geofield', 'geofield.formatters');
+module_load_include('inc', 'geofield', 'geofield.openlayers');
+module_load_include('inc', 'geofield', 'geofield.feeds');
+module_load_include('inc', 'geofield', 'geofield.apachesolr');
+module_load_include('inc', 'geofield', 'geofield.schemaorg');
+module_load_include('inc', 'geofield', 'geofield.microdata');
 
 /* *
  * Max length of geohashes (imposed by database column length).
@@ -278,7 +278,7 @@ function geofield_field_presave($entity_type, $entity, $field, $instance, $langc
     if ($instance['required'] == 0 && empty($items)) {
       $entity_ids = entity_extract_ids($entity_type, $entity);
       if (empty($entity_ids[0])) {
-        $items = array($instance['default_value']);
+        $items = isset($instance['default_value']) ? array($instance['default_value']) : array();
       }
     }
 

@@ -51,3 +51,38 @@ function theme_prod_check_status_report($variables) {
   $output .= '</table>';
   return $output;
 }
+
+/**
+ * Theme database status page.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - title: title string to display.
+ *   - status: string with status summary.
+ *   - details: associative array of associative arrays containing detailed
+ *     status info.
+ *
+ * @ingroup themeable
+ */
+function theme_prod_check_dbstatus($variables) {
+  $title = $variables['title'];
+  $status = $variables['status'];
+  $details = $variables['details'];
+
+  $output = '';
+
+  // DB system and version.
+  $output .= '<h2>' . $title . '</h2>';
+  // Basic status info.
+  $output .= '<div>' . $status . '</div><p>&nbsp;</p>';
+
+  // Add detailed statuses.
+  foreach ($details as $type) {
+    if ($type) {
+      $caption = '<h2>' . $type['title'] . '</h2>';
+      $output .= theme('table', array('header' => $type['header'], 'rows' => $type['rows'], 'caption' => $caption));
+    }
+  }
+
+  return $output;
+}

@@ -67,7 +67,6 @@ function prod_check_help($path, $arg) {
  * Implementation of hook_permission()
  */
 function prod_check_permission() {
-
   return array(
     'administer production check' => array(
       'title' => t('Administer Production Check'),
@@ -89,6 +88,12 @@ function prod_check_permission() {
  */
 function prod_check_menu() {
   $items = array();
+
+  $admin_defaults = array(
+    'access arguments' => array('access production check'),
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/prod_check.admin.inc',
+  );
 
   $items['admin/reports/prod-check'] = array(
     'title' => 'Production check',
@@ -130,23 +135,22 @@ function prod_check_menu() {
     'file' => 'includes/prod_check.admin.inc',
   );
 
+  $items['admin/reports/status/database'] = array(
+    'title' => 'Database',
+    'page callback' => 'prod_check_dbstatus',
+  ) + $admin_defaults;
+
   $items['admin/reports/status/apc'] = array(
     'title' => 'APC',
     'page callback' => 'prod_check_apc',
     'access callback' => 'user_access',
-    'access arguments' => array('access production check'),
-    'type' => MENU_CALLBACK,
-    'file' => 'includes/prod_check.admin.inc',
-  );
+  ) + $admin_defaults;
 
   $items['admin/reports/status/memcache'] = array(
     'title' => 'Memcache',
     'page callback' => 'prod_check_memcache',
     'access callback' => 'user_access',
-    'access arguments' => array('access production check'),
-    'type' => MENU_CALLBACK,
-    'file' => 'includes/prod_check.admin.inc',
-  );
+  ) + $admin_defaults;
 
   return $items;
 }
@@ -171,6 +175,10 @@ function prod_check_theme($existing, $type, $theme, $path) {
   return array(
     'prod_check_status_report' => array(
       'variables' => array('requirements' => NULL),
+      'file' => 'includes/prod_check.theme.inc',
+    ),
+    'prod_check_dbstatus' => array(
+      'variables' => array('title' => NULL, 'status' => NULL, 'details' => NULL),
       'file' => 'includes/prod_check.theme.inc',
     ),
   );
@@ -565,6 +573,7 @@ function _prod_check_functions() {
       '_prod_check_error_reporting' =>  'Error reporting',
       '_prod_check_user_register' => 'User registration',
       '_prod_check_site_mail' => 'Site e-mail',
+      '_prod_check_poormanscron' => 'Cron',
     ),
   );
 
@@ -747,6 +756,52 @@ function _prod_check_site_mail($caller = 'internal') {
     '#description_ok'  => prod_check_ok_title($title, $path),
     '#description_nok' => t('The !link address of the website should not be a development address on production sites!', prod_check_link_array($title, $path)),
     '#nagios_key' => 'MAIL',
+    '#nagios_type' => 'state',
+  );
+
+  return prod_check_execute_check($check, $caller);
+}
+
+// Cron check
+function _prod_check_poormanscron($caller = 'internal') {
+  $check = array();
+
+  $title = 'Cron';
+  $path = 'admin/config/system/cron';
+  if ($caller != 'internal') {
+    $path = PRODCHECK_BASEURL . $path;
+  }
+
+  $cron_interval = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
+
+  // TODO: add some form of cron interval checking here so we can check if the
+  // cron is running regularly AND the poormanscron is disabled?
+  // We could use the data from dblog, but this might not always be enabled so
+  // it will be similar to _prod_check_dblog_php...
+
+  /*$cron_interval_regularity = FALSE;
+  if (module_exists('dblog')) {
+    $result = db_query("SELECT timestamp FROM {watchdog} where type = 'cron' ORDER BY timestamp DESC LIMIT 10");
+    $prev = -1;
+    $diff = array();
+    foreach ($result as $row) {
+      if($prev == -1) {
+        $prev = $row->timestamp;
+        continue;
+      }
+      $diff[] = $prev - $row->timestamp;
+    }
+  }*/
+
+  $check['prod_check_poormanscron'] = array(
+    '#title' => t($title),
+    '#state' => $cron_interval == 0 /*&& $cron_interval_regularity*/,
+    '#severity' => ($caller == 'nagios') ? NAGIOS_STATUS_WARNING : PROD_CHECK_REQUIREMENT_WARNING,
+    '#value_ok'  => t("Drupal's built in cron mechanism is disabled."),
+    '#value_nok'  => t("Drupal's built in cron mechanism is set to run every %interval.", array('%interval' => format_interval($cron_interval))),
+    '#description_ok'  => prod_check_ok_title($title, $path),
+    '#description_nok' => t('The !link interval should be disabled if you have also setup a crontab or scheduled task for this to avoid running the cron more often than you have planned to!', prod_check_link_array($title, $path)),
+    '#nagios_key' => 'CRON',
     '#nagios_type' => 'state',
   );
 
@@ -999,16 +1054,19 @@ function _prod_check_boost($caller = 'internal') {
   if (module_exists('boost')) {
     $check = array();
 
-    $path = 'admin/config/development/performance/boost';
+    $path = 'admin/config/system/boost';
     if ($caller != 'internal') {
       $path = PRODCHECK_BASEURL . $path;
     }
+    $path_htaccess = $path . '/htaccess';
+    $path_crawler = $path . '/crawler';
+    $path_expire = $path . '/expiration';
 
     $title = 'Boost: ';
 
     // Cache lifetime check
-    $subtitle = 'HTML max. cache lifetime ';
-    $var = variable_get('boost_cache_lifetime', 3600);
+    $subtitle = 'text/html - Maximum Cache Lifetime';
+    $var = variable_get('boost_lifetime_max_text/html', 3600);
     $check['prod_check_boost_cache_lifetime'] = array(
       '#title' => t($title.$subtitle),
       '#state' => $var <= 3600,
@@ -1022,53 +1080,78 @@ function _prod_check_boost($caller = 'internal') {
     );
 
     // Clear pages check
-    $subtitle = 'Clear expired pages on cron runs';
-    $var = variable_get('boost_expire_cron', TRUE);
+    $subtitle = 'Remove old cache files on cron';
+    $var = variable_get('boost_expire_cron', BOOST_EXPIRE_CRON);
     $check['prod_check_boost_expire_cron'] = array(
       '#title' => t($title.$subtitle),
       '#state' => $var,
       '#severity' => ($caller == 'nagios') ? NAGIOS_STATUS_WARNING : PROD_CHECK_REQUIREMENT_WARNING,
       '#value_ok'  => t('Enabled'),
       '#value_nok'  => t('Disabled'),
-      '#description_ok'  => prod_check_ok_title($subtitle, $path),
-      '#description_nok' => t('!link is disabled! You should enable this to ensure that expired pages get flushed when the cron runs. This is imperative if you wish to keep view blocks up to date!', prod_check_link_array($subtitle, $path)),
+      '#description_ok'  => prod_check_ok_title($subtitle, $path_expire),
+      '#description_nok' => t('!link is disabled! You should enable this to ensure that expired pages get flushed when the cron runs. This is imperative if you wish to keep view blocks up to date!', prod_check_link_array($subtitle, $path_expire)),
       '#nagios_key' => 'BCLPG',
       '#nagios_type' => 'state',
     );
 
-    /*
     // Crawl on cron check
+    $subtitle = 'Crawl on cron';
+    $var = module_exists('boost_crawler') && variable_get('boost_crawl_on_cron', FALSE);
+    $check['prod_check_boost_crawl_on_cron'] = array(
+      '#title' => t($title.$subtitle),
+      '#state' => $var,
+      '#severity' => ($caller == 'nagios') ? NAGIOS_STATUS_WARNING : PROD_CHECK_REQUIREMENT_WARNING,
+      '#value_ok'  => t('Enabled'),
+      '#value_nok'  => t('Disabled'),
+      '#description_ok'  => prod_check_ok_title($subtitle, $path_crawler),
+      '#description_nok' => t('!link is disabled! You should enable this to ensure that the users are served cached pages all the time. The crawler caches pages before anyone can access them.', prod_check_link_array($subtitle, $path_crawler)),
+      '#nagios_key' => 'BCRCR',
+      '#nagios_type' => 'state',
+    );
 
-    // The Boost module is in development atm, as soon as it is released we'll fix this.
+    // Boost nagios page check
+    if (module_exists('nagios')) {
+      $subtitle = 'Nagios page';
 
-        $subtitle = 'Crawl on cron';
-        $var = variable_get('boost_crawl_on_cron', FALSE);
-        $check['prod_check_boost_crawl_on_cron'] = array(
-          '#title' => t($title.$subtitle),
-          '#state' => $var,
-          '#severity' => ($caller == 'nagios') ? NAGIOS_STATUS_WARNING : PROD_CHECK_REQUIREMENT_WARNING,
-          '#value_ok'  => t('Enabled'),
-          '#value_nok'  => t('Disabled'),
-          '#description_ok'  => prod_check_ok_title($subtitle, $path),
-          '#description_nok' => t('!link is disabled! You should enable this to ensure that the users are served cached pages all the time. The crawler caches pages before anyone can access them.', prod_check_link_array($subtitle, $path)),
-          '#nagios_key' => 'BCRCR',
-          '#nagios_type' => 'state',
-        );
-     */
+      $visibility = variable_get('boost_cacheability_option', BOOST_VISIBILITY_NOTLISTED);
+      $pages_setting = variable_get('boost_cacheability_pages', BOOST_CACHEABILITY_PAGES);
+
+      $pages_array = explode("\n", str_replace(array("\n", "\r\n"), "\n", strtolower($pages_setting)));
+
+      $var = ($visibility && in_array('nagios', $pages_array)) || (!$visibility && !in_array('nagios', $pages_array));
+      if($visibility) {
+        $advise = "You should remove 'nagios' from the listed pages.";
+      }
+      else {
+        $advise = "You should add 'nagios' to the listed pages.";
+      }
+
+      $check['prod_check_boost_apache_nagios_page'] = array(
+        '#title' => t($title.$subtitle),
+        '#state' => !$var,
+        '#severity' => ($caller == 'nagios') ? NAGIOS_STATUS_WARNING : PROD_CHECK_REQUIREMENT_WARNING,
+        '#value_ok'  => t('Enabled'),
+        '#value_nok'  => t('Not properly configured.'),
+        '#description_ok'  => prod_check_ok_title($subtitle, $path),
+        '#description_nok' => t('The !link is being cached by Boost. '.$advise, prod_check_link_array($subtitle, $path)),
+        '#nagios_key' => 'BNAPA',
+        '#nagios_type' => 'state',
+      );
+    }
 
     // Apache etag check
     $subtitle = 'ETag';
-    $var = variable_get('boost_apache_etag', 0);
+    $var = variable_get('boost_apache_etag', BOOST_APACHE_ETAG);
     $check['prod_check_boost_apache_etag'] = array(
       '#title' => t($title.$subtitle),
       '#state' => $var >= 2,
       '#severity' => ($caller == 'nagios') ? NAGIOS_STATUS_WARNING : PROD_CHECK_REQUIREMENT_WARNING,
       '#value_ok'  => t('Enabled'),
       '#value_nok'  => t('Not properly configured.'),
-      '#description_ok'  => prod_check_ok_title($subtitle, $path),
+      '#description_ok'  => prod_check_ok_title($subtitle, $path_htaccess),
       '#description_nok' => t('Your !link settings are not ok! You should enable entity tags (!etag) in Boost so that user side caching and bandwith usage will be optimal! You do need to enable !mod for this to work.',
         array(
-          '!link' => '<em>'.l(t($subtitle), $path, array('attributes' => array('title' => t($subtitle)), 'query' => drupal_get_destination())).'</em>',
+          '!link' => '<em>'.l(t($subtitle), $path_htaccess, array('attributes' => array('title' => t($subtitle)), 'query' => drupal_get_destination())).'</em>',
           '!etag' => '<em>'.l(t('ETags'), 'http://en.wikipedia.org/wiki/HTTP_ETag', array('attributes' => array('title' => t('Etags')))).'</em>',
           '!mod' => '<em>'.l(t('mod_headers'), 'http://httpd.apache.org/docs/2.0/mod/mod_headers.html', array('attributes' => array('title' => t('mod_headers')))).'</em>',
         )
@@ -1076,6 +1159,7 @@ function _prod_check_boost($caller = 'internal') {
       '#nagios_key' => 'BETAG',
       '#nagios_type' => 'state',
     );
+
     $result = prod_check_execute_check($check, $caller);
   }
   return $result;
@@ -1769,6 +1853,10 @@ function _prod_check_redirect($caller = 'internal') {
 // XML sitemap
 function _prod_check_xmlsitemap($caller = 'internal') {
   $check = array();
+  $error = FALSE;
+  $xml_base_url = variable_get('xmlsitemap_base_url', $GLOBALS['base_url']);
+  $value_nok = $msg_nok = '';
+
   $title_ok = 'settings';
   $text_ok = 'Check the !link to verify if they are as you expect.';
 
@@ -1778,14 +1866,25 @@ function _prod_check_xmlsitemap($caller = 'internal') {
     $path = PRODCHECK_BASEURL . $path;
   }
 
-  $check['prod_check_sitemap'] = array(
+  if(!module_exists('xmlsitemap')) {
+    $error = TRUE;
+    $value_nok = t('Disabled');
+    $msg_nok = t('You have not enabled the !link module. This module generates an XML sitemap which can be submitted to search engines, guaranteeing optimal indexation of all urls within the site.', prod_check_link_array($title, 'http://drupal.org/project/xmlsitemap'));
+  }
+  elseif (strtolower($xml_base_url) != strtolower($GLOBALS['base_url'])) {
+    $error = TRUE;
+    $value_nok = t('Not properly configured.');
+    $msg_nok = t('Your sitemap.xml !link is not the same as the current base URL you are viewing the site from.', prod_check_link_array('default base URL', $path));
+  }
+
+  $check['prod_check_xmlsitemap'] = array(
     '#title' => t($title),
-    '#state' => module_exists('xmlsitemap'),
+    '#state' => !$error,
     '#severity' => ($caller == 'nagios') ? NAGIOS_STATUS_WARNING : PROD_CHECK_REQUIREMENT_WARNING,
     '#value_ok'  => t('Enabled'),
-    '#value_nok'  => t('Disabled'),
+    '#value_nok'  => $value_nok,
     '#description_ok'  => prod_check_ok_title($title_ok, $path, $text_ok),
-    '#description_nok' => t('You have not enabled the !link module. This module generates an XML sitemap which can be submitted to search engines, guaranteeing optimal indexation of all urls within the site.', prod_check_link_array($title, 'http://drupal.org/project/xmlsitemap')),
+    '#description_nok' => $msg_nok,
     '#nagios_key' => 'XMLS',
     '#nagios_type' => 'state',
   );

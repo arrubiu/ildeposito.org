@@ -235,7 +235,7 @@ function login_security_validate($form, &$form_state) {
     $password_message = preg_grep("/<a href=\"\/user\/password\?name=$name\">Have you forgotten your password\?<\/a>/", $messages['error']);
     $block_message = preg_grep("/The username <em class=\"placeholder\">$name<\/em> has not been activated or is blocked./", $messages['error']);
 
-    if (user_is_anonymous() && (!empty($password_message) || !empty($block_message))) {
+    if (!count($password_message) || !count($block_message)) {
       if (variable_get('login_security_disable_core_login_error', LOGIN_SECURITY_DISABLE_CORE_LOGIN_ERROR)) {
         // Resets the form error status so no form fields are highlighted in
         // red.
@@ -467,12 +467,12 @@ function login_security_mail($key, &$message, $variables) {
   switch ($key) {
     case 'block_user_notify':
       $message['subject'] = login_security_t(variable_get('login_security_user_blocked_email_subject', LOGIN_SECURITY_USER_BLOCKED_EMAIL_SUBJECT), $variables);
-      $message['body'] = login_security_t(variable_get('login_security_user_blocked_email_body', LOGIN_SECURITY_USER_BLOCKED_EMAIL_BODY), $variables);
+      $message['body'][] = login_security_t(variable_get('login_security_user_blocked_email_body', LOGIN_SECURITY_USER_BLOCKED_EMAIL_BODY), $variables);
       break;
 
     case 'login_activity_notify':
       $message['subject'] = login_security_t(variable_get('login_security_login_activity_email_subject', LOGIN_SECURITY_LOGIN_ACTIVITY_EMAIL_SUBJECT), $variables);
-      $message['body'] = login_security_t(variable_get('login_security_login_activity_email_body', LOGIN_SECURITY_LOGIN_ACTIVITY_EMAIL_BODY), $variables);
+      $message['body'][] = login_security_t(variable_get('login_security_login_activity_email_body', LOGIN_SECURITY_LOGIN_ACTIVITY_EMAIL_BODY), $variables);
       break;
   }
 }

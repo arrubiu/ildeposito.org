@@ -328,7 +328,7 @@ function prod_monitor_cron() {
   $elapsed = $process = 0;
 
   foreach ($sites as $id => $site_info) {
-    $elapsed = REQUEST_TIME - $cron_start;
+    $elapsed = time() - $cron_start;
     if ($elapsed < $time_limit) {
       //TODO: add module status update check here.
       _prod_monitor_retrieve_data($id, $site_info);

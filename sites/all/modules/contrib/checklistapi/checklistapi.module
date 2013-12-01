@@ -9,30 +9,30 @@
  */
 
 /**
- * Access callback: Checks the current user's access to a checklist.
+ * Access callback: Checks the current user's access to a given checklist.
  *
  * @param string $id
  *   The checklist ID.
  * @param string $operation
- *   The operation to test access for. Possible values are "view", "edit", and
- *   "any". Defaults to "any".
+ *   (optional) The operation to test access for. Accepted values are "view",
+ *   "edit", and "any". Defaults to "any".
  *
  * @return bool
  *   Returns TRUE if the current user has access to perform a given operation on
  *   the specified checklist, or FALSE if not.
  */
 function checklistapi_checklist_access($id, $operation = 'any') {
-  $access['view'] = user_access('view any checklistapi checklist') || user_access('view ' . $id . ' checklistapi checklist');
-  $access['edit'] = user_access('edit any checklistapi checklist') || user_access('edit ' . $id . ' checklistapi checklist');
-  $access['any'] = $access['view'] || $access['edit'];
-  if (isset($access[$operation])) {
-    return $access[$operation];
-  }
-  else {
+  $all_operations = array('view', 'edit', 'any');
+  if (!in_array($operation, $all_operations)) {
     throw new Exception(t('No such operation "@operation"', array(
       '@operation' => $operation,
     )));
   }
+
+  $access['view'] = user_access('view any checklistapi checklist') || user_access('view ' . $id . ' checklistapi checklist');
+  $access['edit'] = user_access('edit any checklistapi checklist') || user_access('edit ' . $id . ' checklistapi checklist');
+  $access['any'] = $access['view'] || $access['edit'];
+  return $access[$operation];
 }
 
 /**

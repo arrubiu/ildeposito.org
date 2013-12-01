@@ -10,6 +10,9 @@
  */
 class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Unit tests',
@@ -18,6 +21,9 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     drupal_load('module', 'checklistapi');
     drupal_load('module', 'checklistapi_test');
@@ -28,7 +34,8 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
    * Test checklistapi_sort_array().
    */
   public function testChecklistapiSortArray() {
-    $input = array_pop(checklistapi_test_checklistapi_checklist_info());
+    $checklistapi_test_definition = checklistapi_test_checklistapi_checklist_info();
+    $input = array_pop($checklistapi_test_definition);
     $output = checklistapi_sort_array($input);
     $this->assertEqual($output['group_two']['#weight'], 0, 'Supplied a default for omitted element weight.');
     $this->assertEqual($output['group_three']['#weight'], 0, 'Supplied a default in place of invalid element weight.');
@@ -64,6 +71,9 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
 class ChecklistapiWebTestCase extends DrupalWebTestCase {
   protected $privilegedUser;
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Functional tests',
@@ -72,6 +82,9 @@ class ChecklistapiWebTestCase extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp('checklistapi_example');
     $permissions = array('edit any checklistapi checklist');

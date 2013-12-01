@@ -232,11 +232,14 @@ Cron is NOT used to do this, since we want to keep the transfer to a minimum.
 
 Hidden link
 ===========
-Production check adds a 'hidden link' to the site where you can check the APC
-status of your site. This page can be found on /admin/reports/status/apc.
-This is in analogy with the system module that adds these 'hidden pages':
+Production check adds some 'hidden links' to the site where you can check the
+APC, Memcache and DB status of your site. These pages can be found on:
+  /admin/reports/status/apc
+  /admin/reports/status/memcache
+  /admin/reports/status/database
+
+This is in analogy with the system module that adds this 'hidden page':
  /admin/reports/status/php
- /admin/reports/status/sql
 
 Truely unmissable when setting up your site on a production server to check if
 all is well!
