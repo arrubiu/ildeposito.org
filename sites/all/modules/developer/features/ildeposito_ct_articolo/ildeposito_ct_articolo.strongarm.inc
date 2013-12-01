@@ -197,6 +197,12 @@ function ildeposito_ct_articolo_strongarm() {
       'canti_capoversi' => array(
         'custom_settings' => FALSE,
       ),
+      'rss_app' => array(
+        'custom_settings' => TRUE,
+      ),
+      'drupalgap' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -239,6 +245,10 @@ function ildeposito_ct_articolo_strongarm() {
             'visible' => TRUE,
           ),
           'print' => array(
+            'weight' => '10',
+            'visible' => TRUE,
+          ),
+          'rss_app' => array(
             'weight' => '10',
             'visible' => TRUE,
           ),

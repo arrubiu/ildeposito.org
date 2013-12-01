@@ -4,6 +4,7 @@ core = 7.x
 package = ilDeposito.org
 version = 7.x-1.0
 project = ildeposito_home
+dependencies[] = flexslider_views
 dependencies[] = ildeposito_layout
 dependencies[] = openlayers_views
 dependencies[] = page_manager

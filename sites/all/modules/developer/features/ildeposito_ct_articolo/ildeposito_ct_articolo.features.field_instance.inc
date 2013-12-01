@@ -105,6 +105,15 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 0,
       ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'trim_length' => 250,
+        ),
+        'type' => 'text_summary_or_trimmed',
+        'weight' => 0,
+      ),
       'search_result' => array(
         'label' => 'hidden',
         'settings' => array(),
@@ -188,6 +197,12 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'type' => 'node_reference_default',
         'weight' => 2,
       ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -262,6 +277,12 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
       ),
       'search_result' => array(
         'label' => 'hidden',
@@ -356,6 +377,12 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 2,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -471,6 +498,12 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
+      ),
       'search_result' => array(
         'label' => 'above',
         'module' => 'date',
@@ -569,6 +602,13 @@ function ildeposito_ct_articolo_field_default_field_instances() {
       ),
       'rss' => array(
         'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 1,
+      ),
+      'rss_app' => array(
+        'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',

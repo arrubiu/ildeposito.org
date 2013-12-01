@@ -76,17 +76,9 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 0,
       ),
       'drupalgap' => array(
-        'label' => 'inline',
-        'module' => 'date',
-        'settings' => array(
-          'format_type' => 'data_estesa',
-          'fromto' => 'value',
-          'multiple_from' => 0,
-          'multiple_number' => 1,
-          'multiple_to' => '',
-          'show_repeat_rule' => 'hide',
-        ),
-        'type' => 'date_default',
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
       'elenco_archivio' => array(
@@ -171,6 +163,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'date_default',
         'weight' => 0,
       ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 20,
+      ),
       'search_result' => array(
         'label' => 'inline',
         'settings' => array(),
@@ -235,10 +233,9 @@ function ildeposito_ct_evento_field_default_field_instances() {
       ),
       'drupalgap' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 11,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -269,6 +266,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 25,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -327,14 +330,10 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 9,
       ),
       'drupalgap' => array(
-        'label' => 'hidden',
-        'module' => 'geofield',
-        'settings' => array(
-          'data' => 'full',
-          'map_preset' => 'geofield_formatter_map',
-        ),
-        'type' => 'geofield_openlayers',
-        'weight' => 9,
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -373,6 +372,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         ),
         'type' => 'geofield_openlayers',
         'weight' => 10,
+      ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 23,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -435,10 +440,9 @@ function ildeposito_ct_evento_field_default_field_instances() {
       ),
       'drupalgap' => array(
         'label' => 'above',
-        'module' => 'geolocation',
         'settings' => array(),
-        'type' => 'geolocation_text',
-        'weight' => 10,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -469,6 +473,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 24,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -519,11 +529,10 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 1,
       ),
       'drupalgap' => array(
-        'label' => 'hidden',
-        'module' => 'text',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -564,6 +573,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 3,
       ),
       'rss' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 1,
+      ),
+      'rss_app' => array(
         'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
@@ -619,11 +635,10 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 3,
       ),
       'drupalgap' => array(
-        'label' => 'hidden',
-        'module' => 'link',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'link_default',
-        'weight' => 3,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -669,6 +684,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'link_default',
         'weight' => 3,
+      ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 2,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -731,11 +752,10 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 7,
       ),
       'drupalgap' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 7,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -783,6 +803,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 6,
+      ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 7,
       ),
       'search_result' => array(
         'label' => 'inline',
@@ -836,15 +863,9 @@ function ildeposito_ct_evento_field_default_field_instances() {
       ),
       'drupalgap' => array(
         'label' => 'above',
-        'module' => 'number',
-        'settings' => array(
-          'decimal_separator' => '.',
-          'prefix_suffix' => TRUE,
-          'scale' => 0,
-          'thousand_separator' => ' ',
-        ),
-        'type' => 'number_integer',
-        'weight' => 7,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -887,6 +908,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 22,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -936,11 +963,10 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 6,
       ),
       'drupalgap' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 6,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -982,6 +1008,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 6,
       ),
       'rss' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 5,
+      ),
+      'rss_app' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(),
@@ -1034,11 +1067,10 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 8,
       ),
       'drupalgap' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 8,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -1085,6 +1117,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 7,
+      ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 4,
       ),
       'search_result' => array(
         'label' => 'inline',
@@ -1134,11 +1173,10 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 4,
       ),
       'drupalgap' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 4,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -1184,6 +1222,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 4,
+      ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 6,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -1239,11 +1284,10 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 5,
       ),
       'drupalgap' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 5,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -1288,6 +1332,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 8,
+      ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 21,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -1368,6 +1418,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
       ),
       'search_result' => array(
         'label' => 'above',

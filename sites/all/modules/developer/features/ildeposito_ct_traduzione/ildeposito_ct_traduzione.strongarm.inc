@@ -197,6 +197,12 @@ function ildeposito_ct_traduzione_strongarm() {
       'print_canzoniere' => array(
         'custom_settings' => FALSE,
       ),
+      'rss_app' => array(
+        'custom_settings' => TRUE,
+      ),
+      'drupalgap' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -239,6 +245,10 @@ function ildeposito_ct_traduzione_strongarm() {
             'visible' => FALSE,
           ),
           'rss' => array(
+            'weight' => '5',
+            'visible' => FALSE,
+          ),
+          'rss_app' => array(
             'weight' => '5',
             'visible' => FALSE,
           ),

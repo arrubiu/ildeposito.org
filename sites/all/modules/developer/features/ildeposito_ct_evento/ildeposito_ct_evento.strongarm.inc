@@ -220,6 +220,9 @@ function ildeposito_ct_evento_strongarm() {
       'canti_capoversi' => array(
         'custom_settings' => FALSE,
       ),
+      'rss_app' => array(
+        'custom_settings' => TRUE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -251,6 +254,7 @@ function ildeposito_ct_evento_strongarm() {
           'rss' => NULL,
           'percorso' => NULL,
           'drupalgap' => NULL,
+          'rss_app' => NULL,
         ),
       ),
     ),
