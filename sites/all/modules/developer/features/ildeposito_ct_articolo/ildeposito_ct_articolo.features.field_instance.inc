@@ -106,12 +106,9 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'weight' => 0,
       ),
       'rss_app' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'trim_length' => 250,
-        ),
-        'type' => 'text_summary_or_trimmed',
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
       'search_result' => array(
@@ -201,7 +198,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -279,10 +276,10 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'weight' => 0,
       ),
       'rss_app' => array(
-        'label' => 'hidden',
+        'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'hidden',
@@ -379,10 +376,10 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'weight' => 0,
       ),
       'rss_app' => array(
-        'label' => 'hidden',
+        'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -499,10 +496,10 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'weight' => 0,
       ),
       'rss_app' => array(
-        'label' => 'hidden',
+        'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -608,11 +605,10 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'weight' => 1,
       ),
       'rss_app' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'inline',

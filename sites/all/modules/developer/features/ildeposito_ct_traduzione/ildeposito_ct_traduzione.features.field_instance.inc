@@ -101,10 +101,10 @@ function ildeposito_ct_traduzione_field_default_field_instances() {
         'weight' => 5,
       ),
       'rss_app' => array(
-        'label' => 'hidden',
+        'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -196,11 +196,10 @@ function ildeposito_ct_traduzione_field_default_field_instances() {
         'weight' => 2,
       ),
       'rss_app' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 3,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'inline',
@@ -288,11 +287,10 @@ function ildeposito_ct_traduzione_field_default_field_instances() {
         'weight' => 1,
       ),
       'rss_app' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -378,7 +376,7 @@ function ildeposito_ct_traduzione_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -467,11 +465,10 @@ function ildeposito_ct_traduzione_field_default_field_instances() {
         'weight' => 3,
       ),
       'rss_app' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -555,10 +552,10 @@ function ildeposito_ct_traduzione_field_default_field_instances() {
         'weight' => 4,
       ),
       'rss_app' => array(
-        'label' => 'hidden',
+        'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
