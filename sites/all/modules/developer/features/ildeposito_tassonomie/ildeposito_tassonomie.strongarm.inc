@@ -151,7 +151,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->value = array(
     'view_modes' => array(
       'full' => array(
-        'custom_settings' => TRUE,
+        'custom_settings' => FALSE,
       ),
       'diff_standard' => array(
         'custom_settings' => FALSE,
@@ -161,6 +161,15 @@ function ildeposito_tassonomie_strongarm() {
       ),
       'elenco_termini_contenuti' => array(
         'custom_settings' => TRUE,
+      ),
+      'drupalgap' => array(
+        'custom_settings' => FALSE,
+      ),
+      'rss_app' => array(
+        'custom_settings' => FALSE,
+      ),
+      'termine_singolo' => array(
+        'custom_settings' => FALSE,
       ),
     ),
     'extra_fields' => array(
@@ -192,7 +201,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->value = array(
     'view_modes' => array(
       'full' => array(
-        'custom_settings' => TRUE,
+        'custom_settings' => FALSE,
       ),
       'diff_standard' => array(
         'custom_settings' => FALSE,
@@ -202,6 +211,15 @@ function ildeposito_tassonomie_strongarm() {
       ),
       'elenco_termini_contenuti' => array(
         'custom_settings' => TRUE,
+      ),
+      'drupalgap' => array(
+        'custom_settings' => FALSE,
+      ),
+      'rss_app' => array(
+        'custom_settings' => FALSE,
+      ),
+      'termine_singolo' => array(
+        'custom_settings' => FALSE,
       ),
     ),
     'extra_fields' => array(
@@ -233,7 +251,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->value = array(
     'view_modes' => array(
       'full' => array(
-        'custom_settings' => TRUE,
+        'custom_settings' => FALSE,
       ),
       'diff_standard' => array(
         'custom_settings' => FALSE,
@@ -243,6 +261,15 @@ function ildeposito_tassonomie_strongarm() {
       ),
       'elenco_termini_contenuti' => array(
         'custom_settings' => TRUE,
+      ),
+      'drupalgap' => array(
+        'custom_settings' => FALSE,
+      ),
+      'rss_app' => array(
+        'custom_settings' => FALSE,
+      ),
+      'termine_singolo' => array(
+        'custom_settings' => FALSE,
       ),
     ),
     'extra_fields' => array(
@@ -260,7 +287,7 @@ function ildeposito_tassonomie_strongarm() {
       'display' => array(
         'description' => array(
           'default' => array(
-            'weight' => '0',
+            'weight' => '1',
             'visible' => TRUE,
           ),
           'full' => array(
@@ -284,7 +311,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->value = array(
     'view_modes' => array(
       'full' => array(
-        'custom_settings' => TRUE,
+        'custom_settings' => FALSE,
       ),
       'diff_standard' => array(
         'custom_settings' => FALSE,
@@ -296,6 +323,12 @@ function ildeposito_tassonomie_strongarm() {
         'custom_settings' => TRUE,
       ),
       'termine_singolo' => array(
+        'custom_settings' => FALSE,
+      ),
+      'drupalgap' => array(
+        'custom_settings' => FALSE,
+      ),
+      'rss_app' => array(
         'custom_settings' => FALSE,
       ),
     ),
@@ -347,7 +380,7 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm->value = array(
     'view_modes' => array(
       'full' => array(
-        'custom_settings' => TRUE,
+        'custom_settings' => FALSE,
       ),
       'diff_standard' => array(
         'custom_settings' => FALSE,
@@ -359,6 +392,12 @@ function ildeposito_tassonomie_strongarm() {
         'custom_settings' => TRUE,
       ),
       'termine_singolo' => array(
+        'custom_settings' => FALSE,
+      ),
+      'drupalgap' => array(
+        'custom_settings' => FALSE,
+      ),
+      'rss_app' => array(
         'custom_settings' => FALSE,
       ),
     ),

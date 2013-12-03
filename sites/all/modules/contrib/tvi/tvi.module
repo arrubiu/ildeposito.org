@@ -197,6 +197,13 @@ function tvi_render_view($tid = '', $depth = 0, $op = 'page') {
   }
 
   list($view, $display, $term, $settings) = tvi_get_view_info($tid);
+  
+  // Load metatags if needed.
+  if (module_exists('metatag')) {
+    metatag_entity_view($term, 'taxonomy_term', 'full', NULL);
+  }
+
+  
   if (is_object($view) && $display) {
     if ($view->display[$display]->display_plugin == 'block') {
       // If it's a block display, views returns a block array which won't work

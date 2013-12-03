@@ -262,6 +262,26 @@ function ildeposito_tassonomie_ds_field_settings_info() {
 
   $ds_fieldsetting = new stdClass();
   $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'taxonomy_term|percorsi|default';
+  $ds_fieldsetting->entity_type = 'taxonomy_term';
+  $ds_fieldsetting->bundle = 'percorsi';
+  $ds_fieldsetting->view_mode = 'default';
+  $ds_fieldsetting->settings = array(
+    'mappa_percorso' => array(
+      'weight' => '2',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'service_links_not_node' => array(
+      'weight' => '3',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+  );
+  $export['taxonomy_term|percorsi|default'] = $ds_fieldsetting;
+
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
   $ds_fieldsetting->id = 'taxonomy_term|percorsi|full';
   $ds_fieldsetting->entity_type = 'taxonomy_term';
   $ds_fieldsetting->bundle = 'percorsi';
@@ -655,6 +675,45 @@ function ildeposito_tassonomie_ds_layout_settings_info() {
 
   $ds_layout = new stdClass();
   $ds_layout->api_version = 1;
+  $ds_layout->id = 'taxonomy_term|percorsi|default';
+  $ds_layout->entity_type = 'taxonomy_term';
+  $ds_layout->bundle = 'percorsi';
+  $ds_layout->view_mode = 'default';
+  $ds_layout->layout = 'ds_2col_stacked';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'left' => array(
+        0 => 'field_immagine',
+        1 => 'description',
+      ),
+      'right' => array(
+        2 => 'mappa_percorso',
+        3 => 'service_links_not_node',
+      ),
+    ),
+    'fields' => array(
+      'field_immagine' => 'left',
+      'description' => 'left',
+      'mappa_percorso' => 'right',
+      'service_links_not_node' => 'right',
+    ),
+    'classes' => array(),
+    'wrappers' => array(
+      'header' => 'div',
+      'left' => 'div',
+      'right' => 'div',
+      'footer' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+  );
+  $export['taxonomy_term|percorsi|default'] = $ds_layout;
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
   $ds_layout->id = 'taxonomy_term|percorsi|full';
   $ds_layout->entity_type = 'taxonomy_term';
   $ds_layout->bundle = 'percorsi';
@@ -702,13 +761,11 @@ function ildeposito_tassonomie_ds_layout_settings_info() {
       'left' => array(
         0 => 'description',
         1 => 'field_immagine',
-        2 => 'field_radioactiviy',
       ),
     ),
     'fields' => array(
       'description' => 'left',
       'field_immagine' => 'left',
-      'field_radioactiviy' => 'left',
     ),
     'classes' => array(),
     'wrappers' => array(

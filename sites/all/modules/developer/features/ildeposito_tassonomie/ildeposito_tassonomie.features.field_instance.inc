@@ -18,16 +18,10 @@ function ildeposito_tassonomie_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'number',
-        'settings' => array(
-          'decimal_separator' => '.',
-          'prefix_suffix' => TRUE,
-          'scale' => 0,
-          'thousand_separator' => ' ',
-        ),
-        'type' => 'number_integer',
-        'weight' => 0,
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -82,16 +76,10 @@ function ildeposito_tassonomie_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'number',
-        'settings' => array(
-          'decimal_separator' => '.',
-          'prefix_suffix' => TRUE,
-          'scale' => 0,
-          'thousand_separator' => ' ',
-        ),
-        'type' => 'number_integer',
-        'weight' => 0,
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -146,13 +134,9 @@ function ildeposito_tassonomie_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'image',
-        'settings' => array(
-          'image_link' => '',
-          'image_style' => '',
-        ),
-        'type' => 'image',
-        'weight' => 0,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -221,10 +205,12 @@ function ildeposito_tassonomie_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'file',
-        'settings' => array(),
-        'type' => 'file_default',
+        'label' => 'hidden',
+        'module' => 'file_entity',
+        'settings' => array(
+          'file_view_mode' => 'termine_singolo',
+        ),
+        'type' => 'file_rendered',
         'weight' => 0,
       ),
       'elenco_termini_contenuti' => array(
@@ -289,9 +275,8 @@ function ildeposito_tassonomie_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => 13,
       ),
       'elenco_termini_contenuti' => array(
@@ -343,12 +328,8 @@ function ildeposito_tassonomie_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'image',
-        'settings' => array(
-          'image_link' => '',
-          'image_style' => '',
-        ),
-        'type' => 'image',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 1,
       ),
       'elenco_termini_contenuti' => array(
@@ -359,12 +340,8 @@ function ildeposito_tassonomie_field_default_field_instances() {
       ),
       'full' => array(
         'label' => 'above',
-        'module' => 'image',
-        'settings' => array(
-          'image_link' => '',
-          'image_style' => '',
-        ),
-        'type' => 'image',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 1,
       ),
       'ical' => array(
@@ -421,7 +398,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'file_entity',
         'settings' => array(
-          'file_view_mode' => 'default',
+          'file_view_mode' => 'termine_singolo',
         ),
         'type' => 'file_rendered',
         'weight' => 1,

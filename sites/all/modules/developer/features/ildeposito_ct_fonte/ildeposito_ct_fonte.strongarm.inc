@@ -111,6 +111,39 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'easy_social_fonte_bibliografica_count';
+  $strongarm->value = '1';
+  $export['easy_social_fonte_bibliografica_count'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'easy_social_fonte_bibliografica_enable';
+  $strongarm->value = 0;
+  $export['easy_social_fonte_bibliografica_enable'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'easy_social_fonte_bibliografica_type';
+  $strongarm->value = '1';
+  $export['easy_social_fonte_bibliografica_type'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'easy_social_fonte_bibliografica_widgets';
+  $strongarm->value = array(
+    'twitter' => 'twitter',
+    'facebook' => 'facebook',
+    'googleplus' => 'googleplus',
+    'linkedin' => 0,
+  );
+  $export['easy_social_fonte_bibliografica_widgets'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__fonte_bibliografica';
   $strongarm->value = array(
     'view_modes' => array(
@@ -187,9 +220,30 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'keyword_rules_field_fonte_bibliografica';
+  $strongarm->value = 'disabled';
+  $export['keyword_rules_field_fonte_bibliografica'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'language_content_type_fonte_bibliografica';
   $strongarm->value = '0';
   $export['language_content_type_fonte_bibliografica'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'maxlength_js_fonte_bibliografica';
+  $strongarm->value = '';
+  $export['maxlength_js_fonte_bibliografica'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'maxlength_js_label_fonte_bibliografica';
+  $strongarm->value = 'Content limited to @limit characters, remaining: <strong>@remaining</strong>';
+  $export['maxlength_js_label_fonte_bibliografica'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -230,6 +284,20 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm->name = 'node_submitted_fonte_bibliografica';
   $strongarm->value = 0;
   $export['node_submitted_fonte_bibliografica'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'page_title_type_fonte_bibliografica';
+  $strongarm->value = '';
+  $export['page_title_type_fonte_bibliografica'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'page_title_type_fonte_bibliografica_showfield';
+  $strongarm->value = 0;
+  $export['page_title_type_fonte_bibliografica_showfield'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -318,6 +386,13 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'rh_node_override_fonte_bibliografica';
+  $strongarm->value = TRUE;
+  $export['rh_node_override_fonte_bibliografica'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'rh_node_redirect_fonte_bibliografica';
   $strongarm->value = '';
   $export['rh_node_redirect_fonte_bibliografica'] = $strongarm;
@@ -328,6 +403,20 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm->name = 'rh_node_redirect_response_fonte_bibliografica';
   $strongarm->value = '301';
   $export['rh_node_redirect_response_fonte_bibliografica'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'seo_checker_fonte_bibliografica';
+  $strongarm->value = 0;
+  $export['seo_checker_fonte_bibliografica'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'simplenews_content_type_fonte_bibliografica';
+  $strongarm->value = 0;
+  $export['simplenews_content_type_fonte_bibliografica'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

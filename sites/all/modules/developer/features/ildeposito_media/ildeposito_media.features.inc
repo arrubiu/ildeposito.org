@@ -20,6 +20,9 @@ function ildeposito_media_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "file_entity" && $api == "file_default_displays") {
     return array("version" => "1");
   }
+  if ($module == "file_entity" && $api == "file_type") {
+    return array("version" => "1");
+  }
   if ($module == "picture" && $api == "default_picture_mapping") {
     return array("version" => "1");
   }
@@ -95,6 +98,34 @@ function ildeposito_media_image_default_styles() {
         'data' => array(
           'width' => 150,
           'height' => 110,
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
+  // Exported image style: foto_autore.
+  $styles['foto_autore'] = array(
+    'name' => 'foto_autore',
+    'label' => 'Foto autore',
+    'effects' => array(
+      1 => array(
+        'label' => 'Javascript crop',
+        'help' => 'Create a crop with a javascript toolbox.',
+        'effect callback' => 'imagecrop_effect',
+        'form callback' => 'imagecrop_effect_form',
+        'summary theme' => 'imagecrop_effect_summary',
+        'module' => 'imagecrop',
+        'name' => 'imagecrop_javascript',
+        'data' => array(
+          'width' => 100,
+          'height' => 100,
+          'xoffset' => 'left',
+          'yoffset' => 'top',
+          'resizable' => 0,
+          'downscaling' => 0,
+          'aspect_ratio' => '',
+          'disable_if_no_data' => 0,
         ),
         'weight' => 1,
       ),

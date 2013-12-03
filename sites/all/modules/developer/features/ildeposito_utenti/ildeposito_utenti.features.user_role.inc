@@ -16,6 +16,12 @@ function ildeposito_utenti_user_default_roles() {
     'weight' => 2,
   );
 
+  // Exported role: collaboratore.
+  $roles['collaboratore'] = array(
+    'name' => 'collaboratore',
+    'weight' => 5,
+  );
+
   // Exported role: staff.
   $roles['staff'] = array(
     'name' => 'staff',

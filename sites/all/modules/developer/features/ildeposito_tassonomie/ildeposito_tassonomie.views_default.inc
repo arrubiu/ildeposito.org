@@ -340,6 +340,12 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['style_options']['row_class_special'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
+  /* Intestazione: Globale: Area della vista */
+  $handler->display->display_options['header']['view']['id'] = 'view';
+  $handler->display->display_options['header']['view']['table'] = 'views';
+  $handler->display->display_options['header']['view']['field'] = 'view';
+  $handler->display->display_options['header']['view']['view_to_insert'] = 'termini_descrizione:block';
+  $handler->display->display_options['header']['view']['inherit_arguments'] = TRUE;
   /* Campo: Indexed Contenuto: ID del nodo */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
@@ -369,7 +375,10 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_sezione']['title'] = '%1';
   $handler->display->display_options['arguments']['field_sezione']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['field_sezione']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_sezione']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_sezione']['validate']['type'] = 'taxonomy_term';
   $handler->display->display_options['arguments']['field_sezione']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['field_sezione']['not'] = 0;
   $handler->display->display_options['block_caching'] = '-1';
 
   /* Display: Tematiche */
@@ -385,7 +394,13 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_tematica']['title'] = 'Contentuti per la tematica \'%1\'';
   $handler->display->display_options['arguments']['field_tematica']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['field_tematica']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_tematica']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_tematica']['validate']['type'] = 'taxonomy_term';
+  $handler->display->display_options['arguments']['field_tematica']['validate_options']['vocabularies'] = array(
+    'tematiche' => 'tematiche',
+  );
   $handler->display->display_options['arguments']['field_tematica']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['field_tematica']['not'] = 0;
 
   /* Display: Lingue */
   $handler = $view->new_display('block', 'Lingue', 'contenuti_lingua');
@@ -400,7 +415,13 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_lingua']['title'] = '%1';
   $handler->display->display_options['arguments']['field_lingua']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['field_lingua']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_lingua']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_lingua']['validate']['type'] = 'taxonomy_term';
+  $handler->display->display_options['arguments']['field_lingua']['validate_options']['vocabularies'] = array(
+    'lingue' => 'lingue',
+  );
   $handler->display->display_options['arguments']['field_lingua']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['field_lingua']['not'] = 0;
 
   /* Display: Localizzazioni */
   $handler = $view->new_display('block', 'Localizzazioni', 'contenuti_localizzazioni');
@@ -415,7 +436,13 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_localizzazione']['title'] = '%1';
   $handler->display->display_options['arguments']['field_localizzazione']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['field_localizzazione']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_localizzazione']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_localizzazione']['validate']['type'] = 'taxonomy_term';
+  $handler->display->display_options['arguments']['field_localizzazione']['validate_options']['vocabularies'] = array(
+    'localizzazione' => 'localizzazione',
+  );
   $handler->display->display_options['arguments']['field_localizzazione']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['field_localizzazione']['not'] = 0;
 
   /* Display: Percorsi */
   $handler = $view->new_display('block', 'Percorsi', 'contenuti_percorsi');
@@ -455,7 +482,13 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_percorso']['title'] = '%1';
   $handler->display->display_options['arguments']['field_percorso']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['field_percorso']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_percorso']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_percorso']['validate']['type'] = 'taxonomy_term';
+  $handler->display->display_options['arguments']['field_percorso']['validate_options']['vocabularies'] = array(
+    'percorsi' => 'percorsi',
+  );
   $handler->display->display_options['arguments']['field_percorso']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['field_percorso']['not'] = 0;
   $handler->display->display_options['block_caching'] = '4';
 
   /* Display: Tags */
@@ -471,6 +504,11 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_tags']['title'] = '%1';
   $handler->display->display_options['arguments']['field_tags']['default_argument_type'] = 'taxonomy_tid';
   $handler->display->display_options['arguments']['field_tags']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_tags']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_tags']['validate']['type'] = 'taxonomy_term';
+  $handler->display->display_options['arguments']['field_tags']['validate_options']['vocabularies'] = array(
+    'tags' => 'tags',
+  );
   $handler->display->display_options['arguments']['field_tags']['break_phrase'] = 0;
   $handler->display->display_options['arguments']['field_tags']['not'] = 0;
   $translatables['tassonomie_contenuti'] = array(
@@ -880,6 +918,71 @@ function ildeposito_tassonomie_views_default_views() {
     t('Tags'),
   );
   $export['tassonomie_elenco_termini'] = $view;
+
+  $view = new view();
+  $view->name = 'termini_descrizione';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'taxonomy_term_data';
+  $view->human_name = 'Termini - descrizione';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['use_more_text'] = 'altro';
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'time';
+  $handler->display->display_options['cache']['results_lifespan'] = '518400';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '518400';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Applica';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Ripristina';
+  $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Ordina per';
+  $handler->display->display_options['exposed_form']['options']['sort_desc_label'] = 'Disc';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '1';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'entity';
+  /* Campo: Termine della tassonomia: Nome */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['name']['link_to_taxonomy'] = TRUE;
+  /* Filtro contestuale: Termine della tassonomia: ID Termine */
+  $handler->display->display_options['arguments']['tid']['id'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['arguments']['tid']['field'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['tid']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['tid']['default_argument_type'] = 'taxonomy_tid';
+  $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['tid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['tid']['summary_options']['items_per_page'] = '25';
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'block');
+  $handler->display->display_options['block_caching'] = '4';
+  $translatables['termini_descrizione'] = array(
+    t('Master'),
+    t('altro'),
+    t('Applica'),
+    t('Ripristina'),
+    t('Ordina per'),
+    t('Asc'),
+    t('Disc'),
+    t('Tutti'),
+    t('Block'),
+  );
+  $export['termini_descrizione'] = $view;
 
   return $export;
 }

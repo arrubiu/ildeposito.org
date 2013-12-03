@@ -147,6 +147,74 @@ function ildeposito_ct_fonte_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-fonte_bibliografica-field_canto_riferimento'
+  $field_instances['node-fonte_bibliografica-field_canto_riferimento'] = array(
+    'bundle' => 'fonte_bibliografica',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 6,
+      ),
+      'elenco_archivio' => array(
+        'label' => 'above',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 6,
+      ),
+      'elenco_termini_contenuti' => array(
+        'label' => 'above',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 6,
+      ),
+      'ical' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'above',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_canto_riferimento',
+    'label' => 'Canti collegati',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'noderefcreate',
+      'settings' => array(
+        'autocomplete_match' => 'contains',
+        'autocomplete_path' => 'node_reference/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'noderefcreate_autocomplete',
+      'weight' => 9,
+    ),
+  );
+
   // Exported field_instance: 'node-fonte_bibliografica-field_cura'
   $field_instances['node-fonte_bibliografica-field_cura'] = array(
     'bundle' => 'fonte_bibliografica',
@@ -529,6 +597,7 @@ function ildeposito_ct_fonte_field_default_field_instances() {
   t('A cura di');
   t('Accendere il campo per indicare se gli autori della pubblicazione sono curatori.');
   t('Anno di pubblicazione');
+  t('Canti collegati');
   t('Comment');
   t('Editore');
   t('Fonte internet');

@@ -182,6 +182,13 @@ function ildeposito_forum_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'forum_containers';
+  $strongarm->value = array();
+  $export['forum_containers'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'forum_nav_vocabulary';
   $strongarm->value = '7';
   $export['forum_nav_vocabulary'] = $strongarm;
@@ -212,6 +219,15 @@ function ildeposito_forum_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_forum';
+  $strongarm->value = array(
+    0 => 'status',
+  );
+  $export['node_options_forum'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'node_preview_forum';
   $strongarm->value = '1';
   $export['node_preview_forum'] = $strongarm;
@@ -222,6 +238,41 @@ function ildeposito_forum_strongarm() {
   $strongarm->name = 'node_submitted_forum';
   $strongarm->value = 1;
   $export['node_submitted_forum'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'page_title_forum_root_title';
+  $strongarm->value = '';
+  $export['page_title_forum_root_title'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'page_title_type_forum';
+  $strongarm->value = '';
+  $export['page_title_type_forum'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'page_title_type_forum_showfield';
+  $strongarm->value = 0;
+  $export['page_title_type_forum_showfield'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'page_title_vocab_forums';
+  $strongarm->value = '';
+  $export['page_title_vocab_forums'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'page_title_vocab_forums_showfield';
+  $strongarm->value = 0;
+  $export['page_title_vocab_forums_showfield'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -303,6 +354,13 @@ function ildeposito_forum_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'rh_node_override_forum';
+  $strongarm->value = TRUE;
+  $export['rh_node_override_forum'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'rh_node_redirect_forum';
   $strongarm->value = '';
   $export['rh_node_redirect_forum'] = $strongarm;
@@ -313,6 +371,13 @@ function ildeposito_forum_strongarm() {
   $strongarm->name = 'rh_node_redirect_response_forum';
   $strongarm->value = '301';
   $export['rh_node_redirect_response_forum'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'rh_taxonomy_term_override_forums';
+  $strongarm->value = TRUE;
+  $export['rh_taxonomy_term_override_forums'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

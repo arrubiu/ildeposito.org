@@ -23,6 +23,7 @@ features[user_permission][] = cancel account
 features[user_permission][] = change own username
 features[user_permission][] = select account cancellation method
 features[user_role][] = administrator
+features[user_role][] = collaboratore
 features[user_role][] = staff
 features[user_role][] = utente registrato
 features[variable][] = pathauto_user_pattern

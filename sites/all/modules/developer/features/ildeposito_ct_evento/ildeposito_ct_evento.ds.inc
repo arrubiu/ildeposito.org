@@ -110,6 +110,53 @@ function ildeposito_ct_evento_ds_field_settings_info() {
   );
   $export['ds_views|contenuti_eventi-eventi_mappa|default'] = $ds_fieldsetting;
 
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'node|evento|rss_app';
+  $ds_fieldsetting->entity_type = 'node';
+  $ds_fieldsetting->bundle = 'evento';
+  $ds_fieldsetting->view_mode = 'rss_app';
+  $ds_fieldsetting->settings = array(
+    'data_evento_rss' => array(
+      'weight' => '0',
+      'label' => 'inline',
+      'format' => 'default',
+    ),
+  );
+  $export['node|evento|rss_app'] = $ds_fieldsetting;
+
+  return $export;
+}
+
+/**
+ * Implements hook_ds_custom_fields_info().
+ */
+function ildeposito_ct_evento_ds_custom_fields_info() {
+  $export = array();
+
+  $ds_field = new stdClass();
+  $ds_field->api_version = 1;
+  $ds_field->field = 'data_evento_rss';
+  $ds_field->label = 'Data evento';
+  $ds_field->field_type = 5;
+  $ds_field->entities = array(
+    'node' => 'node',
+  );
+  $ds_field->ui_limit = 'evento|rss_app';
+  $ds_field->properties = array(
+    'code' => array(
+      'value' => '<?php
+$data = new DateTime($entity->field_data_evento[\'und\'][0][\'value\']);
+$data_ut = $data->format(\'U\');
+$data_evento = format_date($data_ut, \'custom\', \'j F Y\');
+print $data_evento;
+?>',
+      'format' => 'ds_code',
+    ),
+    'use_token' => 0,
+  );
+  $export['data_evento_rss'] = $ds_field;
+
   return $export;
 }
 
@@ -212,6 +259,46 @@ function ildeposito_ct_evento_ds_layout_settings_info() {
     'layout_attributes_merge' => 1,
   );
   $export['ds_views|contenuti_eventi-eventi_mappa|default'] = $ds_layout;
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
+  $ds_layout->id = 'node|evento|rss_app';
+  $ds_layout->entity_type = 'node';
+  $ds_layout->bundle = 'evento';
+  $ds_layout->view_mode = 'rss_app';
+  $ds_layout->layout = 'ds_1col';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'ds_content' => array(
+        0 => 'data_evento_rss',
+        1 => 'field_informazioni',
+        2 => 'field_canti_evento',
+        3 => 'field_sezione',
+        4 => 'field_percorso',
+        5 => 'field_tags',
+        6 => 'field_localizzazione',
+      ),
+    ),
+    'fields' => array(
+      'data_evento_rss' => 'ds_content',
+      'field_informazioni' => 'ds_content',
+      'field_canti_evento' => 'ds_content',
+      'field_sezione' => 'ds_content',
+      'field_percorso' => 'ds_content',
+      'field_tags' => 'ds_content',
+      'field_localizzazione' => 'ds_content',
+    ),
+    'classes' => array(),
+    'wrappers' => array(
+      'ds_content' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+  );
+  $export['node|evento|rss_app'] = $ds_layout;
 
   return $export;
 }
