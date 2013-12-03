@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @file
+ * Provides some information of a git repository.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function git_status_requirements($phase) {
+  $requirements = array();
+  $output       = array();
+  $error        = FALSE;
+
+  @exec('git --version', $output, $error);
+  if (!$error && strpos($output[0], 'git version ') !== FALSE) {
+    $version = str_replace('git version ', '', $output[0]);
+  }
+  else {
+    $version = t('Error executing git. Make sure git is installed and that the Web server has enough rights to execute it.');
+    $error   = TRUE;
+  }
+
+  $requirements['git_version'] = array(
+    'title'    => 'Git version',
+    'value'    => $version,
+    'severity' => $error ? REQUIREMENT_ERROR : REQUIREMENT_OK,
+    'weight'   => -5,
+  );
+
+  if (!$error) {
+    $output = array();
+    @exec('git rev-parse --abbrev-ref HEAD 2>&1', $output, $error);
+    $requirements['git_branch'] = array(
+      'title'    => 'Git current branch',
+      'value'    => $output[0],
+      'severity' => $error ? REQUIREMENT_ERROR : REQUIREMENT_OK,
+      'weight'   => -4,
+    );
+
+    $output = array();
+    @exec('git status 2>&1', $output, $error);
+    $output   = implode('<br/>', $output);
+    $severity = $error ? REQUIREMENT_ERROR : REQUIREMENT_INFO;
+    if (strpos($output, 'working directory clean')) {
+      $severity = REQUIREMENT_OK;
+    }
+    $requirements['git_status'] = array(
+      'title'    => 'Git status',
+      'value'    => $output,
+      'severity' => $severity,
+      'weight'   => -1,
+    );
+
+    if (!$error) {
+      $output = array();
+      @exec('git log -1 --pretty=format:"%an"', $output, $error);
+      $author = $error ? '' : $output[0];
+
+      $output = array();
+      @exec('git log -1 --pretty=format:"%s"', $output, $error);
+      $summary = $error ? '' : $output[0];
+
+      $output = array();
+      @exec('git log -1 --pretty=format:"%ad"', $output, $error);
+      $date = $error ? '' : $output[0];
+
+      $error = !($author && $summary && $date);
+      $requirements['git_last_commit'] = array(
+        'title'    => 'Git last commit',
+        'value'    => $error ? t('Error when running git log.') : "$author | <b>$summary</b> ($date)",
+        'severity' => $error ? REQUIREMENT_ERROR : REQUIREMENT_OK,
+        'weight'   => -3,
+      );
+
+      $output = array();
+      @exec('git log -1 --pretty=format:"%H" 2>&1', $output, $error);
+      $requirements['git_last_commit_id'] = array(
+        'title'    => 'Git last commit ID',
+        'value'    => $output[0],
+        'severity' => $error ? REQUIREMENT_ERROR : REQUIREMENT_OK,
+        'weight'   => -2,
+      );
+    }
+  }
+
+  return $requirements;
+}
