@@ -1,0 +1,14 @@
+name = Panels Bootstrap Layouts
+description = Panel's layouts using twitter bootstrap layout system as base.
+package = Panels
+dependencies[] = panels
+core = 7.x
+version = 7.x-0.1
+
+
+; Information added by drupal.org packaging script on 2013-10-01
+version = "7.x-3.x-dev"
+core = "7.x"
+project = "panels_bootstrap_layouts"
+datestamp = "1380622031"
+
