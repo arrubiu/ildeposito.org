@@ -16,6 +16,7 @@ dependencies[] = rabbit_hole
 dependencies[] = rdf
 dependencies[] = rdfx
 dependencies[] = schemaorg
+dependencies[] = smart_trim
 dependencies[] = strongarm
 dependencies[] = taxonomy_display
 dependencies[] = text

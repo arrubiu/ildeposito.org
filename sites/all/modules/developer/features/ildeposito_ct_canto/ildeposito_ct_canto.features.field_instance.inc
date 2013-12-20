@@ -436,7 +436,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
   // Exported field_instance: 'node-canto-field_autore_musica'
   $field_instances['node-canto-field_autore_musica'] = array(
     'bundle' => 'canto',
-    'default_value' => NULL,
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -542,13 +542,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'noderefcreate',
+      'module' => 'node_reference',
       'settings' => array(
         'autocomplete_match' => 'contains',
         'autocomplete_path' => 'node_reference/autocomplete',
         'size' => 60,
       ),
-      'type' => 'noderefcreate_autocomplete',
+      'type' => 'node_reference_autocomplete',
       'weight' => 5,
     ),
   );
@@ -556,7 +556,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
   // Exported field_instance: 'node-canto-field_autore_testo'
   $field_instances['node-canto-field_autore_testo'] = array(
     'bundle' => 'canto',
-    'default_value' => NULL,
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -665,13 +665,13 @@ function ildeposito_ct_canto_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'noderefcreate',
+      'module' => 'node_reference',
       'settings' => array(
         'autocomplete_match' => 'contains',
         'autocomplete_path' => 'node_reference/autocomplete',
         'size' => 60,
       ),
-      'type' => 'noderefcreate_autocomplete',
+      'type' => 'node_reference_autocomplete',
       'weight' => 4,
     ),
   );

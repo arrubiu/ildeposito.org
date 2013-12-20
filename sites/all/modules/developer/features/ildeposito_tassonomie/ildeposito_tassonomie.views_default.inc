@@ -377,6 +377,9 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_sezione']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_sezione']['specify_validation'] = TRUE;
   $handler->display->display_options['arguments']['field_sezione']['validate']['type'] = 'taxonomy_term';
+  $handler->display->display_options['arguments']['field_sezione']['validate_options']['vocabularies'] = array(
+    'sezioni' => 'sezioni',
+  );
   $handler->display->display_options['arguments']['field_sezione']['break_phrase'] = 0;
   $handler->display->display_options['arguments']['field_sezione']['not'] = 0;
   $handler->display->display_options['block_caching'] = '-1';

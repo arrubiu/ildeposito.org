@@ -126,77 +126,6 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_autori_correlati'
-  $field_instances['node-autore-field_autori_correlati'] = array(
-    'bundle' => 'autore',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 7,
-      ),
-      'elenco_archivio' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 9,
-      ),
-      'elenco_termini_contenuti' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 14,
-      ),
-      'ical' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'rss' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 5,
-      ),
-      'search_result' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 7,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_label_plurals_singular' => 'Autore correlato',
-    'field_name' => 'field_autori_correlati',
-    'label' => 'Autori correlati',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'node_reference',
-      'settings' => array(
-        'autocomplete_match' => 'contains',
-        'autocomplete_path' => 'node_reference/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'node_reference_autocomplete',
-      'weight' => 4,
-    ),
-  );
-
   // Exported field_instance: 'node-autore-field_biografia'
   $field_instances['node-autore-field_biografia'] = array(
     'bundle' => 'autore',
@@ -923,7 +852,6 @@ function ildeposito_ct_autore_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Altri nomi');
   t('Autore');
-  t('Autori correlati');
   t('Biografia');
   t('Cognome (o nome del gruppo)');
   t('Commento');
