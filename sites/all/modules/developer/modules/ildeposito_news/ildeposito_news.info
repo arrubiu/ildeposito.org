@@ -1,0 +1,5 @@
+name = ilDeposito News
+description = Gestione automatica newsletter
+core = 7.x
+package = ilDeposito
+

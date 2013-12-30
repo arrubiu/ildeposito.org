@@ -31,9 +31,7 @@
 <?php if (!$opt_out_hidden): ?>
   <?php if ($format == 'html'): ?>
     <p class="newsletter-footer"><a href="[simplenews-subscriber:unsubscribe-url]"><?php print $unsubscribe_text ?></a></p>
-  <?php else: ?>
-  
-Se desideri cancellarti dalla newsletter segui questo link: [simplenews-subscriber:unsubscribe-url]
+<?php else: ?>Se desideri cancellarti dalla newsletter segui questo link: [simplenews-subscriber:unsubscribe-url]
  <?php endif ?>
 <?php endif; ?>
 
