@@ -3,9 +3,9 @@ description = Provides some information of a git repository.
 package = Other
 core = 7.x
 
-; Information added by  packaging script on 2013-12-02
-version = "7.x-1.1"
+; Information added by Drupal.org packaging script on 2013-12-05
+version = "7.x-1.2"
 core = "7.x"
 project = "git_status"
-datestamp = "1386017106"
+datestamp = "1386273128"
 

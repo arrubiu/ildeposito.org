@@ -33,7 +33,7 @@ function autofloat_menu() {
     'title' => 'AutoFloat',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('autofloat_admin_settings'),
-    'access arguments' => array('administer text formats and filters'),
+    'access arguments' => array('administer filters'),
     'description' => 'Filter settings. Start floating left or right, exclude module\'s css and define selectors/rejectors.',
     'file' => 'autofloat.admin.inc',
   );
@@ -81,32 +81,40 @@ function _autofloat_filter_settings($form, &$form_state, $filter, $format, $defa
  * Find a rejected 'div', a selected 'span', a link with image or an image.
  */
 function _autofloat_filter($text, $filter) {
-  $selector = variable_get('autofloat_span', 'caption');
-  // Divide the variable into two selectors if a comma is found.
+  $selector = variable_get('autofloat_span', 'caption,flickr-wrap');
+  // Divide the variable into more selectors if a comma is found.
   $selector = explode(',', $selector);
-  // Make sure both array keys exist, if not the regex breaks.
+  // Make sure a variable exists, if not the regex breaks.
   if (isset($selector[0]) == FALSE) {
-    $selector[0] = '';
+    $select = '';
+  } else {
+    // Set the first selector.
+    $select = trim($selector[0]);
   }
-  if (isset($selector[1]) == FALSE) {
-    $selector[1] = '';
+  foreach (array_slice($selector, 1) as $value) {
+    // Concatenate with subsequent selectors, divided with OR symbol.
+    $select .= '|' . trim($value);
   }
   $rejector = variable_get('autofloat_div', 'flickr-photoset');
-  // Divide the variable into two rejectors if a comma is found.
+  // Divide the variable into more rejectors if a comma is found.
   $rejector = explode(',', $rejector);
-  // Make sure both array keys exist, if not the regex breaks.
+  // Make sure a variable exists, if not the regex breaks.
   if (isset($rejector[0]) == FALSE) {
-    $rejector[0] = '';
+    $reject = '';
+  } else {
+    // Set the first rejector.
+    $reject = trim($rejector[0]);
   }
-  if (isset($rejector[1]) == FALSE) {
-    $rejector[1] = '';
+  foreach (array_slice($rejector, 1) as $value) {
+    // Concatenate with subsequent rejectors, divided with OR symbol.
+    $reject .= '|' . trim($value);
   }
   // Regex in four parts (divided by '|') matching a rejected 'div', a
   // selected 'span', a link with image or an image. A pattern inside an
   // already found pattern gets ignored, to avoid floats inside floats.
   $text = preg_replace_callback('@<(
-  div ([^>]*)(class\\s*=\\s*["\'](nofloat|' . trim($rejector[0]) . '|' . trim($rejector[1]) . ')["\'])([^>]*)>(.*?)</div| # find a rejected div
-  span([^>]*)(class\\s*=\\s*["\'](float|' . trim($selector[0]) . '|' . trim($selector[1]) . ')["\'])([^>]*)>(.*?)</span| # find a selected span
+  div ([^>]*)(class\\s*=\\s*["\'](nofloat|' . $reject . ')["\'])([^>]*)>(.*?)</div| # find a rejected div
+  span([^>]*)(class\\s*=\\s*["\'](float|' . $select . ')["\'])([^>]*)>(.*?)</span| # find a selected span
   (a[^>]*)(href=)([^>]*)(><img[^>]*>(.*?)(</img>)?</a)| # find a link with image
   img (.+?) # find an image
   )>@isx', 'autofloat_filter_callback', $text);
@@ -137,3 +145,4 @@ function autofloat_filter_callback($matches) {
     return $matches[0];
   }
 }
+

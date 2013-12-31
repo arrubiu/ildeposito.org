@@ -32,14 +32,14 @@ function autofloat_admin_settings() {
   $form['target_settings']['autofloat_span'] = array(
     '#type' => 'textfield',
     '#title' => t('Additional span classes to float'),
-    '#default_value' => variable_get('autofloat_span', 'caption'),
-    '#description' => t('A "span" with the class "float" will float all containing content, e.g. the image with a caption under it. Optionally define others. Maximum two, divided by a comma. Example: "caption"'),
+    '#default_value' => variable_get('autofloat_span', 'caption,flickr-wrap'),
+    '#description' => t('A "span" with the class "float" will float all containing content, e.g. the image with a caption under it. Optionally define others divided by a comma. Example: "caption"'),
   );
   $form['target_settings']['autofloat_div'] = array(
     '#type' => 'textfield',
     '#title' => t('Additional "div" classes to ignore'),
     '#default_value' => variable_get('autofloat_div', 'flickr-photoset'),
-    '#description' => t('Images in a "div" with the class "nofloat" do NOT float, e.g. a set of thumbnails. Optionally define others. Maximum two, divided by a comma. Example: "flickr-photoset"'),
+    '#description' => t('Images in a "div" with the class "nofloat" do NOT float, e.g. a set of thumbnails. Optionally define others divided by a comma. Example: "flickr-photoset"'),
   );
 
   return system_settings_form($form);
