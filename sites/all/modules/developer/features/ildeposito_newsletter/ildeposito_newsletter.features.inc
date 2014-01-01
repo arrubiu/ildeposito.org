@@ -30,7 +30,7 @@ function ildeposito_newsletter_node_info() {
       'base' => 'node_content',
       'description' => t('A newsletter issue to be sent to subscribed email addresses.'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Titolo'),
       'help' => '',
     ),
   );

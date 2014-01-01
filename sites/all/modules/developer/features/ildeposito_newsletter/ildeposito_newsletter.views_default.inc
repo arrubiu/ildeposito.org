@@ -79,7 +79,17 @@ function ildeposito_newsletter_views_default_views() {
   $handler->display->display_options['arguments']['created_year_month']['exception']['title'] = 'Tutti';
   $handler->display->display_options['arguments']['created_year_month']['default_argument_type'] = 'php';
   $handler->display->display_options['arguments']['created_year_month']['default_argument_options']['code'] = '$year = date(\'Y\');
-$month = date(\'m\',strtotime("now - 1 month"));
+$month = date(\'m\');
+
+if ($month == \'01\' || $month == \'1\') {
+  $year = $year - 1;
+  $month = \'12\';
+}
+
+else {
+  $month = $month - 1;
+}
+
 $date = $year . $month;
 return $date;';
   $handler->display->display_options['arguments']['created_year_month']['summary']['number_of_records'] = '0';
@@ -237,6 +247,7 @@ return $date;';
   $handler->display->display_options['arguments']['field_data_evento_value']['field'] = 'field_data_evento_value';
   $handler->display->display_options['arguments']['field_data_evento_value']['default_action'] = 'default';
   $handler->display->display_options['arguments']['field_data_evento_value']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['field_data_evento_value']['default_argument_type'] = 'date';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary_options']['items_per_page'] = '25';
