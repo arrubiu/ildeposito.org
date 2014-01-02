@@ -227,6 +227,12 @@ function ildeposito_ct_canto_views_default_views() {
   $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+  /* Criterio del filtro: Contenuto: Immagini (field_immagini:alt) */
+  $handler->display->display_options['filters']['field_immagini_alt']['id'] = 'field_immagini_alt';
+  $handler->display->display_options['filters']['field_immagini_alt']['table'] = 'field_data_field_immagini';
+  $handler->display->display_options['filters']['field_immagini_alt']['field'] = 'field_immagini_alt';
+  $handler->display->display_options['filters']['field_immagini_alt']['relationship'] = 'field_autore_testo_nid';
+  $handler->display->display_options['filters']['field_immagini_alt']['operator'] = 'not empty';
 
   /* Display: Foto autori */
   $handler = $view->new_display('block', 'Foto autori', 'foto_autore');
