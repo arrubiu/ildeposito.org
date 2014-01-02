@@ -66,7 +66,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -126,6 +126,77 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-autore-field_autori_correlati'
+  $field_instances['node-autore-field_autori_correlati'] = array(
+    'bundle' => 'autore',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 8,
+      ),
+      'elenco_archivio' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 9,
+      ),
+      'elenco_termini_contenuti' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 14,
+      ),
+      'ical' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'rss' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
+      ),
+      'search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_label_plurals_singular' => 'Autore correlato',
+    'field_name' => 'field_autori_correlati',
+    'label' => 'Autori correlati',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'node_reference',
+      'settings' => array(
+        'autocomplete_match' => 'contains',
+        'autocomplete_path' => 'node_reference/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'node_reference_autocomplete',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance: 'node-autore-field_biografia'
   $field_instances['node-autore-field_biografia'] = array(
     'bundle' => 'autore',
@@ -137,7 +208,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -208,7 +279,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 4,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -351,7 +422,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 11,
+      'weight' => 9,
     ),
   );
 
@@ -363,9 +434,10 @@ function ildeposito_ct_autore_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
+        'module' => 'link',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'link_default',
         'weight' => 3,
       ),
       'elenco_archivio' => array(
@@ -406,6 +478,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
+    'field_label_plurals_singular' => '',
     'field_name' => 'field_links',
     'label' => 'Links',
     'required' => 0,
@@ -413,7 +486,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
-        'rel' => '',
+        'rel' => 'blank',
         'target' => 'default',
         'title' => '',
       ),
@@ -421,7 +494,12 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'url_cutoff' => 80,
       ),
       'enable_tokens' => 1,
-      'title' => 'optional',
+      'linkit' => array(
+        'enable' => 0,
+        'insert_plugin' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'required',
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -431,9 +509,11 @@ function ildeposito_ct_autore_field_default_field_instances() {
     'widget' => array(
       'active' => 0,
       'module' => 'link',
-      'settings' => array(),
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
       'type' => 'link_field',
-      'weight' => 3,
+      'weight' => 8,
     ),
   );
 
@@ -449,7 +529,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 0,
+        'weight' => 1,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -507,7 +587,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -576,7 +656,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -647,7 +727,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'weight' => 2,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -716,7 +796,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -852,6 +932,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Altri nomi');
   t('Autore');
+  t('Autori correlati');
   t('Biografia');
   t('Cognome (o nome del gruppo)');
   t('Commento');

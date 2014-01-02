@@ -31,6 +31,7 @@ features[field_group][] = group_principale|node|autore|form
 features[field_group][] = group_staff|node|autore|form
 features[field_instance][] = comment-comment_node_autore-comment_body
 features[field_instance][] = node-autore-field_altri_nomi
+features[field_instance][] = node-autore-field_autori_correlati
 features[field_instance][] = node-autore-field_biografia
 features[field_instance][] = node-autore-field_cognome
 features[field_instance][] = node-autore-field_immagini

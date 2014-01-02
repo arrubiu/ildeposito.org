@@ -227,6 +227,12 @@ else {
       'print_canzoniere' => array(
         'custom_settings' => FALSE,
       ),
+      'drupalgap' => array(
+        'custom_settings' => FALSE,
+      ),
+      'rss_app' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -244,6 +250,9 @@ else {
         ),
         'xmlsitemap' => array(
           'weight' => '9',
+        ),
+        'rabbit_hole' => array(
+          'weight' => '0',
         ),
       ),
       'display' => array(

@@ -120,8 +120,8 @@ function ildeposito_media_image_default_styles() {
         'data' => array(
           'width' => 100,
           'height' => 100,
-          'xoffset' => 'left',
-          'yoffset' => 'top',
+          'xoffset' => 'center',
+          'yoffset' => 'center',
           'resizable' => 0,
           'downscaling' => 0,
           'aspect_ratio' => '',
