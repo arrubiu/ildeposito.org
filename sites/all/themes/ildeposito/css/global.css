@@ -179,7 +179,7 @@ h2.top {
 
 #tabs-testo, 
 #tabs-accordi
- {
+{
   background-image: url("../images/canto_virgolette.png");
   background-position: 0 4px;
   background-repeat: no-repeat;
@@ -209,6 +209,20 @@ h2.top {
   min-height: 32px;
 }
 
+.search-results .risultato .field:after {
+  display: inline !important;
+}
+
+.search-results .risultato .field-name-field-immagini{
+  float: left;
+}
+
+.search-results .risultato .field-name-field-immagini img {
+  height: 50px;
+  margin-right: 5px;
+  margin-top: 6px;
+  width: 50px;
+}
 .search-results .risultato .type-icon {
   position: absolute;
   margin-top: 6px;
@@ -938,10 +952,10 @@ span.print_pdf a, span.print_html a {
 }
 
 #user-login-form #edit-submit--2 {
-     background: none repeat scroll 0 0 transparent;
-    position: absolute;
-    right: 0;
-    top: 49px;
+  background: none repeat scroll 0 0 transparent;
+  position: absolute;
+  right: 0;
+  top: 49px;
 }
 
 #user-login-form ul.hybridauth-widget li {
@@ -1641,7 +1655,7 @@ input.form-submit,
   color: #ffffff !important;
 }
 
- .openlayers-map #popup a {
+.openlayers-map #popup a {
   color: #ffffff;
   text-decoration: underline;
 }
@@ -1660,10 +1674,10 @@ form#user-login-form label {
 }
 
 .social-count img {
-   float: left;
-    margin-bottom: 6px;
-    margin-right: 8px;
-    margin-top: 4px;
+  float: left;
+  margin-bottom: 6px;
+  margin-right: 8px;
+  margin-top: 4px;
 }
 
 .social-count p a {
@@ -1704,6 +1718,27 @@ form#user-login-form label {
 .node-autore .group-header {
   clear: left;
   margin-top: 15px;
+}
+
+.node-autore .autore-immagine {
+  width: 100px !important;
+  margin-right: 8px !important;
+  margin-top: 0px;
+}
+
+.node-autore .autore-immagine img {
+  border: 1px solid #DDDDDD;
+  height: auto;
+  margin-right: 10px;
+  max-height: 90px;
+  max-width: 90px;
+  padding: 4px;
+  width: 100%;
+}
+
+.node-autore .view-contenuti-autore {
+  float: left;
+  margin-top: 10px;
 }
 
 

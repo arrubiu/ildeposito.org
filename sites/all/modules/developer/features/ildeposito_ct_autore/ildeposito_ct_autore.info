@@ -8,6 +8,7 @@ dependencies[] = context
 dependencies[] = entity
 dependencies[] = field_group
 dependencies[] = ildeposito_ct_canto
+dependencies[] = image
 dependencies[] = media
 dependencies[] = node
 dependencies[] = text

@@ -109,7 +109,7 @@ function ildeposito_media_image_default_styles() {
     'name' => 'foto_autore',
     'label' => 'Foto autore',
     'effects' => array(
-      1 => array(
+      2 => array(
         'label' => 'Javascript crop',
         'help' => 'Create a crop with a javascript toolbox.',
         'effect callback' => 'imagecrop_effect',
@@ -118,16 +118,31 @@ function ildeposito_media_image_default_styles() {
         'module' => 'imagecrop',
         'name' => 'imagecrop_javascript',
         'data' => array(
-          'width' => 100,
-          'height' => 100,
+          'width' => 90,
+          'height' => 90,
           'xoffset' => 'center',
           'yoffset' => 'center',
           'resizable' => 0,
           'downscaling' => 0,
           'aspect_ratio' => '',
-          'disable_if_no_data' => 0,
+          'disable_if_no_data' => 1,
         ),
         'weight' => 1,
+      ),
+      3 => array(
+        'label' => 'Scala e ritaglia',
+        'help' => 'Scala e ritaglia preserva il rapporto di dimensioni dell\'immagine originale per poi ritagliare la dimensione in eccesso. Questo metodo è utile nei casi in cui si desidera ottenere delle miniature perfettamente quadrate senza deformare l\'immagine.',
+        'effect callback' => 'image_scale_and_crop_effect',
+        'dimensions callback' => 'image_resize_dimensions',
+        'form callback' => 'image_resize_form',
+        'summary theme' => 'image_resize_summary',
+        'module' => 'image',
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 90,
+          'height' => 90,
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -337,6 +352,29 @@ function ildeposito_media_image_default_styles() {
         'data' => array(
           'width' => 1180,
           'height' => 120,
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
+  // Exported image style: ricerca.
+  $styles['ricerca'] = array(
+    'name' => 'ricerca',
+    'label' => 'Ricerca',
+    'effects' => array(
+      4 => array(
+        'label' => 'Scala e ritaglia',
+        'help' => 'Scala e ritaglia preserva il rapporto di dimensioni dell\'immagine originale per poi ritagliare la dimensione in eccesso. Questo metodo è utile nei casi in cui si desidera ottenere delle miniature perfettamente quadrate senza deformare l\'immagine.',
+        'effect callback' => 'image_scale_and_crop_effect',
+        'dimensions callback' => 'image_resize_dimensions',
+        'form callback' => 'image_resize_form',
+        'summary theme' => 'image_resize_summary',
+        'module' => 'image',
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 50,
+          'height' => 50,
         ),
         'weight' => 1,
       ),

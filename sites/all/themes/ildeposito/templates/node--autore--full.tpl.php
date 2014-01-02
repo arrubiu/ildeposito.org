@@ -19,15 +19,22 @@
       
 	//print render($content);
 	?>
-	<div class="autore-img">
-		<?php //print render($content['field_immagini']); ?>
-	</div>
-	<div class="autore-info">
+	<div class="autore-scheda">	
+	  <div class="autore-immagine grid-2 col-first">
+	  <?php
+	 		  print render($content['field_immagini']);
+	 		?>
+	  </div>
+	
+	  <div class="autore-info grid-15 col-second">
 		<?php 
 		print render($content['field_localizzazione']);
-		print render($content['field_sezione']);
+  	print render($content['field_sezione']);
+		print render($content['field_links']);
 		?>
-      	</div>
+    </div>
+  </div>
+
 	<?php 
       print views_embed_view('contenuti_autore', 'autore_singolo');
 
