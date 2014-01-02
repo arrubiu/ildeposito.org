@@ -20,22 +20,27 @@ $style = $imagecrop->getImageStyle();
 
     <div id="imagecrop-forms" class="clearfix">
     <?php
-    print drupal_render($scale_form);
-    print drupal_render($settings_form);
+      print drupal_render($scale_form);
+
+      if ($rotation_form) {
+        print drupal_render($rotation_form);
+      }
+
+      print drupal_render($settings_form);
     ?>
     </div>
 
   </div>
 
-  <div id="imagecrop-right" style="width: <?php print (variable_get('imagecrop_popup_width', 700) - 217) ?>px">
+  <div id="imagecrop-right" style="width: <?php print (variable_get('imagecrop_popup_width', 700) - 237) ?>px">
 
     <div id="imagecrop-help">
       <?php print t("Resize image if needed, then select a crop area. Click 'Save selection' to save the changes."); ?>
     </div>
 
-    <div id="imagecrop-crop-wrapper" style="width: <?php print $imagecrop->getImageWidth() ?>px; height: <?php print $imagecrop->getImageHeight() ?>px;">
-      <div id="image-crop-container" style="background-image: url('<?php print $imagecrop->getCropDestination(); ?>'); width:<?php print $imagecrop->getImageWidth() ?>px; height:<?php print $imagecrop->getImageHeight() ?>px;"></div>
-      <div id="resizeMe" style="background-image: url('<?php print $imagecrop->getCropDestination(); ?>'); width:<?php print $imagecrop->getWidth() ?>px; height:<?php print $imagecrop->getHeight() ?>px; top: 20px;"></div>
+    <div id="imagecrop-crop-container">
+      <?php print theme('image', array('path' => $imagecrop->getCropDestination(), 'attributes' => array('id' => 'imagecrop-image'))); ?>
     </div>
+
   </div>
 </div>

@@ -5,15 +5,24 @@ Drupal.Imagecrop.cropUi = Drupal.Imagecrop.cropUi || {};
 
 $(function () {
   Drupal.Imagecrop.cropUi.initControls();
-  Drupal.Imagecrop.cropUi.initScaling();
 });  
 
+// Input fields
 Drupal.Imagecrop.imageCropWidthField = null;
 Drupal.Imagecrop.imageCropHeightField = null;
 Drupal.Imagecrop.imageCropXField = null;
 Drupal.Imagecrop.imageCropYField = null;
+Drupal.Imagecrop.scalingDropdown = null;
+Drupal.Imagecrop.rotationDropdown = null;
+
+// Hidden fields
 Drupal.Imagecrop.imageCropScaleField = null;
-Drupal.Imagecrop.resizeMe = null;
+Drupal.Imagecrop.imageCropRotationField = null;
+
+// Hidden data
+Drupal.Imagecrop.fid = null;
+Drupal.Imagecrop.style = null;
+Drupal.Imagecrop.cropFile = null;
 
 /**
  * Init the controls.
@@ -28,289 +37,152 @@ Drupal.Imagecrop.cropUi.initControls = function() {
   Drupal.Imagecrop.imageCropYField = $('input[name="image-crop-y"]', $imagecropform);
   Drupal.Imagecrop.imageCropScaleField = $('input[name="image-crop-scale"]', $imagecropform);
   
-  // Event listeners on input fields
-  Drupal.Imagecrop.imageCropWidthField.change(Drupal.Imagecrop.cropUi.sizeListener);
-  Drupal.Imagecrop.imageCropHeightField.change(Drupal.Imagecrop.cropUi.sizeListener);
-  Drupal.Imagecrop.imageCropXField.change(Drupal.Imagecrop.cropUi.positionListener);
-  Drupal.Imagecrop.imageCropYField.change(Drupal.Imagecrop.cropUi.positionListener);
-  
-  Drupal.Imagecrop.resizeMe = $('#resizeMe');
-  Drupal.Imagecrop.cropUi.cropContainer = $('#image-crop-container');
-  
-  if (Drupal.Imagecrop.resizeMe.resizable) { 
-
-    Drupal.Imagecrop.resizeMe.resizable({
-      containment: Drupal.Imagecrop.cropUi.cropContainer,
-      aspectRatio: Drupal.settings.imagecrop.resizeAspectRatio,
-      autohide: true,
-      handles: 'n, e, s, w, ne, se, sw, nw',
-      resize: Drupal.Imagecrop.cropUi.resizeListener
-    });
-    
-  }
-
-  Drupal.Imagecrop.resizeMe.draggable({
-    cursor: 'move',
-    containment: Drupal.Imagecrop.cropUi.cropContainer,
-    drag: Drupal.Imagecrop.cropUi.dragListener
-  });
-  
-  Drupal.Imagecrop.cropUi.cropContainer.css({ opacity: 0.5 });
-  Drupal.Imagecrop.resizeMe.css({ position : 'absolute' });
-  
-  var leftpos = Drupal.Imagecrop.imageCropXField.val();
-  var toppos = Drupal.Imagecrop.imageCropYField.val();
-  
-  Drupal.Imagecrop.resizeMe.css({backgroundPosition: '-'+ leftpos + 'px -'+ toppos +'px'});
-  Drupal.Imagecrop.resizeMe.width(Drupal.Imagecrop.imageCropWidthField.val() + 'px');
-  Drupal.Imagecrop.resizeMe.height($('#edit-image-crop-height', '#imagecrop-crop-settings-form').val() + 'px');
-  Drupal.Imagecrop.resizeMe.css({top: toppos +'px' });
-  Drupal.Imagecrop.resizeMe.css({left: leftpos +'px' });
-  
-}
-
-/**
- * Init the scaling dropdown.
- */
-Drupal.Imagecrop.cropUi.initScaling = function() {
-  
   Drupal.Imagecrop.fid = $('input[name="fid"]', '#imagecrop-crop-settings-form').val();
   Drupal.Imagecrop.style = $('input[name="style"]', '#imagecrop-crop-settings-form').val();
   Drupal.Imagecrop.cropFile = $('input[name="temp-style-destination"]', '#imagecrop-crop-settings-form').val();
-  $('#edit-scaling', '#imagecrop-scale-settings-form').bind('change', Drupal.Imagecrop.cropUi.scaleImage);
-  Drupal.Imagecrop.cropUi.cropWrapper = $('#imagecrop-crop-wrapper');
   
-}
-
-/**
- * Listener on the jquery ui resize plugin.
- */
-Drupal.Imagecrop.cropUi.resizeListener = function(e, ui) {
+  Drupal.Imagecrop.scalingDropdown = $('#edit-scaling', '#imagecrop-scale-settings-form');
+  Drupal.Imagecrop.scalingDropdown.bind('change', Drupal.Imagecrop.cropUi.applyEffects);
   
-  var curr_width = parseInt(Drupal.Imagecrop.resizeMe.width());
-  var curr_height = parseInt(Drupal.Imagecrop.resizeMe.height());
-  Drupal.Imagecrop.imageCropWidthField.val(curr_width);
-  Drupal.Imagecrop.imageCropHeightField.val(curr_height);
-  
-  Drupal.Imagecrop.cropUi.validateSizeChanges(curr_width, curr_height, false);        
-  
-}
-
-/**
- * Listener on the jquery ui draggable plugin.
- */
-Drupal.Imagecrop.cropUi.dragListener = function(e, ui) {
-  Drupal.Imagecrop.cropUi.setBackgroundPosition(ui.position.left, ui.position.top, true);  
-}
-
-/**
- * Listener on the X and Y field.
- */
-Drupal.Imagecrop.cropUi.positionListener = function() {
-
-  var x = parseInt(Drupal.Imagecrop.imageCropXField.val());
-  var y = parseInt(Drupal.Imagecrop.imageCropYField.val());
-  var changeInput = false;
-  
-  // Left must be integer
-  if (isNaN(x)) {
-    var position =Drupal.Imagecrop.resizeMe.position();
-    Drupal.Imagecrop.imageCropXField.val(position.left);
-    return;
-  }
-
-  // Top must be integer
-  if (isNaN(y)) {
-    var position = Drupal.Imagecrop.resizeMe.position();
-    Drupal.Imagecrop.imageCropYField.val(position.top);
-    return;
+  if (Drupal.settings.imagecrop.rotation) {
+    Drupal.Imagecrop.rotationDropdown = $('#edit-rotation');
+    Drupal.Imagecrop.imageCropRotationField = $('input[name="image-crop-rotation"]');
+    Drupal.Imagecrop.rotationDropdown.bind('change', Drupal.Imagecrop.cropUi.applyEffects);
   }
   
-  // X position can not be higher then width from container - width from cropping. 
-  var max_x = Drupal.Imagecrop.cropUi.cropWrapper.width() - Drupal.Imagecrop.imageCropWidthField.val();
-  if (x > max_x) {
-    x = max_x;
-    changeInput = true;
-  }
+  var coordinates = Drupal.Imagecrop.cropUi.getCoordinates();
   
-  // Y position can not be higher then height from container - height from cropping. 
-  var max_y = Drupal.Imagecrop.cropUi.cropWrapper.width() - Drupal.Imagecrop.imageCropWidthField.val();
-  if (y > max_x) {
-    y = max_y;
-    changeInput = true;
-  }
-
-  Drupal.Imagecrop.resizeMe.css({ 'left' : x, 'top' : y});
-  Drupal.Imagecrop.cropUi.setBackgroundPosition(x, y, changeInput);
-  
-}
-
-/**
- * Set the current background position from the cropping area.
- */
-Drupal.Imagecrop.cropUi.setBackgroundPosition = function(x, y, changeInput) {
-
-  Drupal.Imagecrop.resizeMe.css({'background-position' : '-' + x + 'px -' + y + 'px'});
-  if (changeInput) {
-    Drupal.Imagecrop.imageCropXField.val(x);
-    Drupal.Imagecrop.imageCropYField.val(y);    
-  }  
-  
-}
-
-/**
- * Event listener on the width / height field.
- */
-Drupal.Imagecrop.cropUi.sizeListener = function() {
-
-  var curr_height = parseInt(Drupal.Imagecrop.imageCropHeightField.val());
-  var curr_width = parseInt(Drupal.Imagecrop.imageCropWidthField.val());
-  
-  // Height must be integer
-  if (isNaN(curr_height)) {
-    Drupal.Imagecrop.imageCropHeightField.val(Drupal.Imagecrop.resizeMe.height());
-    return;
-  }
-
-  // Width must be integer
-  if (isNaN(curr_width)) {
-    Drupal.Imagecrop.imageCropWidthField.val(Drupal.Imagecrop.resizeMe.width());
-    return;
-  }  
-  
-  Drupal.Imagecrop.resizeMe.height(curr_height);
-  Drupal.Imagecrop.resizeMe.width(curr_width);
-  Drupal.Imagecrop.cropUi.validateSizeChanges(parseInt(curr_width), parseInt(curr_height), true);
-  
-}
-
-/**
- * Validate the new width / height and update if needed.
- */
-Drupal.Imagecrop.cropUi.validateSizeChanges = function(curr_width, curr_height, event) {
-
-  var width_changed = false;
-  var height_changed = false;
-  
-  if (curr_width < parseInt(Drupal.settings.imagecrop.minWidth)) {
-    width_changed = true;
-    curr_width = Drupal.settings.imagecrop.minWidth;
-    if (Drupal.settings.imagecrop.resizeAspectRatio !== false) {
-      height_changed = true;
-      curr_height = Drupal.settings.imagecrop.minWidth / Drupal.settings.imagecrop.resizeAspectRatio;
+  // Start jcrop
+  $('#imagecrop-image').Jcrop(
+    {
+      bgOpacity: .5,
+      minSize: [ Drupal.settings.imagecrop.minWidth, Drupal.settings.imagecrop.minHeight],
+      allowResize: Drupal.settings.imagecrop.resizable,
+      allowSelect: false,
+      aspectRatio: Drupal.settings.imagecrop.aspectRatio,
+      handleSize: 9,
+      onSelect: Drupal.Imagecrop.cropUi.selectListener,
+      setSelect: coordinates
+    },
+    function() {
+      Drupal.Imagecrop.jcrop = this;
     }
-  }
+  );  
   
-  if (curr_height < parseInt(Drupal.settings.imagecrop.minHeight)) {
-    curr_height = Drupal.settings.imagecrop.minHeight;
-    height_changed = true;
-    if (Drupal.settings.imagecrop.resizeAspectRatio !== false) {
-      width_changed = true;
-      curr_width = Drupal.settings.imagecrop.minHeight * Drupal.settings.imagecrop.resizeAspectRatio;
-    }
-  }  
-
-  if (curr_height > Drupal.Imagecrop.cropUi.cropContainer.height()) {
-    height_changed = true;
-    Drupal.Imagecrop.resizeMe.css({top: '0' });
-    if (Drupal.settings.imagecrop.resizeAspectRatio !== false) {
-      width_changed = true;
-      curr_width = Drupal.settings.imagecrop.minHeight * Drupal.settings.imagecrop.resizeAspectRatio;
-    }    
-    curr_height = Drupal.Imagecrop.cropUi.cropContainer.height();
-  }
-
-  if (curr_width > Drupal.Imagecrop.cropUi.cropContainer.width()) {
-    width_changed = true;
-    curr_width = Drupal.Imagecrop.cropUi.cropContainer.width();
-    Drupal.Imagecrop.resizeMe.css({left: '0' });
-    if (Drupal.settings.imagecrop.resizeAspectRatio !== false) {
-      height_changed = true;
-      curr_height = Drupal.settings.imagecrop.minWidth / Drupal.settings.imagecrop.resizeAspectRatio;
-    }    
-  }
-  
-  if (width_changed || event) {
-    Drupal.Imagecrop.imageCropWidthField.val(curr_width);
-    Drupal.Imagecrop.resizeMe.width(curr_width);
-  }
-  
-  if (height_changed || event) {
-    Drupal.Imagecrop.imageCropHeightField.val(curr_height);
-    Drupal.Imagecrop.resizeMe.height(curr_height);
-  }
-  
-  if (curr_width < Drupal.settings.imagecrop.startWidth || curr_height < Drupal.settings.imagecrop.startHeight ) {
-    Drupal.Imagecrop.resizeMe.addClass('boxwarning');
-  }
-  else {
-    Drupal.Imagecrop.resizeMe.removeClass('boxwarning');
-  }  
- 
-  var pos = Drupal.Imagecrop.resizeMe.position();
-  var left = (pos.left > 0) ? pos.left : 0;
-  var top = (pos.top > 0) ? pos.top : 0;
-  Drupal.Imagecrop.resizeMe.css({ backgroundPosition : ('-' + left + 'px -' + top + 'px')});
-  Drupal.Imagecrop.imageCropXField.val(left);
-  Drupal.Imagecrop.imageCropYField.val(top);  
+  // Event listeners on input fields
+  Drupal.Imagecrop.imageCropWidthField.change(Drupal.Imagecrop.cropUi.inputListener);
+  Drupal.Imagecrop.imageCropHeightField.change(Drupal.Imagecrop.cropUi.inputListener);
+  Drupal.Imagecrop.imageCropXField.change(Drupal.Imagecrop.cropUi.inputListener);
+  Drupal.Imagecrop.imageCropYField.change(Drupal.Imagecrop.cropUi.inputListener);
   
 }
 
 /**
- * Scale the image to the selected width / height.
+ * Return an array with all the coordinates.
  */
-Drupal.Imagecrop.cropUi.scaleImage = function() {
+Drupal.Imagecrop.cropUi.getCoordinates = function() {
   
-  var dimensions = $(this).val().split('x');
+  var x = Number(Drupal.Imagecrop.imageCropXField.val());
+  var y = Number(Drupal.Imagecrop.imageCropYField.val());
+  var curr_width = Number(Drupal.Imagecrop.imageCropWidthField.val());
+  var curr_height = Number(Drupal.Imagecrop.imageCropHeightField.val());
+  
+  //add crop width / height to x / y to get x2 / y2
+  Drupal.Imagecrop.x2 = Number(curr_width) + x;
+  Drupal.Imagecrop.y2 = Number(curr_height) + y;   
+  
+  return [x, y, Drupal.Imagecrop.x2, Drupal.Imagecrop.y2];
+  
+}
+
+/**
+ * Listener on the jcrop select event.
+ */
+Drupal.Imagecrop.cropUi.selectListener = function(data) {
+  
+  Drupal.Imagecrop.imageCropXField.val(Math.round(data.x));
+  Drupal.Imagecrop.imageCropYField.val(Math.round(data.y));
+  Drupal.Imagecrop.imageCropWidthField.val(data.w);
+  Drupal.Imagecrop.imageCropHeightField.val(data.h);
+  
+  Drupal.Imagecrop.x2 = data.w + data.x;
+  Drupal.Imagecrop.y2 = data.h + data.y  
+  
+}
+
+/**
+ * Listener on the input elements.
+ */
+Drupal.Imagecrop.cropUi.inputListener = function(element) {
+  
+  Drupal.Imagecrop.jcrop.animateTo(Drupal.Imagecrop.cropUi.getCoordinates(), function() {
+    Drupal.Imagecrop.cropUi.selectListener(Drupal.Imagecrop.jcrop.tellSelect());    
+  });
+  
+}
+
+/**
+ * Apply the selected effects (rotate / scale) to the image.
+ */
+Drupal.Imagecrop.cropUi.applyEffects = function() {
+  
+  var dimensions = Drupal.Imagecrop.scalingDropdown.val().split('x');
   if (dimensions.length != 2) {
     return false;
+  }  
+  
+  // Calculate new x offset, if crop area would go outside image
+  if (dimensions[0] < Drupal.Imagecrop.x2) {
+  	var x = Drupal.Imagecrop.imageCropXField.val();
+  	x = x - (Drupal.Imagecrop.x2 - dimensions[0]);
+  	Drupal.Imagecrop.x2 = dimensions[0];
+  	Drupal.Imagecrop.imageCropXField.val(x);
   }
+  
+  // Calculate new y offset, if crop area would go outside image
+  if (dimensions[1] < Drupal.Imagecrop.y2) {
+  	var y = Drupal.Imagecrop.imageCropYField.val();
+  	y = y - (Drupal.Imagecrop.y2 - dimensions[1]);
+  	Drupal.Imagecrop.y2 = dimensions[1];
+  	Drupal.Imagecrop.imageCropYField.val(y);
+  }  
   
   var imagecropData = {
     'fid' : Drupal.Imagecrop.fid,
     'style' : Drupal.Imagecrop.style,
     'scale' : dimensions[0]
   }
+
+  if (Drupal.Imagecrop.rotationDropdown) {
+    var rotation = Drupal.Imagecrop.rotationDropdown.val();
+    imagecropData.rotation = rotation;
+  }
   
   $.ajax({
     url : Drupal.settings.imagecrop.manipulationUrl,
     data : imagecropData,
     type : 'post',
-    success : function() {
+    success : function(result) {
       
-      Drupal.Imagecrop.hasUnsavedChanges = true;
-      
-      // force new backgrounds and width / height
-      var background = Drupal.Imagecrop.cropFile + '?time=' +  new Date().getTime();
-      Drupal.Imagecrop.cropUi.cropContainer.css({
-        'background-image' : 'url(' + background + ')',
-        'width' : dimensions[0],
-        'height' : dimensions[1]
-      });
+      if (result.success) {
 
-      Drupal.Imagecrop.cropUi.cropWrapper.css({
-        'width' : dimensions[0],
-        'height' : dimensions[1]
-      });      
-
-      // force background-size on resizeMe's background image as well.
-      Drupal.Imagecrop.resizeMe.css({
-        'background-size': dimensions[0] +'px '+ dimensions[1] +'px ',
-        '-moz-background-size': dimensions[0] +'px '+ dimensions[1] +'px ',
-        '-o-background-size': dimensions[0] +'px '+ dimensions[1] +'px ',
-        '-webkit-background-size': dimensions[0] +'px '+ dimensions[1] +'px '
-      });
-      
-      // make resize smaller when new image is smaller
-      if (Drupal.Imagecrop.resizeMe.height() > dimensions[1]) {
-        Drupal.Imagecrop.resizeMe.height(dimensions[1]);
+        Drupal.Imagecrop.imageCropScaleField.val(dimensions[0]);   
+        if (Drupal.Imagecrop.imageCropRotationField) {
+          Drupal.Imagecrop.imageCropRotationField.val(rotation);
+        }      	
+      	
+        // force new backgrounds and width / height
+        var delimiter = Drupal.Imagecrop.cropFile.indexOf('?') === -1 ? '?' : '&';
+        var background = Drupal.Imagecrop.cropFile + delimiter + 'time=' + new Date().getTime();
+        Drupal.Imagecrop.jcrop.setImage(background, function() {
+        	var coordinates = Drupal.Imagecrop.cropUi.getCoordinates();
+          this.animateTo(coordinates);
+        });
+        
       }
-      if (Drupal.Imagecrop.resizeMe.width() > dimensions[0]) {
-        Drupal.Imagecrop.resizeMe.width(dimensions[0]);
-      }      
- 
-      Drupal.Imagecrop.resizeMe.css({'background-image' : 'url(' + background + ')'})
-      Drupal.Imagecrop.imageCropScaleField.val(dimensions[0]);
+      else {
+        alert(result.message);
+      }
       
     }
   })
