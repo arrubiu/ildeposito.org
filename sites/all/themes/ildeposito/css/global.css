@@ -4,6 +4,7 @@
 
 #tabs-testo {
   padding-left: 0px !important;
+
 }
 
 .ildeposito-col.views-row-odd,
@@ -144,6 +145,10 @@ h2.top {
   margin-top: 20px;
 }
 
+.info-canto {
+  clear: left;
+}
+
 /* tab canto */
 #contenuti-tab {
   padding: 0px;
@@ -151,6 +156,8 @@ h2.top {
   border: 0px;
   margin-top: 25px;
   margin-bottom: 20px;
+  clear: left;
+  float: left;
 }
 
 #contenuti-tab ul {
@@ -1755,3 +1762,22 @@ a.invisibile {
   margin-top: 5px;
   margin-right: 10px;
 }
+
+.dati-canto .field:after {
+  display: inline !important;  
+}
+
+.dati-canto #flexslider-1 {
+  float: left;
+  margin-bottom: 0;
+  margin-right: 8px;
+  margin-top: 0px;
+  width: 90px;
+  border: 1px solid #dddddd !important;
+  padding: 4px;
+  box-shadow: none;
+}
+
+
+
+

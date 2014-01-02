@@ -173,5 +173,76 @@ function ildeposito_ct_canto_views_default_views() {
   );
   $export['contenuti_canti'] = $view;
 
+  $view = new view();
+  $view->name = 'contenuti_canti_db';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Contenuti canti - DB';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['use_more_text'] = 'altro';
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Applica';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Ripristina';
+  $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Ordina per';
+  $handler->display->display_options['exposed_form']['options']['sort_desc_label'] = 'Disc';
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['style_plugin'] = 'flexslider';
+  $handler->display->display_options['style_options']['optionset'] = 'foto_autore';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Relazione: Contenuto: Autori testo (field_autore_testo) */
+  $handler->display->display_options['relationships']['field_autore_testo_nid']['id'] = 'field_autore_testo_nid';
+  $handler->display->display_options['relationships']['field_autore_testo_nid']['table'] = 'field_data_field_autore_testo';
+  $handler->display->display_options['relationships']['field_autore_testo_nid']['field'] = 'field_autore_testo_nid';
+  $handler->display->display_options['relationships']['field_autore_testo_nid']['required'] = TRUE;
+  $handler->display->display_options['relationships']['field_autore_testo_nid']['delta'] = '-1';
+  /* Campo: Contenuto: Immagini */
+  $handler->display->display_options['fields']['field_immagini']['id'] = 'field_immagini';
+  $handler->display->display_options['fields']['field_immagini']['table'] = 'field_data_field_immagini';
+  $handler->display->display_options['fields']['field_immagini']['field'] = 'field_immagini';
+  $handler->display->display_options['fields']['field_immagini']['relationship'] = 'field_autore_testo_nid';
+  $handler->display->display_options['fields']['field_immagini']['label'] = '';
+  $handler->display->display_options['fields']['field_immagini']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_immagini']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_immagini']['settings'] = array(
+    'image_style' => 'foto_autore',
+    'image_link' => 'content',
+  );
+  /* Filtro contestuale: Contenuto: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'node';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['nid']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+
+  /* Display: Foto autori */
+  $handler = $view->new_display('block', 'Foto autori', 'foto_autore');
+  $translatables['contenuti_canti_db'] = array(
+    t('Master'),
+    t('altro'),
+    t('Applica'),
+    t('Ripristina'),
+    t('Ordina per'),
+    t('Asc'),
+    t('Disc'),
+    t('field_autore_testo'),
+    t('Tutti'),
+    t('Foto autori'),
+  );
+  $export['contenuti_canti_db'] = $view;
+
   return $export;
 }

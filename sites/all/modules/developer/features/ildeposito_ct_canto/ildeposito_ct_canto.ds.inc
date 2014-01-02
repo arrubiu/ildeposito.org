@@ -114,6 +114,30 @@ function ildeposito_ct_canto_ds_field_settings_info() {
 }
 
 /**
+ * Implements hook_ds_custom_fields_info().
+ */
+function ildeposito_ct_canto_ds_custom_fields_info() {
+  $export = array();
+
+  $ds_field = new stdClass();
+  $ds_field->api_version = 1;
+  $ds_field->field = 'foto_autori';
+  $ds_field->label = 'Foto autori';
+  $ds_field->field_type = 6;
+  $ds_field->entities = array(
+    'node' => 'node',
+  );
+  $ds_field->ui_limit = '';
+  $ds_field->properties = array(
+    'block' => 'views|contenuti_canti_db-foto_autore',
+    'block_render' => '1',
+  );
+  $export['foto_autori'] = $ds_field;
+
+  return $export;
+}
+
+/**
  * Implements hook_ds_layout_settings_info().
  */
 function ildeposito_ct_canto_ds_layout_settings_info() {

@@ -14,26 +14,38 @@
 <div<?php print $content_attributes; ?>>
 
   <div class="grid-12 col-first">
+		
+		<div class="dati-canto">
     <?php
     // We hide the comments and links now so that we can render them later.
 
-    print render($content['field_radioactiviy']);
+		if ($foto_autori) {
+			print $foto_autori;
+		}
     print render($content['field_sezione']);
     print render($content['field_autore_testo']);
     print render($content['field_anno']);
+		
+		?>
+		</div>
+		<?php
 
     print $tabs;
     ?>  
 
+		<div class="info-canto">
     <?php if ($field_informazioni): ?>
-      <h2 class="block-title"">Informazioni</h2>
+		<h2 class="block-title"">Informazioni</h2>
       <?php print render($content['field_informazioni']); ?>
+	
     <?php endif; ?>
 
     <?php if ($field_fonte): ?>
       <h2 class="block-title"">Indicazioni bibliografiche</h2>
       <?php print render($content['field_fonte']); ?>
     <?php endif; ?>
+			
+		</div>
   </div>
 
   <div class="grid-6 col-second">
