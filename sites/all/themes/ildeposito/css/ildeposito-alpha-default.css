@@ -76,15 +76,16 @@ h1#page-title {
 
 #region-header-second .region-inner {
   border-left: 1px solid #CCCCCC;
-  margin-bottom: -20000px;
-  padding: 10px 10px 20000px;
+  /*margin-bottom: -20000px; */
+  padding: 10px 10px;
+  height: 100%;
   background: #eeeeee;
 }
 
 #region-sidebar-second .region-inner {
   border-left: 1px solid #CCCCCC;
-  margin-bottom: -20000px;
-  padding: 10px 10px 20000px;
+  /*margin-bottom: -20000px;*/
+  padding: 10px 10px;
   background: #eeeeee;
 }
 #region-branding #block-superfish-1 {
