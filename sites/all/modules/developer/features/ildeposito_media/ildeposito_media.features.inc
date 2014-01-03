@@ -112,7 +112,7 @@ function ildeposito_media_image_default_styles() {
     'name' => 'foto_autore',
     'label' => 'Foto autore',
     'effects' => array(
-      2 => array(
+      1 => array(
         'label' => 'Javascript crop',
         'help' => 'Create a crop with a javascript toolbox.',
         'effect callback' => 'imagecrop_effect',
@@ -132,7 +132,7 @@ function ildeposito_media_image_default_styles() {
         ),
         'weight' => 1,
       ),
-      3 => array(
+      2 => array(
         'label' => 'Scala e ritaglia',
         'help' => 'Scala e ritaglia preserva il rapporto di dimensioni dell\'immagine originale per poi ritagliare la dimensione in eccesso. Questo metodo è utile nei casi in cui si desidera ottenere delle miniature perfettamente quadrate senza deformare l\'immagine.',
         'effect callback' => 'image_scale_and_crop_effect',
@@ -146,6 +146,16 @@ function ildeposito_media_image_default_styles() {
           'height' => 90,
         ),
         'weight' => 2,
+      ),
+      3 => array(
+        'label' => 'Desatura',
+        'help' => 'Desatura converte un\'immagine in scala di grigi',
+        'effect callback' => 'image_desaturate_effect',
+        'dimensions passthrough' => TRUE,
+        'module' => 'image',
+        'name' => 'image_desaturate',
+        'data' => array(),
+        'weight' => 3,
       ),
     ),
   );
@@ -380,6 +390,16 @@ function ildeposito_media_image_default_styles() {
           'height' => 50,
         ),
         'weight' => 1,
+      ),
+      5 => array(
+        'label' => 'Desatura',
+        'help' => 'Desatura converte un\'immagine in scala di grigi',
+        'effect callback' => 'image_desaturate_effect',
+        'dimensions passthrough' => TRUE,
+        'module' => 'image',
+        'name' => 'image_desaturate',
+        'data' => array(),
+        'weight' => 2,
       ),
     ),
   );
