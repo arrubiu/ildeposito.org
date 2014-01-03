@@ -22,7 +22,7 @@
 	<div class="autore-scheda">	
 	  <div class="autore-immagine grid-2 col-first">
 	  <?php
-	 		  print render($content['field_immagini']);
+	 		  print render($content['field_images']);
 	 		?>
 	  </div>
 	

@@ -14,7 +14,7 @@
   clear: left;
 }
 
-body.node-type-articolo .field-name-field-immagine {
+body.node-type-articolo .field-name-field-images {
   float: left;
   margin-top: 5px;
   margin-right: 10px;
@@ -225,11 +225,11 @@ h2.top {
   display: inline !important;
 }
 
-.search-results .risultato .field-name-field-immagini{
+.search-results .risultato .field-name-field-images{
   float: left;
 }
 
-.search-results .risultato .field-name-field-immagini img {
+.search-results .risultato .field-name-field-images img {
   height: 50px;
   margin-right: 5px;
   margin-top: 6px;
@@ -377,14 +377,14 @@ ul.facetapi-facetapi-links li {
 
 
 
-.elenco-termini .views-field-field-immagine {
+.elenco-termini .views-field-field-images {
   float: left;
   margin-right: 7px;
   margin-top: 5px;
   position: relative;
 }
 
-.elenco-termini .views-field-field-immagine .periodo {
+.elenco-termini .views-field-field-images .periodo {
   background: none repeat scroll 0 0 #000000;
   bottom: 0;
   color: #FFFFFF;
@@ -396,7 +396,7 @@ ul.facetapi-facetapi-links li {
   z-index: 1;
 }
 
-.elenco-termini .views-field-field-immagine .periodo span {
+.elenco-termini .views-field-field-images .periodo span {
   display: block;
   padding: 4px;
   color: #ffffff;
@@ -476,7 +476,7 @@ ul.facetapi-facetapi-links li {
   min-height: 180px;
 }
 
-.taxonomy-term .field-name-field-immagine {
+.taxonomy-term .field-name-field-images {
   float: left;
   margin-right: 6px;
   margin-top: 10px;
@@ -1485,7 +1485,7 @@ input.form-submit,
   clear: left;
 }
 
-.front .views-field-field-immagine {
+.front .views-field-field-images {
   float: left;
   margin-right: 7px;
   margin-top: 4px;
@@ -1545,7 +1545,7 @@ input.form-submit,
   color: #eeeeee !important;
 }
 
-.front .slide-sezioni .views-field-field-immagine {
+.front .slide-sezioni .views-field-field-images {
   margin-right: 0px;
 }
 
