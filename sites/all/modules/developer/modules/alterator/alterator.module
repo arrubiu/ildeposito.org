@@ -542,9 +542,10 @@ function aggiorna_autori($autore) {
 	$sezioni_id = array_unique($sezioni_id);
 	foreach ($sezioni_id as $sezione) {
 		$autore->field_sezione['und'][]['tid'] = $sezione;
-		$autore->log = 'Aggiornamento bulk sezioni';
-		
 	}
+
+	$autore->log = 'Aggiornamento bulk sezioni';
+	$autore->revision_uid = 1;
 	node_save($autore);
 	workbench_moderation_moderate($autore, 'published');
 }
