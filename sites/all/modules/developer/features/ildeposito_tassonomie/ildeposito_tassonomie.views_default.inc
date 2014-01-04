@@ -408,7 +408,7 @@ function ildeposito_tassonomie_views_default_views() {
   /* Display: Lingue */
   $handler = $view->new_display('block', 'Lingue', 'contenuti_lingua');
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Lingue */
+  /* Filtro contestuale: Indexed Contenuto: Lingua traduzione */
   $handler->display->display_options['arguments']['field_lingua']['id'] = 'field_lingua';
   $handler->display->display_options['arguments']['field_lingua']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_lingua']['field'] = 'field_lingua';
@@ -639,20 +639,16 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['field_periodo']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_periodo']['element_wrapper_type'] = 'div';
   $handler->display->display_options['fields']['field_periodo']['element_wrapper_class'] = 'periodo';
-  /* Campo: Campo: Immagine */
-  $handler->display->display_options['fields']['field_immagine']['id'] = 'field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['table'] = 'field_data_field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['field'] = 'field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['label'] = '';
-  $handler->display->display_options['fields']['field_immagine']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_immagine']['alter']['text'] = '<div class="periodo"><span>[field_periodo]</span></div>
-[field_immagine] ';
-  $handler->display->display_options['fields']['field_immagine']['alter']['path'] = 'taxonomy/term/[tid]';
-  $handler->display->display_options['fields']['field_immagine']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_immagine']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_immagine']['type'] = 'file_rendered';
-  $handler->display->display_options['fields']['field_immagine']['settings'] = array(
-    'file_view_mode' => 'elenco_termini_contenuti',
+  /* Campo: Campo: Immagini */
+  $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
+  $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['label'] = '';
+  $handler->display->display_options['fields']['field_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_images']['settings'] = array(
+    'image_style' => 'elenco_termine',
+    'image_link' => 'content',
   );
   /* Campo: Termine della tassonomia: Descrizione del termine */
   $handler->display->display_options['fields']['description']['id'] = 'description';
@@ -811,15 +807,15 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_taxonomy'] = TRUE;
-  /* Campo: Campo: Immagine */
-  $handler->display->display_options['fields']['field_immagine']['id'] = 'field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['table'] = 'field_data_field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['field'] = 'field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['label'] = '';
-  $handler->display->display_options['fields']['field_immagine']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_immagine']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_immagine']['type'] = 'file_rendered';
-  $handler->display->display_options['fields']['field_immagine']['settings'] = array(
+  /* Campo: Campo: Immagini */
+  $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
+  $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['label'] = '';
+  $handler->display->display_options['fields']['field_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_images']['type'] = 'file_rendered';
+  $handler->display->display_options['fields']['field_images']['settings'] = array(
     'file_view_mode' => 'elenco_termini_contenuti',
   );
   /* Campo: Termine della tassonomia: Descrizione del termine */
@@ -907,8 +903,6 @@ function ildeposito_tassonomie_views_default_views() {
     t('Disc'),
     t('Sezioni'),
     t('.'),
-    t('<div class="periodo"><span>[field_periodo]</span></div>
-[field_immagine] '),
     t('Tematiche'),
     t('I tag dell\'archivio'),
     t('Lingue'),

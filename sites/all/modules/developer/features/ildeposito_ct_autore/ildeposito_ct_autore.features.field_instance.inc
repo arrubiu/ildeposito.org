@@ -66,7 +66,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
@@ -137,7 +137,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -208,7 +208,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -279,7 +279,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -337,10 +337,9 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_immagini'
-  $field_instances['node-autore-field_immagini'] = array(
+  // Exported field_instance: 'node-autore-field_images'
+  $field_instances['node-autore-field_images'] = array(
     'bundle' => 'autore',
-    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -371,7 +370,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => 'content',
-          'image_style' => 'ricerca',
+          'image_style' => 'foto_autore',
         ),
         'type' => 'image',
         'weight' => 0,
@@ -385,22 +384,23 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_label_plurals_singular' => '',
-    'field_name' => 'field_immagini',
+    'field_name' => 'field_images',
     'label' => 'Immagini',
     'required' => 0,
     'settings' => array(
-      'alt_field' => 1,
+      'alt_field' => 0,
       'default_image' => 0,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'imagecrop' => array(
         'foto_autore' => 'foto_autore',
+        'ricerca' => 'ricerca',
         'utente_profile' => 0,
       ),
       'max_filesize' => '',
       'max_resolution' => '',
       'min_resolution' => '200x200',
-      'title_field' => 1,
+      'title_field' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -412,6 +412,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
           'public' => 'public',
         ),
         'allowed_types' => array(
+          0 => 0,
           'application' => 0,
           'audio' => 0,
           'document' => 0,
@@ -427,7 +428,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -592,7 +593,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -661,7 +662,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 11,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -804,7 +805,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'elenco_archivio' => array(
         'label' => 'above',

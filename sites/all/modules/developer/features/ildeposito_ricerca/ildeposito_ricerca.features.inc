@@ -127,6 +127,41 @@ function ildeposito_ricerca_default_search_api_index() {
             "tags" : "h1 = 5\\r\\nh2 = 3\\r\\nh3 = 2\\r\\nstrong = 2\\r\\nb = 2\\r\\nem = 1.5\\r\\nu = 1.5"
           }
         },
+        "search_api_transliteration" : {
+          "status" : 1,
+          "weight" : "15",
+          "settings" : { "fields" : {
+              "title" : true,
+              "field_altri_nomi" : true,
+              "field_cognome" : true,
+              "field_nome" : true,
+              "field_testo" : true,
+              "field_accordi" : true,
+              "field_capoverso" : true,
+              "field_titolo_alt" : true,
+              "field_autore_biblio" : true,
+              "field_editore" : true,
+              "search_api_viewed" : true,
+              "body:value" : true,
+              "body:summary" : true,
+              "field_tags:name" : true,
+              "field_sezione:name" : true,
+              "field_sezione:description" : true,
+              "field_localizzazione:name" : true,
+              "field_localizzazione:description" : true,
+              "field_informazioni:value" : true,
+              "field_lingua:name" : true,
+              "field_lingua:description" : true,
+              "field_autore_musica:title" : true,
+              "field_autore_testo:title" : true,
+              "field_tematica:name" : true,
+              "field_tematica:description" : true,
+              "field_percorso:name" : true,
+              "field_percorso:description" : true,
+              "field_geofield:geom" : true
+            }
+          }
+        },
         "search_api_tokenizer" : {
           "status" : 1,
           "weight" : "20",

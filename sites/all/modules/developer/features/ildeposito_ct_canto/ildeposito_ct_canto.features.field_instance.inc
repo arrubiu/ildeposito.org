@@ -66,7 +66,7 @@ function ildeposito_ct_canto_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 12,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',

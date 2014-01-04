@@ -129,14 +129,18 @@ function ildeposito_tassonomie_field_default_field_instances() {
   // Exported field_instance: 'taxonomy_term-percorsi-field_images'
   $field_instances['taxonomy_term-percorsi-field_images'] = array(
     'bundle' => 'percorsi',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 4,
+        'label' => 'hidden',
+        'module' => 'file_entity',
+        'settings' => array(
+          'file_view_mode' => 'termine_singolo',
+        ),
+        'type' => 'file_rendered',
+        'weight' => 0,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -162,6 +166,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'taxonomy_term',
+    'field_label_plurals_singular' => '',
     'field_name' => 'field_images',
     'label' => 'Immagini',
     'required' => 0,
@@ -170,6 +175,11 @@ function ildeposito_tassonomie_field_default_field_instances() {
       'default_image' => 0,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
+      'imagecrop' => array(
+        'foto_autore' => 0,
+        'ricerca' => 0,
+        'utente_profile' => 0,
+      ),
       'max_filesize' => '',
       'max_resolution' => '',
       'min_resolution' => '',
@@ -178,77 +188,14 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'image',
-      'settings' => array(
-        'insert' => 0,
-        'insert_absolute' => FALSE,
-        'insert_class' => '',
-        'insert_default' => array(
-          0 => 'auto',
-        ),
-        'insert_styles' => array(
-          0 => 'auto',
-        ),
-        'insert_width' => '',
-        'preview_image_style' => 'thumbnail',
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'image_image',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance: 'taxonomy_term-percorsi-field_immagine'
-  $field_instances['taxonomy_term-percorsi-field_immagine'] = array(
-    'bundle' => 'percorsi',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'termine_singolo',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 0,
-      ),
-      'elenco_termini_contenuti' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'full' => array(
-        'label' => 'hidden',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'termine_singolo',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'taxonomy_term',
-    'field_label_plurals_singular' => '',
-    'field_name' => 'field_immagine',
-    'label' => 'Immagine',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => '',
-      'file_extensions' => 'jpg jpeg gif png',
-      'max_filesize' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
       'module' => 'media',
       'settings' => array(
         'allowed_schemes' => array(
+          'private' => 'private',
           'public' => 'public',
         ),
         'allowed_types' => array(
+          'application' => 0,
           'audio' => 0,
           'document' => 0,
           'image' => 'image',
@@ -259,10 +206,11 @@ function ildeposito_tassonomie_field_default_field_instances() {
           'media_default--media_browser_my_files' => 0,
           'upload' => 'upload',
         ),
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 2,
+      'weight' => 4,
     ),
   );
 
@@ -277,7 +225,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -316,21 +264,26 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 12,
+      'weight' => 11,
     ),
   );
 
   // Exported field_instance: 'taxonomy_term-sezioni-field_images'
   $field_instances['taxonomy_term-sezioni-field_images'] = array(
     'bundle' => 'sezioni',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 5,
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => 'content',
+          'image_style' => 'termine_singolo',
+        ),
+        'type' => 'image',
+        'weight' => 0,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -352,6 +305,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'taxonomy_term',
+    'field_label_plurals_singular' => '',
     'field_name' => 'field_images',
     'label' => 'Immagini',
     'required' => 0,
@@ -360,6 +314,11 @@ function ildeposito_tassonomie_field_default_field_instances() {
       'default_image' => 0,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
+      'imagecrop' => array(
+        'foto_autore' => 0,
+        'ricerca' => 0,
+        'utente_profile' => 0,
+      ),
       'max_filesize' => '',
       'max_resolution' => '',
       'min_resolution' => '',
@@ -368,76 +327,14 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'image',
-      'settings' => array(
-        'insert' => 0,
-        'insert_absolute' => FALSE,
-        'insert_class' => '',
-        'insert_default' => array(
-          0 => 'auto',
-        ),
-        'insert_styles' => array(
-          0 => 'auto',
-        ),
-        'insert_width' => '',
-        'preview_image_style' => 'thumbnail',
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'image_image',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance: 'taxonomy_term-sezioni-field_immagine'
-  $field_instances['taxonomy_term-sezioni-field_immagine'] = array(
-    'bundle' => 'sezioni',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'termine_singolo',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 0,
-      ),
-      'elenco_termini_contenuti' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'full' => array(
-        'label' => 'hidden',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'termine_singolo',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'taxonomy_term',
-    'field_name' => 'field_immagine',
-    'label' => 'Immagine',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => '',
-      'file_extensions' => 'jpg jpeg gif png',
-      'max_filesize' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
       'module' => 'media',
       'settings' => array(
         'allowed_schemes' => array(
+          'private' => 'private',
           'public' => 'public',
         ),
         'allowed_types' => array(
+          'application' => 0,
           'audio' => 0,
           'document' => 0,
           'image' => 'image',
@@ -448,10 +345,11 @@ function ildeposito_tassonomie_field_default_field_instances() {
           'media_default--media_browser_my_files' => 0,
           'upload' => 'upload',
         ),
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
@@ -466,7 +364,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -503,7 +401,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 4,
+      'weight' => 6,
     ),
   );
 
@@ -527,7 +425,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
           'trim_type' => 'chars',
         ),
         'type' => 'smart_trim_format',
-        'weight' => 1,
+        'weight' => 2,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
@@ -558,7 +456,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 1,
+      'weight' => 2,
     ),
   );
 
@@ -818,7 +716,6 @@ function ildeposito_tassonomie_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Descrizione metatag');
-  t('Immagine');
   t('Immagini');
   t('Old ID');
   t('Periodo');

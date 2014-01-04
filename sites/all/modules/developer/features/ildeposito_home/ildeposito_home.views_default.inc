@@ -321,17 +321,15 @@ function ildeposito_home_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Campo: Immagine */
-  $handler->display->display_options['fields']['field_immagine']['id'] = 'field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['table'] = 'field_data_field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['field'] = 'field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['label'] = '';
-  $handler->display->display_options['fields']['field_immagine']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_immagine']['alter']['path'] = 'node/[nid]';
-  $handler->display->display_options['fields']['field_immagine']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_immagine']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_immagine']['type'] = 'file_rendered';
-  $handler->display->display_options['fields']['field_immagine']['settings'] = array(
+  /* Campo: Campo: Immagini */
+  $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
+  $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['label'] = '';
+  $handler->display->display_options['fields']['field_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_images']['type'] = 'file_rendered';
+  $handler->display->display_options['fields']['field_images']['settings'] = array(
     'file_view_mode' => 'articolo_home',
   );
   /* Campo: Contenuto: Body */
@@ -431,6 +429,7 @@ function ildeposito_home_views_default_views() {
   $handler->display->display_options['arguments']['field_data_evento_value']['field'] = 'field_data_evento_value';
   $handler->display->display_options['arguments']['field_data_evento_value']['default_action'] = 'default';
   $handler->display->display_options['arguments']['field_data_evento_value']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['field_data_evento_value']['default_argument_type'] = 'date';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary_options']['items_per_page'] = '25';
@@ -661,15 +660,15 @@ function ildeposito_home_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'flexslider';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Campo: Campo: Immagine */
-  $handler->display->display_options['fields']['field_immagine']['id'] = 'field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['table'] = 'field_data_field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['field'] = 'field_immagine';
-  $handler->display->display_options['fields']['field_immagine']['label'] = '';
-  $handler->display->display_options['fields']['field_immagine']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_immagine']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_immagine']['type'] = 'file_rendered';
-  $handler->display->display_options['fields']['field_immagine']['settings'] = array(
+  /* Campo: Campo: Immagini */
+  $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
+  $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['label'] = '';
+  $handler->display->display_options['fields']['field_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_images']['type'] = 'file_rendered';
+  $handler->display->display_options['fields']['field_images']['settings'] = array(
     'file_view_mode' => 'sezioni_home',
   );
   /* Campo: Termine della tassonomia: Nome */

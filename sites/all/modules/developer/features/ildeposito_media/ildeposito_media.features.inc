@@ -376,6 +376,26 @@ function ildeposito_media_image_default_styles() {
     'name' => 'ricerca',
     'label' => 'Ricerca',
     'effects' => array(
+      6 => array(
+        'label' => 'Javascript crop',
+        'help' => 'Create a crop with a javascript toolbox.',
+        'effect callback' => 'imagecrop_effect',
+        'form callback' => 'imagecrop_effect_form',
+        'summary theme' => 'imagecrop_effect_summary',
+        'module' => 'imagecrop',
+        'name' => 'imagecrop_javascript',
+        'data' => array(
+          'width' => 50,
+          'height' => 50,
+          'xoffset' => 'center',
+          'yoffset' => 'center',
+          'resizable' => 0,
+          'downscaling' => 0,
+          'aspect_ratio' => '',
+          'disable_if_no_data' => 1,
+        ),
+        'weight' => -10,
+      ),
       4 => array(
         'label' => 'Scala e ritaglia',
         'help' => 'Scala e ritaglia preserva il rapporto di dimensioni dell\'immagine originale per poi ritagliare la dimensione in eccesso. Questo metodo è utile nei casi in cui si desidera ottenere delle miniature perfettamente quadrate senza deformare l\'immagine.',
@@ -389,7 +409,7 @@ function ildeposito_media_image_default_styles() {
           'width' => 50,
           'height' => 50,
         ),
-        'weight' => 1,
+        'weight' => -9,
       ),
       5 => array(
         'label' => 'Desatura',
@@ -399,7 +419,7 @@ function ildeposito_media_image_default_styles() {
         'module' => 'image',
         'name' => 'image_desaturate',
         'data' => array(),
-        'weight' => 2,
+        'weight' => -8,
       ),
     ),
   );

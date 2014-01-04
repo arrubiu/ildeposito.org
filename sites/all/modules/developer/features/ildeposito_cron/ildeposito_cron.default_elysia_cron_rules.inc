@@ -65,7 +65,7 @@ function ildeposito_cron_default_elysia_cron_rules() {
   $cron_rule->api_version = 1;
   $cron_rule->name = 'backup_migrate_cron';
   $cron_rule->disable = NULL;
-  $cron_rule->rule = '0 */6 * * *';
+  $cron_rule->rule = '10 4 * * *';
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['backup_migrate_cron'] = $cron_rule;

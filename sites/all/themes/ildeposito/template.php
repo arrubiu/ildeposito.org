@@ -11,6 +11,9 @@
  * for more information on this topic.
  */
 function ildeposito_preprocess_page(&$vars) {
+	$autore = entity_load('node', array('9138')); 
+	$autore = reset($autore);
+	aggiorna_autori($autore);
 	drupal_add_library('system', 'ui.tabs');
 	drupal_add_js(drupal_get_path('theme', 'ildeposito') . '/js/tabs.js', 'file');
 	$vars['scripts'] = drupal_get_js();

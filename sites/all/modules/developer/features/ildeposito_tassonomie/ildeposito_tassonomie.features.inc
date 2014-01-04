@@ -162,6 +162,10 @@ function ildeposito_tassonomie_rdf_default_mappings() {
       ),
       'type' => 'rel',
     ),
+    'field_images' => array(
+      'predicates' => array(),
+      'type' => 'rel',
+    ),
   );
 
   // Exported RDF mapping: sezioni
@@ -190,6 +194,10 @@ function ildeposito_tassonomie_rdf_default_mappings() {
       'predicates' => array(
         0 => 'skos:broader',
       ),
+      'type' => 'rel',
+    ),
+    'field_images' => array(
+      'predicates' => array(),
       'type' => 'rel',
     ),
   );

@@ -267,12 +267,12 @@ function ildeposito_tassonomie_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'percorsi';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
-    'mappa_percorso' => array(
-      'weight' => '2',
+    'service_links_not_node' => array(
+      'weight' => '4',
       'label' => 'hidden',
       'format' => 'default',
     ),
-    'service_links_not_node' => array(
+    'mappa_percorso' => array(
       'weight' => '3',
       'label' => 'hidden',
       'format' => 'default',
@@ -683,7 +683,7 @@ function ildeposito_tassonomie_ds_layout_settings_info() {
   $ds_layout->settings = array(
     'regions' => array(
       'left' => array(
-        0 => 'field_immagine',
+        0 => 'field_images',
         1 => 'description',
       ),
       'right' => array(
@@ -692,7 +692,7 @@ function ildeposito_tassonomie_ds_layout_settings_info() {
       ),
     ),
     'fields' => array(
-      'field_immagine' => 'left',
+      'field_images' => 'left',
       'description' => 'left',
       'mappa_percorso' => 'right',
       'service_links_not_node' => 'right',

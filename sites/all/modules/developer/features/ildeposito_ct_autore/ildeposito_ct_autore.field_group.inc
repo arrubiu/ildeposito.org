@@ -31,6 +31,7 @@ function ildeposito_ct_autore_field_group_info() {
       5 => 'field_localizzazione',
       6 => 'field_immagini',
       7 => 'title',
+      8 => 'field_images',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

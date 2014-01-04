@@ -275,19 +275,31 @@ function ildeposito_tassonomie_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'path' => array(
-          'weight' => '3',
+          'weight' => '5',
         ),
         'name' => array(
           'weight' => '0',
         ),
         'description' => array(
+          'weight' => '2',
+        ),
+        'metatags' => array(
+          'weight' => '8',
+        ),
+        'rabbit_hole' => array(
           'weight' => '1',
+        ),
+        'redirect' => array(
+          'weight' => '7',
+        ),
+        'xmlsitemap' => array(
+          'weight' => '6',
         ),
       ),
       'display' => array(
         'description' => array(
           'default' => array(
-            'weight' => '1',
+            'weight' => '2',
             'visible' => TRUE,
           ),
           'full' => array(
@@ -335,28 +347,31 @@ function ildeposito_tassonomie_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'path' => array(
-          'weight' => '6',
+          'weight' => '7',
         ),
         'name' => array(
           'weight' => '0',
         ),
         'description' => array(
-          'weight' => '3',
+          'weight' => '5',
         ),
         'metatags' => array(
           'weight' => '10',
         ),
         'redirect' => array(
-          'weight' => '8',
+          'weight' => '9',
         ),
         'xmlsitemap' => array(
-          'weight' => '7',
+          'weight' => '8',
+        ),
+        'rabbit_hole' => array(
+          'weight' => '1',
         ),
       ),
       'display' => array(
         'description' => array(
           'default' => array(
-            'weight' => '2',
+            'weight' => '3',
             'visible' => TRUE,
           ),
           'full' => array(

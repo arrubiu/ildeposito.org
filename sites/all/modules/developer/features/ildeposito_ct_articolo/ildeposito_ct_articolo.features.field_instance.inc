@@ -76,7 +76,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'elenco_archivio' => array(
         'label' => 'hidden',
@@ -165,7 +165,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'module' => 'node_reference',
         'settings' => array(),
         'type' => 'node_reference_default',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -236,6 +236,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
   // Exported field_instance: 'node-articolo-field_images'
   $field_instances['node-articolo-field_images'] = array(
     'bundle' => 'articolo',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -247,9 +248,15 @@ function ildeposito_ct_articolo_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 5,
+        'module' => 'picture',
+        'settings' => array(
+          'colorbox' => 'articolo',
+          'fallback_image_style' => 'resp_articolobreakpoints_theme_ildeposito_tv_1x',
+          'image_link' => '',
+          'picture_group' => 'articolo',
+        ),
+        'type' => 'picture',
+        'weight' => 1,
       ),
       'elenco_archivio' => array(
         'label' => 'hidden',
@@ -295,6 +302,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
+    'field_label_plurals_singular' => '',
     'field_name' => 'field_images',
     'label' => 'Immagini',
     'required' => 0,
@@ -303,6 +311,11 @@ function ildeposito_ct_articolo_field_default_field_instances() {
       'default_image' => 0,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
+      'imagecrop' => array(
+        'foto_autore' => 0,
+        'ricerca' => 0,
+        'utente_profile' => 0,
+      ),
       'max_filesize' => '',
       'max_resolution' => '',
       'min_resolution' => '',
@@ -311,114 +324,14 @@ function ildeposito_ct_articolo_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'image',
-      'settings' => array(
-        'insert' => 1,
-        'insert_absolute' => FALSE,
-        'insert_class' => '',
-        'insert_default' => 'auto',
-        'insert_styles' => array(
-          'auto' => 'auto',
-          'colorbox__large' => 0,
-          'colorbox__medium' => 0,
-          'colorbox__square_thumbnail' => 0,
-          'colorbox__thumbnail' => 0,
-          'image' => 0,
-          'image_large' => 0,
-          'image_medium' => 0,
-          'image_square_thumbnail' => 0,
-          'image_thumbnail' => 0,
-          'link' => 0,
-        ),
-        'insert_width' => '',
-        'preview_image_style' => 'thumbnail',
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'image_image',
-      'weight' => 3,
-    ),
-  );
-
-  // Exported field_instance: 'node-articolo-field_immagine'
-  $field_instances['node-articolo-field_immagine'] = array(
-    'bundle' => 'articolo',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'articolo' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'articolo',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 1,
-      ),
-      'print' => array(
-        'label' => 'hidden',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'articolo',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 1,
-      ),
-      'rss' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_result' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_label_plurals_singular' => '',
-    'field_name' => 'field_immagine',
-    'label' => 'Immagine',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => '',
-      'file_extensions' => 'png gif jpg jpeg',
-      'imagecrop' => array(
-        'utente_profile' => 0,
-      ),
-      'max_filesize' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
       'module' => 'media',
       'settings' => array(
         'allowed_schemes' => array(
-          'private' => 0,
+          'private' => 'private',
           'public' => 'public',
         ),
         'allowed_types' => array(
-          0 => 0,
+          'application' => 0,
           'audio' => 0,
           'document' => 0,
           'image' => 'image',
@@ -426,7 +339,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         ),
         'browser_plugins' => array(
           'media_default--media_browser_1' => 'media_default--media_browser_1',
-          'media_default--media_browser_my_files' => 'media_default--media_browser_my_files',
+          'media_default--media_browser_my_files' => 0,
           'upload' => 'upload',
         ),
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
@@ -451,17 +364,9 @@ function ildeposito_ct_articolo_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'date',
-        'settings' => array(
-          'format_type' => 'long',
-          'fromto' => 'both',
-          'multiple_from' => '',
-          'multiple_number' => '',
-          'multiple_to' => '',
-          'show_repeat_rule' => 'show',
-        ),
-        'type' => 'date_default',
-        'weight' => 4,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
@@ -655,7 +560,6 @@ function ildeposito_ct_articolo_field_default_field_instances() {
   t('Body');
   t('Commento');
   t('Contenuti correlati');
-  t('Immagine');
   t('Immagini');
   t('Prova data');
   t('Tag');
