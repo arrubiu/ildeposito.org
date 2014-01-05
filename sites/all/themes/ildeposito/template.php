@@ -37,11 +37,11 @@ function ildeposito_preprocess_page(&$vars) {
 	$item = menu_get_item();
 	//dsm($item);
 	// Imposto titolo per le sezioni
-	if ($item['page_arguments'][0]->vid == '6') {
+	if (isset($item['page_arguments'][0]->vid) && $item['page_arguments'][0]->vid == '6') {
 		$title = $item['page_arguments'][0]->name;
 	}
 
-	if ($title != '') {
+	if (isset($title) && $title != '') {
 		drupal_set_title($title);
 	}
 }
