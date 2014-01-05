@@ -61,6 +61,17 @@ class EntityCacheControllerHelper extends DrupalDefaultEntityController {
       $revision_id = FALSE;
     }
 
+		// Clean the $ids array to remove non-integer values that can be passed
+    // in from various sources, including menu callbacks.
+    if (is_array($ids)) {
+      foreach ($ids as $key => $id) {
+        $id = (string) $id;
+        if ((empty($id) && $id !== '0') || ($id !== (string) (int) $id)) {
+          unset($ids[$key]);
+        }
+      }
+    }
+		
     // Create a new variable which is either a prepared version of the $ids
     // array for later comparison with the entity cache, or FALSE if no $ids
     // were passed. The $ids array is reduced as items are loaded from cache,
