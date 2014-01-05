@@ -160,6 +160,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['field_data_evento_value']['field'] = 'field_data_evento_value';
   $handler->display->display_options['arguments']['field_data_evento_value']['default_action'] = 'default';
   $handler->display->display_options['arguments']['field_data_evento_value']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['field_data_evento_value']['default_argument_type'] = 'date';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary_options']['items_per_page'] = '25';
@@ -209,6 +210,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['default_action'] = 'default';
   $handler->display->display_options['arguments']['date_argument']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['date_argument']['default_argument_type'] = 'date';
   $handler->display->display_options['arguments']['date_argument']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['date_argument']['granularity'] = 'week';
   $handler->display->display_options['arguments']['date_argument']['add_delta'] = 'yes';
@@ -244,6 +246,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['default_action'] = 'default';
   $handler->display->display_options['arguments']['date_argument']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['date_argument']['default_argument_type'] = 'date';
   $handler->display->display_options['arguments']['date_argument']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['date_argument']['granularity'] = 'day';
   $handler->display->display_options['arguments']['date_argument']['date_fields'] = array(
@@ -322,6 +325,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['default_action'] = 'default';
   $handler->display->display_options['arguments']['date_argument']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['date_argument']['default_argument_type'] = 'date';
   $handler->display->display_options['arguments']['date_argument']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['date_argument']['granularity'] = 'year';
   $handler->display->display_options['arguments']['date_argument']['add_delta'] = 'yes';
@@ -392,6 +396,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['default_action'] = 'default';
   $handler->display->display_options['arguments']['date_argument']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['date_argument']['default_argument_type'] = 'date';
   $handler->display->display_options['arguments']['date_argument']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['date_argument']['add_delta'] = 'yes';
   $handler->display->display_options['arguments']['date_argument']['date_fields'] = array(
@@ -779,7 +784,7 @@ function ildeposito_ct_evento_views_default_views() {
     'other_right' => 'nid',
     'other_bottom' => 'nid',
     'other_left' => 'nid',
-    'name_field' => 'title',
+    'name_field' => 'search_api_aggregation_1',
     'description_field' => '',
     'style_field' => '',
   );
@@ -792,15 +797,6 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Campo: Data evento: Data iniziale (indexed) */
-  $handler->display->display_options['fields']['field_data_evento_value']['id'] = 'field_data_evento_value';
-  $handler->display->display_options['fields']['field_data_evento_value']['table'] = 'search_api_index_default_node_index';
-  $handler->display->display_options['fields']['field_data_evento_value']['field'] = 'field_data_evento_value';
-  $handler->display->display_options['fields']['field_data_evento_value']['label'] = '';
-  $handler->display->display_options['fields']['field_data_evento_value']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_data_evento_value']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_data_evento_value']['date_format'] = 'data_breve';
-  $handler->display->display_options['fields']['field_data_evento_value']['link_to_entity'] = 0;
   /* Campo: Indexed Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'search_api_index_default_node_index';
@@ -832,10 +828,18 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['title']['alter']['text'] = '[title] ([field_data_evento_value])';
+  $handler->display->display_options['fields']['title']['alter']['text'] = '[title]';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['title']['link_to_entity'] = 1;
+  $handler->display->display_options['fields']['title']['link_to_entity'] = 0;
+  /* Campo: Indexed Contenuto: Titolo - Ordinamento */
+  $handler->display->display_options['fields']['search_api_aggregation_1']['id'] = 'search_api_aggregation_1';
+  $handler->display->display_options['fields']['search_api_aggregation_1']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['fields']['search_api_aggregation_1']['field'] = 'search_api_aggregation_1';
+  $handler->display->display_options['fields']['search_api_aggregation_1']['label'] = '';
+  $handler->display->display_options['fields']['search_api_aggregation_1']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['search_api_aggregation_1']['link_to_entity'] = 1;
   /* Campo: Geofield: Well-known text (indexed) */
   $handler->display->display_options['fields']['field_geofield_geom_1']['id'] = 'field_geofield_geom_1';
   $handler->display->display_options['fields']['field_geofield_geom_1']['table'] = 'search_api_index_default_node_index';
@@ -947,7 +951,7 @@ function ildeposito_ct_evento_views_default_views() {
     t('Sezione: [field_sezione]'),
     t('Percorso'),
     t('Percorso: [field_percorso]'),
-    t('[title] ([field_data_evento_value])'),
+    t('[title]'),
     t('Mappa singolo'),
     t('Tutti'),
     t('Overlay Singolo'),
