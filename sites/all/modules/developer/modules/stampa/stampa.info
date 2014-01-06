@@ -1,0 +1,5 @@
+name = Stampa
+description = Gestione stampa de ilDeposito.org
+core = 7.x
+package = ilDeposito
+

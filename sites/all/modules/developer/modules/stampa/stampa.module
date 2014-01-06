@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Gestione stampa per ilDeposito.org
+ */
+
+/**
+ * Implements hook_menu
+ * @return array
+ */
+function stampa_menu() {
+	$items['stampa/canto/%'] = array(
+			'page callback' => 'stampa_canto',
+			'page arguments' => array(2),
+			'type' => MENU_CALLBACK,
+			'access arguments' => array('access content'),
+	);
+	return $items;
+}
+
+/**
+ * Stampa PDF cantno
+ * @param type $node
+ */
+function stampa_canto($nid) {
+	$node = node_load($nid);
+	if ($node && $node->type == 'canto') {
+		//$canto = stampa_get_canto($node);		
+	}	
+	
+	require DRUPAL_ROOT . '/sites/all/libraries/mpdf/mpdf.php';
+
+	$mpdf = new mPDF();
+	$mpdf->WriteHTML('<pre>' . token_replace('[node:field-testo]', array('node' => $node)) . '</pre>');
+	$mpdf->Output();
+	exit;
+}
+
+/**
+ * Recupera le infor
+ * @param type $canto
+ */
+function stampa_get_canto($canto) {
+	
+}
