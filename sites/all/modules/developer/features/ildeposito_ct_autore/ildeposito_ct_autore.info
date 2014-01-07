@@ -41,7 +41,6 @@ features[field_instance][] = node-autore-field_nome
 features[field_instance][] = node-autore-field_old_id
 features[field_instance][] = node-autore-field_sezione
 features[field_instance][] = node-autore-field_tags
-features[field_instance][] = node-fonte_bibliografica-field_autore_biblio
 features[node][] = autore
 features[user_permission][] = create autore content
 features[user_permission][] = delete any autore content

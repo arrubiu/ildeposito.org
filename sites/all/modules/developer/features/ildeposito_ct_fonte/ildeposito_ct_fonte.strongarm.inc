@@ -14,7 +14,7 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'additional_settings__active_tab_fonte_bibliografica';
-  $strongarm->value = 'edit-seo-checker';
+  $strongarm->value = 'edit-print';
   $export['additional_settings__active_tab_fonte_bibliografica'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -317,14 +317,14 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'print_html_display_fonte_bibliografica';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['print_html_display_fonte_bibliografica'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'print_html_display_urllist_fonte_bibliografica';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['print_html_display_urllist_fonte_bibliografica'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -338,14 +338,14 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'print_pdf_display_fonte_bibliografica';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['print_pdf_display_fonte_bibliografica'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'print_pdf_display_urllist_fonte_bibliografica';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['print_pdf_display_urllist_fonte_bibliografica'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -387,7 +387,7 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'rh_node_override_fonte_bibliografica';
-  $strongarm->value = TRUE;
+  $strongarm->value = 1;
   $export['rh_node_override_fonte_bibliografica'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -430,7 +430,7 @@ function ildeposito_ct_fonte_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'xmlsitemap_settings_node_fonte_bibliografica';
   $strongarm->value = array(
-    'status' => '0',
+    'status' => '1',
     'priority' => '0.5',
   );
   $export['xmlsitemap_settings_node_fonte_bibliografica'] = $strongarm;

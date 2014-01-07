@@ -58,6 +58,7 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_contenuto_creato'] = entity_import('rules_config', '{ "rules_contenuto_creato" : {
       "LABEL" : "Contenuto creato - No Staff",
       "PLUGIN" : "reaction rule",
+      "ACTIVE" : false,
       "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
       "ON" : { "node_insert" : [] },
@@ -112,6 +113,7 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_revisione_creata_no_staff'] = entity_import('rules_config', '{ "rules_revisione_creata_no_staff" : {
       "LABEL" : "Revisione creata - No Staff",
       "PLUGIN" : "reaction rule",
+      "ACTIVE" : false,
       "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
       "ON" : { "node_update" : [] },

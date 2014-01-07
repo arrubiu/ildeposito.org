@@ -86,6 +86,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['arguments']['field_data_evento_value']['exception']['title'] = 'Tutti';
   $handler->display->display_options['arguments']['field_data_evento_value']['title_enable'] = TRUE;
   $handler->display->display_options['arguments']['field_data_evento_value']['title'] = '[ilDeposito] Eventi per il %1';
+  $handler->display->display_options['arguments']['field_data_evento_value']['default_argument_type'] = 'date';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary_options']['items_per_page'] = '25';
@@ -402,6 +403,7 @@ function ildeposito_backoffice_views_default_views() {
     t('ultima »'),
     t('Contenuto'),
     t('Commento'),
+    t('- Scegli una azione -'),
     t('Autore'),
     t('Data di inserimento'),
     t('Pubblicato'),
@@ -746,6 +748,7 @@ function ildeposito_backoffice_views_default_views() {
     t('ultima »'),
     t('Ottieni il contenuto effettivo da una revisione del contenuto.'),
     t('utente revisione'),
+    t('- Scegli una azione -'),
     t('Autore'),
     t('Vid'),
     t('Nid'),
@@ -1004,6 +1007,7 @@ function ildeposito_backoffice_views_default_views() {
     t('seguente ›'),
     t('ultima »'),
     t('Contenuto'),
+    t('- Scegli una azione -'),
     t('Tipo'),
     t('Page'),
   );
@@ -1257,10 +1261,11 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Anno di pubblicazione */
+  /* Campo: Contenuto: Anno */
   $handler->display->display_options['fields']['field_anno']['id'] = 'field_anno';
   $handler->display->display_options['fields']['field_anno']['table'] = 'field_data_field_anno';
   $handler->display->display_options['fields']['field_anno']['field'] = 'field_anno';
+  $handler->display->display_options['fields']['field_anno']['label'] = 'Anno di pubblicazione';
   $handler->display->display_options['fields']['field_anno']['settings'] = array(
     'format_type' => 'solo_anno',
     'fromto' => 'both',
@@ -1355,6 +1360,7 @@ function ildeposito_backoffice_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
+    t('- Scegli una azione -'),
     t('Tipo'),
     t('Titolo'),
     t('Sezione'),
@@ -1491,6 +1497,7 @@ function ildeposito_backoffice_views_default_views() {
     t('ultima »'),
     t('Nome'),
     t('Termine della tassonomia'),
+    t('- Scegli una azione -'),
     t('Page'),
   );
   $export['bulk_term'] = $view;
@@ -1546,7 +1553,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filtro contestuale: Contenuto: Canti collegati (field_canto_riferimento) */
+  /* Filtro contestuale: Contenuto: Canto di riferimento (field_canto_riferimento) */
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['id'] = 'field_canto_riferimento_nid';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['table'] = 'field_data_field_canto_riferimento';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['field'] = 'field_canto_riferimento_nid';
@@ -2243,6 +2250,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
 
 Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'),
     t('utente revisione'),
+    t('- Scegli una azione -'),
     t('Titolo'),
     t('Data modifica'),
     t('Stato'),

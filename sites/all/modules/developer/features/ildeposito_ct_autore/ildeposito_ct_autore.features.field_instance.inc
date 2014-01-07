@@ -869,77 +869,9 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-fonte_bibliografica-field_autore_biblio'
-  $field_instances['node-fonte_bibliografica-field_autore_biblio'] = array(
-    'bundle' => 'fonte_bibliografica',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Indicare l\'autore della fonte bibliografica, nella forma "Cognome Nome". In caso di autori multipli indicare "AA. VV.".',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-      'elenco_archivio' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-      'elenco_termini_contenuti' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-      'ical' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_result' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_autore_biblio',
-    'label' => 'Autore',
-    'required' => 1,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 3,
-    ),
-  );
-
   // Translatables
   // Included for use with string extractors like potx.
   t('Altri nomi');
-  t('Autore');
   t('Autori correlati');
   t('Biografia');
   t('Cognome (o nome del gruppo)');
@@ -948,7 +880,6 @@ function ildeposito_ct_autore_field_default_field_instances() {
   t('Indicare eventuali altri nomi o pseudonimi dell\'autore');
   t('Indicare il cognome dell\'autore o il nome del gruppo.');
   t('Indicare il nome "di persona" dell\'autore, se presente');
-  t('Indicare l\'autore della fonte bibliografica, nella forma "Cognome Nome". In caso di autori multipli indicare "AA. VV.".');
   t('Links');
   t('Localizzazioni');
   t('Nome');
