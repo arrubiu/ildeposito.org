@@ -108,8 +108,6 @@ function ildeposito_ricerca_views_default_views() {
     'field_accordi' => 'field_accordi',
     'field_capoverso' => 'field_capoverso',
     'field_titolo_alt' => 'field_titolo_alt',
-    'field_autore_biblio' => 'field_autore_biblio',
-    'field_editore' => 'field_editore',
     'body:value' => 'body:value',
     'body:summary' => 'body:summary',
     'field_tags:name' => 'field_tags:name',
