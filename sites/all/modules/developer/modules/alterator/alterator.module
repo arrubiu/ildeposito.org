@@ -201,12 +201,20 @@ function facebook_follow() {
  */
 function strumenti_contents() {
 	$id = arg(1);
+	$node = menu_get_object();
+	
+	if ($node->type == 'canto') {
+		$print_pdf = '<span class="print_pdf">' . l('Versione PDF', 'stampa/canto/' . $id, array('classes' => array('print--pdf'))) . '</span>';
+	} else {
+		$print_pdf = print_pdf_insert_link();
+	}
+	
 	$items['items'] = array(
 			flag_create_link('segnalibri', $id),
 			flag_create_link('canzoniere', $id),
 			flag_create_link('da_rivedere', $id),
 			print_insert_link(),
-			print_pdf_insert_link()
+			$print_pdf,
 	);
 	return theme('item_list', $items);
 	/* $html = '';
