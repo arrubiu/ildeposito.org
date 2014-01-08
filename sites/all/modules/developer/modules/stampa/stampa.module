@@ -37,8 +37,9 @@ function stampa_canto($nid) {
 			$file_url = $file->uri; 
 			header('Content-Type: application/octet-stream');
 			header('Content-Disposition: attachment; filename="' . $filename . '"');
-			header('Content-Length: ' . filesize($file_url));
+			//header('Content-Length: ' . filesize($file_url));
 			readfile($file_url);
+			exit;
 			#drupal_goto(file_create_url($file->uri));
 		} else {
 
@@ -66,7 +67,7 @@ function stampa_canto($nid) {
 			$file_url = $file->uri;
                         header('Content-Type: application/octet-stream');
                         header('Content-Disposition: attachment; filename="' . $filename . '"');
-                        header('Content-Length: ' . filesize($file_url));
+                        //header('Content-Length: ' . filesize($file_url));
                         readfile($file_url);
 
 
@@ -118,7 +119,7 @@ function stampa_get_canto($mpdf, $node) {
 	}
 	$mpdf->WriteHTML('</div>', 2, false, true);
 	$mpdf->WriteHTML('</div>', 2, false, true);
-	$mpdf->SetColumns(2, 'J');
+	$mpdf->SetColumns(2, BLANK);
 	$mpdf->WriteHTML('<div class="testo"><pre>' . $canto['testo'] . '</pre></div>');
 	$mpdf->SetColumns(1);
 	if ($canto['info'] != '[node:field-informazioni:value]') {
