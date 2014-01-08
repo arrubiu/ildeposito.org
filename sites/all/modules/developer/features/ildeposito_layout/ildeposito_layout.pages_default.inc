@@ -16,7 +16,10 @@ function ildeposito_layout_default_page_manager_pages() {
   $page->admin_title = 'Accesso negato';
   $page->admin_description = '';
   $page->path = 'accesso-negato';
-  $page->access = array();
+  $page->access = array(
+    'type' => 'none',
+    'settings' => NULL,
+  );
   $page->menu = array();
   $page->arguments = array();
   $page->conf = array(

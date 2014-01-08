@@ -19,7 +19,17 @@ function ildeposito_layout_default_box() {
   $box->description = 'Box Contatti';
   $box->options = array(
     'body' => array(
-      'value' => '<p>Per contattarci potete usare i seguenti modi:</p><ul><li>mandare un\'email all\'indirizzo &nbsp;<strong>info _at_ ildeposito.org</strong></li><li>utilizzare il nostro account <a href="http://www.facebook.com/ildeposito.org">Facebook</a></li><li>utilizzare il nostro account <a href="http://twitter.com/ildeposito">Twitter</a></li></ul><p>In alternativa potete utilizzare il seguente modulo di contatto.</p>',
+      'value' => '<p>Per contattarci potete usare i seguenti modi:</p>
+
+<ul>
+	<li>mandare un\'email all\'indirizzo &nbsp;<strong>info _at_ ildeposito.org</strong></li>
+	<li>utilizzare il nostro account <a href="http://www.facebook.com/ildeposito.org">Facebook</a></li>
+	<li>utilizzare il nostro account <a href="http://twitter.com/ildeposito">Twitter</a></li>
+	<li>utilizzare il nostro account <a href="https://plus.google.com/u/0/113629455468042353975/">Google+</a></li>
+</ul>
+
+<p>In alternativa potete utilizzare il seguente modulo di contatto.</p>
+',
       'format' => 'full_html',
     ),
     'additional_classes' => '',

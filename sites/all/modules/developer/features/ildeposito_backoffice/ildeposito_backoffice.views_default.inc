@@ -1802,6 +1802,10 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['edit_node']['label'] = '';
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'Modifica';
+  /* Campo: Contenuto: Anno */
+  $handler->display->display_options['fields']['field_anno']['id'] = 'field_anno';
+  $handler->display->display_options['fields']['field_anno']['table'] = 'field_data_field_anno';
+  $handler->display->display_options['fields']['field_anno']['field'] = 'field_anno';
   /* Criterio di ordinamento: Contenuto: Titolo */
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';
@@ -1835,6 +1839,94 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['menu']['name'] = 'menu-ildeposito-amministrazione';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Canti senza anno */
+  $handler = $view->new_display('page', 'Canti senza anno', 'page_1');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Elenco canti senza anno';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Campo: Contenuto: Autori testo */
+  $handler->display->display_options['fields']['field_autore_testo']['id'] = 'field_autore_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['table'] = 'field_data_field_autore_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['field'] = 'field_autore_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['type'] = 'node_reference_plain';
+  $handler->display->display_options['fields']['field_autore_testo']['delta_offset'] = '0';
+  /* Campo: Contenuto: Link modifica */
+  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['label'] = '';
+  $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['edit_node']['text'] = 'Modifica';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Pubblicato */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'canto' => 'canto',
+  );
+  /* Criterio del filtro: Contenuto: Anno (field_anno) */
+  $handler->display->display_options['filters']['field_anno_value']['id'] = 'field_anno_value';
+  $handler->display->display_options['filters']['field_anno_value']['table'] = 'field_data_field_anno';
+  $handler->display->display_options['filters']['field_anno_value']['field'] = 'field_anno_value';
+  $handler->display->display_options['filters']['field_anno_value']['operator'] = 'empty';
+  $handler->display->display_options['filters']['field_anno_value']['expose']['operator_id'] = 'field_anno_value_op';
+  $handler->display->display_options['filters']['field_anno_value']['expose']['label'] = 'Anno';
+  $handler->display->display_options['filters']['field_anno_value']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['field_anno_value']['expose']['operator'] = 'field_anno_value_op';
+  $handler->display->display_options['filters']['field_anno_value']['expose']['identifier'] = 'field_anno_value';
+  $handler->display->display_options['filters']['field_anno_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_anno_value']['granularity'] = 'year';
+  $handler->display->display_options['filters']['field_anno_value']['form_type'] = 'date_text';
+  /* Criterio del filtro: Contenuto: Sezione (field_sezione) */
+  $handler->display->display_options['filters']['field_sezione_tid']['id'] = 'field_sezione_tid';
+  $handler->display->display_options['filters']['field_sezione_tid']['table'] = 'field_data_field_sezione';
+  $handler->display->display_options['filters']['field_sezione_tid']['field'] = 'field_sezione_tid';
+  $handler->display->display_options['filters']['field_sezione_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_sezione_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator_id'] = 'field_sezione_tid_op';
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['label'] = 'Sezione';
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator'] = 'field_sezione_tid_op';
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['identifier'] = 'field_sezione_tid';
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_sezione_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_sezione_tid']['vocabulary'] = 'sezioni';
+  $handler->display->display_options['path'] = 'canti-senza-anno';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Canti senza anno';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'menu-ildeposito-amministrazione';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
   $translatables['contenuti_elenchi_admin'] = array(
     t('Master'),
     t('Elenco canti senza risorsa audio'),
@@ -1855,7 +1947,11 @@ function ildeposito_backoffice_views_default_views() {
     t('Titolo'),
     t('Autori testo'),
     t('Modifica'),
+    t('Anno'),
     t('Canti senza audio'),
+    t('Canti senza anno'),
+    t('Elenco canti senza anno'),
+    t('Sezione'),
   );
   $export['contenuti_elenchi_admin'] = $view;
 
