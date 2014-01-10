@@ -307,8 +307,13 @@ function alterator_form_user_register_form_alter(&$form, &$form_state, $form_id)
 	$form['#theme'] = 'user_register';
 }
 
+/**
+ * Implements hook_menu._alter
+ * @param type $items
+ */
 function alterator_menu_alter(&$items) {
 	$items['user/%user/hybridauth']['title'] = 'Account social';
+  unset($items['node']);
 }
 
 /**
