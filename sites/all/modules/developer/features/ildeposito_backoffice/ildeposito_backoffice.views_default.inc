@@ -3931,5 +3931,177 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   );
   $export['revisioning_content_summary'] = $view;
 
+  $view = new view();
+  $view->name = 'statistiche';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Statistiche Nodi';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Statistiche';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['use_more_text'] = 'altro';
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    4 => '4',
+  );
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['distinct'] = TRUE;
+  $handler->display->display_options['query']['options']['pure_distinct'] = TRUE;
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Applica';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Ripristina';
+  $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Ordina per';
+  $handler->display->display_options['exposed_form']['options']['sort_desc_label'] = 'Disc';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '20';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_label'] = 'Voci per pagina';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all_label'] = '- Tutto -';
+  $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Scostamento';
+  $handler->display->display_options['pager']['options']['tags']['first'] = '« prima';
+  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ precedente';
+  $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
+  $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
+  $handler->display->display_options['style_plugin'] = 'table';
+  /* Intestazione: Globale: Area di testo */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['content'] = 'Le statistiche di visualizzazione dei singoli contenuti del sito.
+Utilizzare i filtri per selezionare il tipo di contenuto o cambiare l\'ordinamento.';
+  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Campo: Contenuto: Tipo */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
+  /* Campo: Statistiche: Page Views in the past 24 hours */
+  $handler->display->display_options['fields']['count_1']['id'] = 'count_1';
+  $handler->display->display_options['fields']['count_1']['table'] = 'ga_stats_count_pageviews_today';
+  $handler->display->display_options['fields']['count_1']['field'] = 'count';
+  $handler->display->display_options['fields']['count_1']['label'] = 'Ultime 24 ore';
+  $handler->display->display_options['fields']['count_1']['separator'] = '.';
+  /* Campo: Statistiche: Page Views in the past 7 days */
+  $handler->display->display_options['fields']['count_3']['id'] = 'count_3';
+  $handler->display->display_options['fields']['count_3']['table'] = 'ga_stats_count_pageviews_week';
+  $handler->display->display_options['fields']['count_3']['field'] = 'count';
+  $handler->display->display_options['fields']['count_3']['label'] = 'Ultimi 7 giorni';
+  $handler->display->display_options['fields']['count_3']['separator'] = '.';
+  /* Campo: Statistiche: Page Views in the past 31 days */
+  $handler->display->display_options['fields']['count_2']['id'] = 'count_2';
+  $handler->display->display_options['fields']['count_2']['table'] = 'ga_stats_count_pageviews_month';
+  $handler->display->display_options['fields']['count_2']['field'] = 'count';
+  $handler->display->display_options['fields']['count_2']['label'] = 'Ultimi 31 giorni';
+  $handler->display->display_options['fields']['count_2']['separator'] = '.';
+  /* Campo: Statistiche: Page Views for all time */
+  $handler->display->display_options['fields']['count']['id'] = 'count';
+  $handler->display->display_options['fields']['count']['table'] = 'ga_stats_count_pageviews_forever';
+  $handler->display->display_options['fields']['count']['field'] = 'count';
+  $handler->display->display_options['fields']['count']['label'] = 'Da "sempre"';
+  $handler->display->display_options['fields']['count']['separator'] = '.';
+  /* Criterio di ordinamento: Statistiche: Page Views in the past 24 hours */
+  $handler->display->display_options['sorts']['count_2']['id'] = 'count_2';
+  $handler->display->display_options['sorts']['count_2']['table'] = 'ga_stats_count_pageviews_today';
+  $handler->display->display_options['sorts']['count_2']['field'] = 'count';
+  $handler->display->display_options['sorts']['count_2']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['count_2']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['count_2']['expose']['label'] = 'Ultime 24 ore';
+  /* Criterio di ordinamento: Statistiche: Page Views for all time */
+  $handler->display->display_options['sorts']['count']['id'] = 'count';
+  $handler->display->display_options['sorts']['count']['table'] = 'ga_stats_count_pageviews_forever';
+  $handler->display->display_options['sorts']['count']['field'] = 'count';
+  $handler->display->display_options['sorts']['count']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['count']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['count']['expose']['label'] = 'Da sempre';
+  /* Criterio di ordinamento: Statistiche: Page Views in the past 7 days */
+  $handler->display->display_options['sorts']['count_1']['id'] = 'count_1';
+  $handler->display->display_options['sorts']['count_1']['table'] = 'ga_stats_count_pageviews_week';
+  $handler->display->display_options['sorts']['count_1']['field'] = 'count';
+  $handler->display->display_options['sorts']['count_1']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['count_1']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['count_1']['expose']['label'] = 'Ultimi 7 giorni';
+  /* Criterio di ordinamento: Statistiche: Page Views in the past 31 days */
+  $handler->display->display_options['sorts']['count_3']['id'] = 'count_3';
+  $handler->display->display_options['sorts']['count_3']['table'] = 'ga_stats_count_pageviews_month';
+  $handler->display->display_options['sorts']['count_3']['field'] = 'count';
+  $handler->display->display_options['sorts']['count_3']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['count_3']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['count_3']['expose']['label'] = 'Ultimi 31 giorni';
+  /* Criterio del filtro: Contenuto: Pubblicato */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['label'] = 'Tipo contenuto';
+  $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
+  $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['path'] = 'statistiche-contenuti';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Statistiche contenuti';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'menu-ildeposito-amministrazione';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+  $translatables['statistiche'] = array(
+    t('Master'),
+    t('Statistiche'),
+    t('altro'),
+    t('Applica'),
+    t('Ripristina'),
+    t('Ordina per'),
+    t('Asc'),
+    t('Disc'),
+    t('Voci per pagina'),
+    t('- Tutto -'),
+    t('Scostamento'),
+    t('« prima'),
+    t('‹ precedente'),
+    t('seguente ›'),
+    t('ultima »'),
+    t('Le statistiche di visualizzazione dei singoli contenuti del sito.
+Utilizzare i filtri per selezionare il tipo di contenuto o cambiare l\'ordinamento.'),
+    t('Titolo'),
+    t('Tipo'),
+    t('Ultime 24 ore'),
+    t('.'),
+    t('Ultimi 7 giorni'),
+    t('Ultimi 31 giorni'),
+    t('Da "sempre"'),
+    t('Da sempre'),
+    t('Tipo contenuto'),
+    t('Page'),
+  );
+  $export['statistiche'] = $view;
+
   return $export;
 }
