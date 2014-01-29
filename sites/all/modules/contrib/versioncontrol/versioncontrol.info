@@ -3,6 +3,8 @@ package = Version Control
 description = "An interface to version control systems whose functionality is provided by pluggable back-end modules."
 core = 7.x
 php = 5.2
+; see https://drupal.org/node/2136369
+dependencies[] = system (>=7.25)
 dependencies[] = ctools
 dependencies[] = views
 ; base entities
@@ -54,9 +56,9 @@ files[] = tests/VersioncontrolTagUnitTestingTestCase.test
 files[] = tests/VersioncontrolTestCase.test
 files[] = tests/VersioncontrolTokenTests.test
 
-; Information added by drupal.org packaging script on 2013-10-29
-version = "7.x-1.0-rc1"
+; Information added by Drupal.org packaging script on 2014-01-25
+version = "7.x-1.0-rc2"
 core = "7.x"
 project = "versioncontrol"
-datestamp = "1383082245"
+datestamp = "1390627408"
 

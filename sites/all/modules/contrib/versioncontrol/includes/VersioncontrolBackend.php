@@ -284,6 +284,7 @@ abstract class VersioncontrolBackend {
         if (!empty($this->controllerCachingDefaults[$type])) {
           $controller = $this->getController($type);
           $controller->defaultOptions['may cache'] = $this->controllerCachingDefaults[$type];
+          $controller->resetCache();
         }
       }
       $this->ccToggled = FALSE;

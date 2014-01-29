@@ -50,6 +50,7 @@ function drupalgap_menu() {
   $items = array();
   $items['admin/config/drupalgap'] = array(
     'title' => 'DrupalGap',
+    'type' => MENU_NORMAL_ITEM,
     'description' => 'The status of DrupalGap.',
     'page callback' => 'drupalgap_status',
     'access arguments' => array('administer drupalgap'),
@@ -81,11 +82,92 @@ function drupalgap_ctools_plugin_api($owner, $api) {
 }
 
 /**
+* Implements hook_entity_info_alter().
+*/
+function drupalgap_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['drupalgap'] = array(
+    'label' => t('DrupalGap'),
+    'custom settings' => TRUE,
+  );
+}
+
+/**
+ * Implements hook_services_request_postprocess_alter().
+ */
+function drupalgap_services_request_postprocess_alter($controller, $args, &$result) {
+  if ($controller['callback'] == '_system_resource_connect') {
+    // Grab the extras DG provides to system connect and append them to result.
+    module_load_include('inc', 'drupalgap', 'drupalgap.resource');
+    $extras = drupalgap_system_connect_extras(false);
+    foreach($extras as $key => $value) {
+      $result->{$key} = $value;
+    }
+  }
+}
+
+/**
+ *
+ */
+function drupalgap_system_connect_extras($system_connect_call = true) {
+  
+  global $user;
+  
+  $results = array();
+  
+  if ($system_connect_call) {
+    // Make a call to the system connect resource.
+    module_load_include('inc', 'services', 'resources/system_resource');
+    $results['system_connect'] = _system_resource_connect();
+  }
+  
+  // Make calls to various DrupalGap resources.
+  $results['site_settings'] = _drupalgap_resource_system_site_settings();
+  $results['user_permissions'] = _drupalgap_resource_user_permissions(array('uid' => $user->uid));
+  $results['content_types_list'] = _drupalgap_resource_content_types_list();
+  $results['content_types_user_permissions'] = _drupalgap_resource_content_types_user_permissions();
+  $results['entity_info'] = entity_get_info();
+  $results['field_info_instances']['node'] = field_info_instances('node');
+  $results['field_info_instances']['comment'] = field_info_instances('comment');
+  $results['field_info_instances']['taxonomy_vocabulary'] = field_info_instances('taxonomy_vocabulary');
+  $results['field_info_instances']['taxonomy_term'] = field_info_instances('taxonomy_term');
+  $results['field_info_instances']['user'] = field_info_instances('user');
+  $results['field_info_fields'] = field_info_fields();
+  $results['taxonomy_vocabularies'] = _drupalgap_taxonomy_get_vocabularies();
+  return $results;
+}
+
+/**
+ * Implements hook_preprocess_views_views_json_style_simple().
+ */
+function drupalgap_preprocess_views_views_json_style_simple(&$vars) {
+  // Place various view object properties and pager data onto the results.
+  global $pager_total, $pager_page_array, $pager_total_items, $pager_limits;
+  $view = array(
+    'name' => $vars['view']->name,
+    'display' => $vars['view']->current_display,
+    'path' => implode('/', arg()),
+    'root' => $vars['options']['root_object'],
+    'child' => $vars['options']['top_child_object'],
+    'pages' => $pager_total[0],
+    'page' => $pager_page_array[0],
+    'count' => intval($pager_total_items[0]),
+    'limit' => intval($pager_limits[0])
+  );
+  // If there were no pages, adjust the property values accordingly.
+  if ($view['pages'] == null) {
+    $view['count'] = sizeof($vars['rows'][$view['root']]);
+    $view['limit'] = null;
+  }
+  // Attach the view data to the rows result.
+  $vars['rows']['view'] = $view;
+}
+
+/**
  * Implements hook_default_services_endpoint().
  */
 function drupalgap_default_services_endpoint() {
   $endpoints = array();
-
+  
   $endpoint = new stdClass();
   $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
   $endpoint->api_version = 3;
@@ -180,6 +262,9 @@ function drupalgap_default_services_endpoint() {
         'delete' => array(
           'enabled' => '1',
         ),
+        'index' => array(
+          'enabled' => '1',
+        ),
       ),
       'actions' => array(
         'countAll' => array(
@@ -193,6 +278,12 @@ function drupalgap_default_services_endpoint() {
           'enabled' => '1',
         ),
         'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+        'index' => array(
           'enabled' => '1',
         ),
       ),
@@ -209,6 +300,9 @@ function drupalgap_default_services_endpoint() {
           'enabled' => '1',
         ),
         'delete' => array(
+          'enabled' => '1',
+        ),
+        'index' => array(
           'enabled' => '1',
         ),
       ),
@@ -291,10 +385,18 @@ function drupalgap_default_services_endpoint() {
         'delete' => array(
           'enabled' => '1',
         ),
+        'index' => array(
+          'enabled' => '1',
+        ),
       ),
       'actions' => array(
         'login' => array(
           'enabled' => '1',
+          'settings' => array(
+            'services' => array(
+              'resource_api_version' => '1.0',
+            ),
+          ),
         ),
         'logout' => array(
           'enabled' => '1',

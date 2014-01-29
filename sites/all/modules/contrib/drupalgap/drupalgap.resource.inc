@@ -320,6 +320,7 @@ function _drupalgap_resource_system_site_settings() {
     'date_default_timezone',
     'site_name',
     'theme_default',
+    'user_email_verification',
     'user_register',
   );
   $sql = "SELECT * FROM {variable} WHERE name IN (:names)";
@@ -339,7 +340,7 @@ function _drupalgap_resource_system_site_settings() {
   // Add Drupal core verion into settings.
   $settings->variable->drupal_core = "7";
 
-  return $settings;
+  return $settings->variable;
 }
 
 /**
@@ -356,37 +357,9 @@ function _drupalgap_resource_system_site_settings() {
  */
 function _drupalgap_resource_system_connect($created = null) {
   global $user;
-  $results = array();
-  
-  // Make a call to the system connect resource.
-  module_load_include('inc', 'services', 'resources/system_resource');
-  $results['system_connect'] = _system_resource_connect();
-  
-  // Make calls to various DrupalGap resources.
-  $results['site_settings'] = _drupalgap_resource_system_site_settings();
-  // TODO - Leave user_roles_and_permissions in for backwards compatability
-  // until 7.x-1.4 of the module is released, then remove it.
-  $results['user_roles_and_permissions'] = _drupalgap_resource_user_roles_and_permissions();
-  $results['user_permissions'] = _drupalgap_resource_user_permissions(array('uid' => $user->uid));
-  $results['content_types_list'] = _drupalgap_resource_content_types_list();
-  $results['content_types_user_permissions'] = _drupalgap_resource_content_types_user_permissions();
-  $results['entity_info'] = entity_get_info();
-  $results['field_info_instances']['node'] = field_info_instances('node');
-  $results['field_info_instances']['comment'] = field_info_instances('comment');
-  $results['field_info_instances']['taxonomy_vocabulary'] = field_info_instances('taxonomy_vocabulary');
-  $results['field_info_instances']['taxonomy_term'] = field_info_instances('taxonomy_term');
-  $results['field_info_instances']['user'] = field_info_instances('user');
-  $results['field_info_fields'] = field_info_fields();
-  
-  // Add the time at which this call occurred to the result.
-  $results['created'] = "" . time();
-  
-  // Add the last time at which this call occurred, if ever, to the result.
-  if ($created != null) {
-    //$results['last_created'] = date("Y-m-d h:i:s", $created);
-    $results['last_created'] = $created;
-  }
-  
+  $results = drupalgap_system_connect_extras();
+  // Give other modules an opportunity to edit the system connect results.
+  drupal_alter('drupalgap_system_connect', $results);
   return $results;
 }
 

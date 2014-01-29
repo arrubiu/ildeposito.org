@@ -68,6 +68,32 @@ function ildeposito_campi_field_default_field_bases() {
     'type' => 'text_long',
   );
 
+  // Exported field_base: 'field_a_cura_di'
+  $field_bases['field_a_cura_di'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_a_cura_di',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
+  );
+
   // Exported field_base: 'field_accordi'
   $field_bases['field_accordi'] = array(
     'active' => 1,
@@ -153,6 +179,35 @@ function ildeposito_campi_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'datetime',
+  );
+
+  // Exported field_base: 'field_autore'
+  $field_bases['field_autore'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_autore',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
   );
 
   // Exported field_base: 'field_autore_musica'
@@ -272,7 +327,11 @@ function ildeposito_campi_field_default_field_bases() {
         'custom_content' => 0,
         'evento' => 0,
         'fonte_bibliografica' => 0,
+        'forum' => 0,
+        'pagina' => 0,
+        'simplenews' => 0,
         'traduzione' => 0,
+        'voce_libreria' => 0,
       ),
       'view' => array(
         'args' => array(),
@@ -425,6 +484,35 @@ function ildeposito_campi_field_default_field_bases() {
     'type' => 'text',
   );
 
+  // Exported field_base: 'field_citta'
+  $field_bases['field_citta'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_citta',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
   // Exported field_base: 'field_cognome'
   $field_bases['field_cognome'] = array(
     'active' => 1,
@@ -432,6 +520,35 @@ function ildeposito_campi_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_cognome',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
+  // Exported field_base: 'field_collana'
+  $field_bases['field_collana'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_collana',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(
@@ -525,6 +642,35 @@ function ildeposito_campi_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'datetime',
+  );
+
+  // Exported field_base: 'field_editore'
+  $field_bases['field_editore'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_editore',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
   );
 
   // Exported field_base: 'field_evento'
@@ -835,7 +981,7 @@ function ildeposito_campi_field_default_field_bases() {
   // Exported field_base: 'field_images'
   $field_bases['field_images'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_images',
@@ -1423,6 +1569,40 @@ function ildeposito_campi_field_default_field_bases() {
     'settings' => array(),
     'translatable' => 0,
     'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_tipo_voce'
+  $field_bases['field_tipo_voce'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_tipo_voce',
+    'foreign keys' => array(
+      'tid' => array(
+        'columns' => array(
+          'tid' => 'tid',
+        ),
+        'table' => 'taxonomy_term_data',
+      ),
+    ),
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'tipo_libreria',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
   );
 
   // Exported field_base: 'field_titolo_alt'

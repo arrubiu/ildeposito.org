@@ -95,7 +95,6 @@ function commitlog_permission() {
     'access commit messages' => array(
       'title' => t('Access commit messages'),
       'description' => t('See commits information about the version control repostories.'),
-      'restrict access' => TRUE,
     ),
   );
 }

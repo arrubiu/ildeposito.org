@@ -95,6 +95,10 @@ function ildeposito_preprocess_node(&$vars) {
 	if ($vars['node']->type == 'articolo' && $vars['view_mode'] == 'full') {
 		$vars['theme_hook_suggestions'][] = 'node__' . $vars['node']->type . '__full';
 	}
+	
+	if ($vars['node']->type == 'voce_libreria' && $vars['view_mode'] == 'full') {
+		$vars['theme_hook_suggestions'][] = 'node__' . $vars['node']->type . '__full';
+	}
 
 	if ($vars['node']->type == 'articolo' && $vars['view_mode'] == 'articolo') {
 		$vars['theme_hook_suggestions'][] = 'node__' . $vars['node']->type . '__articolo';

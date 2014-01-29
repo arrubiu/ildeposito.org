@@ -98,16 +98,21 @@ abstract class VersioncontrolOperation extends VersioncontrolEntity {
   public $type;
 
   /**
-   * An array of branches or tags that were affected by this
-   * operation. Branch and tag operations are known to only affect one
-   * branch or tag, so for these there will be only one element (with 0
-   * as key) in 'labels'. Commits might affect any number of branches,
-   * including none. Commits that emulate branches and/or tags (like
-   * in Subversion, where they're not a native concept) can also include
-   * add/delete/move operations for labels, as detailed below.
-   * Mind that the main development branch - e.g. 'HEAD', 'trunk'
-   * or 'master' - is also considered a branch. Each element in 'labels'
-   * is a VersioncontrolLabel(VersioncontrolBranch VersioncontrolTag)
+   * An array of branches or tags that were affected by this operation.
+   *
+   * Commits might affect any number of branches or tags, including none.
+   *
+   * Commits that emulate branches and/or tags (like in Subversion, where
+   * they're not a native concept) can also include add/delete/move operations
+   * for labels, as detailed below.
+   * Mind that the main development branch - e.g. 'HEAD', 'trunk' or 'master' -
+   * is also considered a branch. Each element in 'labels' is a
+   * VersioncontrolBranch or a VersioncontrolTag.
+   *
+   * This array is indexed with the label_id as the key, but only when loaded
+   * through the operation controller, so that value should not be trusted when
+   * the labels are being changed, i.e. on CRUD. Use the label label_id data
+   * member in those cases.
    *
    * @var array
    */

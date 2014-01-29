@@ -208,7 +208,11 @@ function qa_checklist_checklistapi_checklist_info() {
         '#title' => t('Disable theme registry rebuild.'),
       ),
       'turn_off_php_error_display' => array(
-        '#title' => t('Turn off PHP error display.'),
+        '#title' => t('Turn off error messages display.'),
+        'logging_and_errors' => array(
+          '#text' => t('Logging and errors'),
+          '#path' => 'admin/config/development/logging',
+        ),
       ),
       'change_passwords' => array(
         '#title' => t('Change all necessary Drupal/MySQL/SSH passwords.'),

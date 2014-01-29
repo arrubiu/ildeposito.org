@@ -85,11 +85,15 @@ function ildeposito_ricerca_views_default_views() {
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  /* Criterio di ordinamento: Cerca: Relevance */
+  $handler->display->display_options['sorts']['search_api_relevance']['id'] = 'search_api_relevance';
+  $handler->display->display_options['sorts']['search_api_relevance']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['sorts']['search_api_relevance']['field'] = 'search_api_relevance';
+  $handler->display->display_options['sorts']['search_api_relevance']['order'] = 'DESC';
   /* Criterio del filtro: Cerca: Fulltext search */
   $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
   $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
-  $handler->display->display_options['filters']['search_api_views_fulltext']['operator'] = '=';
   $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
@@ -98,6 +102,9 @@ function ildeposito_ricerca_views_default_views() {
     2 => '2',
     1 => 0,
     3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
   );
   $handler->display->display_options['filters']['search_api_views_fulltext']['fields'] = array(
     'title' => 'title',
@@ -108,22 +115,30 @@ function ildeposito_ricerca_views_default_views() {
     'field_accordi' => 'field_accordi',
     'field_capoverso' => 'field_capoverso',
     'field_titolo_alt' => 'field_titolo_alt',
+    'field_editore' => 'field_editore',
+    'field_collana' => 'field_collana',
+    'field_citta' => 'field_citta',
+    'search_api_aggregation_4' => 'search_api_aggregation_4',
+    'search_api_viewed' => 'search_api_viewed',
     'body:value' => 'body:value',
     'body:summary' => 'body:summary',
     'field_tags:name' => 'field_tags:name',
     'field_sezione:name' => 'field_sezione:name',
     'field_sezione:description' => 'field_sezione:description',
+    'field_localizzazione:name' => 'field_localizzazione:name',
+    'field_localizzazione:description' => 'field_localizzazione:description',
     'field_informazioni:value' => 'field_informazioni:value',
     'field_lingua:name' => 'field_lingua:name',
     'field_lingua:description' => 'field_lingua:description',
     'field_autore_musica:title' => 'field_autore_musica:title',
     'field_autore_testo:title' => 'field_autore_testo:title',
-    'field_localizzazione:name' => 'field_localizzazione:name',
-    'field_localizzazione:description' => 'field_localizzazione:description',
     'field_tematica:name' => 'field_tematica:name',
     'field_tematica:description' => 'field_tematica:description',
     'field_percorso:name' => 'field_percorso:name',
     'field_percorso:description' => 'field_percorso:description',
+    'field_geofield:geom' => 'field_geofield:geom',
+    'field_tipo_voce:name' => 'field_tipo_voce:name',
+    'field_tipo_voce:description' => 'field_tipo_voce:description',
   );
 
   /* Display: Ricerca */

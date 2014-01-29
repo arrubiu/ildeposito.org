@@ -253,6 +253,16 @@ function ildeposito_cron_default_elysia_cron_rules() {
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
   $cron_rule->api_version = 1;
+  $cron_rule->name = 'new_relic_rpm_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = NULL;
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['new_relic_rpm_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
   $cron_rule->name = 'node_cron';
   $cron_rule->disable = NULL;
   $cron_rule->rule = NULL;

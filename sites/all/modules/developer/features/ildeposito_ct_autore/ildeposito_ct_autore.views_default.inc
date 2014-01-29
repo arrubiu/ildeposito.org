@@ -56,10 +56,10 @@ function ildeposito_ct_autore_views_default_views() {
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['link_to_entity'] = 1;
-  /* Criterio di ordinamento: Indexed Contenuto: Titolo - Ordinamento */
-  $handler->display->display_options['sorts']['search_api_aggregation_1']['id'] = 'search_api_aggregation_1';
-  $handler->display->display_options['sorts']['search_api_aggregation_1']['table'] = 'search_api_index_default_node_index';
-  $handler->display->display_options['sorts']['search_api_aggregation_1']['field'] = 'search_api_aggregation_1';
+  /* Criterio di ordinamento: Indexed Contenuto: Cognome - Ordinmanento */
+  $handler->display->display_options['sorts']['search_api_aggregation_3']['id'] = 'search_api_aggregation_3';
+  $handler->display->display_options['sorts']['search_api_aggregation_3']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['sorts']['search_api_aggregation_3']['field'] = 'search_api_aggregation_3';
   $handler->display->display_options['filter_groups']['groups'] = array(
     1 => 'OR',
   );

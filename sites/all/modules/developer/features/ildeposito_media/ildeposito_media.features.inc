@@ -516,6 +516,29 @@ function ildeposito_media_image_default_styles() {
     ),
   );
 
+  // Exported image style: square_thumbnail.
+  $styles['square_thumbnail'] = array(
+    'name' => 'square_thumbnail',
+    'label' => 'Square thumbnail',
+    'effects' => array(
+      7 => array(
+        'label' => 'Scala e ritaglia',
+        'help' => 'Scala e ritaglia preserva il rapporto di dimensioni dell\'immagine originale per poi ritagliare la dimensione in eccesso. Questo metodo è utile nei casi in cui si desidera ottenere delle miniature perfettamente quadrate senza deformare l\'immagine.',
+        'effect callback' => 'image_scale_and_crop_effect',
+        'dimensions callback' => 'image_resize_dimensions',
+        'form callback' => 'image_resize_form',
+        'summary theme' => 'image_resize_summary',
+        'module' => 'image',
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 100,
+          'height' => 100,
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
   // Exported image style: termine_singolo.
   $styles['termine_singolo'] = array(
     'name' => 'termine_singolo',

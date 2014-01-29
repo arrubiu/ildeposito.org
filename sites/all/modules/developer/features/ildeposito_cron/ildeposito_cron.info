@@ -31,6 +31,7 @@ features[elysia_cron][] = l10n_update_cron
 features[elysia_cron][] = linkchecker_cron
 features[elysia_cron][] = login_security_cron
 features[elysia_cron][] = logintoboggan_cron
+features[elysia_cron][] = new_relic_rpm_cron
 features[elysia_cron][] = node_cron
 features[elysia_cron][] = oauth_common_cron
 features[elysia_cron][] = password_policy_cron

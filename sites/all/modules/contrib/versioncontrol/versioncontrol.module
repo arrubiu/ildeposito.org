@@ -300,10 +300,12 @@ function versioncontrol_cron_queue_info() {
 
   $queues['versioncontrol_repomgr'] = array(
     'worker callback' => 'versioncontrol_repomgr_run_worker',
+    'skip on cron' => TRUE,
   );
 
   $queues['versioncontrol_reposync'] = array(
     'worker callback' => 'versioncontrol_reposync_run_worker',
+    'skip on cron' => TRUE,
   );
 
   return $queues;

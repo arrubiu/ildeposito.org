@@ -8,9 +8,9 @@ dependencies[] = rest_server
 dependencies[] = views
 dependencies[] = views_json
 
-; Information added by drupal.org packaging script on 2013-06-08
-version = "7.x-1.4"
+; Information added by Drupal.org packaging script on 2014-01-23
+version = "7.x-1.5"
 core = "7.x"
 project = "drupalgap"
-datestamp = "1370663151"
+datestamp = "1390495406"
 

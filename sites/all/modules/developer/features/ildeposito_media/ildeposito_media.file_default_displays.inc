@@ -567,11 +567,36 @@ function ildeposito_media_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
+  $file_display->name = 'image__elenco_termini_contenuti__file_field_colorbox';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'colorbox_node_style' => '',
+    'colorbox_image_style' => '',
+    'colorbox_gallery' => 'post',
+    'colorbox_gallery_custom' => '',
+    'colorbox_caption' => 'auto',
+    'colorbox_caption_custom' => '',
+  );
+  $export['image__elenco_termini_contenuti__file_field_colorbox'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
   $file_display->name = 'image__elenco_termini_contenuti__file_field_file_default';
   $file_display->weight = 0;
   $file_display->status = FALSE;
   $file_display->settings = '';
   $export['image__elenco_termini_contenuti__file_field_file_default'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__elenco_termini_contenuti__file_field_file_download_link';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'text' => 'Download [file:name]',
+  );
+  $export['image__elenco_termini_contenuti__file_field_file_download_link'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -601,11 +626,70 @@ function ildeposito_media_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
+  $file_display->name = 'image__elenco_termini_contenuti__file_field_image';
+  $file_display->weight = 0;
+  $file_display->status = TRUE;
+  $file_display->settings = array(
+    'image_style' => 'elenco_termine',
+    'image_link' => 'content',
+  );
+  $export['image__elenco_termini_contenuti__file_field_image'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
   $file_display->name = 'image__elenco_termini_contenuti__file_field_media_large_icon';
   $file_display->weight = 0;
   $file_display->status = FALSE;
   $file_display->settings = '';
   $export['image__elenco_termini_contenuti__file_field_media_large_icon'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__elenco_termini_contenuti__file_field_openlayers';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'imageStyle' => '',
+    'pointRadius' => '6',
+    'fillColor' => '#EE9900',
+    'strokeColor' => '#EE9900',
+    'strokeWidth' => '1',
+    'fillOpacity' => '1',
+    'strokeOpacity' => '1',
+    'strokeLinecap' => 'round',
+    'strokeDashstyle' => 'solid',
+    'cursor' => '',
+    'graphicWidth' => '',
+    'graphicHeight' => '',
+    'graphicOpacity' => '1',
+    'graphicXOffset' => '',
+    'graphicYOffset' => '',
+    'graphicName' => '',
+    'rotation' => '',
+    'display' => '',
+    'label' => '',
+    'labelAlign' => 'cm',
+    'labelXOffset' => '',
+    'labelYOffset' => '',
+    'fontColor' => '',
+    'fontSize' => '',
+    'fontFamily' => '',
+    'fontWeight' => '',
+  );
+  $export['image__elenco_termini_contenuti__file_field_openlayers'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__elenco_termini_contenuti__file_field_picture';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'picture_group' => 'articolo',
+    'fallback_image_style' => '',
+    'image_link' => '',
+    'colorbox' => 'articolo',
+  );
+  $export['image__elenco_termini_contenuti__file_field_picture'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -618,6 +702,19 @@ function ildeposito_media_file_default_displays() {
     'title' => '[file:field_file_image_title_text]',
   );
   $export['image__elenco_termini_contenuti__file_image'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__elenco_termini_contenuti__file_picture';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'picture_group' => 'articolo',
+    'fallback_image_style' => '',
+    'alt' => '',
+    'title' => '',
+  );
+  $export['image__elenco_termini_contenuti__file_picture'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -952,11 +1049,36 @@ function ildeposito_media_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
+  $file_display->name = 'image__termine_singolo__file_field_colorbox';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'colorbox_node_style' => '',
+    'colorbox_image_style' => '',
+    'colorbox_gallery' => 'post',
+    'colorbox_gallery_custom' => '',
+    'colorbox_caption' => 'auto',
+    'colorbox_caption_custom' => '',
+  );
+  $export['image__termine_singolo__file_field_colorbox'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
   $file_display->name = 'image__termine_singolo__file_field_file_default';
   $file_display->weight = 0;
   $file_display->status = FALSE;
   $file_display->settings = '';
   $export['image__termine_singolo__file_field_file_default'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__termine_singolo__file_field_file_download_link';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'text' => 'Download [file:name]',
+  );
+  $export['image__termine_singolo__file_field_file_download_link'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -986,11 +1108,70 @@ function ildeposito_media_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
+  $file_display->name = 'image__termine_singolo__file_field_image';
+  $file_display->weight = 0;
+  $file_display->status = TRUE;
+  $file_display->settings = array(
+    'image_style' => 'termine_singolo',
+    'image_link' => 'content',
+  );
+  $export['image__termine_singolo__file_field_image'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
   $file_display->name = 'image__termine_singolo__file_field_media_large_icon';
   $file_display->weight = 0;
   $file_display->status = FALSE;
   $file_display->settings = '';
   $export['image__termine_singolo__file_field_media_large_icon'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__termine_singolo__file_field_openlayers';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'imageStyle' => '',
+    'pointRadius' => '6',
+    'fillColor' => '#EE9900',
+    'strokeColor' => '#EE9900',
+    'strokeWidth' => '1',
+    'fillOpacity' => '1',
+    'strokeOpacity' => '1',
+    'strokeLinecap' => 'round',
+    'strokeDashstyle' => 'solid',
+    'cursor' => '',
+    'graphicWidth' => '',
+    'graphicHeight' => '',
+    'graphicOpacity' => '1',
+    'graphicXOffset' => '',
+    'graphicYOffset' => '',
+    'graphicName' => '',
+    'rotation' => '',
+    'display' => '',
+    'label' => '',
+    'labelAlign' => 'cm',
+    'labelXOffset' => '',
+    'labelYOffset' => '',
+    'fontColor' => '',
+    'fontSize' => '',
+    'fontFamily' => '',
+    'fontWeight' => '',
+  );
+  $export['image__termine_singolo__file_field_openlayers'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__termine_singolo__file_field_picture';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'picture_group' => 'articolo',
+    'fallback_image_style' => '',
+    'image_link' => '',
+    'colorbox' => 'articolo',
+  );
+  $export['image__termine_singolo__file_field_picture'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -1003,6 +1184,19 @@ function ildeposito_media_file_default_displays() {
     'title' => '[file:field_file_image_title_text]',
   );
   $export['image__termine_singolo__file_image'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__termine_singolo__file_picture';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'picture_group' => 'articolo',
+    'fallback_image_style' => '',
+    'alt' => '',
+    'title' => '',
+  );
+  $export['image__termine_singolo__file_picture'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;

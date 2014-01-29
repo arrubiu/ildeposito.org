@@ -1788,3 +1788,7 @@ a.invisibile {
 .maintenance-page {
   font-family: Arial;
 }
+
+.node-type-voce-libreria .content h2.block-title.margin {
+  margin-top: 20px !important;
+}

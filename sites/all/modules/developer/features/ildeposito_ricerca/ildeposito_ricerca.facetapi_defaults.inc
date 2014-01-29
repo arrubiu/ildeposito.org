@@ -41,6 +41,61 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index::field_anno';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = '';
+  $facet->facet = 'field_anno';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'operator' => 'and',
+    'hard_limit' => '50',
+    'dependencies' => array(
+      'facets' => array(),
+      'force_deactivation' => TRUE,
+      'regex' => FALSE,
+      'roles' => array(),
+      'bundle' => 'none',
+      'bundle_selected' => array(),
+    ),
+    'facet_mincount' => '1',
+    'facet_missing' => '0',
+    'flatten' => 0,
+    'query_type' => 'date',
+    'default_true' => '1',
+    'facet_search_ids' => array(),
+    'date_granularity' => 'YEAR',
+  );
+  $export['search_api@default_node_index::field_anno'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index::field_autore';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = '';
+  $facet->facet = 'field_autore';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'operator' => 'and',
+    'hard_limit' => '50',
+    'dependencies' => array(
+      'facets' => array(),
+      'force_deactivation' => TRUE,
+      'regex' => FALSE,
+    ),
+    'facet_mincount' => '1',
+    'facet_missing' => '0',
+    'flatten' => 0,
+    'query_type' => 'term',
+    'default_true' => '1',
+    'facet_search_ids' => array(),
+    'exclude' => 0,
+  );
+  $export['search_api@default_node_index::field_autore'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index::field_lingua';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = '';
@@ -280,6 +335,35 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
     'pretty_paths_taxonomy_pathauto_vocabulary' => 'tematiche',
   );
   $export['search_api@default_node_index::field_tematica'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index::field_tipo_voce';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = '';
+  $facet->facet = 'field_tipo_voce';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'operator' => 'and',
+    'hard_limit' => '50',
+    'dependencies' => array(
+      'facets' => array(),
+      'force_deactivation' => TRUE,
+      'regex' => FALSE,
+      'roles' => array(),
+      'bundle' => 'none',
+      'bundle_selected' => array(),
+    ),
+    'facet_mincount' => '1',
+    'facet_missing' => '0',
+    'flatten' => '0',
+    'query_type' => 'term',
+    'default_true' => '1',
+    'facet_search_ids' => array(),
+    'exclude' => 0,
+  );
+  $export['search_api@default_node_index::field_tipo_voce'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -594,6 +678,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_a_cura_di';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_a_cura_di';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_a_cura_di'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_accordi';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -666,7 +784,7 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
   $facet->facet = 'field_anno';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'weight' => 0,
     'widget' => 'facetapi_links',
@@ -675,23 +793,209 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
       'active' => 'active',
       'count' => 'count',
       'display' => 'display',
+      'natural' => 0,
+      'indexed' => 0,
     ),
     'sort_weight' => array(
-      'active' => -50,
-      'count' => -49,
-      'display' => -48,
+      'active' => '-50',
+      'count' => '-49',
+      'display' => '-48',
+      'natural' => '0',
+      'indexed' => '0',
     ),
     'sort_order' => array(
-      'active' => 3,
-      'count' => 3,
-      'display' => 4,
+      'active' => '3',
+      'count' => '3',
+      'display' => '4',
+      'natural' => '4',
+      'indexed' => '4',
     ),
     'empty_behavior' => 'none',
-    'soft_limit' => 20,
+    'soft_limit' => '5',
     'nofollow' => 1,
     'show_expanded' => 0,
+    'ranges' => array(
+      'past_hour' => array(
+        'label' => 'Past hour',
+        'machine_name' => 'past_hour',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '1',
+        'date_range_start_unit' => 'HOUR',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '0',
+        'delete' => 0,
+      ),
+      'past_24_hours' => array(
+        'label' => 'Past 24 hours',
+        'machine_name' => 'past_24_hours',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '24',
+        'date_range_start_unit' => 'HOUR',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '1',
+        'delete' => 0,
+      ),
+      'past_week' => array(
+        'label' => 'Past week',
+        'machine_name' => 'past_week',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '7',
+        'date_range_start_unit' => 'DAY',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '2',
+        'delete' => 0,
+      ),
+      'past_month' => array(
+        'label' => 'Past month',
+        'machine_name' => 'past_month',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '1',
+        'date_range_start_unit' => 'MONTH',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '3',
+        'delete' => 0,
+      ),
+      'past_year' => array(
+        'label' => 'Past year',
+        'machine_name' => 'past_year',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '1',
+        'date_range_start_unit' => 'YEAR',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '4',
+        'delete' => 0,
+      ),
+    ),
+    'date_ranges' => array(
+      'add_range' => 'Add a new date range',
+    ),
+    'empty_text' => array(
+      'value' => '',
+      'format' => 'filtered_html',
+    ),
+    'submit_realm' => 'Save and go back to realm settings',
   );
   $export['search_api@default_node_index:block:field_anno'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_autore';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_autore';
+  $facet->enabled = TRUE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+      'natural' => 0,
+      'indexed' => 0,
+    ),
+    'sort_weight' => array(
+      'active' => '-50',
+      'count' => '-49',
+      'display' => '-48',
+      'natural' => '0',
+      'indexed' => '0',
+    ),
+    'sort_order' => array(
+      'active' => '3',
+      'count' => '3',
+      'display' => '4',
+      'natural' => '4',
+      'indexed' => '4',
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => '5',
+    'nofollow' => 1,
+    'show_expanded' => 0,
+    'ranges' => array(
+      'past_hour' => array(
+        'label' => 'Past hour',
+        'machine_name' => 'past_hour',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '1',
+        'date_range_start_unit' => 'HOUR',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '0',
+        'delete' => 0,
+      ),
+      'past_24_hours' => array(
+        'label' => 'Past 24 hours',
+        'machine_name' => 'past_24_hours',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '24',
+        'date_range_start_unit' => 'HOUR',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '1',
+        'delete' => 0,
+      ),
+      'past_week' => array(
+        'label' => 'Past week',
+        'machine_name' => 'past_week',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '7',
+        'date_range_start_unit' => 'DAY',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '2',
+        'delete' => 0,
+      ),
+      'past_month' => array(
+        'label' => 'Past month',
+        'machine_name' => 'past_month',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '1',
+        'date_range_start_unit' => 'MONTH',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '3',
+        'delete' => 0,
+      ),
+      'past_year' => array(
+        'label' => 'Past year',
+        'machine_name' => 'past_year',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '1',
+        'date_range_start_unit' => 'YEAR',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '4',
+        'delete' => 0,
+      ),
+    ),
+    'date_ranges' => array(
+      'add_range' => 'Add a new date range',
+    ),
+    'empty_text' => array(
+      'value' => '',
+      'format' => 'filtered_html',
+    ),
+    'submit_realm' => 'Save and go back to realm settings',
+  );
+  $export['search_api@default_node_index:block:field_autore'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -1002,6 +1306,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_citta';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_citta';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_citta'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_cognome';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -1032,6 +1370,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@default_node_index:block:field_cognome'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_collana';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_collana';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_collana'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -1104,6 +1476,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_data_evento:value';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_data_evento:value';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_data_evento:value'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_editore';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -1172,6 +1578,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_evento_ordinamento';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_evento_ordinamento';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_evento_ordinamento'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_fonte_biblio';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -1202,6 +1642,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@default_node_index:block:field_fonte_biblio'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_geofield:geom';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_geofield:geom';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_geofield:geom'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -1385,6 +1859,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_lingua:node_count';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_lingua:node_count';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_lingua:node_count'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_lingua_originale';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -1539,6 +2047,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@default_node_index:block:field_localizzazione:name'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_localizzazione:node_count';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_localizzazione:node_count';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_localizzazione:node_count'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -1758,6 +2300,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_percorso:node_count';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_percorso:node_count';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_percorso:node_count'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_presenza_accordi';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -1950,6 +2526,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_sezione:node_count';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_sezione:node_count';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_sezione:node_count'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_tags';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -2025,6 +2635,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@default_node_index:block:field_tags:name'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_tags:node_count';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_tags:node_count';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_tags:node_count'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -2142,6 +2786,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_tematica:node_count';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_tematica:node_count';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_tematica:node_count'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_testo';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -2210,6 +2888,252 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_tipo_voce';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_tipo_voce';
+  $facet->enabled = TRUE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+      'natural' => 0,
+      'indexed' => 0,
+    ),
+    'sort_weight' => array(
+      'active' => '-50',
+      'count' => '-49',
+      'display' => '-48',
+      'natural' => '0',
+      'indexed' => '0',
+    ),
+    'sort_order' => array(
+      'active' => '3',
+      'count' => '3',
+      'display' => '4',
+      'natural' => '4',
+      'indexed' => '4',
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => '5',
+    'nofollow' => 1,
+    'show_expanded' => 1,
+    'ranges' => array(
+      'past_hour' => array(
+        'label' => 'Past hour',
+        'machine_name' => 'past_hour',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '1',
+        'date_range_start_unit' => 'HOUR',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '0',
+        'delete' => 0,
+      ),
+      'past_24_hours' => array(
+        'label' => 'Past 24 hours',
+        'machine_name' => 'past_24_hours',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '24',
+        'date_range_start_unit' => 'HOUR',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '1',
+        'delete' => 0,
+      ),
+      'past_week' => array(
+        'label' => 'Past week',
+        'machine_name' => 'past_week',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '7',
+        'date_range_start_unit' => 'DAY',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '2',
+        'delete' => 0,
+      ),
+      'past_month' => array(
+        'label' => 'Past month',
+        'machine_name' => 'past_month',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '1',
+        'date_range_start_unit' => 'MONTH',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '3',
+        'delete' => 0,
+      ),
+      'past_year' => array(
+        'label' => 'Past year',
+        'machine_name' => 'past_year',
+        'date_range_start_op' => '-',
+        'date_range_start_amount' => '1',
+        'date_range_start_unit' => 'YEAR',
+        'date_range_end_op' => 'NOW',
+        'date_range_end_amount' => '',
+        'date_range_end_unit' => 'HOUR',
+        'weight' => '4',
+        'delete' => 0,
+      ),
+    ),
+    'date_ranges' => array(
+      'add_range' => 'Add a new date range',
+    ),
+    'empty_text' => array(
+      'value' => '',
+      'format' => 'filtered_html',
+    ),
+    'submit_realm' => 'Save and go back to realm settings',
+  );
+  $export['search_api@default_node_index:block:field_tipo_voce'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_tipo_voce:description';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_tipo_voce:description';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_tipo_voce:description'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_tipo_voce:name';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_tipo_voce:name';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_tipo_voce:name'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_tipo_voce:node_count';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_tipo_voce:node_count';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_tipo_voce:node_count'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_tipo_voce:tid';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_tipo_voce:tid';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_tipo_voce:tid'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_titolo_alt';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -2274,6 +3198,40 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@default_node_index:block:field_traduzione'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:is_new';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'is_new';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:is_new'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -2414,6 +3372,74 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:search_api_aggregation_2';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'search_api_aggregation_2';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:search_api_aggregation_2'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:search_api_aggregation_3';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'search_api_aggregation_3';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:search_api_aggregation_3'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:search_api_language';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -2444,6 +3470,108 @@ function ildeposito_ricerca_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@default_node_index:block:search_api_language'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:search_api_url';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'search_api_url';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:search_api_url'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:search_api_viewed';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'search_api_viewed';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:search_api_viewed'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:status';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'status';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:status'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */

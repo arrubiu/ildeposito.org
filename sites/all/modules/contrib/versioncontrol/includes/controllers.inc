@@ -572,7 +572,7 @@ class VersioncontrolOperationController extends VersioncontrolEntityController {
     // Attach each label to the labels array on the respective operation data.
     foreach ($result as $label) {
       $label->repository = $this->options['repository'];
-      $queried_entities[$label->vc_op_id]->labels[$label->name] = $this->backend
+      $queried_entities[$label->vc_op_id]->labels[$label->label_id] = $this->backend
         ->buildEntity($label->type == VERSIONCONTROL_LABEL_BRANCH ? 'branch' : 'tag', $label);
     }
   }

@@ -408,7 +408,7 @@ function ildeposito_tassonomie_views_default_views() {
   /* Display: Lingue */
   $handler = $view->new_display('block', 'Lingue', 'contenuti_lingua');
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Lingua traduzione */
+  /* Filtro contestuale: Indexed Contenuto: Lingue */
   $handler->display->display_options['arguments']['field_lingua']['id'] = 'field_lingua';
   $handler->display->display_options['arguments']['field_lingua']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_lingua']['field'] = 'field_lingua';
@@ -514,6 +514,38 @@ function ildeposito_tassonomie_views_default_views() {
   );
   $handler->display->display_options['arguments']['field_tags']['break_phrase'] = 0;
   $handler->display->display_options['arguments']['field_tags']['not'] = 0;
+
+  /* Display: Libreria */
+  $handler = $view->new_display('block', 'Libreria', 'contenuti_libreria');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['style_options']['row_class'] = 'risultato';
+  $handler->display->display_options['style_options']['default_row_class'] = FALSE;
+  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'entity';
+  $handler->display->display_options['row_options']['view_mode'] = 'search_result';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Filtro contestuale: Indexed Contenuto: Tipo voce */
+  $handler->display->display_options['arguments']['field_tipo_voce']['id'] = 'field_tipo_voce';
+  $handler->display->display_options['arguments']['field_tipo_voce']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['arguments']['field_tipo_voce']['field'] = 'field_tipo_voce';
+  $handler->display->display_options['arguments']['field_tipo_voce']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_tipo_voce']['exception']['title'] = 'Tutti';
+  $handler->display->display_options['arguments']['field_tipo_voce']['title_enable'] = TRUE;
+  $handler->display->display_options['arguments']['field_tipo_voce']['title'] = 'La libreria - %1';
+  $handler->display->display_options['arguments']['field_tipo_voce']['default_argument_type'] = 'taxonomy_tid';
+  $handler->display->display_options['arguments']['field_tipo_voce']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_tipo_voce']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_tipo_voce']['validate']['type'] = 'taxonomy_term';
+  $handler->display->display_options['arguments']['field_tipo_voce']['validate_options']['vocabularies'] = array(
+    'tipo_libreria' => 'tipo_libreria',
+  );
+  $handler->display->display_options['arguments']['field_tipo_voce']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['field_tipo_voce']['not'] = 0;
+  $handler->display->display_options['block_caching'] = '-1';
   $translatables['tassonomie_contenuti'] = array(
     t('Master'),
     t('Tassonomie - contenuti'),
@@ -542,6 +574,8 @@ function ildeposito_tassonomie_views_default_views() {
     t('Localizzazioni'),
     t('Percorsi'),
     t('Tags'),
+    t('Libreria'),
+    t('La libreria - %1'),
   );
   $export['tassonomie_contenuti'] = $view;
 
