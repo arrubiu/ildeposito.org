@@ -14,7 +14,7 @@ function ildeposito_ct_libreria_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'additional_settings__active_tab_voce_libreria';
-  $strongarm->value = 'edit-print';
+  $strongarm->value = 'edit-workflow';
   $export['additional_settings__active_tab_voce_libreria'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -546,7 +546,7 @@ function ildeposito_ct_libreria_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'workbench_moderation_default_state_voce_libreria';
-  $strongarm->value = 'draft';
+  $strongarm->value = 'published';
   $export['workbench_moderation_default_state_voce_libreria'] = $strongarm;
 
   $strongarm = new stdClass();

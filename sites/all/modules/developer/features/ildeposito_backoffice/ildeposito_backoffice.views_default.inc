@@ -2688,7 +2688,48 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ precedente';
   $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
   $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'title' => 'title',
+    'field_sezione' => 'field_sezione',
+    'edit_node' => 'edit_node',
+    'field_localizzazione_editable' => 'field_localizzazione_editable',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_sezione' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit_node' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_localizzazione_editable' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'ID';
   /* Campo: Contenuto: Titolo */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -2699,7 +2740,6 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
-  $handler->display->display_options['fields']['field_sezione']['label'] = '';
   $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
@@ -2710,14 +2750,6 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['edit_node']['label'] = '';
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
-  /* Campo: Contenuto: Localizzazioni (editable) */
-  $handler->display->display_options['fields']['field_localizzazione_editable']['id'] = 'field_localizzazione_editable';
-  $handler->display->display_options['fields']['field_localizzazione_editable']['table'] = 'field_data_field_localizzazione';
-  $handler->display->display_options['fields']['field_localizzazione_editable']['field'] = 'field_localizzazione_editable';
-  $handler->display->display_options['fields']['field_localizzazione_editable']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['field_localizzazione_editable']['widget_type'] = '0';
-  $handler->display->display_options['fields']['field_localizzazione_editable']['suppress_label'] = 0;
-  $handler->display->display_options['fields']['field_localizzazione_editable']['suppress_description'] = 0;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Criterio del filtro: Contenuto: Tipo */
@@ -2744,25 +2776,28 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  /* Criterio del filtro: Contenuto: Sezione (field_sezione) */
-  $handler->display->display_options['filters']['field_sezione_tid']['id'] = 'field_sezione_tid';
-  $handler->display->display_options['filters']['field_sezione_tid']['table'] = 'field_data_field_sezione';
-  $handler->display->display_options['filters']['field_sezione_tid']['field'] = 'field_sezione_tid';
-  $handler->display->display_options['filters']['field_sezione_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator_id'] = 'field_sezione_tid_op';
-  $handler->display->display_options['filters']['field_sezione_tid']['expose']['label'] = 'Sezione';
-  $handler->display->display_options['filters']['field_sezione_tid']['expose']['use_operator'] = TRUE;
-  $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator'] = 'field_sezione_tid_op';
-  $handler->display->display_options['filters']['field_sezione_tid']['expose']['identifier'] = 'field_sezione_tid';
-  $handler->display->display_options['filters']['field_sezione_tid']['expose']['remember_roles'] = array(
+  /* Criterio del filtro: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
+  $handler->display->display_options['filters']['field_cognome_value']['id'] = 'field_cognome_value';
+  $handler->display->display_options['filters']['field_cognome_value']['table'] = 'field_data_field_cognome';
+  $handler->display->display_options['filters']['field_cognome_value']['field'] = 'field_cognome_value';
+  $handler->display->display_options['filters']['field_cognome_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_cognome_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['operator_id'] = 'field_cognome_value_op';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['label'] = 'Cognome';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['operator'] = 'field_cognome_value_op';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['identifier'] = 'field_cognome_value';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     3 => 0,
     4 => 0,
     5 => 0,
+    6 => 0,
   );
-  $handler->display->display_options['filters']['field_sezione_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_sezione_tid']['vocabulary'] = 'sezioni';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_dropdown'] = 0;
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_dependent'] = 0;
   $handler->display->display_options['path'] = 'gestione-autori';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Gestione autori';
@@ -3039,9 +3074,10 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     t('modifica'),
     t('Tipo'),
     t('Autori'),
-    t('Localizzazioni (editable)'),
-    t('Pubblicato'),
+    t('ID'),
     t('Sezione'),
+    t('Pubblicato'),
+    t('Cognome'),
     t('Elenco'),
     t('Gestione Eventi'),
     t('Percorsi (editable)'),
