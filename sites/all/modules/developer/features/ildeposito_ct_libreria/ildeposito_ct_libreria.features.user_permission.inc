@@ -20,7 +20,9 @@ function ildeposito_ct_libreria_user_default_permissions() {
   // Exported permission: 'create voce_libreria content'.
   $permissions['create voce_libreria content'] = array(
     'name' => 'create voce_libreria content',
-    'roles' => array(),
+    'roles' => array(
+      'utente registrato' => 'utente registrato',
+    ),
     'module' => 'node',
   );
 
@@ -62,14 +64,18 @@ function ildeposito_ct_libreria_user_default_permissions() {
   // Exported permission: 'edit any voce_libreria content'.
   $permissions['edit any voce_libreria content'] = array(
     'name' => 'edit any voce_libreria content',
-    'roles' => array(),
+    'roles' => array(
+      'utente registrato' => 'utente registrato',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'edit own voce_libreria content'.
   $permissions['edit own voce_libreria content'] = array(
     'name' => 'edit own voce_libreria content',
-    'roles' => array(),
+    'roles' => array(
+      'utente registrato' => 'utente registrato',
+    ),
     'module' => 'node',
   );
 

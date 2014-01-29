@@ -546,7 +546,7 @@ function ildeposito_ct_libreria_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'workbench_moderation_default_state_voce_libreria';
-  $strongarm->value = 'published';
+  $strongarm->value = 'draft';
   $export['workbench_moderation_default_state_voce_libreria'] = $strongarm;
 
   $strongarm = new stdClass();
