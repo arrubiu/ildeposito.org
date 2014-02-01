@@ -1,1 +1,0 @@
-Add your APNS development and production certificates to this folder.
