@@ -84,11 +84,11 @@ $month = date(\'m\');
 if ($month == \'01\' || $month == \'1\') {
   $year = $year - 1;
   $month = \'12\';
-}
-
-else {
+} else {
   $month = $month - 1;
 }
+
+$month = str_pad($month, 2, \'0\', STR_PAD_LEFT); 
 
 $date = $year . $month;
 return $date;';
