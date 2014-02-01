@@ -171,12 +171,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'date_default',
         'weight' => 0,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'inline',
         'settings' => array(),
@@ -271,12 +265,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 0,
       ),
       'rss' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'rss_app' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
@@ -386,12 +374,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'geofield_openlayers',
         'weight' => 10,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -488,12 +470,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -524,7 +500,114 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'scrollwheel' => 0,
       ),
       'type' => 'geolocation_googlemap',
-      'weight' => 12,
+      'weight' => 13,
+    ),
+  );
+
+  // Exported field_instance: 'node-evento-field_images'
+  $field_instances['node-evento-field_images'] = array(
+    'bundle' => 'evento',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 12,
+      ),
+      'elenco_termini_contenuti' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'percorso' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'print' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'riferimento_evento' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'rss' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_label_plurals_singular' => '',
+    'field_name' => 'field_images',
+    'label' => 'Immagini',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'imagecrop' => array(
+        'foto_autore' => 0,
+        'ricerca' => 0,
+        'utente_profile' => 0,
+      ),
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'media',
+      'settings' => array(
+        'allowed_schemes' => array(
+          'public' => 'public',
+        ),
+        'allowed_types' => array(
+          'application' => 0,
+          'audio' => 0,
+          'document' => 0,
+          'image' => 'image',
+          'video' => 0,
+        ),
+        'browser_plugins' => array(
+          'media_default--media_browser_1' => 'media_default--media_browser_1',
+          'media_default--media_browser_my_files' => 0,
+          'upload' => 'upload',
+        ),
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'media_generic',
+      'weight' => 7,
     ),
   );
 
@@ -593,12 +676,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 1,
-      ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -699,12 +776,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'link_default',
         'weight' => 3,
-      ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -820,12 +891,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 6,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
@@ -925,12 +990,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'weight' => 0,
       ),
       'rss' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'rss_app' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
@@ -1036,12 +1095,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 5,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
@@ -1139,12 +1192,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 7,
-      ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'inline',
@@ -1244,12 +1291,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 4,
-      ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -1355,12 +1396,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 8,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1441,12 +1476,6 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1489,6 +1518,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
   t('Evento ordinamento');
   t('Geofield');
   t('Geolocation');
+  t('Immagini');
   t('Informazioni');
   t('Links');
   t('Localizzazioni');

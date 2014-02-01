@@ -198,7 +198,7 @@ function ildeposito_ct_traduzione_strongarm() {
         'custom_settings' => FALSE,
       ),
       'rss_app' => array(
-        'custom_settings' => TRUE,
+        'custom_settings' => FALSE,
       ),
       'drupalgap' => array(
         'custom_settings' => FALSE,

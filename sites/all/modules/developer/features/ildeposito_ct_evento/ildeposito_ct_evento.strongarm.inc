@@ -215,13 +215,13 @@ function ildeposito_ct_evento_strongarm() {
         'custom_settings' => TRUE,
       ),
       'drupalgap' => array(
-        'custom_settings' => TRUE,
+        'custom_settings' => FALSE,
       ),
       'canti_capoversi' => array(
         'custom_settings' => FALSE,
       ),
       'rss_app' => array(
-        'custom_settings' => TRUE,
+        'custom_settings' => FALSE,
       ),
     ),
     'extra_fields' => array(
@@ -240,6 +240,9 @@ function ildeposito_ct_evento_strongarm() {
         ),
         'metatags' => array(
           'weight' => '7',
+        ),
+        'rabbit_hole' => array(
+          'weight' => '0',
         ),
       ),
       'display' => array(

@@ -110,6 +110,7 @@ function ildeposito_ct_evento_field_group_info() {
       2 => 'field_informazioni',
       3 => 'field_links',
       4 => 'title',
+      5 => 'field_images',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

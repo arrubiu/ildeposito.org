@@ -105,12 +105,6 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 0,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'hidden',
         'settings' => array(),
@@ -194,12 +188,6 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'type' => 'node_reference_default',
         'weight' => 2,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -282,12 +270,6 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'hidden',
         'settings' => array(),
@@ -350,117 +332,6 @@ function ildeposito_ct_articolo_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-articolo-field_prova_data'
-  $field_instances['node-articolo-field_prova_data'] = array(
-    'bundle' => 'articolo',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'articolo' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 5,
-      ),
-      'elenco_archivio' => array(
-        'label' => 'above',
-        'module' => 'date',
-        'settings' => array(
-          'format_type' => 'long',
-          'fromto' => 'both',
-          'multiple_from' => '',
-          'multiple_number' => '',
-          'multiple_to' => '',
-          'show_repeat_rule' => 'show',
-        ),
-        'type' => 'date_default',
-        'weight' => 4,
-      ),
-      'ical' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'print' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'rss' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_result' => array(
-        'label' => 'above',
-        'module' => 'date',
-        'settings' => array(
-          'format_type' => 'long',
-          'fromto' => 'both',
-          'multiple_from' => '',
-          'multiple_number' => '',
-          'multiple_to' => '',
-          'show_repeat_rule' => 'show',
-        ),
-        'type' => 'date_default',
-        'weight' => 4,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_prova_data',
-    'label' => 'Prova data',
-    'required' => 0,
-    'settings' => array(
-      'default_value' => 'blank',
-      'default_value2' => 'same',
-      'default_value_code' => '',
-      'default_value_code2' => '',
-      'repeat_collapsed' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'date',
-      'settings' => array(
-        'display_all_day' => 0,
-        'increment' => 1,
-        'input_format' => 'custom',
-        'input_format_custom' => 'd/m/Y',
-        'label_position' => 'above',
-        'repeat_collapsed' => 0,
-        'repeat_presets' => array(
-          'type' => 'standard',
-          'update_type' => 'Update type',
-        ),
-        'text_parts' => array(),
-        'year_range' => '-3:+3',
-      ),
-      'type' => 'date_text',
-      'weight' => 6,
-    ),
-  );
-
   // Exported field_instance: 'node-articolo-field_tags'
   $field_instances['node-articolo-field_tags'] = array(
     'bundle' => 'articolo',
@@ -509,12 +380,6 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 1,
       ),
-      'rss_app' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'search_result' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
@@ -561,7 +426,6 @@ function ildeposito_ct_articolo_field_default_field_instances() {
   t('Commento');
   t('Contenuti correlati');
   t('Immagini');
-  t('Prova data');
   t('Tag');
 
   return $field_instances;
