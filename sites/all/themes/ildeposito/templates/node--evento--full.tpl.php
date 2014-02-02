@@ -25,6 +25,7 @@
       
   <div class="grid-12 col-first">
     <div class="grid-6 col-second mappa">
+    <div class="invisibile"><?php print render($content['field_images']); ?></div>
     <?php print render($content['field_geofield']); ?>  
     </div>
     <?php print render($content['field_informazioni']); ?>  

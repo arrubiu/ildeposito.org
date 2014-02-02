@@ -511,11 +511,11 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
-          'image_style' => '',
+          'image_style' => 'sezioni_homebreakpoints_theme_ildeposito_tv_1x',
         ),
         'type' => 'image',
         'weight' => 12,
