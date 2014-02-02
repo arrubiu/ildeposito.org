@@ -426,34 +426,6 @@ function ildeposito_ct_libreria_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'rdf_rdftype_voce_libreria';
-  $strongarm->value = 'sioc:Item, foaf:Document';
-  $export['rdf_rdftype_voce_libreria'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'rdf_title_datatype_voce_libreria';
-  $strongarm->value = '';
-  $export['rdf_title_datatype_voce_libreria'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'rdf_title_predicates_voce_libreria';
-  $strongarm->value = 'dc:title';
-  $export['rdf_title_predicates_voce_libreria'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'rdf_title_type_voce_libreria';
-  $strongarm->value = 'property';
-  $export['rdf_title_type_voce_libreria'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'redirect_setting_name_voce_libreria';
   $strongarm->value = 'rh_node_redirect';
   $export['redirect_setting_name_voce_libreria'] = $strongarm;
