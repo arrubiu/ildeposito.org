@@ -13,7 +13,7 @@ function ildeposito_utenti_views_default_views() {
   $view = new view();
   $view->name = 'utente_commenti';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'comment';
   $view->human_name = 'Utente - Commenti';
   $view->core = 7;
@@ -158,7 +158,7 @@ function ildeposito_utenti_views_default_views() {
   $view = new view();
   $view->name = 'utente_contenuti';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node_revision';
   $view->human_name = 'Utente - Contenuti';
   $view->core = 7;

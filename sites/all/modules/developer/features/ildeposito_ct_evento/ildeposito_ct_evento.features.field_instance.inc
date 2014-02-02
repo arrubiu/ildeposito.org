@@ -515,7 +515,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
-          'image_style' => 'sezioni_homebreakpoints_theme_ildeposito_tv_1x',
+          'image_style' => 'termine_singolo',
         ),
         'type' => 'image',
         'weight' => 12,

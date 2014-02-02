@@ -13,7 +13,7 @@ function ildeposito_newsletter_views_default_views() {
   $view = new view();
   $view->name = 'newsletter_utils';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Newsletter_utils';
   $view->core = 7;

@@ -13,7 +13,7 @@ function ildeposito_ct_canto_views_default_views() {
   $view = new view();
   $view->name = 'contenuti_canti';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'search_api_index_default_node_index';
   $view->human_name = ' Contenuti - Canti';
   $view->core = 7;
@@ -176,7 +176,7 @@ function ildeposito_ct_canto_views_default_views() {
   $view = new view();
   $view->name = 'contenuti_canti_db';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Contenuti canti - DB';
   $view->core = 7;

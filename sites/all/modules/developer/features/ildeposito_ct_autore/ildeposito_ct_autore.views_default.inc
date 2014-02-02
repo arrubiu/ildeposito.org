@@ -13,7 +13,7 @@ function ildeposito_ct_autore_views_default_views() {
   $view = new view();
   $view->name = 'contenuti_autore';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'search_api_index_default_node_index';
   $view->human_name = 'Contenuti autore';
   $view->core = 7;

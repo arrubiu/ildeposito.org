@@ -627,7 +627,7 @@ function ildeposito_ct_evento_views_default_views() {
   $view = new view();
   $view->name = 'contenuti_eventi';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'search_api_index_default_node_index';
   $view->human_name = 'Contenuti - Eventi';
   $view->core = 7;
@@ -961,7 +961,7 @@ function ildeposito_ct_evento_views_default_views() {
   $view = new view();
   $view->name = 'contenuti_eventi_timeline';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Contenuti Eventi - Timeline';
   $view->core = 7;
@@ -1053,7 +1053,7 @@ function ildeposito_ct_evento_views_default_views() {
   $view = new view();
   $view->name = 'evento_mappa';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Evento - Mappa';
   $view->core = 7;

@@ -13,7 +13,7 @@ function ildeposito_home_views_default_views() {
   $view = new view();
   $view->name = 'home_commenti';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'comment';
   $view->human_name = 'Home Commenti';
   $view->core = 7;
@@ -110,7 +110,7 @@ function ildeposito_home_views_default_views() {
   $view = new view();
   $view->name = 'home_contenuti';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Home contenuti';
   $view->core = 7;
@@ -476,7 +476,7 @@ function ildeposito_home_views_default_views() {
   $view = new view();
   $view->name = 'home_eventi';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Home eventi';
   $view->core = 7;
@@ -632,7 +632,7 @@ function ildeposito_home_views_default_views() {
   $view = new view();
   $view->name = 'home_sezioni';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'taxonomy_term_data';
   $view->human_name = 'Home Sezioni';
   $view->core = 7;

@@ -404,9 +404,9 @@ class VersioncontrolGitRepositoryHistorySynchronizerDefault implements Versionco
 
     // get a list of all tag names with the corresponding commit.
     $tag_commit_list = $this->getTagCommitList($tags_new);
-    $format = '%(objecttype)%0a%(objectname)%0a%(refname)%0a%(taggername) %(taggeremail)%0a%(taggerdate)%0a%(contents)ENDOFGITTAGOUTPUTMESAGEHERE';
+    $format = '%(objecttype)%0a%(objectname)%0a%(refname)%0a%(taggername)%20%(taggeremail)%0a%(taggerdate)%0a%(contents)ENDOFGITTAGOUTPUTMESAGEHERE';
     foreach ($tag_commit_list as $tag_name => $tag_commit) {
-      $exec = "for-each-ref --format=\"$format\" refs/tags/" . escapeshellarg($tag_name);
+      $exec = 'for-each-ref --format=' . $format . ' refs/tags/' . escapeshellarg($tag_name);
       $logs_tag_msg = $this->execute($exec);
 
       // Get the specific tag data for annotated vs not annotated tags.
@@ -416,7 +416,7 @@ class VersioncontrolGitRepositoryHistorySynchronizerDefault implements Versionco
         // message.
         // We get the tagger, the tag_date and the tag_message from the tagged
         // commit.
-        $command = "rev-list -1 --pretty=format:\"%an%n%at%n%BENDOFGITTAGOUTPUTMESAGEHERE\" " . escapeshellarg($hash);
+        $command = 'rev-list -1 --pretty=format:"%an%n%at%n%BENDOFGITTAGOUTPUTMESAGEHERE" ' . escapeshellarg($tag_commit);
         $logs = $this->execute($command);
         $line = next($logs);
         $commits[] = trim($line);

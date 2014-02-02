@@ -13,7 +13,7 @@ function ildeposito_tassonomie_views_default_views() {
   $view = new view();
   $view->name = 'mappa_percorso';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Mappa percorso';
   $view->core = 7;
@@ -129,7 +129,7 @@ function ildeposito_tassonomie_views_default_views() {
   $view = new view();
   $view->name = 'percorsi_eventi';
   $view->description = 'Lista degli eventi di un percorso';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Percorsi - eventi';
   $view->core = 7;
@@ -221,7 +221,7 @@ function ildeposito_tassonomie_views_default_views() {
   $view = new view();
   $view->name = 'percorso_contenuti';
   $view->description = 'I contenuti di un percorso';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Percorso - contenuti';
   $view->core = 7;
@@ -301,7 +301,7 @@ function ildeposito_tassonomie_views_default_views() {
   $view = new view();
   $view->name = 'tassonomie_contenuti';
   $view->description = 'I contenuti in base alle tassonomie';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'search_api_index_default_node_index';
   $view->human_name = 'Tassonomie - contenuti';
   $view->core = 7;
@@ -582,7 +582,7 @@ function ildeposito_tassonomie_views_default_views() {
   $view = new view();
   $view->name = 'tassonomie_elenco_termini';
   $view->description = 'Le viste con gli elenchi di termini';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'taxonomy_term_data';
   $view->human_name = 'Tassonomie - elenco termini';
   $view->core = 7;
@@ -953,7 +953,7 @@ function ildeposito_tassonomie_views_default_views() {
   $view = new view();
   $view->name = 'termini_descrizione';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'taxonomy_term_data';
   $view->human_name = 'Termini - descrizione';
   $view->core = 7;

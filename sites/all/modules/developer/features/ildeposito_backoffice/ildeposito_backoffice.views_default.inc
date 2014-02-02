@@ -13,7 +13,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'avvisi';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Avvisi';
   $view->core = 7;
@@ -130,7 +130,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'bo_commenti';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'comment';
   $view->human_name = 'BO - Commenti';
   $view->core = 7;
@@ -415,7 +415,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'bo_revisioni';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node_revision';
   $view->human_name = 'BO - Revisioni';
   $view->core = 7;
@@ -765,7 +765,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'bulk';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Bulk';
   $view->core = 7;
@@ -1016,7 +1016,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'bulk_sezioni';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Bulk sezioni';
   $view->core = 7;
@@ -1374,7 +1374,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'bulk_term';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'taxonomy_term_data';
   $view->human_name = 'Bulk term';
   $view->core = 7;
@@ -1505,7 +1505,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'check_relazioni';
   $view->description = 'Viste per verificare esistenza di reference';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Check relazioni';
   $view->core = 7;
@@ -1637,7 +1637,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'contenuti_da_revisionare';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Contenuti da revisionare';
   $view->core = 7;
@@ -1746,7 +1746,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'contenuti_elenchi_admin';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Contenuti - Elenchi admin';
   $view->core = 7;
@@ -1958,7 +1958,7 @@ function ildeposito_backoffice_views_default_views() {
   $view = new view();
   $view->name = 'gestione_archivio';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node_revision';
   $view->human_name = 'gestione_archivio';
   $view->core = 7;
@@ -2365,7 +2365,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $view = new view();
   $view->name = 'gestione_commenti';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'comment';
   $view->human_name = 'Gestione commenti';
   $view->core = 7;
@@ -2552,7 +2552,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $view = new view();
   $view->name = 'gestione_contenuti';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Gestione contenuti';
   $view->core = 7;
@@ -3092,7 +3092,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $view = new view();
   $view->name = 'gestione_preferiti';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Gestione preferiti';
   $view->core = 7;
@@ -3460,7 +3460,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $view = new view();
   $view->name = 'redirect_nodi';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Redirect Nodi';
   $view->core = 7;
@@ -3538,7 +3538,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $view = new view();
   $view->name = 'redirect_term';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'taxonomy_term_data';
   $view->human_name = 'Redirect term';
   $view->core = 7;
@@ -3697,7 +3697,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $view = new view();
   $view->name = 'revisioning_content_summary';
   $view->description = 'Summary of moderated and unmoderated site content.';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Content summary';
   $view->core = 0;
@@ -3934,7 +3934,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $view = new view();
   $view->name = 'statistiche';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'node';
   $view->human_name = 'Statistiche Nodi';
   $view->core = 7;

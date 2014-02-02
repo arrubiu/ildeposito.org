@@ -24,9 +24,9 @@ files[] = tests/VersioncontrolGitEventDataIntegrityTests.test
 files[] = tests/VersioncontrolGitTestCase.test
 files[] = tests/VersioncontrolGitTokenTests.test
 
-; Information added by drupal.org packaging script on 2013-10-29
-version = "7.x-1.0-rc1"
+; Information added by Drupal.org packaging script on 2014-01-26
+version = "7.x-1.0-rc2"
 core = "7.x"
 project = "versioncontrol_git"
-datestamp = "1383082547"
+datestamp = "1390696405"
 

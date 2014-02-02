@@ -13,7 +13,7 @@ function ildeposito_ct_traduzione_views_default_views() {
   $view = new view();
   $view->name = 'contenuti_traduzioni';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'search_api_index_default_node_index';
   $view->human_name = 'Contenuti - Traduzioni';
   $view->core = 7;

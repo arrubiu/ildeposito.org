@@ -13,7 +13,7 @@ function ildeposito_ricerca_views_default_views() {
   $view = new view();
   $view->name = 'ricerca';
   $view->description = 'I contenuti in base alle tassonomie';
-  $view->tag = 'default';
+  $view->tag = 'ildeposito, omega';
   $view->base_table = 'search_api_index_default_node_index';
   $view->human_name = 'Ricerca';
   $view->core = 7;
