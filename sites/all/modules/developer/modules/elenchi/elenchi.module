@@ -27,10 +27,13 @@ function elenchi_contenuti_callback() {
 	
 	$search = elenchi_search_solr('canto');
 	
-	// Aggiungere altre variabili (facet, header)
+	// Aggiungere caricamento facet	
+	$facet = '';
+
 	$theme = theme('elenchi', array(
 			'contents' => $search['contents'],
 			'pager' => $search['pager'],
+			'facet' => $search['facet'],
 		)
 	);
 	return $theme;
