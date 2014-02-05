@@ -1,0 +1,105 @@
+<?php
+
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_menu
+ * @return array
+ */
+function elenchi_menu() {
+	$items['prova/archivio'] = array(
+			'page callback' => 'elenchi_contenuti_callback',
+			'title' => 'Eccolo!',
+			//'title_callback' => '',
+			//'title_arguments' => array(),
+			'page_arguments' => array(1),
+			'type' => MENU_NORMAL_ITEM,
+			'access arguments' => array('access content'),
+	);
+	return $items;
+}
+
+function elenchi_contenuti_callback() {
+	$type = arg(1);
+	$search = elenchi_search_solr('canto');
+	$theme = theme('elenchi', array(
+			'contents' => $search['contents'],
+			'pager' => $search['pager'],
+			//'type' => CONTENT_TYPE,
+			//'header' => HEADER.
+			//'facet' => FACET,
+		)
+	);
+	return $theme;
+}
+
+/**
+ * Implements hook_theme.
+ */
+function elenchi_theme() {
+	$elements = array(
+			'elenchi' => array(
+					'variables' => array(
+							'contents' => NULL,
+							'pager' => NULL,
+					),
+					'template' => 'elenchi',
+			),
+	);
+	return $elements;
+}
+
+function elenchi_search_solr($type = NULL, $tid = NULL) {
+	global $user, $pager_page_array, $pager_total;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
+	$items_per_page = 10;
+
+	try {
+		$index = search_api_index_load('default_node_index');
+		$query = new SearchApiQuery($index);
+		
+		if ($type) {
+			$query->condition('type', (string) $type);
+		}
+
+		/*if (isset($_GET['keywords'])) {
+			$query->keys($_GET['keywords']);
+		}*/
+
+		$filter = new SearchApiQueryFilter();
+		$filter->condition('status', 1);
+
+		$query->filter($filter);
+
+		$query->setOption('offset', ($page * $items_per_page));
+		$query->setOption('limit', $items_per_page);
+
+		$query->sort('search_api_aggregation_1', 'ASC');
+
+		$data = $query->execute();
+
+		$pager_total = array(
+				0 => ceil($data['result count'] / $items_per_page),
+		);
+		$pager_page_array = array(
+				0 => $page,
+		);
+		$search['contents'] = '';
+		foreach ($data['results'] as $node) {
+			$fields = $node['fields'];
+			$search['contents'] .= $fields['search_api_viewed'][0];
+			
+		}
+		
+		$search['pager'] = theme('pager');
+	} catch (Exception $e) {
+		$output = '';
+	}
+
+	return $search;
+}
+
+
+
