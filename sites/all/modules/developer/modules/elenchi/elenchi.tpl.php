@@ -1,9 +1,4 @@
-<div class="elenco-contenuti">
-	
-	
+<div class="elenco-contenuti">	
 	<?php print $contents; ?>
-	<?php print $pager; ?>
-	
-	
-	
+	<?php print $pager; ?>	
 </div>

@@ -12,24 +12,25 @@ function elenchi_menu() {
 	$items['prova/archivio'] = array(
 			'page callback' => 'elenchi_contenuti_callback',
 			'title' => 'Eccolo!',
-			//'title_callback' => '',
-			//'title_arguments' => array(),
-			'page_arguments' => array(1),
 			'type' => MENU_NORMAL_ITEM,
 			'access arguments' => array('access content'),
 	);
 	return $items;
 }
 
+/**
+ * Callback per la generazione della pagina con l'elenco
+ */
 function elenchi_contenuti_callback() {
+	// Mappare tipo di contenuto in base al path
 	$type = arg(1);
+	
 	$search = elenchi_search_solr('canto');
+	
+	// Aggiungere altre variabili (facet, header)
 	$theme = theme('elenchi', array(
 			'contents' => $search['contents'],
 			'pager' => $search['pager'],
-			//'type' => CONTENT_TYPE,
-			//'header' => HEADER.
-			//'facet' => FACET,
 		)
 	);
 	return $theme;
@@ -40,17 +41,20 @@ function elenchi_contenuti_callback() {
  */
 function elenchi_theme() {
 	$elements = array(
-			'elenchi' => array(
-					'variables' => array(
-							'contents' => NULL,
-							'pager' => NULL,
-					),
-					'template' => 'elenchi',
-			),
+		'elenchi' => array(
+		'variables' => array(
+			'contents' => NULL,
+			'pager' => NULL,
+		),
+		'template' => 'elenchi',
+		),
 	);
 	return $elements;
 }
 
+/**
+ * Ricerca solr 
+ */
 function elenchi_search_solr($type = NULL, $tid = NULL) {
 	global $user, $pager_page_array, $pager_total;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
@@ -70,16 +74,12 @@ function elenchi_search_solr($type = NULL, $tid = NULL) {
 
 		$filter = new SearchApiQueryFilter();
 		$filter->condition('status', 1);
-
 		$query->filter($filter);
-
 		$query->setOption('offset', ($page * $items_per_page));
 		$query->setOption('limit', $items_per_page);
-
 		$query->sort('search_api_aggregation_1', 'ASC');
-
+		
 		$data = $query->execute();
-
 		$pager_total = array(
 				0 => ceil($data['result count'] / $items_per_page),
 		);
@@ -88,9 +88,7 @@ function elenchi_search_solr($type = NULL, $tid = NULL) {
 		);
 		$search['contents'] = '';
 		foreach ($data['results'] as $node) {
-			$fields = $node['fields'];
-			$search['contents'] .= $fields['search_api_viewed'][0];
-			
+			$search['contents'] .= $node['fields']['search_api_viewed'][0];			
 		}
 		
 		$search['pager'] = theme('pager');
