@@ -15,26 +15,78 @@ function elenchi_menu() {
 			'type' => MENU_NORMAL_ITEM,
 			'access arguments' => array('access content'),
 	);
+
+	$items['prova/json/eventi'] = array(
+			'page callback' => 'json_eventi',
+			'type' => MENU_CALLBACK,
+			'access arguments' => array('access content'),
+	);
 	return $items;
+}
+
+/**
+ * Implementation of hook_menu_alter(). 
+ */
+function elenchi_menu_alter(&$items) {
+	$items['taxonomy/term/%taxonomy_term']['page callback'] = 'elenchi_taxonomy_term_page';
+	$items['taxonomy/term/%taxonomy_term']['page arguments'] = array(2);
+}
+
+/**
+ * Restituisce il nome macchina in base al valore
+ * @param type $type
+ * @param type $value
+ */
+function elenchi_get_relation($type, $value) {
+	$values = array(
+			'contenuto' => array(
+					'canto' => 'canti',
+			),
+			'vocabolario' => array(
+					'field_sezione' => 'sezioni',
+			),
+			'facet' => array(
+					'zIH8EsYFkvWKeMtTZTGLEm1GrYlAarmk' => 'tipo_contenuto',
+					'12345' => 'localizzazione',
+					'12345' => 'sezione',
+					'12345' => 'tags',
+					'12345' => 'lingua',
+					'0Pau1GV8D8QAAmzOG638DhV06AjWM6yp' => 'presenza_accordi',
+			),
+	);
+
+	return array_search($value, $values[$type]);
 }
 
 /**
  * Callback per la generazione della pagina con l'elenco
  */
-function elenchi_contenuti_callback() {
-	// Mappare tipo di contenuto in base al path
-	$type = arg(1);
-	
-	$search = elenchi_search_solr('canto');
-	
-	// Aggiungere caricamento facet	
-	$facet = '';
+function elenchi_contenuti_callback($term = NULL) {
+	$menu_item = menu_get_item();
 
-	$theme = theme('elenchi', array(
+	// Impostazioni per i termini di tassonomia
+	if ($menu_item['page_callback'] == 'elenchi_taxonomy_term_page') {
+		$search = elenchi_search_solr('vocabolario', $term);
+		$header = '<div class="term-description">' . $term->description . '</div>';
+		metatag_entity_view($term, 'taxonomy_term', 'full', NULL);
+	}
+
+	// Impostazioni per le pagine custom
+	else {
+		$tipo_contenuto = arg(1);
+		$search = elenchi_search_solr('contenuto', $tipo_contenuto);
+		$header = 'Descrizione della pagina custom';
+	}
+
+	$facets = elenchi_get_facet_block(array('tipo_contenuto', 'presenza_accordi'));
+
+	$theme = theme(
+					'elenchi', array(
 			'contents' => $search['contents'],
 			'pager' => $search['pager'],
-			'facet' => $search['facet'],
-		)
+			'header' => $header,
+			'facet' => $facets,
+					)
 	);
 	return $theme;
 }
@@ -44,13 +96,15 @@ function elenchi_contenuti_callback() {
  */
 function elenchi_theme() {
 	$elements = array(
-		'elenchi' => array(
-		'variables' => array(
-			'contents' => NULL,
-			'pager' => NULL,
-		),
-		'template' => 'elenchi',
-		),
+			'elenchi' => array(
+					'variables' => array(
+							'contents' => NULL,
+							'pager' => NULL,
+							'facet' => NULL,
+							'header' => NULL,
+					),
+					'template' => 'elenchi',
+			),
 	);
 	return $elements;
 }
@@ -58,7 +112,8 @@ function elenchi_theme() {
 /**
  * Ricerca solr 
  */
-function elenchi_search_solr($type = NULL, $tid = NULL) {
+function elenchi_search_solr($type, $value) {
+
 	global $user, $pager_page_array, $pager_total;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	$items_per_page = 10;
@@ -66,14 +121,21 @@ function elenchi_search_solr($type = NULL, $tid = NULL) {
 	try {
 		$index = search_api_index_load('default_node_index');
 		$query = new SearchApiQuery($index);
-		
-		if ($type) {
-			$query->condition('type', (string) $type);
+
+		switch ($type) {
+			case 'contenuto':
+				$field_to_search = elenchi_get_relation('contenuto', $value);
+				$query->condition('type', $field_to_search);
+				break;
+
+			case 'vocabolario':
+				$field_to_search = elenchi_get_relation('vocabolario', $value->vocabulary_machine_name);
+				$query->condition($field_to_search, $value->tid);
 		}
 
-		/*if (isset($_GET['keywords'])) {
-			$query->keys($_GET['keywords']);
-		}*/
+		/* if (isset($_GET['keywrds'])) {
+		  $query->keys($_GET['keywords']);
+		  } */
 
 		$filter = new SearchApiQueryFilter();
 		$filter->condition('status', 1);
@@ -81,7 +143,7 @@ function elenchi_search_solr($type = NULL, $tid = NULL) {
 		$query->setOption('offset', ($page * $items_per_page));
 		$query->setOption('limit', $items_per_page);
 		$query->sort('search_api_aggregation_1', 'ASC');
-		
+
 		$data = $query->execute();
 		$pager_total = array(
 				0 => ceil($data['result count'] / $items_per_page),
@@ -91,9 +153,9 @@ function elenchi_search_solr($type = NULL, $tid = NULL) {
 		);
 		$search['contents'] = '';
 		foreach ($data['results'] as $node) {
-			$search['contents'] .= $node['fields']['search_api_viewed'][0];			
+			$search['contents'] .= $node['fields']['search_api_viewed'][0];
 		}
-		
+
 		$search['pager'] = theme('pager');
 	} catch (Exception $e) {
 		$output = '';
@@ -102,5 +164,63 @@ function elenchi_search_solr($type = NULL, $tid = NULL) {
 	return $search;
 }
 
+/**
+ * Callback pagina tassonomia
+ */
+function elenchi_taxonomy_term_page($term) {
+	switch ($term->vocabulary_machine_name) {
+		case 'sezioni':
+			return elenchi_contenuti_callback($term);
+		default:
+			module_load_include('inc', 'taxonomy', 'taxonomy.pages');
+			return taxonomy_term_page($tid);
+	}
+}
 
+/**
+ * Restituisce l'html di un blocco facet in base all'id
+ * @param type $facet_id
+ */
+function elenchi_get_facet_block($facets_id) {
+	foreach ($facets_id as $facet_id) {
+		$facet_block = module_invoke('facetapi', 'block_view', elenchi_get_relation('facet', $facet_id));
+	}
+}
 
+/**
+ * Restituisce il json per la timeline
+ */
+function json_eventi() {
+	$array = array(
+			'timeline' => array(
+					'headline' => 'Sh*t People Say',
+					'type' => 'default',
+					'text' => 'People say stuff',
+					'startDate' => '2012,1,26',
+					'date' => array(
+							array(
+									'startDate' => '2012,1,26',
+									'headline' => 'Sh*t Politicians Say',
+									'text' => '<p>In true political fashion, his character rattles off common jargon heard from people running for office.</p>',
+									'asset' => array(
+											'media' => 'http://youtu.be/u4XpeU9erbg',
+											'credit' => 'prova credit',
+											'caption' => 'prova caption',
+									),
+							),
+							array(
+									'startDate' => '2012,1,30',
+									'headline' => 'Sh*t Politicians Say 2',
+									'text' => '<p>2 In true political fashion, his character rattles off common jargon heard from people running for office.</p>',
+									'asset' => array(
+											'media' => 'http://youtu.be/u4XpeU9erbg',
+											'credit' => '2 prova credit',
+											'caption' => ' 2prova caption',
+									),
+							),
+					),
+			),
+	);
+
+	print json_encode($array);
+}
