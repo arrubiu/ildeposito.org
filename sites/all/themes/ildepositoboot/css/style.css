@@ -6440,6 +6440,10 @@ table .checkbox input[type="checkbox"] {
 .field-name-field-testo {
   font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
 }
+/** Generica **/
+h2.block-title {
+  font-size: 1.3em;
+}
 /** Breadcrumbs **/
 .breadcrumb {
   font-size: 12px;
@@ -6518,4 +6522,8 @@ header#navbar {
 /** Main content **/
 h1.page-header {
   font-size: 1.8em;
+}
+.testo-accordi {
+  font-family: monospace;
+  white-space: pre;
 }
