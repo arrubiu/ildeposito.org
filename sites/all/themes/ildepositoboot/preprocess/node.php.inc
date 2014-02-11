@@ -13,8 +13,9 @@ function ildepositoboot_preprocess_node(&$vars) {
 	
 	switch ($node->type) {
 		case 'canto':			
-			if ($vars['view_mode'] == 'full')
-			$vars['canto_tabs'] = ildepositoboot_canto_tabs($vars);
+			if ($vars['view_mode'] == 'full') {
+			  $vars['canto_tabs'] = ildepositoboot_canto_tabs($vars);
+			}
 			break;		
 	}
 	

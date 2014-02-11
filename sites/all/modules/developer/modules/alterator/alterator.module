@@ -243,7 +243,7 @@ function logo_deposito() {
 			'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_nota.png',
 			'alt' => 'logo',
 			'title' => 'ilDeposito.org',
-			'attributes' => array('class' => 'logo'),
+			'attributes' => array('class' => 'logo', 'hidden-xs'),
 	));
 
 	$titolo = theme('image', array(
@@ -257,7 +257,7 @@ function logo_deposito() {
 			'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_sottotitolo.png',
 			'alt' => 'sottotitolo',
 			'title' => 'ilDeposito.org',
-			'attributes' => array('class' => 'sottotitolo'),
+			'attributes' => array('class' => 'sottotitolo', 'hidden-xs'),
 	));
 
 

@@ -1,153 +1,109 @@
-<?php
-
-/**
- * @file
- * Default theme implementation to display a node.
- *
- * Available variables:
- * - $title: the (sanitized) title of the node.
- * - $content: An array of node items. Use render($content) to print them all,
- *   or print a subset such as render($content['field_example']). Use
- *   hide($content['field_example']) to temporarily suppress the printing of a
- *   given element.
- * - $user_picture: The node author's picture from user-picture.tpl.php.
- * - $date: Formatted creation date. Preprocess functions can reformat it by
- *   calling format_date() with the desired parameters on the $created variable.
- * - $name: Themed username of node author output from theme_username().
- * - $node_url: Direct URL of the current node.
- * - $display_submitted: Whether submission information should be displayed.
- * - $submitted: Submission information created from $name and $date during
- *   template_preprocess_node().
- * - $classes: String of classes that can be used to style contextually through
- *   CSS. It can be manipulated through the variable $classes_array from
- *   preprocess functions. The default values can be one or more of the
- *   following:
- *   - node: The current template type; for example, "theming hook".
- *   - node-[type]: The current node type. For example, if the node is a
- *     "Blog entry" it would result in "node-blog". Note that the machine
- *     name will often be in a short form of the human readable label.
- *   - node-teaser: Nodes in teaser form.
- *   - node-preview: Nodes in preview mode.
- *   The following are controlled through the node publishing options.
- *   - node-promoted: Nodes promoted to the front page.
- *   - node-sticky: Nodes ordered above other non-sticky nodes in teaser
- *     listings.
- *   - node-unpublished: Unpublished nodes visible only to administrators.
- * - $title_prefix (array): An array containing additional output populated by
- *   modules, intended to be displayed in front of the main title tag that
- *   appears in the template.
- * - $title_suffix (array): An array containing additional output populated by
- *   modules, intended to be displayed after the main title tag that appears in
- *   the template.
- *
- * Other variables:
- * - $node: Full node object. Contains data that may not be safe.
- * - $type: Node type; for example, story, page, blog, etc.
- * - $comment_count: Number of comments attached to the node.
- * - $uid: User ID of the node author.
- * - $created: Time the node was published formatted in Unix timestamp.
- * - $classes_array: Array of html class attribute values. It is flattened
- *   into a string within the variable $classes.
- * - $zebra: Outputs either "even" or "odd". Useful for zebra striping in
- *   teaser listings.
- * - $id: Position of the node. Increments each time it's output.
- *
- * Node status variables:
- * - $view_mode: View mode; for example, "full", "teaser".
- * - $teaser: Flag for the teaser state (shortcut for $view_mode == 'teaser').
- * - $page: Flag for the full page state.
- * - $promote: Flag for front page promotion state.
- * - $sticky: Flags for sticky post setting.
- * - $status: Flag for published status.
- * - $comment: State of comment settings for the node.
- * - $readmore: Flags true if the teaser content of the node cannot hold the
- *   main body content.
- * - $is_front: Flags true when presented in the front page.
- * - $logged_in: Flags true when the current user is a logged-in member.
- * - $is_admin: Flags true when the current user is an administrator.
- *
- * Field variables: for each field instance attached to the node a corresponding
- * variable is defined; for example, $node->body becomes $body. When needing to
- * access a field's raw values, developers/themers are strongly encouraged to
- * use these variables. Otherwise they will have to explicitly specify the
- * desired field language; for example, $node->body['en'], thus overriding any
- * language negotiation rule that was previously applied.
- *
- * @see template_preprocess()
- * @see template_preprocess_node()
- * @see template_process()
- *
- * @ingroup themeable
- */
-?>
-<div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-
+<div<?php print $attributes; ?>>
   <?php print $user_picture; ?>
-
   <?php print render($title_prefix); ?>
-  <?php if (!$page): ?>
-    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
-  <?php endif; ?>
-  <?php print render($title_suffix); ?>
-
-  <?php if ($display_submitted): ?>
-    <div class="submitted">
-      <?php print $submitted; ?>
+  <?php if (!$page && $title): ?>
+    <div>
+      <h2<?php print $title_attributes; ?>><a href="<?php print $node_url ?>" title="<?php print $title ?>"><?php print $title ?></a></h2>
     </div>
   <?php endif; ?>
+  <?php print render($title_suffix); ?>
+  <?php if ($display_submitted): ?>
+    <div class="submitted"><?php print $date; ?> -- <?php print $name; ?></div>
+  <?php endif; ?>  
+</div>
+<div<?php print $content_attributes; ?>>
 
-  <div class="content"<?php print $content_attributes; ?>>
+
+
     <?php
-      // We hide the comments and links now so that we can render them later.
-      hide($content['comments']);
-      hide($content['links']);
+    // We hide the comments and links now so that we can render them later.
+
+		if ($foto_autori) {
+			print $foto_autori;
+		}
+    print render($content['field_sezione']);
+    print render($content['field_autore_testo']);
+    print render($content['field_anno']);
+		
+		print $canto_tabs;
+		
+		?>
+	
+
+
+
+    <?php if ($field_informazioni): ?>
+		<h2 class="block-title"">Informazioni</h2>
+      <?php print render($content['field_informazioni']); ?>
+	
+    <?php endif; ?>
+
+    <?php if ($field_fonte): ?>
+      <h2 class="block-title"">Indicazioni bibliografiche</h2>
+      <?php print render($content['field_fonte']); ?>
+    <?php endif; ?>
 			
-			print $canto_tabs;
-      print render($content);
+
+
+
+    <h2 class="block-title">Condividi</h2>
+
+    <?php
+    $block = module_invoke('service_links', 'block_view', 'service_links');
+    print render($block['content']);
     ?>
+
+    <h2 class="block-title" style="margin-top: 20px;">Strumenti</h2>
+
+      <?php
+      $block = module_invoke('alterator', 'block_view', 'strumenti');
+      print render($block['content']);
+      ?>
+
+
+    <?php
+    $view = views_get_view('check_relazioni');
+    $view->set_display('eventi');
+    $view->set_arguments(array($node->nid));
+    $view->pre_execute();
+    $view->execute();
+    if (count($view->result) > 0) {
+      print '<h2 class="block-title top">La storia cantata</h2>';
+      print $view->preview();
+    }
+    ?>
+
+    <h2 class="block-title top">Scheda del canto</h2>
+    <?php
+    print render($content['field_sezione']);
+    print render($content['field_autore_testo']);
+    print render($content['field_autore_musica']);
+    print render($content['field_anno']);
+    print render($content['field_tags']);
+    print render($content['field_lingua']);
+    print '<div>Inserito da: ' . _print_user($node->uid) . '</div>';
+    ?>
+
+
+    <div id="disclaimer">
+      <div class="title">Note di pubblicazione</div>
+      I diritti del contenuto sono dei rispettivi autori.<br />
+      Lo staff de ilDeposito.org non condivide necessariamente il contenuto,
+      che viene inserito nell'archivio unicamente per il suo valore storico, artistico o culturale (<a href="#">maggiori informazioni</a>).
+
+    </div>
+
+
+
+
+
+  <div class="clearfix" style="clear: left;">
+    <?php if (!empty($content['links'])): ?>
+      <div class="links node-links clearfix"><?php print render($content['links']); ?></div>
+    <?php endif; ?>
+
+    <?php print render($content['comments']); ?>
   </div>
-
-  <?php print render($content['links']); ?>
-
-  <?php print render($content['comments']); ?>
-
 </div>
 
-<?php
 
-
-  try {
-    $index = search_api_index_load('default_node_index');
-    $query = new SearchApiQuery($index);
-
-    $query->fields(array('title'));
-
-
-    $query->setOption('limit', 100);
-
-    $query->sort('created', 'DESC');
-
-    $data = $query->execute();
-
-
-
-    $types = node_type_get_types();
-    $rows = array();
-		$output .= '';
-    foreach ($data['results'] as $node) {
-      $output .= '<p>' . $node['fields']['search_api_aggregation_1'] . '</p>';
-    }
-
-    print $output;
-		
-		
-		$block = module_invoke('facetapi', 'block_view', 'zIH8EsYFkvWKeMtTZTGLEm1GrYlAarmk');
-    print render($block['content']);
-		
-	}
-	catch (Exception $e) {
-    $output = '';
-  }
-
-
-?>

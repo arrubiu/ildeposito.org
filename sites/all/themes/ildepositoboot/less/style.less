@@ -13,3 +13,100 @@
 .field-name-field-testo {
   font-family: @font-family-monospace;
 }
+
+
+/** Breadcrumbs **/
+.breadcrumb {
+  font-size: @font-size-small;
+  padding: 0px;
+  text-transform: lowercase;
+  margin-top: 10px;
+}
+
+/** Header **/
+header {  
+  &#navbar  {
+	margin-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;   
+	border: 0px;
+  }   
+}
+
+#ildeposito-logo {
+  position: relative;  
+  .sottotitolo {
+	position: absolute;
+	left: 75px;
+	bottom: 0px;
+  }
+}
+
+#ildeposito-social {
+  margin-top: 32px;
+  img {
+	margin-left: 5px;
+  }
+}
+
+#ildeposito-menu {
+  padding-top: 15px;
+  float: left;
+  width: 100%;
+
+  ul.menu {
+	margin-bottom: 0px;
+	width: 100%;
+	background-color: @brand-primary;
+
+	li {
+	  background-color: @brand-primary;
+	  &:hover {
+		background: @brand-primary;
+	  }
+
+	  ul {
+		margin-top: -10px;
+
+		a {
+		  font-size: 0.8em;
+		  font-weight: normal;
+		}
+	  }
+	}
+
+	a {
+	  font-size: 1em;
+	  font-weight: bold;
+	  color: #ffffff;
+	  padding-top: 5px;
+	  padding-bottom: 5px;
+	  border-top-color: transparent;
+	  border-left-width: 0px;
+	  &:hover {
+		background: @brand-primary;
+	  }
+
+	  a {
+		padding-top: 0px;
+		padding-bottom: 0px;
+	  }
+	}
+
+	a > .sf-sub-indicator {
+	  top: 0.6em;
+	}
+  }
+}
+
+/** Sidebar second **/
+.region-sidebar-second {
+  background-color: @gray-lighter;
+  padding: 10px;
+}
+
+
+/** Main content **/
+h1.page-header {
+  font-size: 1.8em;
+}
