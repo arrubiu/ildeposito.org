@@ -119,3 +119,152 @@ h1.page-header {
   font-family: monospace;
   white-space: pre;
 }
+
+/** termini tassonomia **/
+.view-tassonomie-contenuti.view-display-id-contenuti_sezione {
+  .field-name-field-images {
+	float: left;
+	margin-right: 8px;
+	margin-top: 3px;
+  }
+
+  .field-name-field-periodo {
+	display: inline-table;
+  }
+
+  .current-search-item {
+	clear: left;
+	padding-top: 10px;
+  }
+
+}
+
+/** facet **/
+ul.facetapi-facetapi-links {
+  padding-left: 0px;
+}
+
+ul.facetapi-facetapi-links li {
+  list-style-image: none !important;
+}
+
+.facetapi-facetapi-links li {
+  list-style-type: none !important;
+  margin-left: 0px !important;
+}
+
+.facetapi-facetapi-links li a {
+  padding-left: 20px;
+  text-decoration: none;
+  color: @gray-dark;
+  font-size: @font-size-medium;
+}
+
+.facetapi-facetapi-links li a.facetapi-inactive {
+  background: url('../images/facet_check.png') no-repeat;
+  background-position: 0px 4px;
+  color: @gray-dark;
+  font-size: @font-size-medium;
+}
+
+.facetapi-facetapi-links li a.facetapi-active {
+  padding-left: 0px;
+  color: @gray-dark;
+  font-size: @font-size-medium;
+}
+
+.facetapi-facetapi-links li img {
+  vertical-align: middle !important;
+}
+
+a.facetapi-limit-link {
+  padding-left: 20px;
+  background: url('../images/facet_giu.png') no-repeat;
+  background-position: 0px 4px;
+  text-decoration: none;  
+  color: @gray-dark;
+  font-size: @font-size-medium;
+}
+
+a.facetapi-limit-link.open {
+  padding-left: 20px;
+  background: url('../images/facet_su.png') no-repeat;
+  background-position: 0px 4px;
+  text-decoration: none; 
+  color: @gray-dark;
+  font-size: @font-size-medium;
+}
+
+.current-search-item ul {
+  padding-left: 0px;
+}
+
+.current-search-item-active li {
+  display: inline;
+  margin-left: 0px !important;
+  margin-right: 20px !important;
+}
+
+.current-search-item-active li a {
+  text-decoration: none;
+}
+
+.current-search-item-active li img {
+  vertical-align: middle !important;
+}
+
+/** risultati ricerca o elenchi **/
+.risultato {
+
+  font-size: @font-size-medium;
+  margin-bottom: 15px;
+  position: relative;
+  min-height: 32px;
+
+  .field-label {
+	font-weight: normal;
+  }
+
+  .node {
+	padding-left: 26px;
+  }
+
+  .type-icon {
+	position: absolute;
+  }
+
+  a {
+	color: @gray-dark;
+	text-decoration: underline;
+  }
+
+  h2 a {
+	font-size: @font-size-large;
+	color: @gray-dark;
+	float: left;
+	text-decoration: underline;
+	margin-bottom: 5px;
+  }
+
+  .icons {
+	margin-left: 6px;
+  }
+
+  .icons img {
+	margin-right: 6px;
+  }
+
+  .field-name-field-images {
+	float: left;
+  }
+  .field-name-field-images img {
+	height: 50px;
+	margin-right: 1px;
+	margin-top: 0px;
+	width: 50px;
+  }
+
+  .field:after {
+	display: inline !important;
+  }
+}

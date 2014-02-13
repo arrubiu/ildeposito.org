@@ -69,3 +69,27 @@ function ildepositoboot_get_title($nid) {
     }
   }
 }
+
+/**
+ * Funzione che crea la icone da visualizzare accanto al titolo
+ */
+function ildepositoboot_get_icons($vars) {
+	$icons = '';
+	if (isset($vars['field_accordi']['und'])) {
+		$icons .= '<img src="' . $GLOBALS['base_path'] . '' . drupal_get_path('theme', 'ildepositoboot') . '/images/icon_accordi.png" alt="accordi" title="Sono presenti gli accordi" class="icon" />';
+	}
+
+	if (isset($vars['field_link_audio']['und'])) {
+		$icons .= '<img src="' . $GLOBALS['base_path'] . '' . drupal_get_path('theme', 'ildepositoboot') . '/images/icon_audio.png" alt="audio" title="Sono presenti risorse audio" class="icon" />';
+	}
+
+	if (isset($vars['field_evento']['und'])) {
+		$icons .= '<img src="' . $GLOBALS['base_path'] . '' . drupal_get_path('theme', 'ildepositoboot') . '/images/icon_evento.png" alt="evento" title="Il contenuto è legato a un evento" class="icon" />';
+	}
+
+	if (isset($vars['field_traduzione']['und'])) {
+		$icons .= '<img src="' . $GLOBALS['base_path'] . '' . drupal_get_path('theme', 'ildepositoboot') . '/images/icon_trad.png" alt="traduzione" title="Sono presenti traduzioni" class="icon" />';
+	}
+
+	return $icons;
+}

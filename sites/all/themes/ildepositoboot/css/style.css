@@ -249,7 +249,7 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-family: "Arial";
+  font-family: "Verdana", "Arial";
   font-size: 14px;
   line-height: 1.42857143;
   color: #333333;
@@ -384,7 +384,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: "Arial";
+  font-family: "Verdana", "Arial";
   font-weight: 500;
   line-height: 1.1;
 }
@@ -1097,7 +1097,7 @@ pre code {
 }
 @media (min-width: 1200px) {
   .container {
-    max-width: 970px;
+    max-width: 1210px;
   }
   .col-lg-1,
   .col-lg-2,
@@ -5940,7 +5940,7 @@ body #admin-menu .dropdown li {
 }
 @media screen and (min-width: 1200px) {
   .navbar.container {
-    max-width: 940px;
+    max-width: 1180px;
   }
 }
 .navbar.container > .container {
@@ -6526,4 +6526,123 @@ h1.page-header {
 .testo-accordi {
   font-family: monospace;
   white-space: pre;
+}
+/** termini tassonomia **/
+.view-tassonomie-contenuti.view-display-id-contenuti_sezione .field-name-field-images {
+  float: left;
+  margin-right: 8px;
+  margin-top: 3px;
+}
+.view-tassonomie-contenuti.view-display-id-contenuti_sezione .field-name-field-periodo {
+  display: inline-table;
+}
+.view-tassonomie-contenuti.view-display-id-contenuti_sezione .current-search-item {
+  clear: left;
+  padding-top: 10px;
+}
+/** facet **/
+ul.facetapi-facetapi-links {
+  padding-left: 0px;
+}
+ul.facetapi-facetapi-links li {
+  list-style-image: none !important;
+}
+.facetapi-facetapi-links li {
+  list-style-type: none !important;
+  margin-left: 0px !important;
+}
+.facetapi-facetapi-links li a {
+  padding-left: 20px;
+  text-decoration: none;
+  color: #333333;
+  font-size: 13px;
+}
+.facetapi-facetapi-links li a.facetapi-inactive {
+  background: url('../images/facet_check.png') no-repeat;
+  background-position: 0px 4px;
+  color: #333333;
+  font-size: 13px;
+}
+.facetapi-facetapi-links li a.facetapi-active {
+  padding-left: 0px;
+  color: #333333;
+  font-size: 13px;
+}
+.facetapi-facetapi-links li img {
+  vertical-align: middle !important;
+}
+a.facetapi-limit-link {
+  padding-left: 20px;
+  background: url('../images/facet_giu.png') no-repeat;
+  background-position: 0px 4px;
+  text-decoration: none;
+  color: #333333;
+  font-size: 13px;
+}
+a.facetapi-limit-link.open {
+  padding-left: 20px;
+  background: url('../images/facet_su.png') no-repeat;
+  background-position: 0px 4px;
+  text-decoration: none;
+  color: #333333;
+  font-size: 13px;
+}
+.current-search-item ul {
+  padding-left: 0px;
+}
+.current-search-item-active li {
+  display: inline;
+  margin-left: 0px !important;
+  margin-right: 20px !important;
+}
+.current-search-item-active li a {
+  text-decoration: none;
+}
+.current-search-item-active li img {
+  vertical-align: middle !important;
+}
+/** risultati ricerca o elenchi **/
+.risultato {
+  font-size: 13px;
+  margin-bottom: 15px;
+  position: relative;
+  min-height: 32px;
+}
+.risultato .field-label {
+  font-weight: normal;
+}
+.risultato .node {
+  padding-left: 26px;
+}
+.risultato .type-icon {
+  position: absolute;
+}
+.risultato a {
+  color: #333333;
+  text-decoration: underline;
+}
+.risultato h2 a {
+  font-size: 18px;
+  color: #333333;
+  float: left;
+  text-decoration: underline;
+  margin-bottom: 5px;
+}
+.risultato .icons {
+  margin-left: 6px;
+}
+.risultato .icons img {
+  margin-right: 6px;
+}
+.risultato .field-name-field-images {
+  float: left;
+}
+.risultato .field-name-field-images img {
+  height: 50px;
+  margin-right: 1px;
+  margin-top: 0px;
+  width: 50px;
+}
+.risultato .field:after {
+  display: inline !important;
 }

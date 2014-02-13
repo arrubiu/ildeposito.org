@@ -2,7 +2,7 @@
   <?php print $icon_type; ?>
 </div>
 
-<div<?php print $attributes; ?>>
+<div<?php print $attributes; ?> class="node">
       <?php //print $human_type; ?>
   <h2<?php print $title_attributes; ?>><a href="<?php print $node_url ?>" title="<?php print $title ?>"><?php print $title ?></a></h2> <?php if (isset($icons)) { print '<span class="icons">' . $icons . '</span>'; } ?>
 

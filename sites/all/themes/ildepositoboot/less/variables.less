@@ -5,7 +5,7 @@
 
 // Global values
 // --------------------------------------------------
-
+ 
 // Grays
 // -------------------------
 
@@ -15,7 +15,7 @@
 @gray-light:             lighten(#000, 60%);   // #999
 @gray-lighter:           lighten(#000, 93.5%); // #eee
 
-// Brand colors
+// Brand colors  
 // -------------------------
 
 @brand-primary:         #aa0000;
@@ -39,13 +39,14 @@
 // Typography
 // -------------------------
 
-@font-family-sans-serif:  "Arial"; //"Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-sans-serif:  "Verdana", "Arial"; //"Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 @font-family-monospace:   Monaco, Menlo, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
 
 @font-size-base:          14px;
 @font-size-large:         ceil(@font-size-base * 1.25); // ~18px
+@font-size-medium:        ceil(@font-size-base * 0.9); // ~18px
 @font-size-small:         ceil(@font-size-base * 0.85); // ~12px
 
 @font-size-h1:            floor(@font-size-base * 3); // ~36px
@@ -633,6 +634,6 @@
 @container-md:                 @container-desktop;
 
 // Large screen / wide desktop
-@container-large-desktop:      ((940px + @grid-gutter-width));
+@container-large-desktop:      ((1180px + @grid-gutter-width));
 @container-lg:                 @container-large-desktop;
 @container-lg-desktop:         @container-large-desktop;
