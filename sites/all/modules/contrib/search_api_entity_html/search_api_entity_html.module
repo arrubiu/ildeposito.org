@@ -1,0 +1,15 @@
+<?php
+
+/** 
+ * This simple module lets Views to display Entity HTML Output without stripping html tags.
+ * @file
+ * Lets Views to display Entity HTML Output without stripping html tags.
+ */
+
+/**
+ * Implements  HOOK_entity_views_field_handlers_alter.
+ * @param array $field_handlers
+ */
+function search_api_entity_html_entity_views_field_handlers_alter(array &$field_handlers) {
+  $field_handlers['text'] = "search_api_entity_html_handler_field_txt";
+}

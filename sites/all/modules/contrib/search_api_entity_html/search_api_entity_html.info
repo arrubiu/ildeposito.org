@@ -1,0 +1,15 @@
+name = Search API Entity HTML
+description = Lets Views to display Entity HTML Output without stripping html tags.
+package = Search
+core = 7.x
+
+dependencies[] = search_api
+dependencies[] = search_api_solr
+
+files[] = includes/search_api_entity_html_handler.inc
+; Information added by Drupal.org packaging script on 2014-02-14
+version = "7.x-1.0"
+core = "7.x"
+project = "search_api_entity_html"
+datestamp = "1392372221"
+
