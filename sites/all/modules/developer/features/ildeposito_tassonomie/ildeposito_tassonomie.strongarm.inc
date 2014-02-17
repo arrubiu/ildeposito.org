@@ -13,20 +13,6 @@ function ildeposito_tassonomie_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'cache_flush_cache_entity_taxonomy_term';
-  $strongarm->value = 0;
-  $export['cache_flush_cache_entity_taxonomy_term'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cache_flush_cache_entity_taxonomy_vocabulary';
-  $strongarm->value = 0;
-  $export['cache_flush_cache_entity_taxonomy_vocabulary'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_ds_views__tassonomie_contenuti-contenuti_lingua';
   $strongarm->value = array(
     'view_modes' => array(),
