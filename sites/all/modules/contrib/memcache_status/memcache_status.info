@@ -1,0 +1,14 @@
+name = Memcache Status
+description = Adds Memcache status to the administrative reports.
+core = 7.x
+configure = admin/reports/status/memcache
+
+; Optional:
+; dependencies[] = libraries
+
+; Information added by drupal.org packaging script on 2013-10-24
+version = "7.x-1.2"
+core = "7.x"
+project = "memcache_status"
+datestamp = "1382656226"
+
