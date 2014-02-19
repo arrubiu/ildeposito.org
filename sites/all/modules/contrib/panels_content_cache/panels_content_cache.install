@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function panels_content_cache_schema() {
+  $schema = array();
+  $schema['panels_content_cache'] = array(
+    'description' => 'Stores display IDs and content types for content cached panel displays.',
+    'fields' => array(
+      'did' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'pid' => array(
+        'type' => 'int',
+        'default' => NULL,
+      ),
+      'type' => array(
+        'description' => 'The {node_type}.type.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+    ),
+    'indexes' => array(
+      'did' => array('did'),
+      'pid' => array('pid'),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function panels_content_cache_install() {
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function panels_content_cache_uninstall() {
+  drupal_uninstall_schema('panels_content_cache');
+  variable_del('panels_content_cache_types');
+}
