@@ -1,0 +1,12 @@
+name = Varnish dashboard
+description = "Realtime HTML Dashboard using data from Varnish Agent."
+core = 7.x
+package = Caching
+dependencies[] = varnish
+
+; Information added by drupal.org packaging script on 2013-10-19
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "varnish_dashboard"
+datestamp = "1382151378"
+
