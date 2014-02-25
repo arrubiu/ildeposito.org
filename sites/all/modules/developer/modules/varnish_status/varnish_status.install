@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Install, update and delete hooks for Varnish Status module.
+ */
+
+/**
+ * Implements hook_uninstall.
+ * Remove every variable declared.
+ */
+function varnish_status_uninstall() {
+  variable_del('varnish_status_path');
+	variable_del('varnish_status_port');
+  variable_del('varnish_status_username');
+  variable_del('varnish_status_password');
+}

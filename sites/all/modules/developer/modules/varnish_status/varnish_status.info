@@ -1,0 +1,6 @@
+name = Varnish Status
+description = "Varnish status and statistics."
+core = 7.x
+package = Caching
+configure = admin/config/development/varnish/varnish-status
+dependencies[] = varnish

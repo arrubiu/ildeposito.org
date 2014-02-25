@@ -1,0 +1,115 @@
+<?php
+
+/**
+ * @file
+ * Varnish dashboard module. * 
+ */
+
+/**
+ * Implements hook_menu()
+ */
+function varnish_status_menu() {
+	$items = array();
+
+	/* Configuration page */
+	$items['admin/config/development/varnish/varnish-status'] = array(
+			'title' => t('Status'),
+			'description' => t('Configure Varnish status variables.'),
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('varnish_status_admin'),
+			'access arguments' => array('administer varnish status'),
+			'file' => 'varnish_status.admin.inc',
+			'type' => MENU_LOCAL_TASK,
+	);
+
+	/* Status page */
+	$items['admin/reports/varnish-status'] = array(
+			'title' => t('Varnish status'),
+			'description' => t('Varnish status and statistics'),
+			'page callback' => 'varnish_status_view',
+			'access arguments' => array('access varnish status'),
+			'file' => 'varnish_status.admin.inc',
+			'type' => MENU_LOCAL_TASK,
+	);
+
+	return $items;
+}
+
+/**
+ * Implements hook_permission()
+ */
+function varnish_status_permission() {
+	$permissions = array();
+
+	$permissions['access varnish status'] = array(
+			'title' => t('Access Varnish status page'),
+			'description' => t('Access Varnish page with status and statistics.'),
+	);
+
+	$permissions['administer varnish status'] = array(
+			'title' => t('Administer Varnish status'),
+			'description' => t('Administer Varnish status.'),
+	);
+
+	return $permissions;
+}
+
+/**
+ * Implements hook_theme()
+ */
+function varnish_status_theme() {
+	return array(
+			'varnish_status' => array(
+					'variables' => array(),
+					'template' => 'varnish-status',
+					'path' => drupal_get_path('module', 'varnish_status'),
+			),
+	);
+}
+
+/**
+ * Callback for Varnish status page
+ */
+function varnish_status_view() {
+	drupal_set_title('Varnish Status');
+
+	$stats = varnish_status_get_stats();
+	if ($stats == 'error') {
+		drupal_set_message(t('Attenction, Varnish Agent not reached, please check Varnish Status configuration'), 'warning');
+		return '';
+	} else {
+		$module_path = drupal_get_path('module', 'varnish_dashboard');
+
+		return array(
+					'#theme' => 'varnish_status',
+						/* '#attached' => array(
+						  'css' => array(
+						  "{$module_path}/css/varnish_dashboard.admin.css",
+						  "{$module_path}/css/bootstrap.css",
+						  ),
+						  'js' => array(
+						  "{$module_path}/js/lib/handlebars-1.0.0-rc.3.js",
+						  "{$module_path}/js/lib/justgage.js",
+						  "{$module_path}/js/lib/raphael.2.1.0.min.js",
+						  "{$module_path}/js/varnish_agent_dashboard.js",
+						  ),
+						  ), */
+		);
+	}
+}
+
+function varnish_status_get_stats() {
+	$vagent_path = variable_get('varnish_status_path');
+	$vagent_port = variable_get('varnish_status_port');
+	$vagent_username = variable_get('varnish_status_username');
+	$vagent_password = variable_get('varnish_status_password');
+	$url = $vagent_path . ':' . $vagent_port . '/stats';
+
+
+	$stats = drupal_http_request('http://varnish:PassWORD@www.ildeposoto.org:6085/stats');
+	if ($stats->code != '200') {
+		return 'error';
+	} else {
+		return $stats;
+	}
+}
