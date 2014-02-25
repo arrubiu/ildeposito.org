@@ -49,7 +49,7 @@ function ildeposito_utenti_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_email_verification';
-  $strongarm->value = TRUE;
+  $strongarm->value = 1;
   $export['user_email_verification'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -106,7 +106,7 @@ Questo collegamento può essere utilizzato per accedere una sola volta, verrai i
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_register_admin_created_body';
-  $strongarm->value = '[user:name],
+  $strongarm->value = '[user:name-raw],
 
 Un amministratore di [site:name] ha creato un profilo utente per te. Puoi ora accedere cliccando su questo collegamento o copiandolo e incollandolo nel tuo browser:
 
@@ -116,7 +116,7 @@ Questo collegamento può essere usato per accedere solo una volta, verrai indiri
 
 Dopo aver impostato la tua password, potrai effettuare l\'accesso a [site:login-url] usando i seguenti dati:
 
-nome utente: [user:name]
+nome utente: [user:name-raw]
 password: Your password
 
 --  lo staff di [site:name]';
@@ -133,7 +133,7 @@ password: Your password
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_register_no_approval_required_body';
-  $strongarm->value = '[user:name],
+  $strongarm->value = '[user:name-raw],
 
 Ti ringraziamo per la registrazione su [site:name]. Puoi accedere al sito cliccando il link seguente o copiandolo ed incollandolo nella barra degli indirizzi del tuo browser:
 
@@ -143,7 +143,7 @@ Questo link può essere utilizzato una sola volta e ti dirigerà ad una pagina d
 
 Dopo aver impostato la tua password potrai accedere al sito all\'indirizzo [site:login-url] usando:
 
-nome utente: [user:name]
+nome utente: [user:name-raw]
 password: la tua password
 
 --  Lo Staff di [site:name]';
@@ -153,7 +153,7 @@ password: la tua password
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_register_no_approval_required_subject';
-  $strongarm->value = 'Dettagli del profilo [user:name] su [site:name]';
+  $strongarm->value = 'Dettagli del profilo [user:name-raw] su [site:name]';
   $export['user_mail_register_no_approval_required_subject'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -191,7 +191,7 @@ Questo collegamento può essere utilizzato per accedere una sola volta, verrai i
 
 Dopo aver impostato la password, potrai accedere a [site:login-url] le prossime volte utilizzando:
 
-nome utente: [user:name]
+nome utente: [user:name-raw]
 password: Your password
 
 --  lo staff di [site:name]';
@@ -208,7 +208,7 @@ password: Your password
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_status_activated_subject';
-  $strongarm->value = 'Dettagli del profilo utente per [user:name] su [site:name] (approvato)';
+  $strongarm->value = 'Dettagli del profilo utente per [user:name-raw] su [site:name] (approvato)';
   $export['user_mail_status_activated_subject'] = $strongarm;
 
   $strongarm = new stdClass();
