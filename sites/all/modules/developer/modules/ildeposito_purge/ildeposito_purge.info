@@ -1,0 +1,5 @@
+name = ilDeposito Purge
+description = Logiche pulizia cache
+core = 7.x
+package = ilDeposito
+
