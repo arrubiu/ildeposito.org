@@ -56,10 +56,11 @@ function ildeposito_layout_default_page_manager_pages() {
   );
   $display->cache = array();
   $display->title = 'Accesso negato';
+  $display->uuid = '33e5d73d-76c6-443d-bed6-74addcd89945';
   $display->content = array();
   $display->panels = array();
     $pane = new stdClass();
-    $pane->pid = 'new-1';
+    $pane->pid = 'new-fb2ea2a0-7489-44ab-ad1b-b023e60d6e5b';
     $pane->panel = 'middle';
     $pane->type = 'custom';
     $pane->subtype = 'custom';
@@ -85,10 +86,11 @@ function ildeposito_layout_default_page_manager_pages() {
     $pane->extras = array();
     $pane->position = 0;
     $pane->locks = array();
-    $display->content['new-1'] = $pane;
-    $display->panels['middle'][0] = 'new-1';
+    $pane->uuid = 'fb2ea2a0-7489-44ab-ad1b-b023e60d6e5b';
+    $display->content['new-fb2ea2a0-7489-44ab-ad1b-b023e60d6e5b'] = $pane;
+    $display->panels['middle'][0] = 'new-fb2ea2a0-7489-44ab-ad1b-b023e60d6e5b';
   $display->hide_title = PANELS_TITLE_FIXED;
-  $display->title_pane = 'new-1';
+  $display->title_pane = 'new-fb2ea2a0-7489-44ab-ad1b-b023e60d6e5b';
   $handler->conf['display'] = $display;
   $page->default_handlers[$handler->name] = $handler;
   $pages['accesso_negato'] = $page;
