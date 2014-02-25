@@ -181,7 +181,7 @@ function l10n_update_uninstall() {
  * Implements hook_requirements().
  */
 function l10n_update_requirements($phase) {
-  if ($phase == 'runtime') {
+  if ($phase == 'runtime' && variable_get('l10n_update_check_frequency', 0)) {
     if (l10n_update_get_projects() && l10n_update_language_list()) {
       $requirements['l10n_update']['title'] = t('Translation update status');
       if (l10n_update_available_updates()) {

@@ -96,10 +96,15 @@ function l10n_update_menu_alter(&$menu) {
  * Check one project/language at a time, download and import if update available
  */
 function l10n_update_cron() {
-  if ($frequency = variable_get('l10n_update_check_frequency', 0)) {
+  $last = variable_get('l10n_update_last_check', 0);
+  $frequency = variable_get('l10n_update_check_frequency', 0) * 24 *3600;
+  if ($frequency && $last < REQUEST_TIME - $frequency) {
     module_load_include('check.inc', 'l10n_update');
-    list($checked, $updated) = l10n_update_check_translations(L10N_UPDATE_CRON_PROJECTS, REQUEST_TIME - $frequency * 24 * 3600, L10N_UPDATE_CRON_UPDATES);
-    watchdog('l10n_update', 'Automatically checked @checked translations, updated @updated.', array('@checked' => count($checked), '@updated' => count($updated)));
+    list($checked, $updated) = l10n_update_check_translations(L10N_UPDATE_CRON_PROJECTS, REQUEST_TIME - $frequency, L10N_UPDATE_CRON_UPDATES);
+    if (count($checked) || count($updates)) {
+      watchdog('l10n_update', 'Automatically checked @checked translations, updated @updated.', array('@checked' => count($checked), '@updated' => count($updated)));
+    }
+    variable_set('l10n_update_last_check', REQUEST_TIME);
   }
 }
 

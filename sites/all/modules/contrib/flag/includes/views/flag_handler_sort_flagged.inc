@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains the flagged content sort handler.

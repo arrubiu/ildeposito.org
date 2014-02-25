@@ -3,13 +3,13 @@ description = Execute actions on Flag events.
 core = 7.x
 dependencies[] = flag
 package = Flags
-configure = admin/structure/webform/flags
+configure = admin/structure/flags/actions
 
 files[] = flag.install
 files[] = flag_actions.module
-; Information added by drupal.org packaging script on 2013-05-09
-version = "7.x-2.1"
+; Information added by Drupal.org packaging script on 2014-01-26
+version = "7.x-3.3"
 core = "7.x"
 project = "flag"
-datestamp = "1368081620"
+datestamp = "1390732707"
 

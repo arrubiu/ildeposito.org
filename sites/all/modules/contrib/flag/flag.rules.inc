@@ -17,6 +17,11 @@ function flag_rules_data_info() {
       'wrapper class' => 'FlagRulesDataWrapper',
       'wrap' => TRUE,
     ),
+    'flagging' => array(
+      'label' => t('flagging'),
+      'parent' => 'entity',
+      'group' => t('flag'),
+    ),
   );
 }
 
@@ -99,10 +104,10 @@ function _flag_rules_flags_options($flag_type = NULL) {
   $flags = flag_get_flags();
   $options = array();
   foreach ($flags as $flag) {
-    if (!isset($flag_type) || $flag->content_type == $flag_type) {
+    if (!isset($flag_type) || $flag->entity_type == $flag_type) {
       $options[$flag->name] = array(
         'title' => $flag->get_title(),
-        'type' => $flag->content_type,
+        'type' => $flag->entity_type,
         'global' => $flag->global ? t('Yes') : t('No'),
       );
     }
@@ -119,33 +124,37 @@ function flag_rules_event_info() {
   $flags = flag_get_flags();
   foreach ($flags as $flag) {
     // We only support flags on entities.
-    if ($info = entity_get_info($flag->content_type)) {
+    if ($info = entity_get_info($flag->entity_type)) {
       $variables = array(
         'flag' => array(
           'type' => 'flag',
           'label' => t('flag'),
-          'flag_type' => $flag->content_type,
+          'flag_type' => $flag->entity_type,
         ),
-        'flagged_' . $flag->content_type => array(
-          'type' => $flag->content_type,
+        'flagged_' . $flag->entity_type => array(
+          'type' => $flag->entity_type,
           'label' => $info['label'],
         ),
         'flagging_user' => array(
           'type' => 'user',
           'label' => t('flagging user'),
         ),
+        'flagging' => array(
+          'type' => 'flagging',
+          'label' => t('flagging'),
+        ),
       );
 
       // For each flag we define two events.
       $items['flag_flagged_' . $flag->name] = array(
         'group' => t('Flag'),
-        'label' => t('A @flag-type has been flagged, under "@flag-title"', array('@flag-title' => $flag->get_title(), '@flag-type' => t($flag->content_type))),
+        'label' => t('A @flag-type has been flagged, under "@flag-title"', array('@flag-title' => $flag->get_title(), '@flag-type' => t($flag->entity_type))),
         'variables' => $variables,
         'access callback' => 'flag_rules_integration_access',
       );
       $items['flag_unflagged_' . $flag->name] = array(
         'group' => t('Flag'),
-        'label' => t('A @flag-type has been unflagged, under "@flag-title"', array('@flag-title' => $flag->get_title(), '@flag-type' => t($flag->content_type))),
+        'label' => t('A @flag-type has been unflagged, under "@flag-title"', array('@flag-title' => $flag->get_title(), '@flag-type' => t($flag->entity_type))),
         'variables' => $variables,
         'access callback' => 'flag_rules_integration_access',
       );
@@ -158,6 +167,19 @@ function flag_rules_event_info() {
  * Implements hook_rules_action_info().
  */
 function flag_rules_action_info() {
+  $param_defaults = array(
+    'flagging_user' => array(
+      'type' => 'user',
+      'label' => t('User on whose behalf to flag'),
+      'description' => t('For non-global flags, this is the user on whose behalf to flag the object. In addition, if checked below, the access permissions to the flag are checked against this user.'),
+    ),
+    'permission_check' => array(
+      'type' => 'boolean',
+      'label' => t('Skip permission check'),
+      'description' => t('Whether to ignore permissions of the user on whose behalf to flag.'),
+      'restriction' => 'input',
+    ),
+  );
   $items = array(
     'flag_trim' => array(
       'label' => t('Trim a flag'),
@@ -177,82 +199,141 @@ function flag_rules_action_info() {
           'label' => t('Flag queue size'),
           'description' => t('The maximum number of objects to keep in the queue. Newly flagged objects will be kept; older ones will be removed. Tip: by typing "1" here you implement a singleton.'),
         ),
+        'trim_newest' => array(
+          'type' => 'boolean',
+          'label' => t('Trim newest flags'),
+          'description' => t('Checking this will trim the newest flags.  This will prevent new flags once a limit is reached.'),
+        ),
+        'permission_check' => $param_defaults['permission_check'],
       ),
       'group' => t('Flag'),
       'access callback' => 'flag_rules_integration_access',
     ),
-    'flag_fetch_entity_by_user' => array(
-      'label' => t('Fetch content flagged by user'),
-      'base' => 'flag_rules_action_fetch_entity_by_user',
+    'fetch_overall_flag_count' => array(
+      'label' => t('Fetch overall flag count'),
+      'base' => 'flag_rules_action_fetch_overall_flag_count',
       'parameter' => array(
         'flag' => array(
           'type' => 'flag',
           'label' => t('Flag'),
         ),
-        'flagging_user' => array(
-          'type' => 'user',
-          'label' => t('User who flagged the content'),
-          'description' => t('For non-global flags, this is the user who flagged the content. (For global flags, this argument is ignored.)'),
+      ),
+      'provides' => array(
+        'overall_flag_count' => array(
+          'label' => t('Overall flag count'),
+          'type' => 'integer',
+        ),
+      ),
+      'group' => t('Flag'),
+      'access callback' => 'flag_rules_integration_access',
+    ),
+    'fetch_entity_flag_count' => array(
+      'label' => t('Fetch entity flag count'),
+      'base' => 'flag_rules_action_fetch_entity_flag_count',
+      'parameter' => array(
+        'flag' => array(
+          'type' => 'flag',
+          'label' => t('Flag'),
+        ),
+        'entity_type' => array(
+          'type' => 'text',
+          'label' => t('Entity type'),
+          'options list' => 'flag_rules_get_flag_types',
+          'restriction' => 'input',
         ),
       ),
       'provides' => array(
-        'content_flagged_by_user' => array(
-          'label' => t('Content flagged by user'),
-          'type' => 'list<node>',
+        'entity_flag_count' => array(
+          'label' => t('Entity flag count'),
+          'type' => 'integer',
+        ),
+      ),
+      'group' => t('Flag'),
+      'access callback' => 'flag_rules_integration_access',
+    ),
+    'fetch_user_flag_count' => array(
+      'label' => t('Fetch user flag count'),
+      'base' => 'flag_rules_action_fetch_user_flag_count',
+      'parameter' => array(
+        'flag' => array(
+          'type' => 'flag',
+          'label' => t('Flag'),
+        ),
+        'user' => array(
+          'type' => 'user',
+          'label' => t('User'),
+        ),
+      ),
+      'provides' => array(
+        'user_flag_count' => array(
+          'label' => t('User flag count'),
+          'type' => 'integer',
         ),
       ),
       'group' => t('Flag'),
       'access callback' => 'flag_rules_integration_access',
     ),
   );
-  $param_defaults = array(
-    'flagging_user' => array(
-      'type' => 'user',
-      'label' => t('User on whose behalf to flag'),
-      'description' => t('For non-global flags, this is the user on whose behalf to flag the object. In addition, if checked below, the access permissions to the flag are checked against this user.'),
-    ),
-    'permission_check' => array(
-      'type' => 'boolean',
-      'label' => t('Skip permission check'),
-      'description' => t('Whether to ignore permissions of the user on whose behalf to flag.'),
-      'restriction' => 'input',
-    ),
-  );
   foreach (flag_get_types() as $type) {
-    $flag = flag_create_handler($type);
     $entity_info = entity_get_info($type);
+    $label = $entity_info['label'];
     $items += array(
+      'flag_fetch_' . $type . '_by_user' => array(
+        'label' => t('Fetch @label flagged by user', array('@label' => $label)),
+        'base' => 'flag_rules_action_fetch_entity_by_user',
+        'parameter' => array(
+          'flag' => array(
+            'type' => 'flag',
+            'label' => t('Flag'),
+            'flag_type' => $type,
+            'description' => t('The flag to check for.'),
+          ),
+          'flagging_user' => array(
+            'type' => 'user',
+            'label' => t('User who flagged the @label', array('@label' => $label)),
+            'description' => t('For non-global flags, this is the user who flagged the @label. (For global flags, this argument is ignored.)', array('@label' => $label)),
+          ),
+        ),
+        'provides' => array(
+          'content_flagged_by_user' => array(
+            'label' => t('Content flagged by user'),
+            'type' => 'list<' . $type . '>',
+          ),
+        ),
+        'group' => t('Flag'),
+        'access callback' => 'flag_rules_integration_access',
+      ),
       'flag_flag' . $type => array(
-        'label' => t('Flag a @type', array('@type' => $type)),
+        'label' => t('Flag a @label', array('@label' => $label)),
         'base' => 'flag_rules_action_flag',
         'parameter' => array(
           'flag' => array(
             'type' => 'flag',
             'label' => t('Flag'),
             'flag_type' => $type,
-            'description' => t('The flag to check for.')
+            'description' => t('The flag to check for.'),
           ),
           $type => array(
             'type' => $type,
-            'label' => isset($entity_info[$type]['label']) ? $entity_info[$type]['label'] : $type,
+            'label' => $label,
           ),
         ) + $param_defaults,
         'group' => t('Flag'),
         'access callback' => 'flag_rules_integration_access',
       ),
       'flag_unflag' . $type => array(
-        'label' => t('Unflag a @type', array('@type' => $type)),
+        'label' => t('Unflag a @label', array('@label' => $label)),
         'base' => 'flag_rules_action_unflag',
         'parameter' => array(
           'flag' => array(
             'type' => 'flag',
             'label' => t('Flag'),
             'flag_type' => $type,
-            'description' => t('The flag to check for.')
+            'description' => t('The flag to check for.'),
           ),
           $type => array(
             'type' => $type,
-            'label' => isset($entity_info[$type]['label']) ? $entity_info[$type]['label'] : $type,
+            'label' => $label,
           ),
         ) + $param_defaults,
         'group' => t('Flag'),
@@ -260,7 +341,7 @@ function flag_rules_action_info() {
       ),
     );
     $items['flag_fetch_users_' . $type] = array(
-      'label' => t('Fetch users who have flagged a @type', array('@type' => $type)),
+      'label' => t('Fetch users who have flagged a @label', array('@label' => $label)),
       'base' => 'flag_rules_action_fetch_users',
       'parameter' => array(
         'flag' => array(
@@ -271,7 +352,7 @@ function flag_rules_action_info() {
         ),
         $type => array(
           'type' => $type,
-          'label' => isset($entity_info[$type]['label']) ? $entity_info[$type]['label'] : $type,
+          'label' => $label,
         ),
       ),
       'provides' => array(
@@ -284,6 +365,9 @@ function flag_rules_action_info() {
       'access callback' => 'flag_rules_integration_access',
     );
   }
+  // For backward compatibility sake. This was the original name of the 'fetch node by user'.
+  $items['flag_fetch_entity_by_user'] = $items['flag_fetch_node_by_user'];
+  $items['flag_fetch_entity_by_user']['label'] .= ' '. t('(Legacy)');
   return $items;
 }
 
@@ -291,31 +375,37 @@ function flag_rules_action_info() {
  * Base action implementation: Flag.
  */
 function flag_rules_action_flag($flag, $entity, $flagging_user, $permissions_check) {
-  $flag->flag('flag', $flag->get_content_id($entity), $flagging_user, $permissions_check);
+  $flag->flag('flag', $flag->get_entity_id($entity), $flagging_user, $permissions_check);
 }
 
 /**
  * Base action implementation: Unflag.
  */
 function flag_rules_action_unflag($flag, $entity, $flagging_user, $permissions_check) {
-  $flag->flag('unflag', $flag->get_content_id($entity), $flagging_user, $permissions_check);
+  $flag->flag('unflag', $flag->get_entity_id($entity), $flagging_user, $permissions_check);
 }
 
 /**
  * Base action implementation: Trim flag.
  */
-function flag_rules_action_trim($flag, $flagging_user, $cutoff_size) {
-  flag_trim_flag($flag, $flagging_user, $cutoff_size);
+function flag_rules_action_trim($flag, $flagging_user, $cutoff_size, $trim_newest, $permissions_check) {
+  // For some reason, when this action fires in response to a flagging event,
+  // as an anonymous user, then the $flagging_user is sent through as FALSE.
+  // Not sure why. This workaround fixes the problem in this specific case.
+  if ($flagging_user === FALSE) {
+    $flagging_user = $GLOBALS['user'];
+  }
+  flag_trim_flag($flag, $flagging_user, $cutoff_size, $trim_newest, $permissions_check);
 }
 
 /**
  * Base action implementation: Fetch users who flagged an entity.
  */
 function flag_rules_action_fetch_users($flag, $entity) {
-  $result = db_select('flag_content', 'fc')
+  $result = db_select('flagging', 'fc')
     ->fields('fc', array('uid'))
-    ->condition('content_type', $flag->content_type)
-    ->condition('content_id', $flag->get_content_id($entity))
+    ->condition('entity_type', $flag->entity_type)
+    ->condition('entity_id', $flag->get_entity_id($entity))
     ->condition('fid', $flag->fid)
     ->execute();
   $uids = $result->fetchCol();
@@ -326,16 +416,59 @@ function flag_rules_action_fetch_users($flag, $entity) {
 /**
  * Base action implementation: Fetch entities who were flagged a user.
  */
-function flag_rules_action_fetch_entity_by_user($flag, $user) {
-  $result = db_select('flag_content', 'fc')
-    ->fields('fc', array('content_id'))
-    ->condition('content_type', $flag->content_type)
-    ->condition('uid', $user->uid)
-    ->condition('fid', $flag->fid)
-    ->execute();
-
+function flag_rules_action_fetch_entity_by_user($flag, $entity) {
+  $user = entity_metadata_wrapper('user', $entity);
+  $sid = $user->flag_sid->value();
+  $query = db_select('flagging', 'fc')
+    ->fields('fc', array('entity_id'))
+    ->condition('entity_type', $flag->entity_type)
+    ->condition('uid', $user->uid->value())
+    ->condition('fid', $flag->fid);
+  // Filter out any bad session ids and any users that aren't anonymous.
+  if (!empty($sid) && $sid != -1) {
+    $query->condition('sid', $sid);
+  }
+  $result = $query->execute();
   $flagged = $result->fetchCol();
   return array('content_flagged_by_user' => $flagged);
+}
+
+/**
+ * Base action implementation: Fetch overall count for a particular flag.
+ */
+function flag_rules_action_fetch_overall_flag_count($flag) {
+  $count = flag_get_flag_counts($flag->name);
+  return array('overall_flag_count' => $count);
+}
+
+/**
+ * Helper function which will return all the available flag types.
+ *
+ *  @return
+ *  An array of flag type names keyed by the type name.
+ */
+function flag_rules_get_flag_types() {
+  $types = array();
+  foreach (flag_get_types() as $type) {
+    $types[$type] = $type;
+  }
+  return $types;
+}
+
+/**
+ * Base action implementation: Fetch count of flags for a particular entity type.
+ */
+function flag_rules_action_fetch_entity_flag_count($flag, $entity_type) {
+  $count = flag_get_entity_flag_counts($flag, $entity_type);
+  return array('entity_flag_count' => $count);
+}
+
+/**
+ * Base action implementation: Fetch user's flag count.
+ */
+function flag_rules_action_fetch_user_flag_count($flag, $user) {
+  $count = flag_get_user_flag_counts($flag, $user);
+  return array('user_flag_count' => $count);
 }
 
 /**
@@ -344,7 +477,6 @@ function flag_rules_action_fetch_entity_by_user($flag, $user) {
 function flag_rules_condition_info() {
   $items = array();
   foreach (flag_get_types() as $type) {
-    $flag = flag_create_handler($type);
     $entity_info = entity_get_info($type);
     $label = isset($entity_info[$type]['label']) ? $entity_info[$type]['label'] : $type;
     $items += array(
@@ -424,7 +556,7 @@ function flag_rules_condition_threshold_operator_options() {
  * Condition: Check flagging count.
  */
 function flag_rules_condition_threshold($flag, $entity, $number, $operator = '=') {
-  $count = $flag->get_count($flag->get_content_id($entity));
+  $count = $flag->get_count($flag->get_entity_id($entity));
 
   switch ($operator) {
     case '>' : return $count >  $number;
@@ -439,7 +571,7 @@ function flag_rules_condition_threshold($flag, $entity, $number, $operator = '='
  * Condition: Flag is flagged.
  */
 function flag_rules_condition_flagged($flag, $entity, $account) {
-  return $flag->is_flagged($flag->get_content_id($entity), $account->uid);
+  return $flag->is_flagged($flag->get_entity_id($entity), $account->uid);
 }
 
 /**

@@ -172,6 +172,10 @@ function _l10n_update_batch_import($id, $file, $mode, &$context) {
     $file = $context['results'][$id]['file'];
   }
   if ($file) {
+    // Create a result if none exists yet.
+    if (!isset($context['results'][$id])) {
+      $context['results'][$id] = array();
+    }
     if ($import_result = l10n_update_source_import($file, $mode)) {
       $context['message'] = $t('Imported: %name.', array('%name' => $file->filename));
       $context['results'][$id] = array_merge((array)$context['results'][$id], $import_result, array('file' => $file));
