@@ -5,5 +5,65 @@
  *   Main module file for Dismiss
  */
 
-// This blank file is intentionally included
-// so that the Drupal module can function
+define('DISMISS_SCOPE_DEFAULT', 'footer');
+define('DISMISS_INLINE_DEFAULT', 'inline');
+
+
+/**
+ * Implements hook_menu().
+ */
+function dismiss_menu() {
+  $items['admin/config/user-interface/dismiss'] = array(
+    'title' => 'Dismiss',
+    'description' => 'Administrative settings for Dismiss module.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('dismiss_admin'),
+    'file' => 'dismiss.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array('administer dismiss'),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_page_build().
+ *
+ * Using hook_init() loads the JS files needlessly on autocomplete requests,
+ * private file requests, and other non-HTML-producing Drupal boots.
+ */
+function dismiss_page_build() {
+  // Add Dismiss CSS
+  drupal_add_css(drupal_get_path('module', 'dismiss') . '/css/dismiss.base.css');
+
+  // Prepare JS settings
+  $dismiss_scope = variable_get('dismiss_scope', DISMISS_SCOPE_DEFAULT);
+  $dismiss_inline = variable_get('dismiss_inline', DISMISS_INLINE_DEFAULT);
+
+  // If the script needs to be inlined, pull the JS file contents and add to options.
+  if ($dismiss_inline == DISMISS_INLINE_DEFAULT) {
+    $dismiss_code = file_get_contents(drupal_get_path('module', 'dismiss') . '/js/dismiss.js');
+    $dismiss_type = 'inline';
+  }
+  else {
+    $dismiss_code = drupal_get_path('module', 'dismiss') . '/js/dismiss.js';
+    $dismiss_type = 'file';
+  }
+
+  // Add Dismiss JS
+  drupal_add_js(
+    $dismiss_code,
+    array(
+      'type' => $dismiss_type,
+      'scope' => $dismiss_scope,
+      'every_page' => TRUE,
+    )
+  );
+}
+
+/**
+ * Implements hook_modernizr_info().
+ */
+function dismiss_modernizr_info() {
+  return array('touch');
+}

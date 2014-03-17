@@ -22,6 +22,7 @@
   right: .4em;
   width: 1.4em;
   background: #ed541d;
+  border: 0;
   color: #fff;
 
   font-weight: 900;
@@ -39,6 +40,10 @@
       -ms-transition: .1s opacity linear;
        -o-transition: .1s opacity linear;
           transition: .1s opacity linear;
+}
+
+.dismiss:before {
+  content: 'X';
 }
 
 .error .dismiss {
