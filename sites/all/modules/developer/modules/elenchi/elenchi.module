@@ -21,6 +21,15 @@ function elenchi_menu() {
 			'type' => MENU_CALLBACK,
 			'access arguments' => array('access content'),
 	);
+	
+	$items['admin/batch'] = array(
+    'title' => 'Demo Batches',
+    'description' => 'Run batch operations.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('elenchi_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+   );
 	return $items;
 }
 
@@ -223,4 +232,72 @@ function json_eventi() {
 	);
 
 	print json_encode($array);
+}
+
+function elenchi_form(){
+  $form = array();
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Aggiorna le operazioni'));
+	$form['foo'] = array(
+    '#type' => 'submit',
+    '#value' => t('Aggiorna i pagamenti'),
+    '#submit' => array('submit_custom'),
+  );
+  return $form;
+}
+
+function elenchi_form_submit($form, $form_state){
+  batch_set(elenchi_build_batch());
+}
+
+function submit_custom($form, $form_state){
+	drupal_set_message('ciao');
+	
+}
+
+function elenchi_build_batch(){
+  // Here we can add multiple operation using an array variable.
+	$nodes = node_load_multiple(array(), array('type' => "traduzione"));
+	$node_count = count($nodes);
+	foreach($nodes as $nid=>$node) {
+    // $operations[] = array(<function name>, <array of arguments to pass to function>);
+    $operations[] = array('elenchi_batch_title', array($node));
+  }
+	
+
+  // build the batch instructions
+  $batch = array(
+    'operations' => $operations,
+    'finished' => 'elenchi_batch_title_finished',
+  );
+  return $batch;
+}
+
+/**
+* Batch operation: associate audio tiles to 1 node.
+* This is the function that is called on each operation in the above.
+*/
+function elenchi_batch_title($node, &$context) {
+  $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+  // Optional message displayed under the progressbar.
+  $context['message'] = t('Processing traduzione "@title"', array('@title' => $node->title));
+  $updated = FALSE;
+  // .... do the actual work - code removed in this example
+  if ($updated) {
+    //node_save($node);
+    $path = drupal_lookup_path("alias", "node/" . $node->nid);
+    drupal_set_message("<a href='/$path'>" . $node->title . "</a> updated.");
+  }
+}
+
+function elenchi_batch_title_finished($success, $results, $operations) {
+  if ($success) {
+    // Here we could do something meaningful with the results.
+    // We just display the number of nodes we processed...
+    drupal_set_message(t('@count traduzioni processate.', array('@count' => count($results))));
+  } else {
+    // An error occurred.
+    // $operations contains the operations that remained unprocessed.
+    $error_operation = reset($operations);
+    drupal_set_message(t('An error occurred while processing @operation with arguments : @args', array('@operation' => $error_operation[0], '@args' => print_r($error_operation[0], TRUE))));
+  }
 }
