@@ -282,3 +282,10 @@ function l10n_update_update_7004() {
     db_create_table('cache_l10n_update', $schema);
   }
 }
+
+/**
+ * Rebuild registry for 'translations' stream wrapper.
+ */
+function l10n_update_update_7005() {
+  registry_rebuild();
+}

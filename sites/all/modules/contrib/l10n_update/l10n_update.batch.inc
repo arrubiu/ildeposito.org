@@ -253,6 +253,14 @@ function _l10n_update_batch_finished($success, $results) {
             array('!log_messages' => l(t('Recent log messages'), 'admin/reports/dblog'))),
         'warning');
       }
+
+      // Clear cache and force refresh of JavaScript translations and rebuild
+      // the menu as strings may have changed.
+      foreach (array_keys($totals) as $langcode) {
+        _locale_invalidate_js($langcode);
+      }
+      cache_clear_all('locale:', 'cache', TRUE);
+      menu_rebuild();
     }
 
     // Error for failed imports.
