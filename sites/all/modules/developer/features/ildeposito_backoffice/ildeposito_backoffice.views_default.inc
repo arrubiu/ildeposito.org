@@ -1688,7 +1688,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['type']['field'] = 'type';
   /* Campo: Flag: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
-  $handler->display->display_options['fields']['ops']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
   $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['ops']['link_type'] = 'toggle';
@@ -1905,7 +1905,6 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['filters']['field_sezione_tid']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['filters']['field_sezione_tid']['field'] = 'field_sezione_tid';
   $handler->display->display_options['filters']['field_sezione_tid']['value'] = '';
-  $handler->display->display_options['filters']['field_sezione_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator_id'] = 'field_sezione_tid_op';
   $handler->display->display_options['filters']['field_sezione_tid']['expose']['label'] = 'Sezione';
   $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator'] = 'field_sezione_tid_op';
@@ -1923,6 +1922,105 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['path'] = 'canti-senza-anno';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Canti senza anno';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'menu-ildeposito-amministrazione';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Canti senza fonte */
+  $handler = $view->new_display('page', 'Canti senza fonte', 'page_2');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Elenco canti senza fonte';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Campo: Contenuto: Sezione */
+  $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
+  /* Campo: Contenuto: Autori testo */
+  $handler->display->display_options['fields']['field_autore_testo']['id'] = 'field_autore_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['table'] = 'field_data_field_autore_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['field'] = 'field_autore_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['type'] = 'node_reference_plain';
+  $handler->display->display_options['fields']['field_autore_testo']['delta_offset'] = '0';
+  /* Campo: Contenuto: Link modifica */
+  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['label'] = '';
+  $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['edit_node']['text'] = 'Modifica';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Pubblicato */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'canto' => 'canto',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Criterio del filtro: Contenuto: Sezione (field_sezione) */
+  $handler->display->display_options['filters']['field_sezione_tid']['id'] = 'field_sezione_tid';
+  $handler->display->display_options['filters']['field_sezione_tid']['table'] = 'field_data_field_sezione';
+  $handler->display->display_options['filters']['field_sezione_tid']['field'] = 'field_sezione_tid';
+  $handler->display->display_options['filters']['field_sezione_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_sezione_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_sezione_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator_id'] = 'field_sezione_tid_op';
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['label'] = 'Sezione';
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator'] = 'field_sezione_tid_op';
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['identifier'] = 'field_sezione_tid';
+  $handler->display->display_options['filters']['field_sezione_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_sezione_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_sezione_tid']['vocabulary'] = 'sezioni';
+  /* Criterio del filtro: Contenuto: Fonte (field_fonte) */
+  $handler->display->display_options['filters']['field_fonte_value']['id'] = 'field_fonte_value';
+  $handler->display->display_options['filters']['field_fonte_value']['table'] = 'field_data_field_fonte';
+  $handler->display->display_options['filters']['field_fonte_value']['field'] = 'field_fonte_value';
+  $handler->display->display_options['filters']['field_fonte_value']['operator'] = 'empty';
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['operator_id'] = 'field_fonte_value_op';
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['label'] = 'Fonte (field_fonte)';
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['operator'] = 'field_fonte_value_op';
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['identifier'] = 'field_fonte_value';
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['autocomplete_field'] = 'field_fonte';
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_fonte_value']['expose']['autocomplete_dependent'] = 0;
+  $handler->display->display_options['path'] = 'canti-senza-fonte';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Canti senza fonte';
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['name'] = 'menu-ildeposito-amministrazione';
   $handler->display->display_options['menu']['context'] = 0;
@@ -1952,6 +2050,9 @@ function ildeposito_backoffice_views_default_views() {
     t('Canti senza anno'),
     t('Elenco canti senza anno'),
     t('Sezione'),
+    t('Canti senza fonte'),
+    t('Elenco canti senza fonte'),
+    t('Fonte (field_fonte)'),
   );
   $export['contenuti_elenchi_admin'] = $view;
 
@@ -3192,14 +3293,14 @@ Puoi eliminarli e riordinarli';
   $handler->display->display_options['fields']['type']['field'] = 'type';
   /* Campo: Flag: Flagged time */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'flagging';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['timestamp']['label'] = 'Dati';
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'time ago';
   /* Campo: Flag: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
-  $handler->display->display_options['fields']['ops']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
   $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['ops']['label'] = '';
@@ -3207,7 +3308,7 @@ Puoi eliminarli e riordinarli';
   $handler->display->display_options['fields']['ops']['link_type'] = 'confirm';
   /* Criterio di ordinamento: Flag: Flagged time */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['sorts']['timestamp']['table'] = 'flag_content';
+  $handler->display->display_options['sorts']['timestamp']['table'] = 'flagging';
   $handler->display->display_options['sorts']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['sorts']['timestamp']['order'] = 'DESC';
@@ -3297,23 +3398,23 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['fields']['field_presenza_accordi']['label'] = 'Accordi';
   /* Campo: Flag: Flagged time */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'flagging';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['timestamp']['label'] = 'Dati';
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'time ago';
   /* Campo: Flag: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
-  $handler->display->display_options['fields']['ops']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
   $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['ops']['label'] = '';
   $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['ops']['link_type'] = 'confirm';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Flag: Peso */
+  /* Criterio di ordinamento: Gestore rotto/mancante */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
-  $handler->display->display_options['sorts']['weight']['table'] = 'flag_content';
+  $handler->display->display_options['sorts']['weight']['table'] = 'flagging';
   $handler->display->display_options['sorts']['weight']['field'] = 'weight';
   $handler->display->display_options['sorts']['weight']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['path'] = 'utente/canzoniere';
@@ -3351,7 +3452,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'canzoniere';
   /* Relazione: Flag: Utente */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'flag_content';
+  $handler->display->display_options['relationships']['uid']['table'] = 'flagging';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['defaults']['fields'] = FALSE;
@@ -3379,23 +3480,23 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['fields']['field_presenza_accordi']['label'] = 'Accordi';
   /* Campo: Flag: Flagged time */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'flagging';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['timestamp']['label'] = 'Dati';
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'time ago';
   /* Campo: Flag: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
-  $handler->display->display_options['fields']['ops']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
   $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['ops']['label'] = '';
   $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['ops']['link_type'] = 'confirm';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Flag: Peso */
+  /* Criterio di ordinamento: Gestore rotto/mancante */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
-  $handler->display->display_options['sorts']['weight']['table'] = 'flag_content';
+  $handler->display->display_options['sorts']['weight']['table'] = 'flagging';
   $handler->display->display_options['sorts']['weight']['field'] = 'weight';
   $handler->display->display_options['sorts']['weight']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['defaults']['arguments'] = FALSE;

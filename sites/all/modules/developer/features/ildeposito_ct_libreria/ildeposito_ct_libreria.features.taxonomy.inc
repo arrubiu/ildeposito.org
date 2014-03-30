@@ -13,7 +13,7 @@ function ildeposito_ct_libreria_taxonomy_default_vocabularies() {
       'name' => 'Tipo libreria',
       'machine_name' => 'tipo_libreria',
       'description' => '',
-      'hierarchy' => 1,
+      'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
       'rdf_mapping' => array(
