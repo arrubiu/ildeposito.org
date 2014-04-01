@@ -93,6 +93,12 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 4,
       ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 8,
+      ),
       'search_result' => array(
         'label' => 'inline',
         'module' => 'text',
@@ -162,6 +168,12 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 5,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 9,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -234,6 +246,12 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 3,
       ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -305,6 +323,12 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -363,6 +387,16 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => 'resp_articolobreakpoints_theme_ildeposito_narrow_1x',
+        ),
+        'type' => 'image',
         'weight' => 0,
       ),
       'search_result' => array(
@@ -469,6 +503,12 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 1,
       ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -548,6 +588,13 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 1,
+      ),
       'search_result' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
@@ -618,6 +665,12 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 2,
       ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 6,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -686,6 +739,12 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 7,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 11,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -762,6 +821,16 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 9,
       ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_link' => TRUE,
+          'taxonomy_term_separator' => ', ',
+        ),
+        'type' => 'ds_taxonomy_separator',
+        'weight' => 2,
+      ),
       'search_result' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
@@ -829,6 +898,12 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 6,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 10,
       ),
       'search_result' => array(
         'label' => 'above',

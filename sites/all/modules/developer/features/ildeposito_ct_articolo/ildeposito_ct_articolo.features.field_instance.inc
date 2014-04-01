@@ -105,6 +105,23 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 0,
       ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'module' => 'smart_trim',
+        'settings' => array(
+          'more_link' => 1,
+          'more_text' => '[Continua a leggere]',
+          'summary_handler' => 'trim',
+          'trim_length' => 500,
+          'trim_options' => array(
+            'text' => 'text',
+          ),
+          'trim_suffix' => '...  ',
+          'trim_type' => 'chars',
+        ),
+        'type' => 'smart_trim_format',
+        'weight' => 1,
+      ),
       'search_result' => array(
         'label' => 'hidden',
         'settings' => array(),
@@ -188,6 +205,12 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'type' => 'node_reference_default',
         'weight' => 2,
       ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -268,6 +291,16 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => 'resp_articolobreakpoints_theme_ildeposito_narrow_1x',
+        ),
+        'type' => 'image',
         'weight' => 0,
       ),
       'search_result' => array(
@@ -379,6 +412,13 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 1,
+      ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 2,
       ),
       'search_result' => array(
         'label' => 'inline',

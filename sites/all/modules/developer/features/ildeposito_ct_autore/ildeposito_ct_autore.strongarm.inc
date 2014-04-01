@@ -231,7 +231,7 @@ else {
         'custom_settings' => FALSE,
       ),
       'rss_app' => array(
-        'custom_settings' => FALSE,
+        'custom_settings' => TRUE,
       ),
     ),
     'extra_fields' => array(
@@ -270,6 +270,10 @@ else {
             'visible' => FALSE,
           ),
           'rss' => array(
+            'weight' => '10',
+            'visible' => FALSE,
+          ),
+          'rss_app' => array(
             'weight' => '10',
             'visible' => FALSE,
           ),
