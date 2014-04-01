@@ -15,6 +15,7 @@ dependencies[] = metatag
 dependencies[] = noderefcreate
 dependencies[] = override_node_options
 dependencies[] = rules
+dependencies[] = smart_trim
 dependencies[] = strongarm
 dependencies[] = views
 features[ctools][] = ds:ds:1
