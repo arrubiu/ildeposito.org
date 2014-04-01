@@ -221,7 +221,7 @@ function ildeposito_ct_evento_strongarm() {
         'custom_settings' => FALSE,
       ),
       'rss_app' => array(
-        'custom_settings' => FALSE,
+        'custom_settings' => TRUE,
       ),
     ),
     'extra_fields' => array(

@@ -171,6 +171,20 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'date_default',
         'weight' => 0,
       ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'data_estesa',
+          'fromto' => 'value',
+          'multiple_from' => 0,
+          'multiple_number' => 1,
+          'multiple_to' => '',
+          'show_repeat_rule' => 'hide',
+        ),
+        'type' => 'date_default',
+        'weight' => 0,
+      ),
       'search_result' => array(
         'label' => 'inline',
         'settings' => array(),
@@ -269,6 +283,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 12,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -374,6 +394,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'geofield_openlayers',
         'weight' => 10,
       ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'module' => 'rss_georss',
+        'settings' => array(),
+        'type' => 'rss_georss_point',
+        'weight' => 8,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -470,6 +497,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 11,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -549,6 +582,16 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => 'resp_articolobreakpoints_theme_ildeposito_narrow_1x',
+        ),
+        'type' => 'image',
+        'weight' => 3,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -677,6 +720,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 1,
       ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -776,6 +826,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'link_default',
         'weight' => 3,
+      ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 9,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -891,6 +947,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 6,
       ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 2,
+      ),
       'search_result' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
@@ -995,6 +1058,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 10,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1095,6 +1164,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 5,
       ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 13,
+      ),
       'search_result' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
@@ -1192,6 +1267,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 7,
+      ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 1,
       ),
       'search_result' => array(
         'label' => 'inline',
@@ -1291,6 +1373,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 4,
+      ),
+      'rss_app' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 6,
       ),
       'search_result' => array(
         'label' => 'above',
@@ -1396,6 +1484,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 8,
       ),
+      'rss_app' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1475,6 +1569,12 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
       ),
       'search_result' => array(
         'label' => 'above',

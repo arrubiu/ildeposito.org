@@ -148,6 +148,13 @@ function ildeposito_preprocess_node(&$vars) {
 		$vars['theme_hook_suggestions'][] = 'node__' . $vars['node']->type . '__print';
 		$vars['type'] == 'canto';
 	}
+	
+	
+	if ($vars['view_mode'] == 'rss_app') {
+		
+		$vars['title'] = 'sergio';
+		
+	}
 }
 
 /**

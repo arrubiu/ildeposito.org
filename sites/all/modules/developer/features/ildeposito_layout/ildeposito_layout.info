@@ -50,6 +50,7 @@ features[ds_fields][] = tipo_di_conteuto
 features[ds_fields][] = widget_social
 features[ds_view_modes][] = elenco_termini_contenuti
 features[ds_view_modes][] = print_canzoniere
+features[ds_view_modes][] = rss_app
 features[ds_view_modes][] = termine_singolo
 features[features_api][] = api:2
 features[openlayers_styles][] = ildeposito

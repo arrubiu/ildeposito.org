@@ -15,6 +15,7 @@ dependencies[] = media
 dependencies[] = node
 dependencies[] = openlayers
 dependencies[] = openlayers_views
+dependencies[] = rss_georss
 dependencies[] = text
 dependencies[] = views
 dependencies[] = views_slideshow
