@@ -180,9 +180,14 @@ function entity_token_tokens($type, $tokens, array $data = array(), array $optio
         $wrapper = !isset($wrapper) ? _entity_token_wrap_data($type, $token_types[$type], $data[$type], $options) : $wrapper;
         $property_name = str_replace('-', '_', $name);
         try {
-          $replacement = _entity_token_get_token($wrapper->$property_name, $options);
-          if (isset($replacement)) {
-            $replacements[$original] = $replacement;
+          #$replacement = _entity_token_get_token($wrapper->$property_name, $options);
+          #if (isset($replacement)) {
+          #  $replacements[$original] = $replacement;
+          if (isset($wrapper->$property_name)) {
+            $replacement = _entity_token_get_token($wrapper->$property_name, $options);
+            if (isset($replacement)) {
+              $replacements[$original] = $replacement;
+            }
           }
         }
         catch (EntityMetadataWrapperException $e) {
