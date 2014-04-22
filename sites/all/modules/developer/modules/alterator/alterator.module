@@ -240,9 +240,9 @@ function twitter_timeline_sidebar() {
 function logo_deposito() {
 
 	$logo = theme('image', array(
-			'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_nota.png',
+			'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_decennale.png',
 			'alt' => 'logo',
-			'title' => 'ilDeposito.org',
+			'title' => 'Il decennale de ilDeposito.org',
 			'attributes' => array('class' => 'logo', 'hidden-xs'),
 	));
 
@@ -261,7 +261,7 @@ function logo_deposito() {
 	));
 
 
-	return l($logo . $titolo . $sottotitolo, '', array('html' => TRUE));
+	return l($logo, 'ildeposito-decennale', array('html' => TRUE)) . l($titolo . $sottotitolo, '', array('html' => TRUE));
 }
 
 /**
