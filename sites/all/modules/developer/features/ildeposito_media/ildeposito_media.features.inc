@@ -66,7 +66,7 @@ function ildeposito_media_image_default_styles() {
     'name' => 'articolo_home',
     'label' => 'articolo_home',
     'effects' => array(
-      32 => array(
+      8 => array(
         'label' => 'Scala e ritaglia',
         'help' => 'Scala e ritaglia preserva il rapporto di dimensioni dell\'immagine originale per poi ritagliare la dimensione in eccesso. Questo metodo è utile nei casi in cui si desidera ottenere delle miniature perfettamente quadrate senza deformare l\'immagine.',
         'effect callback' => 'image_scale_and_crop_effect',
@@ -77,7 +77,7 @@ function ildeposito_media_image_default_styles() {
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 100,
-          'height' => 80,
+          'height' => 100,
         ),
         'weight' => 1,
       ),
