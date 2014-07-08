@@ -782,7 +782,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
   // Exported field_instance: 'node-autore-field_sezione'
   $field_instances['node-autore-field_sezione'] = array(
     'bundle' => 'autore',
-    'default_value' => array(),
+    'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -845,18 +845,21 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_label_plurals_singular' => '',
     'field_name' => 'field_sezione',
     'label' => 'Sezione',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
       'type' => 'options_buttons',
       'weight' => 6,
     ),
