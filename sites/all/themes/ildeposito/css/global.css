@@ -1796,3 +1796,9 @@ a.invisibile {
 .invisibile {
   display: none !important;
 }
+
+.node-type-articolo .field-name-body blockquote {
+  border-left: 5px solid #dddddd !important;
+margin-left: 10px;
+padding: 5px 5px 0px 5px;
+}
