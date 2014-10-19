@@ -56,7 +56,7 @@ function ildeposito_news_get_contents($type) {
 }
 
 function ildeposito_news_create_node($contents) {
-	setlocale('LC_TIME', 'ita', 'it_IT');
+	//setlocale('LC_TIME', 'ita', 'it_IT');
   $mese = strftime('%B');
 	$body =  'Salve,
 ecco la newsletter mensile de ilDeposito.org.
