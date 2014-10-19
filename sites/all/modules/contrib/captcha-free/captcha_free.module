@@ -1,0 +1,142 @@
+<?php
+/**
+ * @file
+ * Qualifies users so they don't need to be shown a captcha
+ *
+ * Only users with JavaScript enabled and a session cookie
+ * can submit the form. Bots should have neither.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function captcha_free_form_alter(&$form, &$form_state, $form_id) {
+  // Get form ids that are protected.
+  $protected_forms = variable_get('captcha_free_form_ids', array());
+  $path = drupal_get_path('module', 'captcha_free');
+  if (user_is_anonymous()== TRUE) {
+    if (in_array($form_id, $protected_forms)
+        || (strpos($form_id, 'webform') !== FALSE)
+        || (strpos($form_id, 'comment') !== FALSE)) {
+      $selector_id = str_replace('_', '-', $form_id);
+      if (strpos($form_id, 'comment') !== FALSE) {
+        $selector_id = 'comment-form';
+      }
+      // Convert PHP variables to JavaScript variables.
+      drupal_add_js(array('captchaFree' => array('path' => $path, 'selector' => $selector_id)), 'setting');
+      drupal_add_js($path . '/captcha_free.js');
+
+      // Don't cache the form.
+      $form_state['no_cache'] = TRUE;
+      // Add warning when JavaScript is not detected.
+      $form['nojavascript'] = array(
+        '#prefix' => '<p class="warning"><span style="color:red;">',
+        '#markup' => t('You must have JavaScript enabled to use this form.'),
+        '#suffix' => '</span></p>',
+        '#weight' => -5,
+      );
+     if (user_is_anonymous()== TRUE) {
+      // Give it a function for validation
+      $form['#validate'][] = 'captcha_free_form_validate';
+     }
+    }
+  }
+}
+
+/**
+ * Validate a form protected by Captcha-free.
+ *
+ * Validation should eliminate a bot with no cookies, JavaScript or
+ * who took too long possibly submitting the form repeatedly.
+ */
+function captcha_free_form_validate($form, &$form_state) {
+  $captcha_free_secret_salt = variable_get('captcha_free_secret_salt', array());
+  $proceed = FALSE;
+  // Time allowed is set in admin.
+  $mins_allowed = variable_get('captcha_free_time_out', 10);
+  $seconds = (60 * $mins_allowed);
+  if (isset($_POST['ts'])) {
+    $time_stamp = check_plain($_POST['ts']);
+  }
+  if (isset($time_stamp) && isset($_COOKIE['capfree']) && $_COOKIE['capfree'] == md5
+    ($captcha_free_secret_salt . $time_stamp)) {
+    $proceed = TRUE;
+  }
+  if (!$proceed) {
+    form_set_error('', t('Form processing halted for suspicious activity. It requires that cookies be enabled.'));
+    watchdog('captcha free', $form_state['values']['form_id'] . ': Form processing halted for suspicious activity.',
+    array(), WATCHDOG_NOTICE);
+
+  }
+  elseif (((int)$time_stamp + $seconds) < time()) {
+    form_set_error('', t('Sorry this form has a set time limit for submission. Please refresh the page and try again.'));
+    watchdog('captcha free', $form_state['values']['form_id'] . ': Too much time elapsed', array(), WATCHDOG_NOTICE);
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function captcha_free_menu() {
+  $items['admin/config/content/captcha-free'] = array(
+    'title' => 'Captcha-free',
+    'description' => 'Manage which forms should be protected with Captcha-free.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('captcha_free_settings'),
+    'access arguments' => array('administer captcha free'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'captcha_free.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Submit the Captcha-free configuration form in admin.
+ *
+ */
+function captcha_free_admin_submit($form, &$form_state) {
+  variable_set('captcha_free_form_ids', array_filter($form_state['values']['protect_forms']));
+}
+
+/**
+ * Validation for the admin form.
+ *
+ */
+function captcha_free_admin_validate($form, &$form_state) {
+  $time = $form_state['values']['captcha_free_time_out'];
+  if (!ctype_digit($time)) {
+    form_set_error('captcha_free_time_out', t('Please use a 1 or 2 digit value for Timeout'));
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function captcha_free_permission() {
+  return array(
+    'administer captcha free' => array(
+      'title' => t('Administer Captcha-free'),
+      'description' => t('Perform administration tasks for Captcha-free.')),
+  );
+}
+
+/**
+ * Implements hook_help().
+ */
+function captcha_free_help($path, $arg) {
+  if ($path == 'admin/help#captcha_free') {
+    $output = '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('Captcha-free provides protection for your forms from bots that do everything from opening fake user accounts to adding spam comments. As soon as your site gains some visibility the automated bots will begin to try and open accounts. Captcha-free will save you the time of having to go and block or delete each one in admin.') . '</p>';
+    $output .= '<h3>' . t('Settings') . '</h3>';
+    $output .= '<dl>';
+    $output .= '<dt>' . t('Secret salt') . '</dt>';
+    $output .= '<dd>' . t('Since we are not trying to block users with browsers a simple cookie does most of the work. The Secret salt and the time are baked together to give a unique cookie and if the cookie dosen\'t show up when the user submits the form he is probably a bot and is blocked. </dd>');
+    $output .= '<dt>' . t('Form timeout') . '</dt>';
+    $output .= '<dd>' . t('You can tighten the timeout setting if you feel that time on the form is indicating troublesome behavior. If a legitimate user is delayed and gets the error they can simply refresh and try again. </dd>');
+    $output .= '<dt>' . t('Forms to protect') . '</dt>';
+    $output .= '<dd>' . t('There is no real need to protect forms that bots aren\'t attacking. For a new site a suggestion is to just protect the User Register Form, and then as the attacks come protect the targeted forms. If Captcha-free is triggered there will be a message in your Recent log messages.</dd>');
+    $output .= '<dd><a href="/sites/all/modules/captcha-free/README.txt">Read the README.txt</a></dd>';
+    $output .= '</dl>';
+    return $output;
+  }
+}

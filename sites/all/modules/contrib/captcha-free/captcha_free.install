@@ -1,0 +1,39 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for Captcha-free.
+ *
+ */
+
+/**
+ * Implements hook_install().
+ */
+function captcha_free_install() {
+  // Set some default variables necessary for the module to perform.
+  variable_set('captcha_free_form_ids', array('user_register_form', ));
+  variable_set('captcha_free_secret_salt', 'secret salt');
+  variable_set('captcha_free_time_out', 10);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function captcha_free_uninstall() {
+  // Delete all the captcha_free variables and then clear the variable cache
+  db_query("DELETE FROM {variable} WHERE name LIKE 'captcha_free_%'");
+  cache_clear_all('variables', 'cache');
+}
+
+/**
+ * Disable the protection of forms used to add article and page content.
+ */
+function captcha_free_update_7100() {
+  $options = variable_get('captcha_free_form_ids', array());
+  if (isset($options['page_node_form'])) {
+    unset($options['page_node_form']);
+  }
+  if (isset($options['article_node_form'])) {
+    unset($options['article_node_form']);
+  }
+  variable_set('captcha_free_form_ids', $options);
+}

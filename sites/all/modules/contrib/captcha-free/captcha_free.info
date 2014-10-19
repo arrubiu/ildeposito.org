@@ -1,0 +1,12 @@
+name = Captcha-free
+description = "Form protection without captcha."
+core = 7.x
+files[] = captcha_free.module
+files[] = captcha_free.admin.inc
+configure = admin/config/content
+; Information added by Drupal.org packaging script on 2014-07-04
+version = "7.x-1.8"
+core = "7.x"
+project = "captcha-free"
+datestamp = "1404489531"
+
