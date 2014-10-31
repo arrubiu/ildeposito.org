@@ -234,6 +234,36 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     $display->content['new-7cde485c-1f67-44ff-acb9-49d6a3622d76'] = $pane;
     $display->panels['left'][5] = 'new-7cde485c-1f67-44ff-acb9-49d6a3622d76';
     $pane = new stdClass();
+    $pane->pid = 'new-ef57e8be-81fc-4b47-9e89-6de54de3f331';
+    $pane->panel = 'middle';
+    $pane->type = 'custom';
+    $pane->subtype = 'custom';
+    $pane->shown = FALSE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'admin_title' => 'Decennale',
+      'title' => 'Festa de ilDeposito - 3/4/5 ottobre a Milano',
+      'body' => '<h6>Quest\'anno ilDeposito.org compie 10 anni!<br />
+Festeggeremo questo evento con una festa a Milano, al circolo La Scighera, il 3/4/5 ottobre.</h6>
+
+<h5><strong><a href="http://www.ildeposito.org/ildeposito-decennale">Visualizza tutte le informazioni</a>!</strong><br />
+<strong><a href="https://www.facebook.com/events/1594321064128937/?ref=5">Partecipa all\'evento su Facebook</a>!</strong></h5>
+',
+      'format' => 'filtered_html',
+      'substitute' => TRUE,
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 0;
+    $pane->locks = array();
+    $pane->uuid = 'ef57e8be-81fc-4b47-9e89-6de54de3f331';
+    $display->content['new-ef57e8be-81fc-4b47-9e89-6de54de3f331'] = $pane;
+    $display->panels['middle'][0] = 'new-ef57e8be-81fc-4b47-9e89-6de54de3f331';
+    $pane = new stdClass();
     $pane->pid = 'new-24068dc5-8e92-49b7-9347-4d86b5e9ee91';
     $pane->panel = 'middle';
     $pane->type = 'block';
@@ -256,11 +286,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     );
     $pane->css = array();
     $pane->extras = array();
-    $pane->position = 0;
+    $pane->position = 1;
     $pane->locks = array();
     $pane->uuid = '24068dc5-8e92-49b7-9347-4d86b5e9ee91';
     $display->content['new-24068dc5-8e92-49b7-9347-4d86b5e9ee91'] = $pane;
-    $display->panels['middle'][0] = 'new-24068dc5-8e92-49b7-9347-4d86b5e9ee91';
+    $display->panels['middle'][1] = 'new-24068dc5-8e92-49b7-9347-4d86b5e9ee91';
     $pane = new stdClass();
     $pane->pid = 'new-9fb1dab0-4ef7-497d-9518-6cca890b3c40';
     $pane->panel = 'middle';
@@ -293,11 +323,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'ribelle',
     );
     $pane->extras = array();
-    $pane->position = 1;
+    $pane->position = 2;
     $pane->locks = array();
     $pane->uuid = '9fb1dab0-4ef7-497d-9518-6cca890b3c40';
     $display->content['new-9fb1dab0-4ef7-497d-9518-6cca890b3c40'] = $pane;
-    $display->panels['middle'][1] = 'new-9fb1dab0-4ef7-497d-9518-6cca890b3c40';
+    $display->panels['middle'][2] = 'new-9fb1dab0-4ef7-497d-9518-6cca890b3c40';
     $pane = new stdClass();
     $pane->pid = 'new-848cb06a-aff0-4cdd-bad0-576888d4a10f';
     $pane->panel = 'middle';
@@ -321,11 +351,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'ribelle',
     );
     $pane->extras = array();
-    $pane->position = 2;
+    $pane->position = 3;
     $pane->locks = array();
     $pane->uuid = '848cb06a-aff0-4cdd-bad0-576888d4a10f';
     $display->content['new-848cb06a-aff0-4cdd-bad0-576888d4a10f'] = $pane;
-    $display->panels['middle'][2] = 'new-848cb06a-aff0-4cdd-bad0-576888d4a10f';
+    $display->panels['middle'][3] = 'new-848cb06a-aff0-4cdd-bad0-576888d4a10f';
     $pane = new stdClass();
     $pane->pid = 'new-36520cbb-1bc7-4065-8b9d-f35067288f58';
     $pane->panel = 'middle';
@@ -358,11 +388,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-first elenco-contenuti',
     );
     $pane->extras = array();
-    $pane->position = 3;
+    $pane->position = 4;
     $pane->locks = array();
     $pane->uuid = '36520cbb-1bc7-4065-8b9d-f35067288f58';
     $display->content['new-36520cbb-1bc7-4065-8b9d-f35067288f58'] = $pane;
-    $display->panels['middle'][3] = 'new-36520cbb-1bc7-4065-8b9d-f35067288f58';
+    $display->panels['middle'][4] = 'new-36520cbb-1bc7-4065-8b9d-f35067288f58';
     $pane = new stdClass();
     $pane->pid = 'new-3ace6fef-a486-4902-9d0f-5d26402cdc63';
     $pane->panel = 'middle';
@@ -389,11 +419,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-second elenco-contenuti',
     );
     $pane->extras = array();
-    $pane->position = 4;
+    $pane->position = 5;
     $pane->locks = array();
     $pane->uuid = '3ace6fef-a486-4902-9d0f-5d26402cdc63';
     $display->content['new-3ace6fef-a486-4902-9d0f-5d26402cdc63'] = $pane;
-    $display->panels['middle'][4] = 'new-3ace6fef-a486-4902-9d0f-5d26402cdc63';
+    $display->panels['middle'][5] = 'new-3ace6fef-a486-4902-9d0f-5d26402cdc63';
     $pane = new stdClass();
     $pane->pid = 'new-3e159394-883a-4432-b463-2abee97e49b9';
     $pane->panel = 'middle';
@@ -417,11 +447,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
     );
     $pane->css = array();
     $pane->extras = array();
-    $pane->position = 5;
+    $pane->position = 6;
     $pane->locks = array();
     $pane->uuid = '3e159394-883a-4432-b463-2abee97e49b9';
     $display->content['new-3e159394-883a-4432-b463-2abee97e49b9'] = $pane;
-    $display->panels['middle'][5] = 'new-3e159394-883a-4432-b463-2abee97e49b9';
+    $display->panels['middle'][6] = 'new-3e159394-883a-4432-b463-2abee97e49b9';
     $pane = new stdClass();
     $pane->pid = 'new-cb24690f-5e84-4cc0-a395-06e549e4b1ee';
     $pane->panel = 'middle';
@@ -448,11 +478,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-first',
     );
     $pane->extras = array();
-    $pane->position = 6;
+    $pane->position = 7;
     $pane->locks = array();
     $pane->uuid = 'cb24690f-5e84-4cc0-a395-06e549e4b1ee';
     $display->content['new-cb24690f-5e84-4cc0-a395-06e549e4b1ee'] = $pane;
-    $display->panels['middle'][6] = 'new-cb24690f-5e84-4cc0-a395-06e549e4b1ee';
+    $display->panels['middle'][7] = 'new-cb24690f-5e84-4cc0-a395-06e549e4b1ee';
     $pane = new stdClass();
     $pane->pid = 'new-9c848b2e-eed4-468c-a8ae-2883fdff6fd5';
     $pane->panel = 'middle';
@@ -479,11 +509,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-second',
     );
     $pane->extras = array();
-    $pane->position = 7;
+    $pane->position = 8;
     $pane->locks = array();
     $pane->uuid = '9c848b2e-eed4-468c-a8ae-2883fdff6fd5';
     $display->content['new-9c848b2e-eed4-468c-a8ae-2883fdff6fd5'] = $pane;
-    $display->panels['middle'][7] = 'new-9c848b2e-eed4-468c-a8ae-2883fdff6fd5';
+    $display->panels['middle'][8] = 'new-9c848b2e-eed4-468c-a8ae-2883fdff6fd5';
     $pane = new stdClass();
     $pane->pid = 'new-0b8d5347-5866-4664-a7b0-50bfb0939e48';
     $pane->panel = 'middle';
@@ -504,11 +534,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-second',
     );
     $pane->extras = array();
-    $pane->position = 8;
+    $pane->position = 9;
     $pane->locks = array();
     $pane->uuid = '0b8d5347-5866-4664-a7b0-50bfb0939e48';
     $display->content['new-0b8d5347-5866-4664-a7b0-50bfb0939e48'] = $pane;
-    $display->panels['middle'][8] = 'new-0b8d5347-5866-4664-a7b0-50bfb0939e48';
+    $display->panels['middle'][9] = 'new-0b8d5347-5866-4664-a7b0-50bfb0939e48';
     $pane = new stdClass();
     $pane->pid = 'new-59746621-9d7b-473f-b882-316dc1a0c4c7';
     $pane->panel = 'middle';
@@ -535,11 +565,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-first',
     );
     $pane->extras = array();
-    $pane->position = 9;
+    $pane->position = 10;
     $pane->locks = array();
     $pane->uuid = '59746621-9d7b-473f-b882-316dc1a0c4c7';
     $display->content['new-59746621-9d7b-473f-b882-316dc1a0c4c7'] = $pane;
-    $display->panels['middle'][9] = 'new-59746621-9d7b-473f-b882-316dc1a0c4c7';
+    $display->panels['middle'][10] = 'new-59746621-9d7b-473f-b882-316dc1a0c4c7';
     $pane = new stdClass();
     $pane->pid = 'new-40aa1460-38cc-40e0-80e9-95bc599d63f7';
     $pane->panel = 'middle';
@@ -566,11 +596,11 @@ Tutti i contenuti sono pubblicati per la loro valenza storica, artistica, cultur
       'css_class' => 'grid-6 col-second',
     );
     $pane->extras = array();
-    $pane->position = 10;
+    $pane->position = 11;
     $pane->locks = array();
     $pane->uuid = '40aa1460-38cc-40e0-80e9-95bc599d63f7';
     $display->content['new-40aa1460-38cc-40e0-80e9-95bc599d63f7'] = $pane;
-    $display->panels['middle'][10] = 'new-40aa1460-38cc-40e0-80e9-95bc599d63f7';
+    $display->panels['middle'][11] = 'new-40aa1460-38cc-40e0-80e9-95bc599d63f7';
     $pane = new stdClass();
     $pane->pid = 'new-db1ac8e2-ba61-4323-86a5-50e12ce71648';
     $pane->panel = 'right';
