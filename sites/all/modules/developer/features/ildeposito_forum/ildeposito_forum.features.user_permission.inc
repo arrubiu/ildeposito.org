@@ -35,7 +35,6 @@ function ildeposito_forum_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'staff' => 'staff',
-      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );
@@ -94,7 +93,6 @@ function ildeposito_forum_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'staff' => 'staff',
-      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );

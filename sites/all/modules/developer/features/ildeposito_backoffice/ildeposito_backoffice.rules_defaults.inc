@@ -58,17 +58,11 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_contenuto_creato'] = entity_import('rules_config', '{ "rules_contenuto_creato" : {
       "LABEL" : "Contenuto creato - No Staff",
       "PLUGIN" : "reaction rule",
-      "ACTIVE" : false,
       "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
       "ON" : { "node_insert" : [] },
       "IF" : [
-        { "NOT user_has_role" : { "account" : [ "node:author" ], "roles" : { "value" : { "4" : "4" } } } },
-        { "NOT node_is_of_type" : {
-            "node" : [ "node" ],
-            "type" : { "value" : { "support_ticket" : "support_ticket" } }
-          }
-        }
+        { "NOT user_has_role" : { "account" : [ "node:author" ], "roles" : { "value" : { "4" : "4" } } } }
       ],
       "DO" : [
         { "drupal_message" : {
@@ -113,7 +107,6 @@ function ildeposito_backoffice_default_rules_configuration() {
   $items['rules_revisione_creata_no_staff'] = entity_import('rules_config', '{ "rules_revisione_creata_no_staff" : {
       "LABEL" : "Revisione creata - No Staff",
       "PLUGIN" : "reaction rule",
-      "ACTIVE" : false,
       "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
       "ON" : { "node_update" : [] },
