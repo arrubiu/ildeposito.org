@@ -3154,6 +3154,312 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['menu']['name'] = 'menu-ildeposito-amministrazione';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Autori senza foto */
+  $handler = $view->new_display('page', 'Autori senza foto', 'page_3');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Autori senza foto';
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '20';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_label'] = 'Voci per pagina';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all_label'] = '- Tutto -';
+  $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Scostamento';
+  $handler->display->display_options['pager']['options']['tags']['first'] = '« prima';
+  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ precedente';
+  $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
+  $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'title' => 'title',
+    'field_sezione' => 'field_sezione',
+    'edit_node' => 'edit_node',
+    'field_localizzazione_editable' => 'field_localizzazione_editable',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_sezione' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit_node' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_localizzazione_editable' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Intestazione: Globale: Area di testo */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['content'] = 'L\'elenco è ordinato in base al numero di visite dell\'utlimo mese.';
+  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'ID';
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Campo: Contenuto: Sezione */
+  $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
+  /* Campo: Contenuto: Link modifica */
+  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['label'] = '';
+  $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Criterio di ordinamento: Statistiche: Page Views in the past 31 days */
+  $handler->display->display_options['sorts']['count']['id'] = 'count';
+  $handler->display->display_options['sorts']['count']['table'] = 'ga_stats_count_pageviews_month';
+  $handler->display->display_options['sorts']['count']['field'] = 'count';
+  $handler->display->display_options['sorts']['count']['order'] = 'DESC';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'autore' => 'autore',
+  );
+  /* Criterio del filtro: Contenuto: Pubblicato */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
+  $handler->display->display_options['filters']['status']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['status']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['status']['expose']['label'] = 'Pubblicato';
+  $handler->display->display_options['filters']['status']['expose']['operator'] = 'status_op';
+  $handler->display->display_options['filters']['status']['expose']['identifier'] = 'status';
+  $handler->display->display_options['filters']['status']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+  );
+  /* Criterio del filtro: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
+  $handler->display->display_options['filters']['field_cognome_value']['id'] = 'field_cognome_value';
+  $handler->display->display_options['filters']['field_cognome_value']['table'] = 'field_data_field_cognome';
+  $handler->display->display_options['filters']['field_cognome_value']['field'] = 'field_cognome_value';
+  $handler->display->display_options['filters']['field_cognome_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_cognome_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['operator_id'] = 'field_cognome_value_op';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['label'] = 'Cognome';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['operator'] = 'field_cognome_value_op';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['identifier'] = 'field_cognome_value';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_dropdown'] = 0;
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_dependent'] = 0;
+  /* Criterio del filtro: Campo: Immagini (field_images:delta) */
+  $handler->display->display_options['filters']['delta']['id'] = 'delta';
+  $handler->display->display_options['filters']['delta']['table'] = 'field_data_field_images';
+  $handler->display->display_options['filters']['delta']['field'] = 'delta';
+  $handler->display->display_options['filters']['delta']['operator'] = 'empty';
+  $handler->display->display_options['path'] = 'gestione-autori-senza-foto';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Autori senza foto';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'menu-ildeposito-amministrazione';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Eventi senza foto */
+  $handler = $view->new_display('page', 'Eventi senza foto', 'page_4');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Eventi senza foto';
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '20';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_label'] = 'Voci per pagina';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all_label'] = '- Tutto -';
+  $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Scostamento';
+  $handler->display->display_options['pager']['options']['tags']['first'] = '« prima';
+  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ precedente';
+  $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
+  $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'title' => 'title',
+    'field_sezione' => 'field_sezione',
+    'edit_node' => 'edit_node',
+    'field_localizzazione_editable' => 'field_localizzazione_editable',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_sezione' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit_node' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_localizzazione_editable' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Intestazione: Globale: Area di testo */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['content'] = 'L\'elenco è ordinato in base al numero di visite dell\'utlimo mese.';
+  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'ID';
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Campo: Contenuto: Sezione */
+  $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
+  /* Campo: Contenuto: Link modifica */
+  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['label'] = '';
+  $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Criterio di ordinamento: Statistiche: Page Views in the past 31 days */
+  $handler->display->display_options['sorts']['count']['id'] = 'count';
+  $handler->display->display_options['sorts']['count']['table'] = 'ga_stats_count_pageviews_month';
+  $handler->display->display_options['sorts']['count']['field'] = 'count';
+  $handler->display->display_options['sorts']['count']['order'] = 'DESC';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'evento' => 'evento',
+  );
+  /* Criterio del filtro: Contenuto: Pubblicato */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
+  $handler->display->display_options['filters']['status']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['status']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['status']['expose']['label'] = 'Pubblicato';
+  $handler->display->display_options['filters']['status']['expose']['operator'] = 'status_op';
+  $handler->display->display_options['filters']['status']['expose']['identifier'] = 'status';
+  $handler->display->display_options['filters']['status']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+  );
+  /* Criterio del filtro: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
+  $handler->display->display_options['filters']['field_cognome_value']['id'] = 'field_cognome_value';
+  $handler->display->display_options['filters']['field_cognome_value']['table'] = 'field_data_field_cognome';
+  $handler->display->display_options['filters']['field_cognome_value']['field'] = 'field_cognome_value';
+  $handler->display->display_options['filters']['field_cognome_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_cognome_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['operator_id'] = 'field_cognome_value_op';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['label'] = 'Cognome';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['operator'] = 'field_cognome_value_op';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['identifier'] = 'field_cognome_value';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_dropdown'] = 0;
+  $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_dependent'] = 0;
+  /* Criterio del filtro: Campo: Immagini (field_images:delta) */
+  $handler->display->display_options['filters']['delta']['id'] = 'delta';
+  $handler->display->display_options['filters']['delta']['table'] = 'field_data_field_images';
+  $handler->display->display_options['filters']['delta']['field'] = 'delta';
+  $handler->display->display_options['filters']['delta']['operator'] = 'empty';
+  $handler->display->display_options['path'] = 'gestione-eventi-senza-foto';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Eventi senza foto';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'menu-ildeposito-amministrazione';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
   $translatables['gestione_contenuti'] = array(
     t('Master'),
     t('Gestione Autori'),
@@ -3187,6 +3493,9 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     t('Gestione contenuti'),
     t('Data di inserimento'),
     t('Data modifica'),
+    t('Autori senza foto'),
+    t('L\'elenco è ordinato in base al numero di visite dell\'utlimo mese.'),
+    t('Eventi senza foto'),
   );
   $export['gestione_contenuti'] = $view;
 
