@@ -9,190 +9,190 @@
  * Implements hook_node_presave
  */
 function alterator_node_presave($node) {
-	switch ($node->type) {
-		case 'evento':
-			$values = array(
-					'lat' => $node->field_geolocation['und'][0]['lat'],
-					'lon' => $node->field_geolocation['und'][0]['lng'],
-			);
-			$node->field_geofield['und'][0] = geofield_compute_values($values, 'latlon');
-			$node->field_evento_ordinamento['und'][0]['value'] = $node->field_data_evento['und'][0]['value'];
-			break;
-	}
+  switch ($node->type) {
+    case 'evento':
+      $values = array(
+        'lat' => $node->field_geolocation['und'][0]['lat'],
+        'lon' => $node->field_geolocation['und'][0]['lng'],
+      );
+      $node->field_geofield['und'][0] = geofield_compute_values($values, 'latlon');
+      $node->field_evento_ordinamento['und'][0]['value'] = $node->field_data_evento['und'][0]['value'];
+      break;
+  }
 
-	if (in_array('staff', $GLOBALS['user']->roles) && $node->type != 'articolo' && !isset($node->original) && $node->uid != '227') {
-		$node->uid = '227';
-	}
+  if (in_array('staff', $GLOBALS['user']->roles) && $node->type != 'articolo' && !isset($node->original) && $node->uid != '227') {
+    $node->uid = '227';
+  }
 }
 
 /**
  * Implements hook_form_alter().
  */
 function alterator_form_alter(&$form, &$form_state, $form_id) {
-	if ($form['#id'] == 'views-exposed-form-ricerca-ricerca-page') {
-		$form['submit']['#type'] = 'image_button';
-		$form['submit']['#title'] = 'Cerca nel sito';
-		$form['submit']['#src'] = drupal_get_path('theme', 'ildeposito') . '/images/icon_search.png';
-		$form['chiave']['#default_value'] = 'cerca nel sito';
-		$form['chiave']['#attributes']['onblur'] = "if (this.value == '') {this.value = 'cerca nel sito';}";
-		$form['chiave']['#attributes']['onfocus'] = "if (this.value == 'cerca nel sito') {this.value = '';}";
-	}
+  if ($form['#id'] == 'views-exposed-form-ricerca-ricerca-page') {
+    $form['submit']['#type'] = 'image_button';
+    $form['submit']['#title'] = 'Cerca nel sito';
+    $form['submit']['#src'] = drupal_get_path('theme', 'ildeposito') . '/images/icon_search.png';
+    $form['chiave']['#default_value'] = 'cerca nel sito';
+    $form['chiave']['#attributes']['onblur'] = "if (this.value == '') {this.value = 'cerca nel sito';}";
+    $form['chiave']['#attributes']['onfocus'] = "if (this.value == 'cerca nel sito') {this.value = '';}";
+  }
 
-	if ($form['#id'] == 'user-login-form') {
-		$form['actions']['submit']['#type'] = 'image_button';
-		$form['actions']['submit']['#title'] = 'Accedi';
-		$form['actions']['submit']['#src'] = drupal_get_path('theme', 'ildeposito') . '/images/login.png';
-		$form['name']['#attributes']['onblur'] = "if (this.value == '') {this.value = 'username';}";
-		$form['name']['#default_value'] = 'username';
-		$form['name']['#attributes']['onfocus'] = "if (this.value == 'username') {this.value = '';}";
-		$form['pass']['#attributes']['onblur'] = "if (this.value == '') {this.value = 'password';}";
-		$form['pass']['#attributes']['onfocus'] = "if (this.value == 'password') {this.value = '';}";
-	}
+  if ($form['#id'] == 'user-login-form') {
+    $form['actions']['submit']['#type'] = 'image_button';
+    $form['actions']['submit']['#title'] = 'Accedi';
+    $form['actions']['submit']['#src'] = drupal_get_path('theme', 'ildeposito') . '/images/login.png';
+    $form['name']['#attributes']['onblur'] = "if (this.value == '') {this.value = 'username';}";
+    $form['name']['#default_value'] = 'username';
+    $form['name']['#attributes']['onfocus'] = "if (this.value == 'username') {this.value = '';}";
+    $form['pass']['#attributes']['onblur'] = "if (this.value == '') {this.value = 'password';}";
+    $form['pass']['#attributes']['onfocus'] = "if (this.value == 'password') {this.value = '';}";
+  }
 
-	if ($form['#id'] == 'simplenews-block-form-293') {
-		$form['mail']['#attributes']['onblur'] = "if (this.value == '') {this.value = 'tuo@indirizzoemail';}";
-		$form['mail']['#attributes']['onfocus'] = "if (this.value == 'tuo@indirizzoemail') {this.value = '';}";
-		$form['mail']['#default_value'] = 'tuo@indirizzoemail';
-		$form['submit']['#type'] = 'image_button';
-		$form['submit']['#title'] = 'Iscriviti';
-		$form['submit']['#src'] = drupal_get_path('theme', 'ildeposito') . '/images/login.png';
-	}
+  if ($form['#id'] == 'simplenews-block-form-293') {
+    $form['mail']['#attributes']['onblur'] = "if (this.value == '') {this.value = 'tuo@indirizzoemail';}";
+    $form['mail']['#attributes']['onfocus'] = "if (this.value == 'tuo@indirizzoemail') {this.value = '';}";
+    $form['mail']['#default_value'] = 'tuo@indirizzoemail';
+    $form['submit']['#type'] = 'image_button';
+    $form['submit']['#title'] = 'Iscriviti';
+    $form['submit']['#src'] = drupal_get_path('theme', 'ildeposito') . '/images/login.png';
+  }
 
-	if (isset($form['#entity_type']) && $form['#entity_type'] == 'node' && !in_array('staff', $GLOBALS['user']->roles)) {
-		unset($form['#fieldgroups']['group_staff']);
-		unset($form['#groups']['group_staff']);
-	}
+  if (isset($form['#entity_type']) && $form['#entity_type'] == 'node' && !in_array('staff', $GLOBALS['user']->roles)) {
+    unset($form['#fieldgroups']['group_staff']);
+    unset($form['#groups']['group_staff']);
+  }
 }
 
 /**
  * Implements hook_views_pre_view.
  */
 function alterator_views_pre_view(&$view) {
-	switch ($view->name) {
-		case 'contenuti_autore':
-			if ($view->current_display == 'autore_singolo') {
-				$nid_autore = arg(1);
-				$view_filters = $view->display_handler->get_option('filters');
-				$view_filters['field_autore_testo']['value'] = $nid_autore;
-				$view_filters['field_autore_musica']['value'] = $nid_autore;
-				$view->display_handler->override_option('filters', $view_filters);
-			}
-			break;
-	}
+  switch ($view->name) {
+    case 'contenuti_autore':
+      if ($view->current_display == 'autore_singolo') {
+        $nid_autore = arg(1);
+        $view_filters = $view->display_handler->get_option('filters');
+        $view_filters['field_autore_testo']['value'] = $nid_autore;
+        $view_filters['field_autore_musica']['value'] = $nid_autore;
+        $view->display_handler->override_option('filters', $view_filters);
+      }
+      break;
+  }
 }
 
 /**
  * Implementation of hook_block_info().
  */
 function alterator_block_info() {
-	$blocks['strumenti'] = array(
-			'info' => t('Strumenti contenuti'),
-	);
+  $blocks['strumenti'] = array(
+    'info' => t('Strumenti contenuti'),
+  );
 
-	$blocks['logo_deposito'] = array(
-			'info' => t('Logo Deposito'),
-	);
+  $blocks['logo_deposito'] = array(
+    'info' => t('Logo Deposito'),
+  );
 
-	$blocks['twitter_timeline'] = array(
-			'info' => t('Twitter timeline'),
-	);
+  $blocks['twitter_timeline'] = array(
+    'info' => t('Twitter timeline'),
+  );
 
-	$blocks['twitter_timeline_sidebar'] = array(
-			'info' => t('Twitter timeline Sidebar'),
-	);
+  $blocks['twitter_timeline_sidebar'] = array(
+    'info' => t('Twitter timeline Sidebar'),
+  );
 
-	$blocks['social_count'] = array(
-			'info' => t('Social Count'),
-	);
-	return $blocks;
+  $blocks['social_count'] = array(
+    'info' => t('Social Count'),
+  );
+  return $blocks;
 }
 
 /**
  * Implementation of hook_block_view().
  */
 function alterator_block_view($delta = '') {
-	$block = array();
-	switch ($delta) {
-		case 'strumenti':
-			$block['subject'] = t('Strumenti');
-			$block['content'] = strumenti_contents();
-			break;
+  $block = array();
+  switch ($delta) {
+    case 'strumenti':
+      $block['subject'] = t('Strumenti');
+      $block['content'] = strumenti_contents();
+      break;
 
-		case 'logo_deposito':
-			$block['content'] = logo_deposito();
-			break;
+    case 'logo_deposito':
+      $block['content'] = logo_deposito();
+      break;
 
-		case 'twitter_timeline':
-			$block['content'] = twitter_timeline();
-			break;
+    case 'twitter_timeline':
+      $block['content'] = twitter_timeline();
+      break;
 
-		case 'twitter_timeline_sidebar':
-			$block['content'] = twitter_timeline_sidebar();
-			break;
+    case 'twitter_timeline_sidebar':
+      $block['content'] = twitter_timeline_sidebar();
+      break;
 
-		case 'social_count':
-			$block['subject'] = 'Social network';
-			$block['content'] = social_count();
-			break;
-	}
-	return $block;
+    case 'social_count':
+      $block['subject'] = 'Social network';
+      $block['content'] = social_count();
+      break;
+  }
+  return $block;
 }
 
 /**
  * 
  */
 function social_count() {
-	/* $url = "http://twitter.com/users/show/ildeposito";
-	  $response = file_get_contents($url);
-	  $t_profile = new SimpleXMLElement($response);
-	  $count_twitter = $t_profile->followers_count; */
+  /* $url = "http://twitter.com/users/show/ildeposito";
+    $response = file_get_contents($url);
+    $t_profile = new SimpleXMLElement($response);
+    $count_twitter = $t_profile->followers_count; */
 
 
-	require_once('facebook.php');
-	$facebook = new Facebook(array(
-			'appId' => variable_get('alterator_fb_app_id'),
-			'secret' => variable_get('alterator_fb_app_secret'),
-			'cookie' => true,
-	));
-	$result = $facebook->api(array(
-			'method' => 'fql.query',
-			'query' => 'select fan_count from page where page_id = ' . variable_get('alterator_fb_page_id') . ''
-	));
-	$count_facebook = $result[0]['fan_count'];
+  require_once('facebook.php');
+  $facebook = new Facebook(array(
+    'appId' => variable_get('alterator_fb_app_id'),
+    'secret' => variable_get('alterator_fb_app_secret'),
+    'cookie' => true,
+  ));
+  $result = $facebook->api(array(
+    'method' => 'fql.query',
+    'query' => 'select fan_count from page where page_id = ' . variable_get('alterator_fb_page_id') . ''
+  ));
+  $count_facebook = $result[0]['fan_count'];
 
 
-	$facebook_img = theme('image', array(
-			'path' => drupal_get_path('theme', 'ildeposito') . '/images/home_facebook.png',
-			'alt' => 'facebook',
-			'title' => 'Seguici su Facebook',
-	));
+  $facebook_img = theme('image', array(
+    'path' => drupal_get_path('theme', 'ildeposito') . '/images/home_facebook.png',
+    'alt' => 'facebook',
+    'title' => 'Seguici su Facebook',
+  ));
 
-	$google_img = theme('image', array(
-			'path' => drupal_get_path('theme', 'ildeposito') . '/images/home_google.png',
-			'alt' => 'google',
-			'title' => 'Seguici su Google Plus',
-	));
+  $google_img = theme('image', array(
+    'path' => drupal_get_path('theme', 'ildeposito') . '/images/home_google.png',
+    'alt' => 'google',
+    'title' => 'Seguici su Google Plus',
+  ));
 
-	$twitter_img = theme('image', array(
-			'path' => drupal_get_path('theme', 'ildeposito') . '/images/home_twitter.png',
-			'alt' => 'twitter',
-			'title' => 'Seguici su Twitter',
-	));
-	$output = '';
-	$output .= '<div class="social">' . l($facebook_img, 'http://www.facebook.com/ildeposito.org', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Facebook', 'http://www.facebook.com/ildeposito.org', array('absolute' => TRUE)) . '<br /><strong>ildeposito.org</strong><br /><strong> ' . $count_facebook . '</strong> mi piace</div>';
-
-
-	$output .= '<div class="social">' . l($twitter_img, 'http://twitter.com/ildeposito', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Twitter', 'http://twitter.com/ildeposito', array('absolute' => TRUE)) . '<br /><strong>@ildeposito</strong><br /></div>';
-
-	$output .= '<div class="social">' . l($google_img, 'https://plus.google.com/u/0/113629455468042353975/', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Google Plus', 'https://plus.google.com/u/0/113629455468042353975/', array('absolute' => TRUE)) . '<br /><strong>ilDeposito</strong><br /></div>';
+  $twitter_img = theme('image', array(
+    'path' => drupal_get_path('theme', 'ildeposito') . '/images/home_twitter.png',
+    'alt' => 'twitter',
+    'title' => 'Seguici su Twitter',
+  ));
+  $output = '';
+  $output .= '<div class="social">' . l($facebook_img, 'http://www.facebook.com/ildeposito.org', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Facebook', 'http://www.facebook.com/ildeposito.org', array('absolute' => TRUE)) . '<br /><strong>ildeposito.org</strong><br /><strong> ' . $count_facebook . '</strong> mi piace</div>';
 
 
+  $output .= '<div class="social">' . l($twitter_img, 'http://twitter.com/ildeposito', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Twitter', 'http://twitter.com/ildeposito', array('absolute' => TRUE)) . '<br /><strong>@ildeposito</strong><br /></div>';
 
-	return $output;
+  $output .= '<div class="social">' . l($google_img, 'https://plus.google.com/u/0/113629455468042353975/', array('html' => TRUE, 'absolute' => TRUE)) . '<p>' . l('Google Plus', 'https://plus.google.com/u/0/113629455468042353975/', array('absolute' => TRUE)) . '<br /><strong>ilDeposito</strong><br /></div>';
+
+
+
+  return $output;
 }
 
 function facebook_follow() {
-	// mettere su strongarm le chiavi!!!
+  // mettere su strongarm le chiavi!!!
 }
 
 /**
@@ -200,68 +200,69 @@ function facebook_follow() {
  * @return string
  */
 function strumenti_contents() {
-	$id = arg(1);
-	$node = menu_get_object();
-	
-	if ($node->type == 'canto') {
-		$print_pdf = '<span class="print_pdf">' . l('Versione PDF', 'stampa/canto/' . $id, array('classes' => array('print--pdf'))) . '</span>';
-	} else {
-		$print_pdf = print_pdf_insert_link();
-	}
-	
-	$items['items'] = array(
-			flag_create_link('segnalibri', $id),
-			flag_create_link('canzoniere', $id),
-			flag_create_link('da_rivedere', $id),
-			print_insert_link(),
-			$print_pdf,
-	);
-	return theme('item_list', $items);
-	/* $html = '';
-	  $html .= flag_create_link('segnalibri', $id);
-	  $html .= flag_create_link('canzoniere', $id);
-	  $html .= print_insert_link();
-	  $html .= ; */
-	//return $html;
+  $id = arg(1);
+  $node = menu_get_object();
+
+  if ($node->type == 'canto') {
+    $print_pdf = '<span class="print_pdf">' . l('Versione PDF', 'stampa/canto/' . $id, array('classes' => array('print--pdf'))) . '</span>';
+  }
+  else {
+    $print_pdf = print_pdf_insert_link();
+  }
+
+  $items['items'] = array(
+    flag_create_link('segnalibri', $id),
+    flag_create_link('canzoniere', $id),
+    flag_create_link('da_rivedere', $id),
+    print_insert_link(),
+    $print_pdf,
+  );
+  return theme('item_list', $items);
+  /* $html = '';
+    $html .= flag_create_link('segnalibri', $id);
+    $html .= flag_create_link('canzoniere', $id);
+    $html .= print_insert_link();
+    $html .= ; */
+  //return $html;
 }
 
 function twitter_timeline() {
-	$output = "<a class=\"twitter-timeline\" height=\"350\"  href=\"https://twitter.com/ildeposito\"  data-widget-id=\"330683254619381760\" data-link-color=\"#aa0000\" lang=\"IT\">Tweet di @ildeposito</a>
+  $output = "<a class=\"twitter-timeline\" height=\"350\"  href=\"https://twitter.com/ildeposito\"  data-widget-id=\"330683254619381760\" data-link-color=\"#aa0000\" lang=\"IT\">Tweet di @ildeposito</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+\"://platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script>";
-	return $output;
+  return $output;
 }
 
 function twitter_timeline_sidebar() {
-	$output = "<a class=\"twitter-timeline\" height=\"350\"  href=\"https://twitter.com/ildeposito\"  data-widget-id=\"330683254619381760\" data-link-color=\"#aa0000\" lang=\"IT\">Tweet di @ildeposito</a>
+  $output = "<a class=\"twitter-timeline\" height=\"350\"  href=\"https://twitter.com/ildeposito\"  data-widget-id=\"330683254619381760\" data-link-color=\"#aa0000\" lang=\"IT\">Tweet di @ildeposito</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+\"://platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script>";
-	return $output;
+  return $output;
 }
 
 function logo_deposito() {
 
-	$logo = theme('image', array(
-			'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_decennale.png',
-			'alt' => 'logo',
-			'title' => 'Il decennale de ilDeposito.org',
-			'attributes' => array('class' => 'logo', 'hidden-xs'),
-	));
+  $logo = theme('image', array(
+    'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_decennale.png',
+    'alt' => 'logo',
+    'title' => 'Il decennale de ilDeposito.org',
+    'attributes' => array('class' => 'logo', 'hidden-xs'),
+  ));
 
-	$titolo = theme('image', array(
-			'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_titolo.png',
-			'alt' => 'titolo',
-			'title' => 'ilDeposito.org',
-			'attributes' => array('class' => 'titolo'),
-	));
+  $titolo = theme('image', array(
+    'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_titolo.png',
+    'alt' => 'titolo',
+    'title' => 'ilDeposito.org',
+    'attributes' => array('class' => 'titolo'),
+  ));
 
-	$sottotitolo = theme('image', array(
-			'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_sottotitolo.png',
-			'alt' => 'sottotitolo',
-			'title' => 'ilDeposito.org',
-			'attributes' => array('class' => 'sottotitolo', 'hidden-xs'),
-	));
+  $sottotitolo = theme('image', array(
+    'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_sottotitolo.png',
+    'alt' => 'sottotitolo',
+    'title' => 'ilDeposito.org',
+    'attributes' => array('class' => 'sottotitolo', 'hidden-xs'),
+  ));
 
 
-	return l($logo, 'ildeposito-decennale', array('html' => TRUE)) . l($titolo . $sottotitolo, '', array('html' => TRUE));
+  return l($logo, 'ildeposito-decennale', array('html' => TRUE)) . l($titolo . $sottotitolo, '', array('html' => TRUE));
 }
 
 /**
@@ -277,34 +278,34 @@ function logo_deposito() {
  * Implements hook_service_links().
  */
 function alterator_service_links() {
-	$links = array();
+  $links = array();
 
-	$links['googleplus'] = array(
-			'name' => 'Google Plus',
-			'description' => t('Share this content on Google Plus'),
-			'link' => 'https://plus.google.com/share?url=<encoded-url>',
-	);
+  $links['googleplus'] = array(
+    'name' => 'Google Plus',
+    'description' => t('Share this content on Google Plus'),
+    'link' => 'https://plus.google.com/share?url=<encoded-url>',
+  );
 
-	$links['pinterest'] = array(
-			'name' => 'Pinterest',
-			'description' => t('Share this content on Pinterest'),
-			'link' => 'http://pinterest.com/pin/create/button/?url=<encoded-url>',
-	);
+  $links['pinterest'] = array(
+    'name' => 'Pinterest',
+    'description' => t('Share this content on Pinterest'),
+    'link' => 'http://pinterest.com/pin/create/button/?url=<encoded-url>',
+  );
 
-	return $links;
+  return $links;
 }
 
 /**
  * Implements hook_ctools_plugin_directory().
  */
 function alterator_ctools_plugin_directory($module, $type) {
-	if ($module == 'hybridauth' && $type == 'icon_pack') {
-		return 'plugins/icon_pack';
-	}
+  if ($module == 'hybridauth' && $type == 'icon_pack') {
+    return 'plugins/icon_pack';
+  }
 }
 
 function alterator_form_user_register_form_alter(&$form, &$form_state, $form_id) {
-	$form['#theme'] = 'user_register';
+  $form['#theme'] = 'user_register';
 }
 
 /**
@@ -312,7 +313,7 @@ function alterator_form_user_register_form_alter(&$form, &$form_state, $form_id)
  * @param type $items
  */
 function alterator_menu_alter(&$items) {
-	$items['user/%user/hybridauth']['title'] = 'Account social';
+  $items['user/%user/hybridauth']['title'] = 'Account social';
   unset($items['node']);
 }
 
@@ -320,107 +321,107 @@ function alterator_menu_alter(&$items) {
  * Modulo redirect
  */
 function alterator_init() {
-	switch ($_GET['q']) {
+  switch ($_GET['q']) {
 
-		// Ricerca
-		case 'ricerca.php':
-			exec_redirect(url('ricerca', array('absolute' => TRUE, 'query' => array('chiave' => $_GET['ricerca']))), 'MOVED');
-			break;
+    // Ricerca
+    case 'ricerca.php':
+      exec_redirect(url('ricerca', array('absolute' => TRUE, 'query' => array('chiave' => $_GET['ricerca']))), 'MOVED');
+      break;
 
-		// Pdf & Download
-		case 'pdf/pdf_singolo.php':
-		case 'archivio/canti/download.php':
-			get_path_nodo($_GET['id'], 'canto', 'MOVED');
-			break;
+    // Pdf & Download
+    case 'pdf/pdf_singolo.php':
+    case 'archivio/canti/download.php':
+      get_path_nodo($_GET['id'], 'canto', 'MOVED');
+      break;
 
-		// Canto
-		case 'archivio/canti/canto.php':
-			if (isset($_GET['id'])) {
-				get_path_nodo($_GET['id'], 'canto', 'MOVED');
-			}
-			break;
+    // Canto
+    case 'archivio/canti/canto.php':
+      if (isset($_GET['id'])) {
+        get_path_nodo($_GET['id'], 'canto', 'MOVED');
+      }
+      break;
 
-		// Autore
-		case 'archivio/autori/autore.php':
-			get_path_nodo($_GET['id_autore'], 'autore', 'MOVED');
-			break;
+    // Autore
+    case 'archivio/autori/autore.php':
+      get_path_nodo($_GET['id_autore'], 'autore', 'MOVED');
+      break;
 
-		// Sezione
-		case 'archivio/sezioni/sezione.php':
-			get_path_term('sezioni', $_GET['id_sez'], 'MOVED');
-			break;
+    // Sezione
+    case 'archivio/sezioni/sezione.php':
+      get_path_term('sezioni', $_GET['id_sez'], 'MOVED');
+      break;
 
-		// Tematica vecchia
-		case 'sezioni/view_tematica.php':
-			get_path_term('tags', $_GET['id'], 'MOVED');
-			break;
-
-
-		// Tematica
-		case 'archivio/tematiche/tematica.php':
-			get_path_term('tags', $_GET['id_tem'], 'MOVED');
-			break;
-
-		// Lingua
-		case 'archivio/lingue/lingua.php':
-			get_path_term('lingue', $_GET['id_lingua'], 'MOVED');
-			break;
-
-		// Localizzazione
-		case 'archivio/nazioni/nazione.php':
-			get_path_term('localizzazione', $_GET['id_nazione'], 'MOVED');
-			break;
+    // Tematica vecchia
+    case 'sezioni/view_tematica.php':
+      get_path_term('tags', $_GET['id'], 'MOVED');
+      break;
 
 
-		// Mese
-		case 'archivio/storiacantata/mese.php':
-		case 'archivio/storiacantata/giorno.php':
-			exec_redirect(url('archivio/storiacantata/calendario', array('absolute' => TRUE)), 'MOVED');
-			break;
-	}
+    // Tematica
+    case 'archivio/tematiche/tematica.php':
+      get_path_term('tags', $_GET['id_tem'], 'MOVED');
+      break;
+
+    // Lingua
+    case 'archivio/lingue/lingua.php':
+      get_path_term('lingue', $_GET['id_lingua'], 'MOVED');
+      break;
+
+    // Localizzazione
+    case 'archivio/nazioni/nazione.php':
+      get_path_term('localizzazione', $_GET['id_nazione'], 'MOVED');
+      break;
+
+
+    // Mese
+    case 'archivio/storiacantata/mese.php':
+    case 'archivio/storiacantata/giorno.php':
+      exec_redirect(url('archivio/storiacantata/calendario', array('absolute' => TRUE)), 'MOVED');
+      break;
+  }
 }
 
 function get_path_nodo($old_id, $type, $move) {
-	$path = views_get_view_result('redirect_nodi', $type, $old_id);
-	if (count($path) > 0) {
-		$url = url('node/' . $path[0]->nid, array('absolute' => TRUE));
-		exec_redirect($url, $move);
-	}
+  $path = views_get_view_result('redirect_nodi', $type, $old_id);
+  if (count($path) > 0) {
+    $url = url('node/' . $path[0]->nid, array('absolute' => TRUE));
+    exec_redirect($url, $move);
+  }
 }
 
 function get_path_term($voc, $old_id, $move) {
-	$path = views_get_view_result('redirect_term', 'block', $voc, $old_id);
-	//print count($path);
-	if (count($path) > 0) {
-		$url = url('taxonomy/term/' . $path[0]->tid, array('absolute' => TRUE));
-		exec_redirect($url, $move);
-	}
+  $path = views_get_view_result('redirect_term', 'block', $voc, $old_id);
+  //print count($path);
+  if (count($path) > 0) {
+    $url = url('taxonomy/term/' . $path[0]->tid, array('absolute' => TRUE));
+    exec_redirect($url, $move);
+  }
 }
 
 function get_path_calendar($type, $mese, $giorno, $move) {
-	//$mese = sprintf("%02u", $mese);
-	if ($type == 'mese') {
-		$url = url('archivio/storiacantata/calendario/mese/' . date("Y-$mese"), array('absolute' => TRUE));
-	}
+  //$mese = sprintf("%02u", $mese);
+  if ($type == 'mese') {
+    $url = url('archivio/storiacantata/calendario/mese/' . date("Y-$mese"), array('absolute' => TRUE));
+  }
 
-	if ($type == 'giorno') {
-		// $giorno = sprintf("%02u", $giorno);
-		$url = url('archivio/storiacantata/calendario/giorno/' . date("Y-$mese-$giorno"), array('absolute' => TRUE));
-	}
+  if ($type == 'giorno') {
+    // $giorno = sprintf("%02u", $giorno);
+    $url = url('archivio/storiacantata/calendario/giorno/' . date("Y-$mese-$giorno"), array('absolute' => TRUE));
+  }
 
-	//exec_redirect('http://www.google.it', $move);
+  //exec_redirect('http://www.google.it', $move);
 }
 
 function exec_redirect($url, $move) {
-	if ($move == 'MOVED') {
-		$google_code = 'HTTP/1.1 301 Moved Permanently';
-	}
+  if ($move == 'MOVED') {
+    $google_code = 'HTTP/1.1 301 Moved Permanently';
+  }
 
-	if ($move == 'REMOVED') {
-		$google_code = 'HTTP/1.1 301 Moved Permanently';
-	}
-	header('HTTP/1.1 301 Moved Permanently');
-	header('Location: ' . $url); // perform calculations here,
+  if ($move == 'REMOVED') {
+    $google_code = 'HTTP/1.1 301 Moved Permanently';
+  }
+  header('HTTP/1.1 301 Moved Permanently');
+  header('Location: ' . $url); // perform calculations here,
 }
 
 /**
@@ -431,22 +432,22 @@ function exec_redirect($url, $move) {
  */
 function alterator_workbench_moderation_transition($node, $previous_state, $new_state) {
 
-	$autore_nodo = user_load($node->uid);
-	if (!in_array('staff', $autore_nodo->roles)) {
+  $autore_nodo = user_load($node->uid);
+  if (!in_array('staff', $autore_nodo->roles)) {
 
-		if ($new_state == 'published') {
-			$url = url('node/' . $node->nid, array('absolute' => TRUE));
-			$mittente = user_load('227');
-			$oggetto = 'Il contenuto ' . $node->title . ' è stato pubblicato';
-			$messaggio = 'Ciao ' . $autore_nodo->name . ',
+    if ($new_state == 'published') {
+      $url = url('node/' . $node->nid, array('absolute' => TRUE));
+      $mittente = user_load('227');
+      $oggetto = 'Il contenuto ' . $node->title . ' è stato pubblicato';
+      $messaggio = 'Ciao ' . $autore_nodo->name . ',
         il tuo contenuto <strong>' . $node->title . '</strong> è stato pubblicato.
           
 Per visualizzarlo clicca qui:
 ' . l($url, $url);
 
-			privatemsg_new_thread(array($autore_nodo), $oggetto, $messaggio, array('author' => $mittente));
-		}
-	}
+      privatemsg_new_thread(array($autore_nodo), $oggetto, $messaggio, array('author' => $mittente));
+    }
+  }
 }
 
 /**
@@ -454,13 +455,13 @@ Per visualizzarlo clicca qui:
  * @return array
  */
 function alterator_menu() {
-	$items['eventi/export'] = array(
-			'page callback' => 'eventi_export',
-			'page arguments' => array(),
-			'type' => MENU_CALLBACK,
-			'access arguments' => array('access content'),
-	);
-	return $items;
+  $items['eventi/export'] = array(
+    'page callback' => 'eventi_export',
+    'page arguments' => array(),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+  );
+  return $items;
 }
 
 /**
@@ -468,39 +469,39 @@ function alterator_menu() {
  */
 function eventi_export() {
 
-	header('Content-Type: text/csv; charset=utf-8');
-	header('Content-Disposition: attachment; filename=eventi.csv');
-	$output = fopen('php://output', 'w');
+  header('Content-Type: text/csv; charset=utf-8');
+  header('Content-Disposition: attachment; filename=eventi.csv');
+  $output = fopen('php://output', 'w');
 
-	$query = db_select('node', 'n')
-					->fields('n', array('nid', 'vid', 'title'))
-					->condition('n.type', 'evento', '=')
-					->condition('n.status', 1, '=')
-					->execute();
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'vid', 'title'))
+    ->condition('n.type', 'evento', '=')
+    ->condition('n.status', 1, '=')
+    ->execute();
 
-	while ($risultato = $query->fetch()) {
-		$query1 = db_select('field_data_field_data_evento', 'f')
-						->fields('f', array('field_data_evento_value'))
-						->condition('f.entity_id', $risultato->nid, '=')
-						->condition('f.revision_id', $risultato->vid, '=')
-						->execute();
-		$data = $query1->fetch();
+  while ($risultato = $query->fetch()) {
+    $query1 = db_select('field_data_field_data_evento', 'f')
+      ->fields('f', array('field_data_evento_value'))
+      ->condition('f.entity_id', $risultato->nid, '=')
+      ->condition('f.revision_id', $risultato->vid, '=')
+      ->execute();
+    $data = $query1->fetch();
 
-		$query2 = db_select('field_data_field_informazioni', 'f')
-						->fields('f', array('field_informazioni_value'))
-						->condition('f.entity_id', $risultato->nid, '=')
-						->condition('f.revision_id', $risultato->vid, '=')
-						->execute();
-		$info = $query2->fetch();
-		$evento = array(
-				substr($data->field_data_evento_value, 0, 10),
-				'',
-				l($risultato->title, 'node/' . $risultato->nid, array('absolute' => TRUE, 'attributes' => array('target' => '_top'))),
-				$info->field_informazioni_value
-		);
+    $query2 = db_select('field_data_field_informazioni', 'f')
+      ->fields('f', array('field_informazioni_value'))
+      ->condition('f.entity_id', $risultato->nid, '=')
+      ->condition('f.revision_id', $risultato->vid, '=')
+      ->execute();
+    $info = $query2->fetch();
+    $evento = array(
+      substr($data->field_data_evento_value, 0, 10),
+      '',
+      l($risultato->title, 'node/' . $risultato->nid, array('absolute' => TRUE, 'attributes' => array('target' => '_top'))),
+      $info->field_informazioni_value
+    );
 
-		fputcsv($output, $evento);
-	}
+    fputcsv($output, $evento);
+  }
 }
 
 /**
@@ -508,29 +509,31 @@ function eventi_export() {
  * @param type $uid
  */
 function _print_user($uid) {
-	$autore = user_load($uid);
-	$real = realname_load($autore);
-	if ($real != '') {
-		$nome = $real;
-	} else {
-		$nome = $autore->name;
-	}
+  $autore = user_load($uid);
+  $real = realname_load($autore);
+  if ($real != '') {
+    $nome = $real;
+  }
+  else {
+    $nome = $autore->name;
+  }
 
-	if ($GLOBALS['user']->uid != 0) {
-		return l($nome, 'user/' . $uid);
-	} else {
-		return $nome;
-	}
+  if ($GLOBALS['user']->uid != 0) {
+    return l($nome, 'user/' . $uid);
+  }
+  else {
+    return $nome;
+  }
 }
 
 /**
  * Alter dei tempi della sitemap
  */
 function alterator_xmlsitemap_link_alter(&$link) {
-	//if ( $link['subtype'] == 'canto' ) {
-	$link['lastmod'] = 0;
-	$link['changefreq'] = XMLSITEMAP_FREQUENCY_DAILY;
-	//}
+  //if ( $link['subtype'] == 'canto' ) {
+  $link['lastmod'] = 0;
+  $link['changefreq'] = XMLSITEMAP_FREQUENCY_DAILY;
+  //}
 }
 
 /**
@@ -539,67 +542,100 @@ function alterator_xmlsitemap_link_alter(&$link) {
  * @param type $autore
  */
 function aggiorna_autori($autore) {
-	
-	unset($autore->field_sezione['und']);	
-	
-	$canti_testo = views_get_view_result('migrazione', 'testo', $autore->nid);
-	foreach ($canti_testo as $value) {
-		$sezioni_id[] = $value->field_data_field_sezione_field_sezione_tid;
-	}
 
-	$canti_musica = views_get_view_result('migrazione', 'musica', $autore->nid);
-	foreach ($canti_musica as $value) {
-		$sezioni_id[] = $value->field_data_field_sezione_field_sezione_tid;
-	}
+  unset($autore->field_sezione['und']);
 
-	$sezioni_id = array_unique($sezioni_id);
-	foreach ($sezioni_id as $sezione) {
-		$autore->field_sezione['und'][]['tid'] = $sezione;
-	}
+  $canti_testo = views_get_view_result('migrazione', 'testo', $autore->nid);
+  foreach ($canti_testo as $value) {
+    $sezioni_id[] = $value->field_data_field_sezione_field_sezione_tid;
+  }
 
-	$autore->log = 'Aggiornamento bulk sezioni';
-	$autore->revision_uid = 1;
-	node_save($autore);
-	workbench_moderation_moderate($autore, 'published');
+  $canti_musica = views_get_view_result('migrazione', 'musica', $autore->nid);
+  foreach ($canti_musica as $value) {
+    $sezioni_id[] = $value->field_data_field_sezione_field_sezione_tid;
+  }
+
+  $sezioni_id = array_unique($sezioni_id);
+  foreach ($sezioni_id as $sezione) {
+    $autore->field_sezione['und'][]['tid'] = $sezione;
+  }
+
+  $autore->log = 'Aggiornamento bulk sezioni';
+  $autore->revision_uid = 1;
+  node_save($autore);
+  workbench_moderation_moderate($autore, 'published');
 }
 
 /**
  * Implements hook_file_url_alter().
  */
-/*function alterator_file_url_alter(&$original_uri) {
+/* function alterator_file_url_alter(&$original_uri) {
 
   $scheme = file_uri_scheme($original_uri);
 
   // If the current URI is an absolute or protocol-relative URI, return
   // immediately.
   if (($scheme && ($scheme == 'http' || $scheme == 'https'))
-      || drupal_substr($original_uri, 0, 2) == '//'
-     )
+  || drupal_substr($original_uri, 0, 2) == '//'
+  )
   {
-    return;
+  return;
   }
   elseif ($scheme) {
-      // Only alter URLs for local stream wrappers. If a file is served
-    // remotely, it doesn't make sense to serve it from a CDN.
-    $local_schemes = array_keys(file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL));
-    if (!in_array($scheme, $local_schemes)) {
-      return;
-    }
+  // Only alter URLs for local stream wrappers. If a file is served
+  // remotely, it doesn't make sense to serve it from a CDN.
+  $local_schemes = array_keys(file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL));
+  if (!in_array($scheme, $local_schemes)) {
+  return;
+  }
 
-    // Attempt to get an external URL using the appropriate wrapper.
-    if ($wrapper = file_stream_wrapper_get_instance_by_uri($original_uri)) {
-      $uri = str_replace($GLOBALS['base_url'] . '/', '', $wrapper->getExternalUrl());
-  
-      $original_uri = variable_get('alterator_cdn', 'http://CDN.MYDOMAIN.COM') . '/' . $uri;
-      return;
-    }
-    else {
-      return;
-    }
+  // Attempt to get an external URL using the appropriate wrapper.
+  if ($wrapper = file_stream_wrapper_get_instance_by_uri($original_uri)) {
+  $uri = str_replace($GLOBALS['base_url'] . '/', '', $wrapper->getExternalUrl());
+
+  $original_uri = variable_get('alterator_cdn', 'http://CDN.MYDOMAIN.COM') . '/' . $uri;
+  return;
   }
   else {
-    $original_uri = variable_get('alterator_cdn', 'http://CDN.MYDOMAIN.COM') . '/' . $original_uri;
+  return;
+  }
+  }
+  else {
+  $original_uri = variable_get('alterator_cdn', 'http://CDN.MYDOMAIN.COM') . '/' . $original_uri;
   }
 
-}*/
+  } */
+
+
+// noteresource.module
+/**
+ * Implements hook_services_resources().
+ */
+function alterator_services_resources() {
+  return array(
+    'flag_users' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Retrieves user flags',
+          'file' => array('type' => 'inc', 'module' => 'alterator', 'name' => 'alterator'),
+          'callback' => 'alterator_users_flags',
+          'access callback' => 'alterator_flag_access',
+          'args' => array(
+            array(
+               'name' => 'uuid',
+               'type' => 'string',
+               'description' => 'UUID of the user',
+               'source' => array('path' => 0),
+               'optional' => FALSE,
+             ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+function alterator_flag_access() {
+  return TRUE;
+}
 

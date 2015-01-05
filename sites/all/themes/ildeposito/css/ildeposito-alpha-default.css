@@ -344,3 +344,17 @@ a > .sf-sub-indicator {
 .flexslider-processed {
   border: 0px !important;
 }
+
+.pagina-cori .elenco-riga {
+    width: 50%;    
+    float: left;
+}
+
+.pagina-cori .elenco-riga a {
+    font-size: 1.2em;
+}
+
+.pagina-cori h2.pane-title {
+    font-size: 1.7em;
+    font-weight: normal;
+}

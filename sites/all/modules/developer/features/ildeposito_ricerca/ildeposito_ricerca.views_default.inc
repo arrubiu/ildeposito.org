@@ -154,6 +154,7 @@ function ildeposito_ricerca_views_default_views() {
     t('Ordina per'),
     t('Asc'),
     t('Disc'),
+    t('Seleziona qualsiasi filtro e clicca su Applica per visualizzare i risultati'),
     t('Voci per pagina'),
     t('- Tutto -'),
     t('Scostamento'),

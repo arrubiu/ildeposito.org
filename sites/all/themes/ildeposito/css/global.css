@@ -1802,3 +1802,17 @@ a.invisibile {
 margin-left: 10px;
 padding: 5px 5px 0px 5px;
 }
+
+.node-type-gruppi h2.block-title {
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.node-type-gruppi .multi .field-item {
+    color: #fff;
+}
+
+.node-type-gruppi .field-name-field-media .field-item {
+    float: left;
+    margin-right: 20px;
+}

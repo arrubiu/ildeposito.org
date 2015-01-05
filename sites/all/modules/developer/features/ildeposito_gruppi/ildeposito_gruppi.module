@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Gruppi feature.
+ */
+
+include_once 'ildeposito_gruppi.features.inc';
