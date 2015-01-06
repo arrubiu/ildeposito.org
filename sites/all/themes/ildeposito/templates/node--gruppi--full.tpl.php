@@ -2,20 +2,30 @@
     <?php print $user_picture; ?>
     <?php print render($title_prefix); ?>
     <?php if (!$page && $title): ?>
-    <div>
-        <h2<?php print $title_attributes; ?>><a href="<?php print $node_url ?>" title="<?php print $title ?>"><?php print $title ?></a></h2>
-    </div>
+      <div>
+          <h2<?php print $title_attributes; ?>><a href="<?php print $node_url ?>" title="<?php print $title ?>"><?php print $title ?></a></h2>
+      </div>
     <?php endif; ?>
     <?php print render($title_suffix); ?>
     <?php if ($display_submitted): ?>
-    <div class="submitted">Pubblicato da <?php print $name; ?> il <?php print $date; ?>
-        <?php print render($content['field_tags']); ?>
-    </div>
+      <div class="submitted">Pubblicato da <?php print $name; ?> il <?php print $date; ?>
+          <?php print render($content['field_tags']); ?>
+      </div>
     <?php endif; ?>  
 </div>
 <div<?php print $content_attributes; ?>>
 
     <div class="grid-10 col-first">
+        <?php if (count($field_images) > 0) : ?>
+          <div class="gruppo-image">
+          <?php
+          print render($content['field_images'][0]);
+          ?>
+          </div>
+
+        <?php endif; ?>
+
+
         <?php print render($content['body']); ?>
     </div>
     <div class="grid-8 col-second mappa">
@@ -42,23 +52,25 @@
 
         <div class="multi">
 
-            <?php 
-            $a = 1;
-            if (count($field_images) > 0) : ?>
-            <h2 class="block-title">Immagini</h2>
             <?php
-            print render($content['field_images']);
-            ?>
-            
-            <?php endif; ?>
+            $a = 1;
+            if (count($field_images) > 1) :
+              ?>
+              <h2 class="block-title">Immagini</h2>
+              <?php
+              unset ($content['field_images']['#items'][0]);
+              print render($content['field_images']);
+              ?>
+
+<?php endif; ?>
 
 
-            <?php if (count($field_media) > 0) : ?>
+<?php if (count($field_media) > 0) : ?>
 
-            <h2 class="block-title">Video</h2>
-            <?php print render($content['field_media']); ?>
+              <h2 class="block-title">Video</h2>
+              <?php print render($content['field_media']); ?>
 
-            <?php endif; ?>
+<?php endif; ?>
 
         </div>
     </div>
@@ -67,9 +79,9 @@
 
     <div class="clearfix" style="clear: left;">
         <?php if (!empty($content['links'])): ?>
-        <div class="links node-links clearfix"><?php print render($content['links']); ?></div>
+          <div class="links node-links clearfix"><?php print render($content['links']); ?></div>
         <?php endif; ?>
 
-        <?php print render($content['comments']); ?>
+<?php print render($content['comments']); ?>
     </div>
 </div>
