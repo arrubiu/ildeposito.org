@@ -70,7 +70,9 @@ function ildeposito_gruppi_default_page_manager_pages() {
     $pane->configuration = array(
       'admin_title' => '',
       'title' => '',
-      'body' => '<p>Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina. Descrizione della pagina.</p>
+      'body' => '<p>Da ormai qualche anno abbiamo visto nascere e stiamo vedendo crescere una rete spontanea di cori e gruppi, che si incontrano sempre più spesso all\'interno di svariati eventi e che portano avanti il repertorio di canto politico e sociale. Le caratteristiche delle varie realtà sono tra loro per molti aspetti comuni, ma di sicuro ognuna ha una sua identità ben precisa legata all\'approccio interpretativo, alle scelte di gestione del gruppo, alle tradizioni o ai fenomeni sociali emergenti presenti sul territorio. Abbiamo la fortuna di conoscere personalmente molte di queste realtà e le persone che le animano, e abbiamo spesso verificato la volontà e il desiderio di scambiare e condividere le esperienze, di creare contatti e possibilità di incontro.</p>
+
+<p>È nata quindi l\'idea di creare un archivio consultabile di cori e gruppi da pubblicare nel sito, con delle brevi schede contenti le informazioni necessarie per sapere dove sono, cosa fanno, e come contattarli. Questo per favorire la creazione di contatti tra cori, ma anche per facilitare chi cercasse dalle proprie parti qualche gruppo a cui aggregarsi per cantare.</p>
 ',
       'format' => 'filtered_html',
       'substitute' => TRUE,
@@ -97,8 +99,8 @@ function ildeposito_gruppi_default_page_manager_pages() {
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
-      'override_title' => 0,
-      'override_title_text' => '',
+      'override_title' => 1,
+      'override_title_text' => 'Mappa dei cori',
     );
     $pane->cache = array();
     $pane->style = array(

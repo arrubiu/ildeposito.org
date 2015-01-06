@@ -18,7 +18,7 @@ function ildeposito_gruppi_openlayers_maps() {
   $openlayers_maps->description = '';
   $openlayers_maps->data = array(
     'width' => 'auto',
-    'height' => '300px',
+    'height' => '350px',
     'image_path' => 'sites/all/modules/contrib/openlayers/themes/default_dark/img/',
     'css_path' => 'sites/all/modules/contrib/openlayers/themes/default_dark/style.css',
     'proxy_host' => '',
