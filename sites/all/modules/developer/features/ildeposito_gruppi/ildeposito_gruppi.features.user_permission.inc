@@ -13,7 +13,9 @@ function ildeposito_gruppi_user_default_permissions() {
   // Exported permission: 'create gruppi content'.
   $permissions['create gruppi content'] = array(
     'name' => 'create gruppi content',
-    'roles' => array(),
+    'roles' => array(
+      'staff' => 'staff',
+    ),
     'module' => 'node',
   );
 
@@ -34,14 +36,18 @@ function ildeposito_gruppi_user_default_permissions() {
   // Exported permission: 'delete any gruppi content'.
   $permissions['delete any gruppi content'] = array(
     'name' => 'delete any gruppi content',
-    'roles' => array(),
+    'roles' => array(
+      'staff' => 'staff',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete own gruppi content'.
   $permissions['delete own gruppi content'] = array(
     'name' => 'delete own gruppi content',
-    'roles' => array(),
+    'roles' => array(
+      'staff' => 'staff',
+    ),
     'module' => 'node',
   );
 
@@ -55,14 +61,18 @@ function ildeposito_gruppi_user_default_permissions() {
   // Exported permission: 'edit any gruppi content'.
   $permissions['edit any gruppi content'] = array(
     'name' => 'edit any gruppi content',
-    'roles' => array(),
+    'roles' => array(
+      'staff' => 'staff',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'edit own gruppi content'.
   $permissions['edit own gruppi content'] = array(
     'name' => 'edit own gruppi content',
-    'roles' => array(),
+    'roles' => array(
+      'staff' => 'staff',
+    ),
     'module' => 'node',
   );
 
