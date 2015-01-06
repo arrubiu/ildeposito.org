@@ -39,6 +39,7 @@ features[ds_view_modes][] = video_piccolo
 features[features_api][] = api:2
 features[field_instance][] = file-image-field_file_image_alt_text
 features[field_instance][] = file-image-field_file_image_title_text
+features[field_instance][] = file-image-field_fonte_text
 features[field_instance][] = file-image-field_header_image
 features[field_instance][] = file-image-field_links
 features[file_display][] = application__default__file_field_enclosure_file

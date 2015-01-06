@@ -53,6 +53,7 @@ features[field_base][] = field_file_image_alt_text
 features[field_base][] = field_file_image_title_text
 features[field_base][] = field_fonte
 features[field_base][] = field_fonte_biblio
+features[field_base][] = field_fonte_text
 features[field_base][] = field_geofield
 features[field_base][] = field_geolocation
 features[field_base][] = field_header_image
