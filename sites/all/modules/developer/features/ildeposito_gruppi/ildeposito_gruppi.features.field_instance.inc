@@ -96,7 +96,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 8,
+      'weight' => 7,
     ),
   );
 
@@ -168,7 +168,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_text',
-      'weight' => 7,
+      'weight' => 3,
     ),
   );
 
@@ -223,7 +223,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 5,
     ),
   );
 
@@ -271,7 +271,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'email_textfield',
-      'weight' => 9,
+      'weight' => 4,
     ),
   );
 
@@ -323,7 +323,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'scrollwheel' => 0,
       ),
       'type' => 'geolocation_googlemap',
-      'weight' => 15,
+      'weight' => 6,
     ),
   );
 
@@ -406,7 +406,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 11,
+      'weight' => 4,
     ),
   );
 
@@ -471,7 +471,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'addressfield_standard',
-      'weight' => 14,
+      'weight' => 5,
     ),
   );
 
@@ -539,7 +539,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 10,
+      'weight' => 6,
     ),
   );
 
@@ -616,7 +616,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 16,
+      'weight' => 5,
     ),
   );
 
@@ -670,7 +670,7 @@ function ildeposito_gruppi_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 2,
     ),
   );
 

@@ -178,22 +178,22 @@ function ildeposito_gruppi_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '5',
+          'weight' => '8',
         ),
         'title' => array(
-          'weight' => '0',
-        ),
-        'path' => array(
-          'weight' => '4',
-        ),
-        'rabbit_hole' => array(
           'weight' => '1',
         ),
+        'path' => array(
+          'weight' => '10',
+        ),
+        'rabbit_hole' => array(
+          'weight' => '11',
+        ),
         'redirect' => array(
-          'weight' => '2',
+          'weight' => '9',
         ),
         'xmlsitemap' => array(
-          'weight' => '3',
+          'weight' => '7',
         ),
       ),
       'display' => array(),
