@@ -18,7 +18,7 @@ function ildeposito_gruppi_custom_formatters_defaults() {
   $formatter->description = 'Formattazione indirizzo per i gruppi.';
   $formatter->mode = 'token';
   $formatter->field_types = 'addressfield';
-  $formatter->code = '[node:field_indirizzo:name-line]<br />
+  $formatter->code = '<div>[node:field_indirizzo:name-line]</div>
 [node:field_indirizzo:thoroughfare], [node:field_indirizzo:locality] ([node:field_indirizzo:administrative-area-raw])';
   $formatter->fapi = '';
   $export['indirizzo_gruppi'] = $formatter;
