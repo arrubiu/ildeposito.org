@@ -34,34 +34,6 @@ function ildeposito_gruppi_openlayers_maps() {
       ),
     ),
     'behaviors' => array(
-      'openlayers_behavior_keyboarddefaults' => array(),
-      'openlayers_behavior_attribution' => array(
-        'separator' => '',
-      ),
-      'openlayers_behavior_navigation' => array(
-        'zoomWheelEnabled' => 1,
-        'zoomBoxEnabled' => 1,
-        'documentDrag' => 0,
-      ),
-      'openlayers_behavior_panzoom' => array(),
-      'openlayers_behavior_popup' => array(
-        'layers' => array(
-          'elenco_gruppi_overlay_mappa_cori' => 'elenco_gruppi_overlay_mappa_cori',
-        ),
-        'panMapIfOutOfView' => 1,
-        'keepInMap' => 1,
-        'zoomToPoint' => 0,
-        'zoomToCluster' => 0,
-      ),
-      'openlayers_behavior_zoomtolayer' => array(
-        'zoomtolayer' => array(
-          'elenco_gruppi_overlay_mappa_cori' => 'elenco_gruppi_overlay_mappa_cori',
-          'mapquest_osm' => 0,
-          'mapquest_openaerial' => 0,
-        ),
-        'point_zoom_level' => '8',
-        'zoomtolayer_scale' => '1',
-      ),
       'openlayers_behavior_cluster' => array(
         'clusterlayer' => array(
           'elenco_gruppi_overlay_mappa_cori' => 'elenco_gruppi_overlay_mappa_cori',
@@ -92,6 +64,33 @@ function ildeposito_gruppi_openlayers_maps() {
         'label_middle_opacity' => '0.8',
         'label_high_color' => '#000000',
         'label_high_opacity' => '0.8',
+      ),
+      'openlayers_behavior_keyboarddefaults' => array(),
+      'openlayers_behavior_attribution' => array(
+        'separator' => '',
+      ),
+      'openlayers_behavior_navigation' => array(
+        'zoomWheelEnabled' => 1,
+        'zoomBoxEnabled' => 1,
+        'documentDrag' => 0,
+      ),
+      'openlayers_behavior_panzoom' => array(),
+      'openlayers_behavior_popup' => array(
+        'layers' => array(
+          'elenco_gruppi_overlay_mappa_cori' => 'elenco_gruppi_overlay_mappa_cori',
+        ),
+        'popupAtPosition' => 'mouse',
+        'panMapIfOutOfView' => 1,
+        'keepInMap' => 1,
+      ),
+      'openlayers_behavior_zoomtolayer' => array(
+        'zoomtolayer' => array(
+          'elenco_gruppi_overlay_mappa_cori' => 'elenco_gruppi_overlay_mappa_cori',
+          'mapquest_osm' => 0,
+          'mapquest_openaerial' => 0,
+        ),
+        'point_zoom_level' => '4',
+        'zoomtolayer_scale' => '1',
       ),
     ),
     'default_layer' => 'mapquest_osm',

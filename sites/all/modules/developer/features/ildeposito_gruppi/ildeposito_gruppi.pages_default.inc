@@ -44,6 +44,20 @@ function ildeposito_gruppi_default_page_manager_pages() {
     'css' => '',
     'contexts' => array(),
     'relationships' => array(),
+    'metatag_panels' => array(
+      'enabled' => 1,
+      'metatags' => array(
+        'title' => array(
+          'value' => 'La mappa dei cori | [site:name]',
+        ),
+        'description' => array(
+          'value' => 'I cori, italiani ma non solo, con un repertorio di canto politico e sociale. Scheda informativa, indirizzi, contatti, video e immagini!',
+        ),
+        'image_src' => array(
+          'value' => 'http://www.ildeposito.org/sites/default/files/laboratorio_canto.jpg',
+        ),
+      ),
+    ),
   );
   $display = new panels_display();
   $display->layout = 'onecol';
@@ -59,7 +73,7 @@ function ildeposito_gruppi_default_page_manager_pages() {
     ),
   );
   $display->cache = array();
-  $display->title = 'I Cori';
+  $display->title = 'La mappa dei Cori';
   $display->uuid = 'd13d3946-002e-4104-9aa1-efe3356b24d7';
   $display->content = array();
   $display->panels = array();
@@ -73,7 +87,7 @@ function ildeposito_gruppi_default_page_manager_pages() {
     $pane->configuration = array(
       'admin_title' => '',
       'title' => '',
-      'body' => '<p>Da ormai qualche anno abbiamo visto nascere e stiamo vedendo crescere una rete spontanea di cori e gruppi, che si incontrano sempre più spesso all\'interno di svariati eventi e che portano avanti il repertorio di canto politico e sociale. Le caratteristiche delle varie realtà sono tra loro per molti aspetti comuni, ma di sicuro ognuna ha una sua identità ben precisa legata all\'approccio interpretativo, alle scelte di gestione del gruppo, alle tradizioni o ai fenomeni sociali emergenti presenti sul territorio. Abbiamo la fortuna di conoscere personalmente molte di queste realtà e le persone che le animano, e abbiamo spesso verificato la volontà e il desiderio di scambiare e condividere le esperienze, di creare contatti e possibilità di incontro.</p>
+      'body' => '<p><img alt="" class="attr__field_file_image_alt_text[und][0][value]__ attr__field_file_image_title_text[und][0][value]__ attr__field_fonte_text[und][0][value]__ attr__field_links[und][0][_weight]__0 attr__field_links[und][0][title]__ attr__field_links[und][0][url]__ attr__format__default attr__typeof__foaf:Image img__fid__2164 img__view_mode__default media-image" src="http://www.ildeposito.org/sites/default/files/immagine_cori.png" style="float:left; height:144px; margin-right:10px; margin-top:5px; width:140px" title="" />Da ormai qualche anno abbiamo visto nascere e stiamo vedendo crescere una rete spontanea di cori e gruppi, che si incontrano sempre più spesso all\'interno di svariati eventi e che portano avanti il repertorio di canto politico e sociale. Le caratteristiche delle varie realtà sono tra loro per molti aspetti comuni, ma di sicuro ognuna ha una sua identità ben precisa legata all\'approccio interpretativo, alle scelte di gestione del gruppo, alle tradizioni o ai fenomeni sociali emergenti presenti sul territorio. Abbiamo la fortuna di conoscere personalmente molte di queste realtà e le persone che le animano, e abbiamo spesso verificato la volontà e il desiderio di scambiare e condividere le esperienze, di creare contatti e possibilità di incontro.</p>
 
 <p>È nata quindi l\'idea di creare un archivio consultabile di cori e gruppi da pubblicare nel sito, con delle brevi schede contenti le informazioni necessarie per sapere dove sono, cosa fanno, e come contattarli. Questo per favorire la creazione di contatti tra cori, ma anche per facilitare chi cercasse dalle proprie parti qualche gruppo a cui aggregarsi per cantare.</p>
 ',
@@ -102,7 +116,7 @@ function ildeposito_gruppi_default_page_manager_pages() {
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
-      'override_title' => 1,
+      'override_title' => 0,
       'override_title_text' => 'Mappa dei cori',
     );
     $pane->cache = array();
