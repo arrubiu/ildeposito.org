@@ -110,6 +110,11 @@ function rh_file_entity_edit_submit($form, &$form_state) {
  * Implements hook_file_view().
  */
 function rh_file_file_view($file, $view_mode, $langcode) {
+  if ($view_mode != 'full') {
+    // The file isn't viewed using the full view mode, exit early.
+    return;
+  }
+
   // Determine whether or not the file is being viewed at it's own page. The
   // logics for this has been taken from node_is_page().
   $page_file = menu_get_object('file');

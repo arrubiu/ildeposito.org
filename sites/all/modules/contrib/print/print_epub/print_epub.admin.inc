@@ -95,7 +95,7 @@ function print_epub_settings() {
 
     $form['settings'] = array(
       '#type' => 'markup',
-      '#markup' => '<p>' . t("No EPUB generation tool found! Please dowload a supported PHP EPUB generation tool. Check this module's INSTALL.txt for more details.") . '</p>',
+      '#markup' => '<p>' . t("No EPUB generation tool found! Please download a supported PHP EPUB generation tool. Check this module's INSTALL.txt for more details.") . '</p>',
     );
   }
 

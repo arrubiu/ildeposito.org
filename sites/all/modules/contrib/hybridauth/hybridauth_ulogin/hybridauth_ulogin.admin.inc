@@ -88,9 +88,9 @@ function _hybridauth_ulogin_identity_process($ulogin_identity) {
   // If no network to provider mapping - then skip this identity.
   if ($provider = _hybridauth_ulogin_provider_convert($ulogin_identity->network)) {
     $ulogin_data = unserialize($ulogin_identity->data);
-    $hybridauth_data = _hybridauth_ulogin_data_convert($ulogin_data);
+    $hybridauth_data = $ulogin_data;
     $hybridauth_data['provider'] = $provider;
-    $hybridauth_data['identifier'] = $ulogin_identity->ulogin_uid;
+    $hybridauth_data['identifier'] = _hybridauth_provider_identifier($ulogin_identity->ulogin_uid);
     if (!($existing_identity = _hybridauth_identity_load($hybridauth_data)) || $existing_identity['uid'] == $ulogin_identity->uid) {
       _hybridauth_identity_save($hybridauth_data, $ulogin_identity->uid);
     }
@@ -121,7 +121,7 @@ function _hybridauth_ulogin_providers_map() {
       'linkedin' => 'LinkedIn',
       'liveid' => 'Live',
       'soundcloud' => '',
-      'steam' => '',
+      'steam' => 'Steam',
       'flickr' => '',
       'vimeo' => '',
       'youtube' => '',

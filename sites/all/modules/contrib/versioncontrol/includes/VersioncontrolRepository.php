@@ -89,13 +89,14 @@ abstract class VersioncontrolRepository implements VersioncontrolEntityInterface
   /**
    * An array describing the plugins that will be used for this repository.
    *
-   * The current plugin types(array keys) are:
+   * The current plugin slots(array keys) are:
    * - author_mapper
    * - committer_mapper
    * - webviewer_url_handler
    * - repomgr
    * - auth_handler
    * - reposync
+   * - event_processors
    *
    * @var array
    */
@@ -103,6 +104,9 @@ abstract class VersioncontrolRepository implements VersioncontrolEntityInterface
 
   /**
    * An array of plugin instances (instanciated plugin objects).
+   *
+   * There is one plugin per plugin slot in most cases. For now only
+   * event_processors can have multiple plugins associated.
    *
    * @var array
    */
@@ -878,29 +882,59 @@ abstract class VersioncontrolRepository implements VersioncontrolEntityInterface
     return $this->pluginInstances['webviewer_url_handler'];
   }
 
-  /**
-   * Get a ctools plugin based on plugin slot passed.
-   */
-  protected function getPlugin($plugin_slot, $plugin_type) {
-    ctools_include('plugins');
-
-    $plugin_name = $this->getPluginName($plugin_slot);
-
-    $plugin = ctools_get_plugins('versioncontrol', $plugin_type, $plugin_name);
-    if (!is_array($plugin) || empty($plugin)) {
-      throw new Exception("Attempted to get a plugin of type '$plugin_type' named '$plugin_name', but no such plugin could be found.", E_WARNING);
-    }
-
-    // If $plugin_name is empty ctools_get_plugins() returns an array of plugins
-    // instead of a single one. Default to the first one.
-    if (!$plugin_name) {
-      return reset($plugin);
-    }
-    else {
-      return $plugin;
-    }
+  protected function isPluginSlotMultiple($plugin_slot) {
+    // @todo Maybe define metadata per plugin slot?
+    return $plugin_slot == 'event_processors';
   }
 
+  protected function isPluginSlotRequired($plugin_slot) {
+    return $plugin_slot != 'event_processors';
+  }
+
+  /**
+   * Get a list of ctools plugins based on plugin slot and type passed.
+   */
+  public function getPlugins($plugin_slot, $plugin_type) {
+    ctools_include('plugins');
+
+    // It can be an array, some plugin slots accept multiple values.
+    $plugin_names = $this->getPluginName($plugin_slot);
+    if ($plugin_names == NULL) {
+      return array();
+    }
+    if (!is_array($plugin_names)) {
+      $plugin_names = array($plugin_names);
+    }
+
+    // If $plugin_name is empty ctools_get_plugins() returns an array of
+    // plugins.
+    if (empty($plugin_names) && !$multiple) {
+      return ctools_get_plugins('versioncontrol', $plugin_type);
+    }
+
+    $plugins = array();
+    foreach ($plugin_names as $plugin_name) {
+      $plugin = ctools_get_plugins('versioncontrol', $plugin_type, $plugin_name);
+      if (!is_array($plugin) || empty($plugin)) {
+        throw new Exception("Attempted to get a plugin of type '$plugin_type' named '$plugin_name', but no such plugin could be found.", E_WARNING);
+      }
+      $plugins[] = $plugin;
+    }
+    return $plugins;
+  }
+
+  /**
+   * Retrieve the first plugin associated with the plugin slot.
+   *
+   * @fixme review visibility
+   */
+  protected function getPlugin($plugin_slot, $plugin_type) {
+    $plugins = $this->getPlugins($plugin_slot, $plugin_type);
+    if ($this->isPluginSlotMultiple($plugin_slot)) {
+      throw new Exception("Attempted to use getPlugin() with a multiple plugin slot named '$plugin_slot' of plugin type '$plugin_type'. Please use getPlugins() instead.", E_WARNING);
+    }
+    return reset($plugins);
+  }
 
   /**
    * Retrieves the ctools plugin name to use, based on the plugin slot passed.
@@ -939,8 +973,11 @@ abstract class VersioncontrolRepository implements VersioncontrolEntityInterface
       return $plugin_name;
     }
 
-    // Could not find any default.
-    throw new Exception("A default plugin name could not be retrieved for plugin type '$plugin_slot'.", E_WARNING);
+    if ($this->isPluginSlotRequired($plugin_slot)) {
+      // Could not find any default.
+      throw new Exception("A default plugin name could not be retrieved for plugin type '$plugin_slot'.", E_WARNING);
+    }
+    return NULL;
   }
 
   public function getSynchronizerOptions() {
@@ -985,6 +1022,26 @@ abstract class VersioncontrolRepository implements VersioncontrolEntityInterface
     $plugin_object = new $class_name();
     $this->getBackend()->verifyPluginInterface($this, $plugin_slot, $plugin_object);
     return $plugin_object;
+  }
+
+  /**
+   * @see getPluginClass().
+   */
+  protected function getPluginClasses($plugin_slot, $plugin_type, $class_type) {
+    $plugin_objects = array();
+
+    foreach ($this->getPlugins($plugin_slot, $plugin_type) as $plugin) {
+      $class_name = ctools_plugin_get_class($plugin, $class_type);
+      if (!class_exists($class_name)) {
+        throw new Exception("Plugin slot '$plugin_slot' of type '$plugin_type' contains an invalid class name in handler slot '$class_type', named '$class_name' class", E_WARNING);
+        return FALSE;
+      }
+
+      $plugin_object = new $class_name();
+      $this->getBackend()->verifyPluginInterface($this, $plugin_slot, $plugin_object);
+      $plugin_objects[$plugin['name']] = $plugin_object;
+    }
+    return $plugin_objects;
   }
 
   /**
@@ -1045,6 +1102,34 @@ abstract class VersioncontrolRepository implements VersioncontrolEntityInterface
     }
 
     return $this->pluginInstances['reposync'];
+  }
+
+  /**
+   * Returns the event processor plugin object that this repository is
+   * configured to use.
+   *
+   * @return array(VersioncontrolSynchronizationEventProcessorInterface)
+   *   Keyed by plugin name.
+   */
+  public function getEventProcessors() {
+    if (!isset($this->pluginInstances['event_processors'])) {
+      $this->pluginInstances['event_processors'] = $this->getPluginClasses('event_processors', 'event_processor', 'handler');
+      // @todo when per repository configuration is supported, add it.
+      // @todo move this to getPluginClasses when data per plugin is supported on all repository plugin types.
+      $variable_name = "versioncontrol_repository_plugin_defaults_{$this->vcs}_event_processors_data";
+      $default_event_processor_data = variable_get($variable_name, array());
+      foreach ($this->pluginInstances['event_processors'] as $name => $event_processor_object) {
+        $event_processor_object->setRepository($this);
+        if (empty($default_event_processor_data[$name])) {
+          continue;
+        }
+        if ($event_processor_object instanceof VersioncontrolPluginConfigurationInterface) {
+          $event_processor_object->setConfiguration($default_event_processor_data[$name]);
+        }
+      }
+    }
+
+    return $this->pluginInstances['event_processors'];
   }
 
   /**

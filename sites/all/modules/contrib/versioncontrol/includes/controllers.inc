@@ -480,11 +480,13 @@ class VersioncontrolRepositoryController extends VersioncontrolEntityController 
         }
       }
 
-      // Add the condition to the query.
-      $this->attachCondition($query, 'vcs', array(
-        'values' => $default_controller_backends,
-        'operator' => 'IN',
-      ));
+      // Add the condition to the query if valid.
+      if (!empty($default_controller_backends)) {
+        $this->attachCondition($query, 'vcs', array(
+          'values' => $default_controller_backends,
+          'operator' => 'IN',
+        ));
+      }
     }
     return $query;
   }

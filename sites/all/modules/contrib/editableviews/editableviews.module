@@ -173,9 +173,36 @@ function editableviews_entity_form_validate($form, &$form_state) {
       $entity = $form[$entity_type][$entity_id]['#entity'];
       $relationship = $form[$entity_type][$entity_id]['#views_relationship'];
 
+      // Start with a fresh errors array for each entity. FieldAPI field
+      // validation will add to this array.
+      $errors = array();
+
       // Invoke the field handlers on the relationship the entity is on.
       foreach ($field_handlers[$relationship] as $field_handler) {
-        $field_handler->edit_form_validate($entity_type, $entity, $form[$entity_type][$entity_id], $form_state);
+        $field_handler->edit_form_validate($entity_type, $entity, $form[$entity_type][$entity_id], $form_state, $errors);
+      }
+
+      // Invoke hook_field_attach_validate() to let other modules validate the
+      // entity. This should be done once only for each entity.
+      // Avoid module_invoke_all() to let $errors be taken by reference.
+      foreach (module_implements('field_attach_validate') as $module) {
+        $function = $module . '_field_attach_validate';
+        $function($entity_type, $entity, $errors);
+      }
+
+      if ($errors) {
+        // Pass FieldAPI validation errors back to widgets for accurate error
+        // flagging.
+        foreach ($field_handlers[$relationship] as $field_handler) {
+          // This is ugly, but only FieldAPI field handlers need this. The
+          // alternative would be for the editableviews_handler_field_field_edit
+          // handler's edit_form_validate() method to detect whether it's the
+          // last FieldAPI field handler for the current entity, which would be
+          // messier.
+          if (method_exists($field_handler, 'edit_form_validate_errors')) {
+            $field_handler->edit_form_validate_errors($entity_type, $entity, $form[$entity_type][$entity_id], $form_state, $errors);
+          }
+        }
       }
     }
   }
@@ -262,6 +289,7 @@ function editableviews_entity_form_submit_build_values($form, &$form_state) {
 function editableviews_entity_form_submit_save($form, &$form_state) {
   //dsm($form_state['entities'], 'entities to save');
   $entity_info = entity_get_info();
+  $save_message_labels = array();
   foreach (array_keys($form_state['entities']) as $entity_type) {
     foreach ($form_state['entities'][$entity_type] as $entity_id => $entity) {
       // Check whether a save has been requested.

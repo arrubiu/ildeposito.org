@@ -22,6 +22,13 @@ function speedy_drush_command() {
     ),
     'aliases' => array('smj'),
   );
+  $items['speedy-min-module'] = array(
+    'description' => 'Minify JS for a module.',
+    'arguments' => array(
+      'module' => 'The name of a particular module whose files you wish to minify.',
+    ),
+    'aliases' => array('smm'),
+  );
 
   return $items;
 }
@@ -33,6 +40,8 @@ function speedy_drush_help($section) {
   switch ($section) {
     case 'drush:speedy-min':
       return dt("Look for unminified core JavaScript files and generate minified files that can be replaced via hook_library_alter().");
+    case 'drush:speedy-min-module':
+      return dt("Look for unminified JavaScript files in a particular module directory and minify them.");
   }
 }
 
@@ -74,7 +83,7 @@ function drush_speedy_min($uglifyjs) {
     $blacklist[$k] = DRUPAL_ROOT . '/' . $v;
   }
 
-  // @todo Replace file_scan_directory with PHP navite call. Why does Drupal
+  // @todo Replace file_scan_directory with PHP native call. Why does Drupal
   // reproduce a native php feature?
   $all_files = file_scan_directory(DRUPAL_ROOT, '/.js/');
 
@@ -102,6 +111,45 @@ function drush_speedy_min($uglifyjs) {
       }
     }
   }
+}
+
+/**
+ * Command callback to minify JS using UglifyJS.
+ *
+ * This is a command that walks through a particular Drupal module's codebase and produces minified
+ * JavaScript files.
+ */
+function drush_speedy_min_module($module) {
+  $directory = drupal_get_path('module', $module);
+  $directory_strlen = strlen($directory);
+
+  $all_files = file_scan_directory($directory, '/.js/');
+
+  // Walk though each file.
+  foreach ($all_files as $k => $file) {
+    if (!strstr($file->filename, '.min.js')) {
+      // Minify and store the file.
+      $new_path = DRUPAL_ROOT . '/' . $directory . substr(str_replace('.js', '.min.js', $file->uri), $directory_strlen);
+      // Delete an old version if it exists.
+      if (file_exists($new_path)) {
+        $result = drupal_unlink($new_path);
+      }
+      $pathinfo = pathinfo($new_path);
+      if (is_dir($pathinfo['dirname'])) {
+        chmod($pathinfo['dirname'], 0775);
+      }
+
+      $return = drush_shell_exec('/usr/local/bin/uglifyjs' . ' ' . $file->uri . ' > ' . $new_path);
+
+      if ($return) {
+        drush_log(dt('!filename was minified.', array('!filename' => $file->filename)), 'success');
+      }
+      else {
+        drush_log(dt('There was an error when trying to minify !filename.', array('!filename' => $file->filename)), 'error');
+      }
+    }
+  }
+
 }
 
 /**

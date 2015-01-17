@@ -20,7 +20,8 @@ function versioncontrol_drush_command() {
     ),
     'options' => array(
       'flush' => 'Flush all data prior to performing history synchronization. Useful if something has gone awry in the db data and normal resyncs are failing to correct it.',
-      'nobatch' => 'By default, this command operates using batchapi to help with memory management; Passing this option will cause it to execute normally.'
+      'nobatch' => 'By default, this command operates using batchapi to help with memory management; Passing this option will cause it to execute normally.',
+      'ignorelock' => 'Ignore repository blocking. WARNING: this is potentially dangerous, only use it if you now what you are doing.',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
     'aliases' => array('vc-sync'),
@@ -209,6 +210,10 @@ function drush_versioncontrol_vcapi_map_operations() {
 
 function _drush_versioncontrol_vcapi_sync_repositories($repo_id, $flush) {
   $repository = versioncontrol_repository_load($repo_id);
+  if (drush_get_option('ignorelock', FALSE) && !empty($repository->locked)) {
+    $repository->updateLock(0);
+    $repository->update();
+  }
   try {
     drush_log(dt('Beginning synchronization of repository !name', array('!name' => $repository->name)), 'ok');
     $sync_status = $flush ? $repository->reSyncFromScratch() : $repository->sync();

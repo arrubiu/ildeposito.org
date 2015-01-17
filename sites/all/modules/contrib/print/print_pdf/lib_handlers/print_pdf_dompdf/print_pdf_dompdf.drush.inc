@@ -10,7 +10,7 @@
  */
 
 // URI to the the latest dompdf version.. Hardcoded version unfortunately
-define('DOMPDF_DOWNLOAD_URI', 'http://dompdf.googlecode.com/files/dompdf_0-6-0_beta3.tar.gz');
+define('DOMPDF_DOWNLOAD_URI', 'https://github.com/dompdf/dompdf/releases/download/v0.6.1/dompdf-0.6.1.zip');
 
 /**
  * Implements hook_drush_command().

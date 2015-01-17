@@ -41,39 +41,16 @@ function views_timelinejs_libraries_info() {
     'vendor url' => 'http://timeline.verite.co',
     'download url' => 'http://timeline.verite.co',
     'version arguments' => array(
-      'file' => 'compiled/js/timeline.js',
-      'pattern' => '/Version ([\d.]+)/i',
+      'file' => 'build/js/timeline.js',
+      'pattern' => '/TimelineJS - ver. ([\d.]+)/i',
       'lines' => 5,
-      'cols' => 20,
     ),
     'files' => array(
       'js' => array(
-        'compiled/js/storyjs-embed.js',
+        'build/js/storyjs-embed.js',
       ),
       'css' => array(
-        'compiled/css/timeline.css',
-      ),
-    ),
-    'versions' => array(
-      '2.17' => array(
-        'files' => array(
-          'js' => array(
-            'compiled/js/storyjs-embed.js',
-          ),
-          'css' => array(
-            'compiled/css/timeline.css',
-          ),
-        ),
-      ),
-      '2.22' => array(
-        'files' => array(
-          'js' => array(
-            'compiled/js/storyjs-embed.js',
-          ),
-          'css' => array(
-            'compiled/css/timeline.css',
-          ),
-        ),
+        'build/css/timeline.css',
       ),
     ),
   );
@@ -170,20 +147,29 @@ function views_timelinejs_convert_to_csv($value, $date_format, $timezone, $db_ti
   }
 
   $format = array();
-  if (is_string($granularity['year']) && $granularity['year'] == 'year') {
-    $format[] = 'Y';
+
+  if (empty($granularity)) {
+    $format = array('Y,m,d,H,i');
   }
-  if (is_string($granularity['month']) && $granularity['month'] == 'month') {
-    $format[] = 'm';
-  }
-  if (is_string($granularity['day']) && $granularity['day'] == 'day') {
-    $format[] = 'd';
-  }
-  if (is_string($granularity['hour']) && $granularity['hour'] == 'hour') {
-    $format[] = 'H';
-  }
-  if (is_string($granularity['minute']) && $granularity['minute'] == 'minute') {
-    $format[] = 'i';
+  else {
+    if (is_string($granularity['year']) && $granularity['year'] == 'year') {
+      $format[] = 'Y';
+    }
+    if (is_string($granularity['month']) && $granularity['month'] == 'month') {
+      $format[] = 'm';
+    }
+    if (is_string($granularity['day']) && $granularity['day'] == 'day') {
+      $format[] = 'd';
+    }
+    if (is_string($granularity['hour']) && $granularity['hour'] == 'hour') {
+      $format[] = 'H';
+    }
+    if (is_string($granularity['minute']) && $granularity['minute'] == 'minute') {
+      $format[] = 'i';
+    }
+    if (is_string($granularity['second']) && $granularity['second'] == 'second') {
+      $format[] = 's';
+    }
   }
 
   $format = implode(',', $format);

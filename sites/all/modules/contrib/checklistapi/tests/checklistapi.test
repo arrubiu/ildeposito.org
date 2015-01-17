@@ -87,7 +87,7 @@ class ChecklistapiWebTestCase extends DrupalWebTestCase {
    */
   public function setUp() {
     parent::setUp('checklistapi_example');
-    $permissions = array('edit any checklistapi checklist');
+    $permissions = array('edit any checklistapi checklist', 'view checklistapi checklists report');
     $this->privilegedUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->privilegedUser);
   }
@@ -107,6 +107,20 @@ class ChecklistapiWebTestCase extends DrupalWebTestCase {
 
     $this->drupalLogout();
     $this->drupalGet('admin/config/development/checklistapi-example');
+    $this->assertResponse(403, 'Denied access to nonprivileged user.');
+  }
+
+  /**
+   * Test report access.
+   */
+  public function testAccessReport() {
+    $report_path = 'admin/reports/checklistapi';
+
+    $this->drupalGet($report_path);
+    $this->assertResponse(200, 'Granted access to user with "view checklistapi checklists report" permission.');
+
+    $this->drupalLogout();
+    $this->drupalGet($report_path);
     $this->assertResponse(403, 'Denied access to nonprivileged user.');
   }
 

@@ -38,7 +38,6 @@
           // Visit: file:///[path_to_ckeditor-dev]/plugins/devtools/samples/devtools.html
           // for an excellent way to find machine names for dialog elements.
           if (dialogName == 'image') {
-            dialogDefinition.removeContents('advanced');
             dialogDefinition.removeContents('Link');
             var infoTab = dialogDefinition.getContents('info');
             var altText = infoTab.get('txtAlt');

@@ -33,3 +33,17 @@ function alterator_users_flags($data) {
     return FALSE;
   }
 }
+
+function alterator_users_hybridauth($data) {
+
+  $result = db_query('SELECT uid FROM {users} WHERE uuid = :uuid', array(':uuid' => $data));
+  foreach ($result as $record) {
+    $uid = $record->uid;
+  }
+
+  $result = db_query('SELECT * FROM {hybridauth_identity} WHERE uid = :uid', array(':uid' => $uid));
+  foreach ($result as $record) {
+    $results[] = $record;
+  }
+  return $results;
+}

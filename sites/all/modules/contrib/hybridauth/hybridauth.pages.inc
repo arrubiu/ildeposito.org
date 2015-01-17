@@ -6,7 +6,7 @@
 
 function hybridauth_endpoint() {
   // Make sure the session is started, HybridAuth library needs it.
-  drupal_session_start();
+  hybridauth_session_start();
 
   if ($lib_path = _hybridauth_library_path()) {
     try {
@@ -18,6 +18,29 @@ function hybridauth_endpoint() {
   }
 
   return MENU_ACCESS_DENIED;
+}
+
+/**
+ * Initialize the user session before using the HybridAuth library.
+ */
+function hybridauth_session_start() {
+  // Make sure that a user session exists.
+  drupal_session_start();
+  // Special handling for HTTPS with normal session IDs and secure session IDs.
+  // Duplicated sessions are created, so we need to pull out the correct session
+  // data.
+  global $is_https;
+  if ($is_https && variable_get('https', FALSE)) {
+    // If there is an existing session with the same secure session ID we need
+    // to replace the $_SESSION contents with that.
+    $session = db_query('SELECT session FROM {sessions} WHERE sid = :sid AND ssid = :sid', array('sid' => session_id()))->fetchField();
+    if ($session) {
+      // Overwrite $_SESSION with the data.
+      session_decode($session);
+      // Remove the duplicate session from the database.
+      db_delete('sessions')->condition('sid', session_id())->execute();
+    }
+  }
 }
 
 /**
@@ -45,15 +68,15 @@ function hybridauth_window_start($provider_id) {
   // If provider is OpenID, but we don't have the openid_identifier.
   if ($provider_id == 'OpenID' && !isset($_GET['openid_identifier'])) {
     $form = drupal_get_form('hybridauth_openid_form');
-    _hybridauth_window_render_form($form, $provider_id);
+    return _hybridauth_window_render_form($form, $provider_id);
   }
 
   // Make sure the session is started, HybridAuth library needs it.
-  drupal_session_start();
+  hybridauth_session_start();
 
   // Try to get HybridAuth instance.
   if ($hybridauth = hybridauth_get_instance()) {
-    _hybridauth_window_auth($hybridauth, $provider_id);
+    return _hybridauth_window_auth($hybridauth, $provider_id);
   }
   else {
     drupal_set_message(t('There was an error processing your request.'), 'error');
@@ -159,7 +182,7 @@ function _hybridauth_window_auth($hybridauth, $provider_id) {
   // Invoke hook_hybridauth_profile_alter().
   drupal_alter('hybridauth_profile', $profile);
   // Process Drupal authentication.
-  _hybridauth_window_process_auth($profile);
+  return _hybridauth_window_process_auth($profile);
 }
 
 /**
@@ -202,7 +225,7 @@ function _hybridauth_window_process_auth($data) {
       $data = unserialize($identity['data']);
       drupal_set_message(t('You need to verify your e-mail address - !email.', array('!email' => $data['email'])), 'error');
       drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));
-      _user_mail_notify('register_no_approval_required', user_load($identity['uid']));
+      _hybridauth_mail_notify('hybridauth_email_verification', user_load($identity['uid']));
     }
     else {
       $form_state['uid'] = $identity['uid'];
@@ -252,7 +275,9 @@ function _hybridauth_window_process_auth($data) {
       _hybridauth_invoke_hooks('hybridauth_user_preinsert', $user, $data);
 
       // Check profile information for required fields.
-      _hybridauth_check_additional_info($data);
+      if ($additional_info = _hybridauth_check_additional_info($data)) {
+        return $additional_info;
+      }
 
       // TODO: remove this global if possible.
       global $_hybridauth_data;
@@ -336,7 +361,7 @@ function _hybridauth_window_process_auth($data) {
         $account = user_save($account, $edit);
       }
       if ($user_email_verify_trigger) {
-        _user_mail_notify('register_no_approval_required', $account);
+        _hybridauth_mail_notify('hybridauth_email_verification', $account);
         drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));
       }
 
@@ -388,20 +413,18 @@ function _hybridauth_check_additional_info($data) {
 
   if ($show_form) {
     $form = drupal_get_form('hybridauth_additional_info_form', $data);
-    _hybridauth_window_render_form($form, $data['provider']);
+    return _hybridauth_window_render_form($form, $data['provider']);
   }
 }
 
 function _hybridauth_window_render_form($form, $provider_id) {
-  $page = element_info('page');
   $window_type = variable_get('hybridauth_provider_' . $provider_id . '_window_type', 'current');
 
   if ($window_type == 'current') {
-    $page['content']['system_main']['messages'] = array('#type' => 'markup', '#markup' => theme('status_messages'));
-    $page['content']['system_main']['required_info_form'] = $form;
-    print drupal_render($page);
+    return $form;
   }
   else { // 'popup' or modal ('colorbox', 'shadowbox', 'fancybox', 'lightbox2')
+    $page = element_info('page');
     $page['#children'] = theme('status_messages') . drupal_render($form);
     print theme('html', array('page' => $page));
   }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ildeposito_media.file_default_displays.inc
@@ -1152,10 +1153,10 @@ function ildeposito_media_file_default_displays() {
   $file_display->weight = 0;
   $file_display->status = FALSE;
   $file_display->settings = array(
-    'picture_group' => 'articolo',
     'fallback_image_style' => '',
     'image_link' => '',
     'colorbox' => 'articolo',
+    'picture_mapping' => 'articolo',
   );
   $export['image__elenco_termini_contenuti__file_field_picture'] = $file_display;
 
@@ -1255,6 +1256,19 @@ function ildeposito_media_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
+  $file_display->name = 'image__header__file_field_picture';
+  $file_display->weight = 0;
+  $file_display->status = TRUE;
+  $file_display->settings = array(
+    'picture_group' => 'ildeposito',
+    'fallback_image_style' => 'respbreakpoints_theme_ildeposito_normal_1x',
+    'image_link' => '',
+    'colorbox' => 'ildeposito',
+  );
+  $export['image__header__file_field_picture'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
   $file_display->name = 'image__header__file_image';
   $file_display->weight = 0;
   $file_display->status = FALSE;
@@ -1337,14 +1351,6 @@ function ildeposito_media_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
-  $file_display->name = 'image__preview__file_field_media_large_icon';
-  $file_display->weight = 0;
-  $file_display->status = FALSE;
-  $file_display->settings = '';
-  $export['image__preview__file_field_media_large_icon'] = $file_display;
-
-  $file_display = new stdClass();
-  $file_display->api_version = 1;
   $file_display->name = 'image__preview__file_field_openlayers';
   $file_display->weight = 0;
   $file_display->status = FALSE;
@@ -1384,10 +1390,10 @@ function ildeposito_media_file_default_displays() {
   $file_display->weight = 0;
   $file_display->status = FALSE;
   $file_display->settings = array(
-    'picture_group' => 'articolo',
     'fallback_image_style' => '',
     'image_link' => '',
     'colorbox' => 'articolo',
+    'picture_mapping' => 'articolo',
   );
   $export['image__preview__file_field_picture'] = $file_display;
 
@@ -1429,6 +1435,7 @@ function ildeposito_media_file_default_displays() {
   $file_display->status = FALSE;
   $file_display->settings = array(
     'colorbox_node_style' => '',
+    'colorbox_node_style_first' => '',
     'colorbox_image_style' => '',
     'colorbox_gallery' => 'post',
     'colorbox_gallery_custom' => '',
@@ -1436,6 +1443,14 @@ function ildeposito_media_file_default_displays() {
     'colorbox_caption_custom' => '',
   );
   $export['image__sezioni_home__file_field_colorbox'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__sezioni_home__file_field_enclosure';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['image__sezioni_home__file_field_enclosure'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -1589,8 +1604,17 @@ function ildeposito_media_file_default_displays() {
     'picture_group' => 'seizoni_home',
     'fallback_image_style' => 'sezioni_homebreakpoints_theme_ildeposito_normal_1x',
     'image_link' => '',
+    'colorbox' => 'articolo',
   );
   $export['image__sezioni_home__file_field_picture'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'image__sezioni_home__file_field_rss_enclosure';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['image__sezioni_home__file_field_rss_enclosure'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -1723,10 +1747,10 @@ function ildeposito_media_file_default_displays() {
   $file_display->weight = 0;
   $file_display->status = FALSE;
   $file_display->settings = array(
-    'picture_group' => 'articolo',
     'fallback_image_style' => '',
     'image_link' => '',
     'colorbox' => 'articolo',
+    'picture_mapping' => 'articolo',
   );
   $export['image__teaser__file_field_picture'] = $file_display;
 
@@ -1880,10 +1904,10 @@ function ildeposito_media_file_default_displays() {
   $file_display->weight = 0;
   $file_display->status = FALSE;
   $file_display->settings = array(
-    'picture_group' => 'articolo',
     'fallback_image_style' => '',
     'image_link' => '',
     'colorbox' => 'articolo',
+    'picture_mapping' => 'articolo',
   );
   $export['image__termine_singolo__file_field_picture'] = $file_display;
 
@@ -1911,6 +1935,14 @@ function ildeposito_media_file_default_displays() {
     'title' => '',
   );
   $export['image__termine_singolo__file_picture'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'video__default__file_field_enclosure';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['video__default__file_field_enclosure'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -1987,7 +2019,7 @@ function ildeposito_media_file_default_displays() {
   $file_display->api_version = 1;
   $file_display->name = 'video__default__media_vimeo_image';
   $file_display->weight = 0;
-  $file_display->status = FALSE;
+  $file_display->status = TRUE;
   $file_display->settings = array(
     'image_style' => '',
   );
@@ -1997,11 +2029,42 @@ function ildeposito_media_file_default_displays() {
   $file_display->api_version = 1;
   $file_display->name = 'video__default__media_youtube_image';
   $file_display->weight = 0;
-  $file_display->status = FALSE;
+  $file_display->status = TRUE;
   $file_display->settings = array(
     'image_style' => '',
   );
   $export['video__default__media_youtube_image'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->api_version = 1;
+  $file_display->settings = array(
+    'width' => 640,
+    'height' => 390,
+    'theme' => 'dark',
+    'color' => 'red',
+    'autohide' => 2,
+    'autoplay' => 0,
+    'loop' => 0,
+    'showinfo' => 1,
+    'modestbranding' => 0,
+    'rel' => 1,
+    'nocookie' => 0,
+    'protocol_specify' => 0,
+    'protocol' => 'https:',
+    'enablejsapi' => 0,
+    'origin' => '',
+  );
+  $export['video__default__media_youtube_video'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'video__preview__file_field_enclosure';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['video__preview__file_field_enclosure'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -2046,6 +2109,7 @@ function ildeposito_media_file_default_displays() {
     'controls' => 1,
     'autoplay' => 0,
     'loop' => 0,
+    'muted' => 0,
     'width' => '',
     'height' => '',
     'multiple_file_behavior' => 'tags',
@@ -2116,6 +2180,14 @@ function ildeposito_media_file_default_displays() {
     'origin' => '',
   );
   $export['video__preview__media_youtube_video'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'video__teaser__file_field_enclosure';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['video__teaser__file_field_enclosure'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -2197,6 +2269,16 @@ function ildeposito_media_file_default_displays() {
     'image_style' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
   );
   $export['video__teaser__media_vimeo_image'] = $file_display;
+  
+    $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'video__teaser__media_vimeo_image';
+  $file_display->weight = 0;
+  $file_display->status = TRUE;
+  $file_display->settings = array(
+    'image_style' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
+  );
+  $export['video__teaser__media_youtube_image'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -2207,6 +2289,30 @@ function ildeposito_media_file_default_displays() {
     'image_style' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
   );
   $export['video__teaser__media_youtube_image'] = $file_display;
+  
+    $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'video__video_grande__media_youtube_video';
+  $file_display->weight = 0;
+  $file_display->status = TRUE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '390',
+    'theme' => 'dark',
+    'color' => 'red',
+    'autohide' => '2',
+    'autoplay' => 0,
+    'loop' => 0,
+    'showinfo' => 1,
+    'modestbranding' => 0,
+    'rel' => 1,
+    'nocookie' => 0,
+    'protocol_specify' => 0,
+    'protocol' => 'https:',
+    'enablejsapi' => 0,
+    'origin' => '',
+  );
+  $export['video__teaser__media_youtube_video'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -2360,6 +2466,14 @@ function ildeposito_media_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
+  $file_display->name = 'video__video_piccolo__file_field_enclosure';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['video__video_piccolo__file_field_enclosure'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
   $file_display->name = 'video__video_piccolo__file_field_enclosure_file';
   $file_display->weight = 0;
   $file_display->status = FALSE;
@@ -2409,6 +2523,7 @@ function ildeposito_media_file_default_displays() {
     'controls' => 1,
     'autoplay' => 0,
     'loop' => 0,
+    'muted' => 0,
     'width' => '',
     'height' => '',
     'multiple_file_behavior' => 'tags',
@@ -2498,8 +2613,8 @@ function ildeposito_media_file_default_displays() {
     'autoplay' => 0,
     'loop' => 0,
     'showinfo' => 1,
-    'modestbranding' => 0,
-    'rel' => 1,
+    'modestbranding' => 1,
+    'rel' => 0,
     'nocookie' => 0,
     'protocol_specify' => 0,
     'protocol' => 'https:',

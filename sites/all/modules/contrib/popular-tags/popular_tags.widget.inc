@@ -46,9 +46,9 @@ function _popular_tags_inject(&$element, $context) {
       $term->name = '"'. $term->name . '"';
     }
     
-    $tag_terms .= t('<a class="@classes" href="#" title="x@count" >@term</a>', array(
+    $tag_terms .= t('<a class="@classes" href="#" title="x@freq" >@term</a>', array(
       '@term' => $term->name,
-      '@count' => $term->count,
+      '@freq' => $term->freq,
       '@classes' => implode(' ', $classes),
     ));
   }
@@ -80,10 +80,10 @@ function _popular_tags_get_terms($vname, $limit = NULL, $all = FALSE) {
   $query->fields('td', array('tid', 'name'));
   $query->innerJoin('taxonomy_vocabulary', 'tv', 'tv.vid = td.vid');
   $query->leftJoin('taxonomy_index', 'tn', 'tn.tid = td.tid');
-  $query->addExpression('COUNT(tn.tid)', 'count');
+  $query->addExpression('COUNT(tn.tid)', 'freq');
   $query->condition('tv.machine_name', $vname);
   $query->groupBy('td.tid');
-  $query->orderBy('count', 'DESC');
+  $query->orderBy('freq', 'DESC');
   $query->orderBy('name');
   if (!empty($limit) && !$all) {
     $query->range(0, $limit);

@@ -632,6 +632,25 @@ function alterator_services_resources() {
         ),
       ),
     ),
+    'hybridauth_get' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Retrieves user hybridauth infos',
+          'file' => array('type' => 'inc', 'module' => 'alterator', 'name' => 'alterator'),
+          'callback' => 'alterator_users_hybridauth',
+          'access callback' => 'alterator_flag_access',
+          'args' => array(
+            array(
+               'name' => 'uuid',
+               'type' => 'string',
+               'description' => 'UUID of the user',
+               'source' => array('path' => 0),
+               'optional' => FALSE,
+             ),
+          ),
+        ),
+      ),
+    ),
   );
 }
 

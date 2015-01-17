@@ -21,7 +21,7 @@ function print_epub_print_link() {
     'description' => t('Display a EPUB version of this page.'),
     'path' => 'printepub',
     'class' => 'print-epub',
-    'icon' => 'epub_icon.gif',
+    'icon' => 'epub_icon.png',
     'module' => 'print_epub',
   );
 }

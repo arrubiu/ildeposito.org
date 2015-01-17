@@ -14,7 +14,7 @@ function ildeposito_gruppi_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'additional_settings__active_tab_gruppi';
-  $strongarm->value = 'edit-print';
+  $strongarm->value = 'edit-auto-nodetitle';
   $export['additional_settings__active_tab_gruppi'] = $strongarm;
 
   $strongarm = new stdClass();

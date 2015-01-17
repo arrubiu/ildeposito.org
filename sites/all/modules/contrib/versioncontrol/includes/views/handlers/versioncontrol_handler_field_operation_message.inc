@@ -22,11 +22,11 @@ class versioncontrol_handler_field_operation_message extends views_handler_field
   }
 
   function render($values) {
-    $message = $values->{$this->field_alias};
+    $message = check_plain($values->{$this->field_alias});
     if (empty($this->options['issue_tracker_url'])) {
       return $message;
     }
     $replacement = sprintf('<a href="%s">#\\1</a>', strtr($this->options['issue_tracker_url'], array('%issue_id' => '\\1')));
-    return preg_replace('/#(\d+)\b/i', $replacement, htmlspecialchars($message));
+    return preg_replace('/#(\d+)\b/i', $replacement, $message);
   }
 }

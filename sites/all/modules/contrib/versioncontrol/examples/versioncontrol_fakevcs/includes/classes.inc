@@ -10,7 +10,9 @@
  */
 
 class VersioncontrolFakeBackend extends VersioncontrolBackend {
-  public $classes = array(
+  public $type = 'fakevcs';
+
+  public $classesEntities = array(
     'repo'      => 'VersioncontrolFakeRepository',
     'operation' => 'VersioncontrolFakeOperation',
     'item'      => 'VersioncontrolFakeItem',
@@ -21,6 +23,7 @@ class VersioncontrolFakeBackend extends VersioncontrolBackend {
   );
 
   public function __construct() {
+    parent::__construct();
     // The user-visible name of the VCS.
     $this->name = 'FakeVCS';
     // A short description of the VCS, if possible not longer than one or
@@ -39,7 +42,7 @@ class VersioncontrolFakeBackend extends VersioncontrolBackend {
     );
   }
 
-  function isUsernameValid(&$username) {
+  public function isUsernameValid(&$username) {
     // Continuing the email-style username example from above.
     return valid_email_address($username);
   }
@@ -145,7 +148,7 @@ class VersioncontrolFakeOperationController extends VersioncontrolOperationContr
 
 class VersioncontrolFakeItem extends VersioncontrolItem {}
 
-class VersioncontrolGitEvent extends VersioncontrolEvent {
+class VersioncontrolFakeEvent extends VersioncontrolEvent {
   public $pushRevision = NULL;
   public $foo = NULL;
 

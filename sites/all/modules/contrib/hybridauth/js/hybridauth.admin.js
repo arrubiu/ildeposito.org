@@ -1,4 +1,7 @@
+/*global Drupal: false, jQuery: false */
+/*jslint devel: true, browser: true, maxerr: 50, indent: 2 */
 (function ($) {
+  "use strict";
 
 Drupal.behaviors.hybridauth_vtabs_SettingsSummary = {};
 Drupal.behaviors.hybridauth_vtabs_SettingsSummary.attach = function(context, settings) {
@@ -138,7 +141,7 @@ Drupal.behaviors.hybridauth_vtabs_SettingsSummary.attach = function(context, set
     }
 
     label = '<span style="font-weight:bold;">' + $.trim($('label[for="edit-hybridauth-duplicate-emails"]', context).text()) + '</span>';
-    list = [];
+    var list = [];
     $('#edit-hybridauth-duplicate-emails', context).find('label').each(function(index, Element) {
       var label_for = $(this).attr('for');
       if ($('#' + label_for).is(':checked')) {

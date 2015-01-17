@@ -27,7 +27,7 @@ function print_pdf_print_link() {
     'description' => t('Display a PDF version of this page.'),
     'path' => 'printpdf',
     'class' => 'print-pdf',
-    'icon' => 'pdf_icon.gif',
+    'icon' => 'pdf_icon.png',
     'module' => 'print_pdf',
   );
 }
@@ -66,7 +66,9 @@ function print_pdf_init() {
     if (isset($info['public_dirs'])) {
       foreach ($info['public_dirs'] as $dir) {
         $directory = 'public://print_pdf/' . $tool[0] . '/' . $dir;
-        $result = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+        $wrapper = file_stream_wrapper_get_instance_by_uri($directory);
+        $real_directory_path = $wrapper->getDirectoryPath() . "/" . file_uri_target($directory);
+        $result = file_prepare_directory($real_directory_path, FILE_CREATE_DIRECTORY);
         if (!$result) {
           watchdog('print_pdf', 'Failed to create directory "%dir" for %tool.', array('%dir' => $directory, '%tool' => $tool[0]), WATCHDOG_CRITICAL);
         }
@@ -75,7 +77,9 @@ function print_pdf_init() {
   }
   if (variable_get('print_pdf_cache_enabled', PRINT_PDF_CACHE_ENABLED_DEFAULT)) {
     $directory = print_pdf_cache_dir();
-    $result = file_prepare_directory($directory, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
+    $wrapper = file_stream_wrapper_get_instance_by_uri($directory);
+    $real_directory_path = $wrapper->getDirectoryPath() . "/" . file_uri_target($directory);
+    $result = file_prepare_directory($real_directory_path, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
     if (!$result) {
       watchdog('print_pdf', 'Failed to create directory "%dir" for print_pdf cache.', array('%dir' => $directory), WATCHDOG_CRITICAL);
     }
@@ -213,22 +217,22 @@ function print_pdf_requirements($phase) {
           $function = $tool[0] . '_pdf_tool_version';
           if (function_exists($function)) {
             $version = $function($tool[1]);
-          }
 
-          if (isset($info['min_version']) && version_compare($version, $info['min_version'], '<')) {
-            $requirements['print_pdf_tool_version'] = array(
-              'title' => $t('Printer, email and PDF versions - PDF generation library'),
-              'value' => $t('Unsupported %lib version', array('%lib' => $info['name'])),
-              'description' => $t('The currently selected version of %lib (@version) is not supported. Please update to a !url.',
-                                  array('%lib' => $info['name'], '@version' => $version, '!url' => l($t('newer version'), $info['url']))),
-              'severity' => REQUIREMENT_ERROR,
-            );
-          }
-          else {
-            $requirements['print_pdf_tool_version'] = array(
-              'title' => $t('Printer, email and PDF versions - PDF generation library'),
-              'value' => $info['name'] . ' ' . $version,
-            );
+            if (isset($info['min_version']) && version_compare($version, $info['min_version'], '<')) {
+              $requirements['print_pdf_tool_version'] = array(
+                'title' => $t('Printer, email and PDF versions - PDF generation library'),
+                'value' => $t('Unsupported %lib version', array('%lib' => $info['name'])),
+                'description' => $t('The currently selected version of %lib (@version) is not supported. Please update to a !url.',
+                                    array('%lib' => $info['name'], '@version' => $version, '!url' => l($t('newer version'), $info['url']))),
+                'severity' => REQUIREMENT_ERROR,
+              );
+            }
+            else {
+              $requirements['print_pdf_tool_version'] = array(
+                'title' => $t('Printer, email and PDF versions - PDF generation library'),
+                'value' => $info['name'] . ' ' . $version,
+              );
+            }
           }
         }
 

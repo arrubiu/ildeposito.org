@@ -185,6 +185,12 @@ function hybridauth_schema() {
 }
 
 /**
+ * Set us at schema rev 7000 as a base version.
+ */
+function hybridauth_update_7000(&$sandbox) {
+}
+
+/**
  * Add hybridauth_session DB table.
  */
 function hybridauth_update_7001(&$sandbox) {
@@ -195,7 +201,13 @@ function hybridauth_update_7001(&$sandbox) {
 }
 
 /**
- * Set us at schema rev 7000 as a base version.
+ * Remove unused hybridauth variables of disabled providers.
  */
-function hybridauth_update_7000(&$sandbox) {
+function hybridauth_update_7002(&$sandbox) {
+  foreach (hybridauth_providers_list() as $provider_id => $provider_name) {
+    if (!variable_get('hybridauth_provider_' . $provider_id . '_enabled', 0)) {
+      variable_del('hybridauth_provider_' . $provider_id . '_enabled');
+      variable_del('hybridauth_provider_' . $provider_id . '_weight');
+    }
+  }
 }

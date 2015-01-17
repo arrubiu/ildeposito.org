@@ -11,10 +11,7 @@
  *
  * @param $vars
  */
-function template_process_flexslider_picture_list(&$vars) {
-  // Call default preprocessor first.
-  template_process_flexslider_list($vars);
-
+function template_preprocess_flexslider_picture_list(&$vars) {
   $optionset = &$vars['settings']['optionset'];
 
   // Check if this is a picture optionset.
@@ -47,18 +44,13 @@ function template_process_flexslider_picture_list(&$vars) {
 
     // Prepare the item slides to be passed to render().
     foreach ($items as $i => &$item) {
-      // If the slide hasn't been set, build the slide using the image
-      // attributes given (assumes we're using a multi-image field)
-      // @todo need to allow for different types of field and collection fields.
-      if (!isset($item['slide'])) {
+      if (isset($item['item'])) {
         $item['slide'] = array(
           '#theme' => 'picture',
           '#style_name' => $optionset->imagestyle_normal,
-          '#uri' => $item['uri'],
-          '#height' => $item['height'],
-          '#width' => $item['width'],
-          '#alt' => $item['alt'],
-          '#title' => $item['title'],
+          '#uri' => $item['item']['uri'],
+          '#alt' => $item['item']['alt'],
+          '#title' => $item['item']['title'],
           '#breakpoints' => $breakpoint_styles,
         );
 
@@ -66,17 +58,20 @@ function template_process_flexslider_picture_list(&$vars) {
         if (!empty($optionset->options['colorboxEnabled'])) {
           $item['slide'] = array(
             '#theme' => 'picture_formatter_colorbox',
-            '#item' => $item,
+            '#item' => $item['item'],
             '#image_style' => $optionset->imagestyle_normal,
-            '#path' => $item['uri'],
+            '#path' => $item['item']['uri'],
             '#colorbox_image_style' => $colorbox_fallback_image_style,
             '#colorbox' => $colorbox_breakpoints,
             '#colorbox_group_id' => $colorbox_group_id,
-          ) + $item['slide'];
+            '#alt' => $item['item']['alt'],
+            '#title' => $item['item']['title'],
+            '#breakpoints' => $breakpoint_styles,
+          );
         }
-      }
-      if (!isset($item['thumb'])) {
-        $item['thumb'] = image_style_url($optionset->imagestyle_thumbnail, $item['uri']);
+        if (!isset($item['thumb'])) {
+          $item['thumb'] = image_style_url($optionset->imagestyle_thumbnail, $item['item']['uri']);
+        }
       }
     }
   }
@@ -96,11 +91,12 @@ function theme_flexslider_picture_list(&$vars) {
     if (!empty($vars['items'])) {
       $output .= "<$type" . drupal_attributes($attributes) . '>';
       foreach ($vars['items'] as $i => $item) {
-        $item = render($item['slide']);
+        $slide = render($item['slide']);
         $output .= theme('flexslider_list_item', array(
-          'item' => $item,
-          'thumb' => $item['thumb'],
-          'optionset' => $vars['settings']['optionset'],
+          'item' => $slide,
+          'thumb' => isset($item['thumb']) ? $item['thumb'] : NULL,
+          'settings' => $vars['settings'],
+          'caption' => isset($item['caption']) ? $item['caption'] : '',
         ));
       }
       $output .= "</$type>";

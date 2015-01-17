@@ -468,3 +468,94 @@ interface VersioncontrolRepositoryHistorySynchronizerInterface {
    */
   public function verifyData();
 }
+
+/**
+ * Defines a versioncontrol synchronization event processor plugin behavior.
+ *
+ * Note: This is similar to hook_versioncontrol_code_arrival(), but this type
+ * of plugins are intended to help different configuration per repository per
+ * plugin.
+ */
+interface VersioncontrolSynchronizationEventProcessorInterface {
+  /**
+   * Reacts when new code has arrived correctly.
+   *
+   * @param VersioncontrolEvent $event
+   *   The event describing the code arrival.
+   *
+   * @throws VersioncontrolSynchronizationEventProcessorException $event
+   *   Something wrong happened during the processing. It let caller knows if
+   *   was executed correctly or not.
+   */
+  public function process(VersioncontrolEvent $event);
+
+  /**
+   * Set the repository object to be used by this plugin object.
+   */
+  public function setRepository(VersioncontrolRepository $repository);
+
+}
+
+/**
+ * Defines a way for plugins to define configuration.
+ *
+ * @todo Currently it is only used on versioncontrol synchronization event
+ * processor plugin. It's pending to be used on other plugins.
+ * @todo Add a way to validate the form. Not added for now until we can pass
+ * context to the plugin to know in which part of the form_state hierarchy to
+ * find the values. Probably make a new method that receives only the known
+ * context of form_state instead of the full context.
+ */
+interface VersioncontrolPluginConfigurationInterface {
+  /**
+   * Adds the values passed to the object.
+   *
+   * @param array $data
+   *   the corresponding data to initialize values.
+   *   i.e.
+   *   array(
+   *     'behavior' => 1,
+   *     'message' => 'test',
+   *   )
+   */
+  public function setConfiguration($data);
+
+  /**
+   * Build a configuration form to be used to configure a plugin instance.
+   *
+   * @param array $data
+   *   the corresponding data to initialize values.
+   *   i.e.
+   *   array(
+   *     'behavior' => 1,
+   *     'message' => 'test',
+   *   )
+   *
+   * @return array
+   *   A form array to include.
+   */
+  public function buildForm($default_data);
+
+  /**
+   * Converts the buildForm() form data into an array to be saved.
+   *
+   * @param array $form
+   *   A form array.
+   * @param array $form_state_values_data
+   *   A subset of $form_state with corresponding data.
+   */
+  public function getFormData($form_state_values_data);
+
+  /**
+   * Handle any special handling on form submission.
+   *
+   * Probably empty in most cases, getFormData should provide enough for
+   * storing the configuration.
+   *
+   * @param array $form
+   *   A form array.
+   * @param array $form_state
+   *   the corresponding form state.
+   */
+  public function submitForm(&$form, &$form_state);
+}

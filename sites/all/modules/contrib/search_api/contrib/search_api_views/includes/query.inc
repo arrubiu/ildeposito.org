@@ -169,7 +169,7 @@ class SearchApiViewsQuery extends views_plugin_query {
       '#default_value' => $this->options['search_api_bypass_access'],
     );
 
-    if (entity_get_info($this->index->item_type)) {
+    if ($this->index->getEntityType()) {
       $form['entity_access'] = array(
         '#type' => 'checkbox',
         '#title' => t('Additional access checks on result entities'),
@@ -342,7 +342,7 @@ class SearchApiViewsQuery extends views_plugin_query {
     catch (Exception $e) {
       $this->errors[] = $e->getMessage();
       // Recursion to get the same error behaviour as above.
-      return $this->execute($view);
+      $this->execute($view);
     }
   }
 
@@ -374,9 +374,9 @@ class SearchApiViewsQuery extends views_plugin_query {
     // First off, we try to gather as much field values as possible without
     // loading any items.
     foreach ($results as $id => $result) {
-      if (!empty($this->options['entity_access'])) {
-        $entity = entity_load($this->index->item_type, array($id));
-        if (!entity_access('view', $this->index->item_type, $entity[$id])) {
+      if (!empty($this->options['entity_access']) && ($entity_type = $this->index->getEntityType())) {
+        $entity = entity_load($entity_type, array($id));
+        if (!entity_access('view', $entity_type, $entity[$id])) {
           continue;
         }
       }
@@ -660,16 +660,18 @@ class SearchApiViewsQuery extends views_plugin_query {
     return $ret;
   }
 
-  public function getOption($name) {
+  public function getOption($name, $default = NULL) {
     if (!$this->errors) {
-      return $this->query->getOption($name);
+      return $this->query->getOption($name, $default);
     }
+    return $default;
   }
 
   public function setOption($name, $value) {
     if (!$this->errors) {
       return $this->query->setOption($name, $value);
     }
+    return NULL;
   }
 
   public function &getOptions() {

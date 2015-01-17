@@ -33,7 +33,7 @@ function print_epub_views_data() {
     'left_field' => 'nid',
     'field' => 'path',
 //    'type' => 'INNER',
-    'handler' => 'print_epub_join_page_counter',
+    'handler' => 'print_join_page_counter',
   );
 
   // print_epub_node_conf fields

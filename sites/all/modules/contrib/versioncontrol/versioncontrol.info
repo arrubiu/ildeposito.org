@@ -56,9 +56,9 @@ files[] = tests/VersioncontrolTagUnitTestingTestCase.test
 files[] = tests/VersioncontrolTestCase.test
 files[] = tests/VersioncontrolTokenTests.test
 
-; Information added by Drupal.org packaging script on 2014-01-25
-version = "7.x-1.0-rc2"
+; Information added by Drupal.org packaging script on 2014-04-22
+version = "7.x-1.0-rc3"
 core = "7.x"
 project = "versioncontrol"
-datestamp = "1390627408"
+datestamp = "1398180528"
 

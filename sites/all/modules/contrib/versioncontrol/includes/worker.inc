@@ -107,6 +107,42 @@ function _versioncontrol_reposync_run_worker($data) {
   if ($repository->syncEvent($event, $sync_options)) {
     // Fire the notification hook on success: new code is here, parsed and
     // ready to go!
+    // @todo Passing the repository to the hook is redundant, the event already
+    // have it, remove it.
     module_invoke_all('versioncontrol_code_arrival', $repository, $event);
+  }
+}
+
+/**
+ * Run a repository event processor plugin.
+ */
+function _versioncontrol_repository_event_processor_run_worker($data) {
+  $repository_id = $data['repo_id'];
+  if (empty($data['repo_id'])) {
+    watchdog('versioncontrol', 'event_processor: Cannot load a repository with empty repo_id.".', WATCHDOG_ERROR);
+    return;
+  }
+  if (!$repository = versioncontrol_repository_load($data['repo_id'])) {
+    watchdog('versioncontrol', 'event_processor: Cannot load a repository with repo_id "%repository_id".', array('%repository_id' => $data['repo_id']), WATCHDOG_ERROR);
+    return;
+  }
+  if (empty($data['elid'])) {
+    watchdog('versioncontrol', 'event_processor: Cannot load an event with empty elid.".', WATCHDOG_ERROR);
+    return;
+  }
+  if (!$event = $repository->loadEvent($data['elid'])) {
+    watchdog('versioncontrol', 'event_processor: Cannot load an event with elid "%elid" on repository "%repo_id".', array('%elid' => $data['elid'], '%repo_id' => $data['repo_id']), WATCHDOG_ERROR);
+    return;
+  }
+  foreach($event->getRepository()->getEventProcessors() as $name => $event_processor) {
+    try {
+      $event_processor->process($event);
+    }
+    catch (VersioncontrolSynchronizationEventProcessorException $exception) {
+      watchdog('versioncontrol', 'Event processor using class "%class" aborted execution with message "%message".', array('%class' => get_class($event_processor), '%message' => $exception->getMessage()), WATCHDOG_WARNING);
+    }
+    catch (Exception $exception) {
+      watchdog('versioncontrol', 'Event processor using class "%class" failed with message "%message".', array('%class' => get_class($event_processor), '%message' => $exception->getMessage()), WATCHDOG_WARNING);
+    }
   }
 }

@@ -78,7 +78,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     'field_label_plurals_singular' => '',
     'field_name' => 'body',
     'label' => 'Descrizione',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'display_summary' => 1,
       'text_processing' => 1,
@@ -91,6 +91,8 @@ function ildeposito_gruppi_field_default_field_instances() {
         'maxlength_js' => '',
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_label_summary' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_summary' => '',
         'maxlength_js_truncate_html' => 0,
         'rows' => 20,
         'summary_rows' => 5,
@@ -205,7 +207,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     'field_label_plurals_singular' => '',
     'field_name' => 'field_citta',
     'label' => 'Città',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'linkit' => array(
         'enable' => 0,
@@ -310,7 +312,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     'field_label_plurals_singular' => '',
     'field_name' => 'field_geofield',
     'label' => 'Geofield',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -319,7 +321,6 @@ function ildeposito_gruppi_field_default_field_instances() {
       'module' => 'geolocation_googlemaps',
       'settings' => array(
         'marker_draggable' => 0,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'scrollwheel' => 0,
       ),
       'type' => 'geolocation_googlemap',
@@ -344,6 +345,7 @@ function ildeposito_gruppi_field_default_field_instances() {
           'colorbox_image_style' => 'flexslider_full',
           'colorbox_multivalue_index' => NULL,
           'colorbox_node_style' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
+          'colorbox_node_style_first' => '',
         ),
         'type' => 'colorbox',
         'weight' => 8,
@@ -415,13 +417,14 @@ function ildeposito_gruppi_field_default_field_instances() {
     'bundle' => 'gruppi',
     'default_value' => array(
       0 => array(
-        'element_key' => 'node|gruppi|field_indirizzo|und|0',
         'thoroughfare' => '',
         'premise' => '',
         'postal_code' => '',
+        'dependent_locality' => '',
         'locality' => '',
         'administrative_area' => '',
         'country' => 'IT',
+        'name_line' => '',
       ),
     ),
     'deleted' => 0,
@@ -452,7 +455,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     'field_label_plurals_singular' => '',
     'field_name' => 'field_indirizzo',
     'label' => 'Indirizzo',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -464,11 +467,12 @@ function ildeposito_gruppi_field_default_field_instances() {
         'format_handlers' => array(
           'address' => 'address',
           'name-oneline' => 'name-oneline',
+          'address-hide-postal-code' => 0,
+          'address-hide-street' => 0,
           'address-hide-country' => 0,
           'organisation' => 0,
           'name-full' => 0,
         ),
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'addressfield_standard',
       'weight' => 5,
@@ -509,6 +513,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     'label' => 'Collegamenti',
     'required' => 0,
     'settings' => array(
+      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -526,6 +531,7 @@ function ildeposito_gruppi_field_default_field_instances() {
       ),
       'rel_remove' => 'default',
       'title' => 'optional',
+      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,

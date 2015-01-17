@@ -15,6 +15,7 @@ function ildeposito_gruppi_user_default_permissions() {
     'name' => 'create gruppi content',
     'roles' => array(
       'staff' => 'staff',
+      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );
@@ -63,6 +64,7 @@ function ildeposito_gruppi_user_default_permissions() {
     'name' => 'edit any gruppi content',
     'roles' => array(
       'staff' => 'staff',
+      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );
@@ -72,6 +74,7 @@ function ildeposito_gruppi_user_default_permissions() {
     'name' => 'edit own gruppi content',
     'roles' => array(
       'staff' => 'staff',
+      'utente registrato' => 'utente registrato',
     ),
     'module' => 'node',
   );

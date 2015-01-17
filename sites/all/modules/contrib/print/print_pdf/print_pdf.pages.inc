@@ -44,12 +44,12 @@ function print_pdf_controller() {
 
     $pdf_filename = variable_get('print_pdf_filename', PRINT_PDF_FILENAME_DEFAULT);
     if (!empty($pdf_filename) && !empty($node)) {
-      $pdf_filename = token_replace($pdf_filename, array('node' => $node));
+      $pdf_filename = token_replace($pdf_filename, array('node' => $node), array('clear' => TRUE));
     }
     else {
-      $pdf_filename = token_replace($pdf_filename, array('site'));
-      if (empty($pdf_filename) || count(token_scan($pdf_filename))) {
-        // If there are still tokens, use a fallback solution
+      $pdf_filename = token_replace($pdf_filename, array('site'), array('clear' => TRUE));
+      if (empty($pdf_filename)) {
+        // If empty, use a fallback solution
         $pdf_filename = str_replace('/', '_', $path);
       }
     }

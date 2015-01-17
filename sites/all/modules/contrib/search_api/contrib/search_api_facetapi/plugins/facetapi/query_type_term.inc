@@ -30,7 +30,7 @@ class SearchApiFacetapiTerm extends FacetapiQueryType implements FacetapiQueryTy
     // Return terms for this facet.
     $this->adapter->addFacet($this->facet, $query);
 
-    $settings = $this->adapter->getFacet($this->facet)->getSettings()->settings;
+    $settings = $this->getSettings()->settings;
 
     // First check if the facet is enabled for this search.
     $default_true = isset($settings['default_true']) ? $settings['default_true'] : TRUE;
@@ -56,7 +56,12 @@ class SearchApiFacetapiTerm extends FacetapiQueryType implements FacetapiQueryTy
       $conjunction = 'OR';
     }
     else {
-      throw new SearchApiException(t('Unknown facet operator %operator.', array('%operator' => $operator)));
+      $vars = array(
+        '%operator' => $operator,
+        '%facet' => !empty($this->facet['label']) ? $this->facet['label'] : $this->facet['name'],
+      );
+      watchdog('search_api_facetapi', 'Unknown facet operator %operator used for facet %facet.', $vars, WATCHDOG_WARNING);
+      return;
     }
     $tags = array('facet:' . $this->facet['field']);
     $facet_filter = $query->createFilter($conjunction, $tags);
@@ -77,7 +82,7 @@ class SearchApiFacetapiTerm extends FacetapiQueryType implements FacetapiQueryTy
     // Test if this filter should be negated.
     $settings = $this->adapter->getFacet($this->facet)->getSettings();
     $exclude = !empty($settings->settings['exclude']);
-    // Integer (or other nun-string) filters might mess up some of the following
+    // Integer (or other non-string) filters might mess up some of the following
     // comparison expressions.
     $filter = (string) $filter;
     if ($filter == '!') {
@@ -143,9 +148,15 @@ class SearchApiFacetapiTerm extends FacetapiQueryType implements FacetapiQueryTy
       return array();
     }
     $search_id = $search_ids[$facet['name']];
-    $search = search_api_current_search($search_id);
+    list(, $results) = search_api_current_search($search_id);
     $build = array();
-    $results = $search[1];
+
+    // Always include the active facet items.
+    foreach ($this->adapter->getActiveItems($this->facet) as $filter)  {
+      $build[$filter['value']]['#count'] = $results['result count'];
+    }
+
+    // Then, add the facets returned by the server.
     if (isset($results['search_api_facets']) && isset($results['search_api_facets'][$this->facet['name']])) {
       $values = $results['search_api_facets'][$this->facet['name']];
       foreach ($values as $value) {

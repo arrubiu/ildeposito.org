@@ -50,15 +50,6 @@ function ildeposito_media_user_default_permissions() {
     'module' => 'file_entity',
   );
 
-  // Exported permission: 'import media'.
-  $permissions['import media'] = array(
-    'name' => 'import media',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'media',
-  );
-
   // Exported permission: 'view files'.
   $permissions['view files'] = array(
     'name' => 'view files',

@@ -27,20 +27,20 @@ function views_timelinejs_date_stamp_source_date_field_conversion($date, $output
   $timezone = date_get_timezone($tz_handling);
   $db_timezone = date_get_timezone_db($tz_handling);
   switch ($output_format) {
-    case 'csv':{
+    case 'csv':
       $ret['value'] = views_timelinejs_convert_to_csv($date['value'], $input_format, $timezone, $db_timezone, $granularity);
       if (isset($date['value2'])) {
         $ret['value2'] = views_timelinejs_convert_to_csv($date['value2'], $input_format, $timezone, $db_timezone, $granularity);
       }
       break;
-    }
-    case 'timestamp':{
+
+    case 'timestamp':
       $ret['value'] = views_timelinejs_convert_to_timestamp($date['value'], $input_format, $timezone, $db_timezone, $granularity);
       if (isset($date['value2'])) {
         $ret['value2'] = views_timelinejs_convert_to_timestamp($date['value2'], $input_format, $timezone, $db_timezone, $granularity);
       }
       break;
-    }
+
   }
 
   if (isset($ret['value2']) && $ret['value'] == $ret['value2']) {

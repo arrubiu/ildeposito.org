@@ -54,19 +54,46 @@ class ExpireAPI {
     }
     else {
 
-      // Define object languge. It will be used to define path aliases.
-      $language = NULL;
+      // Define a language code. It will be used to define path aliases.
+      $langcode = NULL;
       if (!empty($object_type) && !empty($object)) {
-        $language = entity_language($object_type, $object);
+        if(function_exists('entity_language')){
+          $langcode = entity_language($object_type, $object);
+        }
+        else{
+          $info = entity_get_info($object_type);
+          if (isset($info['language callback']) && function_exists($info['language callback'])) {
+            $langcode = $info['language callback']($object_type, $object);
+          }
+          elseif (!empty($info['entity keys']['language']) && isset($object->{$info['entity keys']['language']})) {
+            $langcode = $object->{$info['entity keys']['language']};
+          }
+          else {
+            $langcode = NULL;
+          }
+        }
+      }
+
+      // Get a language of current object (if exists). We need to respect cases
+      // when entities having one site language has been expired from another
+      // site locale. For this purpose we always have to pass a proper language
+      // key/object to get a correct URL of entity's language.
+      if ($langcode == LANGUAGE_NONE) {
+        $language = language_default();
+        $langcode = $language->language;
+      }
+      else {
+        $languages = language_list();
+        $language = isset($languages[$langcode]) ? $languages[$langcode] : NULL;
       }
 
       // Adds paths aliases, defines wildcards, etc.
-      list($urls, $wildcards) = self::processInternalPaths($urls, $language);
+      list($urls, $wildcards) = self::processInternalPaths($urls, $langcode);
 
       // If base site url should be included, then simply add it to the internal paths.
       if ($include_base_url) {
         foreach ($urls as $internal_path) {
-          $urls[$internal_path] = url($internal_path, array('absolute' => TRUE, 'alias' => TRUE));
+          $urls[$internal_path] = url($internal_path, array('absolute' => TRUE, 'alias' => TRUE, 'language' => $language));
         }
       }
     }
@@ -178,16 +205,18 @@ class ExpireAPI {
   /**
    * Find all entity references in fields and build urls for them.
    *
-   * @param $entity
+   * @param object $entity
    *   Entity object.
-   *
-   * @param $entity_type
+   * @param string $entity_type
    *   Type of entity.
+   * @param bool $traverse_field_collection
+   *   (optional) Whether or not to traverse references from field collections
+   *   attached to this entity. Defaults to FALSE.
    *
    * @return array
    *   Entity references' urls that should be flushed.
    */
-  public static function expireReferences($entity, $entity_type) {
+  public static function expireReferences($entity, $entity_type, $traverse_field_collection = FALSE) {
 
     $field_references = array();
 
@@ -196,10 +225,22 @@ class ExpireAPI {
     // Get all fields from current entity type.
     $field_instances = field_info_instances($entity_type, $bundle_name);
 
+    // Gather references across field_collections.
+    $field_collection_items = array();
     foreach ($field_instances as $field_name => $field_instance) {
 
       // Load information about field.
       $field_info = field_info_field($field_name);
+
+      // Collect field collection items.
+      if ($traverse_field_collection && $field_info['type'] == 'field_collection') {
+        $items = field_get_items($entity_type, $entity, $field_name);
+        if (!empty($items) && is_array($items)) {
+          foreach ($items as $item) {
+            $field_collection_items[] = $item['value'];
+          }
+        }
+      }
 
       if (in_array($field_info['type'], array('node_reference', 'user_reference', 'entityreference'))) {
 
@@ -242,7 +283,7 @@ class ExpireAPI {
     foreach ($field_references as $field_reference) {
 
       // Load entity.
-      $field_entity = entity_load_single($field_reference['entity_type'], $field_reference['entity_id']);
+      $field_entity = _expire_load_single_entity($field_reference['entity_type'], $field_reference['entity_id']);
       if (empty($field_entity)) {
         continue;
       }
@@ -254,6 +295,14 @@ class ExpireAPI {
       }
 
       $urls['reference-' . $field_reference['entity_type'] . '-' . $field_reference['entity_id']] = $field_entity_uri['path'];
+    }
+
+    // Traverse gathered field collections.
+    if ($field_collection_items) {
+      foreach (field_collection_item_load_multiple($field_collection_items) as $field_collection_item) {
+        $field_collection_urls = ExpireAPI::expireReferences($field_collection_item, 'field_collection_item');
+        $urls = array_merge($urls, $field_collection_urls);
+      }
     }
 
     return $urls;
@@ -289,6 +338,16 @@ class ExpireAPI {
       }
     }
 
+    return $urls;
+  }
+
+  /**
+   * Return urls for a front page.
+   */
+  public static function getFrontPageUrls() {
+    $urls = array();
+    $urls['front'] = '';
+    $urls['front-path'] = variable_get('site_frontpage', 'node');
     return $urls;
   }
 
@@ -346,6 +405,12 @@ class ExpireAPI {
       // Collect array with information about expired URLs and its wildcards.
       $urls[$path] = $path;
       $wildcards[$path] = $wildcard;
+
+      // Don't process empty pass, because otherwise drupal will return us
+      // alias for the current page. And that is not what we actually want.
+      if ($path == NULL) {
+        continue;
+      }
 
       // Get the path alias for this path, and add it to the array if one was
       // found.

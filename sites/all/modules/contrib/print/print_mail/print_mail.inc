@@ -153,8 +153,8 @@ function print_mail_form_for_path($form, &$form_state, $path, $query = NULL, $us
     '#required' => TRUE,
   );
   if (!empty($title)) {
-    // To prevent useless translation strings, try to translate only node titles
-    if (drupal_substr($path, 0, 5) == 'node/') {
+    // To prevent useless translation strings, try to translate only non-node titles
+    if (drupal_substr($path, 0, 5) != 'node/') {
       $title = t($title);
     }
 
@@ -186,10 +186,6 @@ function print_mail_form_for_path($form, &$form_state, $path, $query = NULL, $us
     '#name' => 'submit',
     '#type' => 'submit',
     '#value' => t('Send email'),
-  );
-  $form['btn_clear'] = array(
-    '#type' => 'markup',
-    '#markup' => '<input type="reset" name="clear" id="edit-btn-clear" value="' . t('Clear form') . '" class="form-submit" />',
   );
   $form['btn_cancel'] = array(
     '#name' => 'cancel',
@@ -406,6 +402,9 @@ function print_mail_form_submit($form, &$form_state) {
       // Convert the a href elements, to make sure no relative links remain
       $pattern = '!<(a\s[^>]*?)>!is';
       $params['body'] = preg_replace_callback($pattern, '_print_rewrite_urls', $params['body']);
+
+      // Enable support for third-party modules to alter the e-mail before it's sent
+      drupal_alter('print_mail', $params, $to);
 
       $ok = FALSE;
       $use_job_queue = variable_get('print_mail_job_queue', PRINT_MAIL_JOB_QUEUE_DEFAULT);

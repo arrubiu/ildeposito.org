@@ -108,11 +108,6 @@ function ildeposito_backoffice_filter_default_formats() {
         'status' => 1,
         'settings' => array(),
       ),
-      'media_filter' => array(
-        'weight' => -44,
-        'status' => 1,
-        'settings' => array(),
-      ),
       'filter_htmlcorrector' => array(
         'weight' => -43,
         'status' => 1,

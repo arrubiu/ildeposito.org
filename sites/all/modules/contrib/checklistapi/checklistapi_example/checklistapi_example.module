@@ -24,6 +24,7 @@ function checklistapi_example_checklistapi_checklist_info() {
       '#description' => t('<p>Gain these skills to pass the <em><a href="http://headrush.typepad.com/creating_passionate_users/2005/10/getting_users_p.html">suck threshold</a></em> and start being creative with Drupal.</p>'),
       'install_configure' => array(
         '#title' => t('Installation and configuration of Drupal core'),
+        '#description' => t('Prepare for installation, run the installation script, and take the steps that should be done after the installation script has completed.'),
         'handbook_page' => array(
           '#text' => t('Installation Guide'),
           '#path' => 'http://drupal.org/documentation/install',
@@ -31,6 +32,7 @@ function checklistapi_example_checklistapi_checklist_info() {
       ),
       'node_system' => array(
         '#title' => t('Node system'),
+        '#description' => t('Perform a variety of operations on one or more nodes.'),
         'handbook_page' => array(
           '#text' => t('Manage nodes'),
           '#path' => 'http://drupal.org/node/306808',
@@ -38,6 +40,7 @@ function checklistapi_example_checklistapi_checklist_info() {
       ),
       'block_system' => array(
         '#title' => t('Block system'),
+        '#description' => t('Create blocks and adjust their appearance, shape, size and position.'),
         'handbook_page' => array(
           '#text' => t('Working with blocks (content in regions)'),
           '#path' => 'http://drupal.org/documentation/modules/block',
@@ -45,6 +48,7 @@ function checklistapi_example_checklistapi_checklist_info() {
       ),
       'users' => array(
         '#title' => t('Users, roles and permissions'),
+        '#description' => t('Create and manage users and access control.'),
         'handbook_page' => array(
           '#text' => t('Managing users'),
           '#path' => 'http://drupal.org/node/627158',
@@ -52,6 +56,7 @@ function checklistapi_example_checklistapi_checklist_info() {
       ),
       'contrib' => array(
         '#title' => t('Installing contributed themes and modules'),
+        '#description' => t('Customize Drupal to your tastes by adding modules and themes.'),
         'handbook_page' => array(
           '#text' => t('Installing modules and themes'),
           '#path' => 'http://drupal.org/documentation/install/modules-themes',

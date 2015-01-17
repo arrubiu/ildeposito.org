@@ -338,7 +338,21 @@ a > .sf-sub-indicator {
 }
 
 .front .pane-views-home-sezioni-block { 
-  display: block;
+    display:inline;
+}
+
+.front .pane-views-home-sezioni-block .flexslider { 
+    margin-bottom: 0px;
+    box-shadow: none !important;
+    border: none !important;    
+}
+
+.front .pane-views-home-eventi-block {
+    margin-top: 50px;
+}
+
+.front .pane-views-334a0f330c3cb3b95d3ca2bc3a44cf6d {
+    margin-top: 50px;
 }
 
 .flexslider-processed {

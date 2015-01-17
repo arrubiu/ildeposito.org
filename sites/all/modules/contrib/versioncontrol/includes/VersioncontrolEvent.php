@@ -7,7 +7,7 @@
 /**
  * Stuff that happened in a repository at a specific time
  */
-abstract class VersioncontrolEvent extends VersioncontrolEntity {
+abstract class VersioncontrolEvent extends VersioncontrolEntity implements Serializable {
   protected $_id = 'elid';
   /**
    * db identifier
@@ -102,5 +102,42 @@ abstract class VersioncontrolEvent extends VersioncontrolEntity {
     $this->backendDelete($options);
 
     module_invoke_all('versioncontrol_entity_event_delete', $this);
+  }
+
+  /**
+   * @todo generalize for VersioncontrolEntity
+   *
+   * @see Serializable::serialize().
+   */
+  public function serialize() {
+    $refl = new ReflectionObject($this);
+    // Get all properties, except static ones.
+    $props = $refl->getProperties(ReflectionProperty::IS_PRIVATE | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PUBLIC );
+
+    $ser = array();
+    foreach ($props as $prop) {
+      // Avoid repository and backend.
+      if (in_array($prop->name, array('backend', 'repository'))) {
+        continue;
+      }
+      $ser[$prop->name] = $this->{$prop->name};
+    }
+    // Make sure ids are set.
+    $ser['vcs'] = $this->getRepository()->vcs;
+    $ser['repo_id'] = $this->getRepository()->repo_id;
+    return serialize($ser);
+  }
+
+  /**
+   * @see Serializable::unserialize().
+   */
+  public function unserialize($serialized) {
+    foreach (unserialize($serialized) as $prop => $val) {
+      $this->$prop = $val;
+    }
+    // And stripped out data members.
+    $this->backend = versioncontrol_get_backends($this->vcs);
+    unset($this->vcs);
+    $this->repository = $this->backend->loadEntity('repo', $this->repo_id);
   }
 }

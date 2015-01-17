@@ -33,6 +33,28 @@ function hybridauth_bonus_form_hybridauth_admin_settings_alter(&$form, &$form_st
         ),
       ),
     );
+    $form['vtabs']['fset_bonus_roles']['hybridauth_bonus_registration_roles_required'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Make role selection required'),
+      '#description' => t('Force users to select a role when registering through HybridAuth.'),
+      '#default_value' => variable_get('hybridauth_bonus_registration_roles_required', 0),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="hybridauth_bonus_registration_role_choice"]' => array('checked' => TRUE),
+        ),
+      ),
+    );
+    $form['vtabs']['fset_bonus_roles']['hybridauth_bonus_registration_roles_multiple'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Allow several roles selection'),
+      '#description' => t('Allow users to select several roles when registering through HybridAuth.'),
+      '#default_value' => variable_get('hybridauth_bonus_registration_roles_multiple', 1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="hybridauth_bonus_registration_role_choice"]' => array('checked' => TRUE),
+        ),
+      ),
+    );
   }
 
   $form['vtabs']['fset_bonus_forms'] = array(
@@ -97,9 +119,10 @@ function hybridauth_bonus_form_hybridauth_additional_info_form_alter(&$form, &$f
   if (variable_get('hybridauth_bonus_registration_role_choice', 0)) {
     $roles = array_intersect_key(user_roles(TRUE), array_filter(variable_get('hybridauth_bonus_registration_roles', array())));
     $form['fset']['roles'] = array(
-      '#type' => 'checkboxes',
+      '#type' => variable_get('hybridauth_bonus_registration_roles_multiple', 1) ? 'checkboxes' : 'radios',
       '#title' => t('Roles'),
       '#options' => $roles,
+      '#required' => variable_get('hybridauth_bonus_registration_roles_required', 0),
     );
 
     // $form['#validate'][] = 'hybridauth_bonus_form_hybridauth_additional_info_form_validate';
@@ -112,7 +135,14 @@ function hybridauth_bonus_form_hybridauth_additional_info_form_alter(&$form, &$f
 
 function hybridauth_bonus_form_hybridauth_additional_info_form_submit($form, &$form_state) {
   if (isset($form_state['values']['roles'])) {
-    $form_state['values']['data']['roles'] = $form_state['values']['roles'];
+    if (is_array($form_state['values']['roles'])) {
+      $form_state['values']['data']['roles'] = $form_state['values']['roles'];
+    }
+    else {
+      $form_state['values']['data']['roles'] = array(
+        $form_state['values']['roles'] => $form_state['values']['roles'],
+      );
+    }
     if (!isset($form_state['values']['data']['manual']) || is_array($form_state['values']['data']['manual'])) {
       $form_state['values']['data']['manual'][] = 'roles';
     }

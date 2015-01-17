@@ -10,6 +10,8 @@
 function hybridauth_bonus_uninstall() {
   variable_del('hybridauth_bonus_registration_role_choice');
   variable_del('hybridauth_bonus_registration_roles');
+  variable_del('hybridauth_bonus_registration_roles_required');
+  variable_del('hybridauth_bonus_registration_roles_multiple');
   variable_del('hybridauth_bonus_customize_widget_per_form');
 
   if (!function_exists('hybridauth_forms_list')) {

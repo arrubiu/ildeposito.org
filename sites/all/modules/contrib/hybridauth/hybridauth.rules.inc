@@ -95,7 +95,7 @@ function hybridauth_url_managed_file($url, $directory) {
     }
     // Make a request.
     $content = drupal_http_request($url);
-    if ($content->error) {
+    if (isset($content->error)) {
       watchdog('hybridauth', 'Error while executing drupal_http_request() to %url: %error.', array('%url' => $url, '%error' => $content->error), WATCHDOG_ERROR);
       return array('file' => '');
     }

@@ -19,8 +19,7 @@ function speedy_form_system_performance_settings_alter(&$form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Use minified JS files created by Speedy'),
     '#default_value' => variable_get('speedy_js_production', TRUE),
-    '#description' => t('Enabling this will replace non-minified Drupal core
-     Javascript files with a minified version.'),
+    '#description' => t('Enabling this will replace non-minified Drupal core Javascript files with a minified version.'),
   );
 }
 

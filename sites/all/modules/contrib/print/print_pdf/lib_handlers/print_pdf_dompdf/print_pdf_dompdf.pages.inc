@@ -31,12 +31,12 @@ function print_pdf_dompdf_print_pdf_generate($html, $meta, $paper_size = NULL, $
     $unicode = variable_get('print_pdf_dompdf_unicode', PRINT_PDF_DOMPDF_UNICODE_DEFAULT);
     $font_subsetting = variable_get('print_pdf_dompdf_font_subsetting', PRINT_PDF_DOMPDF_FONT_SUBSETTING_DEFAULT);
 
-    define('DOMPDF_ENABLE_PHP', FALSE);
-    define('DOMPDF_ENABLE_REMOTE', TRUE);
-    define('DOMPDF_TEMP_DIR', file_directory_temp());
-    define('DOMPDF_UNICODE_ENABLED', $unicode);
-    define('DOMPDF_ENABLE_FONTSUBSETTING', $font_subsetting);
-    define('DOMPDF_FONT_CACHE', drupal_realpath('public://print_pdf/print_pdf_dompdf/fonts/'));
+    if (!defined('DOMPDF_ENABLE_PHP')) define('DOMPDF_ENABLE_PHP', FALSE);
+    if (!defined('DOMPDF_ENABLE_REMOTE')) define('DOMPDF_ENABLE_REMOTE', TRUE);
+    if (!defined('DOMPDF_TEMP_DIR')) define('DOMPDF_TEMP_DIR', file_directory_temp());
+    if (!defined('DOMPDF_UNICODE_ENABLED')) define('DOMPDF_UNICODE_ENABLED', $unicode);
+    if (!defined('DOMPDF_ENABLE_FONTSUBSETTING')) define('DOMPDF_ENABLE_FONTSUBSETTING', $font_subsetting);
+    if (!defined('DOMPDF_FONT_CACHE')) define('DOMPDF_FONT_CACHE', drupal_realpath('public://print_pdf/print_pdf_dompdf/fonts/'));
   }
 
   require_once(DRUPAL_ROOT . '/' . $pdf_tool[1]);
@@ -90,6 +90,10 @@ function print_pdf_dompdf_print_pdf_generate($html, $meta, $paper_size = NULL, $
     }
     $html = htmlspecialchars_decode(htmlentities($html, ENT_NOQUOTES, 'ISO-8859-1'), ENT_NOQUOTES);
   }
+  else {
+    // Otherwise, ensure the content is properly formatted Unicode.
+    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+  }
 
   // Must get rid of tbody (dompdf goes into recursion)
   $html = preg_replace('!<tbody[^>]*?>|</tbody>!i', '', $html);
@@ -115,36 +119,40 @@ function print_pdf_dompdf_print_pdf_generate($html, $meta, $paper_size = NULL, $
  */
 function theme_print_pdf_dompdf_footer($vars) {
   preg_match('!<div class="print-footer">(.*?)</div>!si', $vars['html'], $tpl_footer);
-  $html = str_replace($tpl_footer[0], '', $vars['html']);
+  if (isset($tpl_footer[1])) {
+    $html = str_replace($tpl_footer[0], '', $vars['html']);
 
-  $text = '<script type="text/php">
-    if (isset($pdf)) {
-      $font = Font_Metrics::get_font("verdana");;
-      $size = 10;
-      $color = array(0,0,0);
-      $text_height = Font_Metrics::get_font_height($font, $size);
+    $text = '<script type="text/php">
+      if (isset($pdf)) {
+        $font = Font_Metrics::get_font("verdana");;
+        $size = 10;
+        $color = array(0,0,0);
+        $text_height = Font_Metrics::get_font_height($font, $size);
 
-      $w = $pdf->get_width();
-      $h = $pdf->get_height();
+        $w = $pdf->get_width();
+        $h = $pdf->get_height();
 
-      $footer = $pdf->open_object();
+        $footer = $pdf->open_object();
 
-      // Draw a line along the bottom
-      $y = $h - 25;
-      $pdf->line(15, $y, $w - 15, $y, $color, 1);
+        // Draw a line along the bottom
+        $y = $h - 25;
+        $pdf->line(15, $y, $w - 15, $y, $color, 1);
 
-      $y += $text_height / 2;
-      $pdf->page_text(15, $y, \'' . addslashes(strip_tags($tpl_footer[1])) . '\', $font, $size, $color);
+        $y += $text_height / 2;
+        $pdf->page_text(15, $y, \'' . addslashes(strip_tags($tpl_footer[1])) . '\', $font, $size, $color);
 
-      $pdf->close_object();
-      $pdf->add_object($footer, "all");
+        $pdf->close_object();
+        $pdf->add_object($footer, "all");
 
-      // Center the text
-      $width = Font_Metrics::get_text_width("Page 1 of 2", $font, $size);
-      $pagenumtxt = t("Page !n of !total", array("!n" => "{PAGE_NUM}", "!total" => "{PAGE_COUNT}"));
-      $pdf->page_text($w - 15 - $width, $y, $pagenumtxt, $font, $size, $color);
-    }
-  </script>';
+        // Center the text
+        $width = Font_Metrics::get_text_width("Page 1 of 2", $font, $size);
+        $pagenumtxt = t("Page !n of !total", array("!n" => "{PAGE_NUM}", "!total" => "{PAGE_COUNT}"));
+        $pdf->page_text($w - 15 - $width, $y, $pagenumtxt, $font, $size, $color);
+      }
+    </script>';
 
-  return str_replace("<body>", "<body>" . $text, $html);
+    return str_replace("<body>", "<body>" . $text, $html);
+  } else {
+    return $vars['html'];
+  }
 }

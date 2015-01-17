@@ -667,10 +667,14 @@ function ildeposito_home_views_default_views() {
   $handler->display->display_options['fields']['field_images']['label'] = '';
   $handler->display->display_options['fields']['field_images']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_images']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_images']['type'] = 'file_rendered';
+  $handler->display->display_options['fields']['field_images']['type'] = 'picture';
   $handler->display->display_options['fields']['field_images']['settings'] = array(
-    'file_view_mode' => 'sezioni_home',
+    'picture_group' => 'seizoni_home',
+    'fallback_image_style' => 'sezioni_homebreakpoints_theme_ildeposito_normal_1x',
+    'image_link' => 'content',
+    'colorbox' => 'articolo',
   );
+  $handler->display->display_options['fields']['field_images']['delta_offset'] = '0';
   /* Campo: Termine della tassonomia: Nome */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';

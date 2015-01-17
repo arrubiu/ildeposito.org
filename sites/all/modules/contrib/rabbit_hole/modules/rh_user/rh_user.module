@@ -74,6 +74,11 @@ function rh_user_form_user_register_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_user_view().
  */
 function rh_user_user_view($account, $view_mode, $langcode) {
+  if ($view_mode != 'full') {
+    // The user isn't viewed using the full view mode, exit early.
+    return;
+  }
+
   // Copy the behavior from the node_is_page() function to determine if the user
   // is being viewed at its own page.
   $page_user = menu_get_object('user');

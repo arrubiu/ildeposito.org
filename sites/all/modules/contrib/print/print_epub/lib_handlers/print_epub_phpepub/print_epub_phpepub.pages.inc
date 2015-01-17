@@ -38,7 +38,7 @@ function print_epub_phpepub_print_epub_generate($html, $meta, $filename = NULL) 
   $epub->setPublisher(variable_get('site_name', 'Drupal'), $base_url);
   $epub->setSourceURL($meta['url']);
 
-  @$epub->addChapter("Chapter", "epub.html", $html, FALSE, EPub::EXTERNAL_REF_ADD);
+  @$epub->addChapter("Chapter", "epub.html", $html, FALSE);
 
   $epub->finalize(); // Finalize the book, and build the archive.
 

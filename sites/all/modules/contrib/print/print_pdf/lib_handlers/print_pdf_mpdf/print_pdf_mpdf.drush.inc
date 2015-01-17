@@ -10,7 +10,7 @@
  */
 
 // URI to the the latest mpdf version.. Hardcoded version unfortunately
-define('MPDF_DOWNLOAD_URI', 'http://mpdf1.com/repos/MPDF54.zip');
+define('MPDF_DOWNLOAD_URI', 'http://mpdf1.com/repos/MPDF57.zip');
 
 /**
  * Implements hook_drush_command().

@@ -1,13 +1,12 @@
-; Copyright 2012 Hewlett-Packard Development Company, L.P.
 name = Speedy
 description = "Tools to improve the front end performance of your site."
 core = 7.x
 
 configure = admin/config/development/performance
 
-; Information added by drupal.org packaging script on 2013-08-11
-version = "7.x-1.8"
+; Information added by Drupal.org packaging script on 2014-11-20
+version = "7.x-1.15"
 core = "7.x"
 project = "speedy"
-datestamp = "1376197014"
+datestamp = "1416498504"
 

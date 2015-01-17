@@ -81,9 +81,9 @@ function rh_taxonomy_form_taxonomy_form_term_alter(&$form, $form_state) {
  * Implements hook_taxonomy_term_view().
  */
 function rh_taxonomy_taxonomy_term_view($term, $view_mode, $langcode) {
-  // Execute Rabbit Hole, if the node is being viewed at its own page, and the
-  // current user isn't able to override Rabbit Hole.
-  if (taxonomy_term_is_page($term) && !user_access('bypass rh_taxonomy')) {
+  // Execute Rabbit Hole, if the term is being viewed at its own page using the
+  // full view mode, and the current user isn't able to override Rabbit Hole.
+  if ($view_mode == 'full' && taxonomy_term_is_page($term) && !user_access('bypass rh_taxonomy')) {
     rabbit_hole_execute('taxonomy_term', $term);
   }
 }

@@ -27,8 +27,8 @@ function print_pdf_mpdf_print_pdf_generate($html, $meta, $paper_size = NULL, $pa
   $images_via_file = variable_get('print_pdf_images_via_file', PRINT_PDF_IMAGES_VIA_FILE_DEFAULT);
 
   if (variable_get('print_pdf_autoconfig', PRINT_PDF_AUTOCONFIG_DEFAULT)) {
-    define('_MPDF_TTFONTDATAPATH', drupal_realpath('public://print_pdf/print_pdf_mpdf/ttfontdata/'));
-    define("_MPDF_TEMP_PATH", drupal_realpath('public://print_pdf/print_pdf_mpdf/tmp/'));
+    if (!defined('_MPDF_TTFONTDATAPATH')) define('_MPDF_TTFONTDATAPATH', drupal_realpath('public://print_pdf/print_pdf_mpdf/ttfontdata/'));
+    if (!defined('_MPDF_TEMP_PATH')) define('_MPDF_TEMP_PATH', drupal_realpath('public://print_pdf/print_pdf_mpdf/tmp/'));
   }
 
   require_once(DRUPAL_ROOT . '/' . $pdf_tool[1]);
@@ -53,7 +53,8 @@ function print_pdf_mpdf_print_pdf_generate($html, $meta, $paper_size = NULL, $pa
   // No password is required to open the document
   // Owner has full rights using the password "MyPassword"
   // $mpdf->SetProtection(array('copy', 'print'), '', 'MyPassword');
-  $mpdf->SetProtection(array('copy', 'print', 'print-highres'), '', '');
+  // $mpdf->SetProtection(array('copy', 'print', 'print-highres'), '', '');
+  drupal_alter('print_pdf_mpdf', $mpdf, $html, $meta);
 
   $mpdf->WriteHTML($html);
 

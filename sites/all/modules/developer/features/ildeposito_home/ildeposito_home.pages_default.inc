@@ -436,11 +436,8 @@ Festeggeremo questo evento con una festa a Milano, al circolo La Scighera, il 3/
       'override_title_text' => 'Le sezioni dell\'archivio',
     );
     $pane->cache = array(
-      'method' => 'simple',
-      'settings' => array(
-        'lifetime' => '86400',
-        'granularity' => 'none',
-      ),
+      'method' => '0',
+      'settings' => array(),
     );
     $pane->style = array(
       'settings' => NULL,

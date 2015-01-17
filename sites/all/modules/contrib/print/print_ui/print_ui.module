@@ -330,9 +330,15 @@ function print_ui_node_update($node) {
         $display_comment = 'print_' . $link['format'] . '_display_comment';
         $display_urllist =  'print_' . $link['format'] . '_display_urllist';
 
-        if (!isset($node->{$display})) $node->{$display} = variable_get($display . '_' . $node->type, PRINT_UI_TYPE_SHOW_LINK_DEFAULT);
-        if (!isset($node->{$display_comment})) $node->{$display_comment} = variable_get($display_comment . '_' . $node->type, PRINT_UI_TYPE_COMMENT_LINK_DEFAULT);
-        if (!isset($node->{$display_urllist})) $node->{$display_urllist} = variable_get($display_urllist . '_' . $node->type, PRINT_TYPE_URLLIST_DEFAULT);
+        if (!isset($node->{$display}) || $node->{$display} === NULL) {
+          $node->{$display} = variable_get($display . '_' . $node->type, PRINT_UI_TYPE_SHOW_LINK_DEFAULT);
+        }
+        if (!isset($node->{$display_comment}) || $node->{$display_comment} === NULL) {
+          $node->{$display_comment} = variable_get($display_comment . '_' . $node->type, PRINT_UI_TYPE_COMMENT_LINK_DEFAULT);
+        }
+        if (!isset($node->{$display_urllist}) || $node->{$display_urllist} === NULL) {
+          $node->{$display_urllist} = variable_get($display_urllist . '_' . $node->type, PRINT_TYPE_URLLIST_DEFAULT);
+        }
 
         db_merge($module . '_node_conf')
           ->key(array('nid' => $node->nid))
@@ -506,10 +512,10 @@ function theme_print_ui_format_link($vars) {
           $img = drupal_get_path('module', $module) . '/icons/' . $link['icon'];
           switch ($show_link) {
             case 2:
-              $text = theme('image', array('path' => $img, 'alt' => $link_text, 'title' => $link_text, 'attributes' => array('class' => array('print-icon'))));
+              $text = theme('image', array('path' => $img, 'width' => '16px', 'height' => '16px', 'alt' => $link_text, 'title' => $link_text, 'attributes' => array('class' => array('print-icon'))));
               break;
             case 3:
-              $text = theme('image', array('path' => $img, 'alt' => $link_text, 'title' => $link_text, 'attributes' => array('class' => array('print-icon', 'print-icon-margin')))) . $link_text;
+              $text = theme('image', array('path' => $img, 'width' => '16px', 'height' => '16px', 'alt' => $link_text, 'title' => $link_text, 'attributes' => array('class' => array('print-icon', 'print-icon-margin')))) . $link_text;
               break;
           }
           $html = TRUE;

@@ -44,12 +44,12 @@ function print_epub_controller() {
 
     $epub_filename = variable_get('print_epub_filename', PRINT_EPUB_FILENAME_DEFAULT);
     if (!empty($epub_filename) && !empty($node)) {
-      $epub_filename = token_replace($epub_filename, array('node' => $node));
+      $epub_filename = token_replace($epub_filename, array('node' => $node), array('clear' => TRUE));
     }
     else {
-      $epub_filename = token_replace($epub_filename, array('site'));
-      if (empty($epub_filename) || count(token_scan($epub_filename))) {
-        // If there are still tokens, use a fallback solution
+      $epub_filename = token_replace($epub_filename, array('site'), array('clear' => TRUE));
+      if (empty($epub_filename)) {
+        // If empty, use a fallback solution
         $epub_filename = str_replace('/', '_', $path);
       }
     }

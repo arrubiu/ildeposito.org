@@ -269,6 +269,95 @@ function versioncontrol_admin_views_sets_edit_submit($form, &$form_state) {
 }
 
 /**
+ * Form callback for 'admin/settings/versioncontrol-settings/event-processors'.
+ */
+function versioncontrol_admin_event_processors_edit($form, &$form_state) {
+  ctools_include('dependent');
+  $form = array();
+
+  $form['info'] = array(
+    '#type' => 'item',
+    '#markup' => t("This form allows you to manage Version Control API's event processors to be used by default on each backend, setting a configuration if it allows it."),
+  );
+
+  $backends = versioncontrol_get_backends();
+  foreach ($backends as $vcs => $backend) {
+    $form[$vcs] = array(
+      '#type' => 'fieldset',
+      '#title' => $backend->name,
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+      '#tree' => TRUE,
+    );
+    $variable_name = "versioncontrol_repository_plugin_defaults_{$backend->type}_event_processors";
+    $default_event_processor_names = variable_get($variable_name, array());
+    $default_event_processor_data = variable_get("{$variable_name}_data", array());
+    foreach (versioncontrol_plugin_get_by_vcs('event_processor', $vcs) as $processor_name => $processor_plugin) {
+      $form[$vcs]["processor-$processor_name"] = array(
+        '#type' => 'checkbox',
+        '#title' => $processor_plugin['title'],
+        '#default_value' => in_array($processor_name, $default_event_processor_names),
+        '#id' => "processor-$processor_name",
+      );
+      $class_name = ctools_plugin_get_class($processor_plugin, 'handler');
+      $event_processor = new $class_name();
+      if (!$event_processor instanceof VersioncontrolPluginConfigurationInterface) {
+        continue;
+      }
+      $default_data = isset($default_event_processor_data[$processor_name]) ? $default_event_processor_data[$processor_name] : array();
+      $settings_form = $event_processor->buildForm($default_data);
+      $form[$vcs]["processor-settings-$processor_name"] = array(
+        '#type' => 'fieldset',
+        '#title' => t('%name options', array('%name' => $processor_plugin['title'])),
+        '#process' => array('ctools_dependent_process'),
+        '#dependency' => array("processor-$processor_name" => array(1)),
+      );
+      $form[$vcs]["processor-settings-$processor_name"] += $settings_form;
+    }
+  }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form submit callback for 'admin/settings/versioncontrol-settings/event-processors'.
+ */
+function versioncontrol_admin_event_processors_edit_submit($form, &$form_state) {
+  $backends = versioncontrol_get_backends();
+  foreach ($backends as $vcs => $backend) {
+    // Remove variables.
+    $variable_name = "versioncontrol_repository_plugin_defaults_{$backend->type}_event_processors";
+    variable_del($variable_name);
+    variable_del("{$variable_name}_data");
+    // Process new values.
+    $active_processors = array();
+    $processors_data = array();
+    foreach (versioncontrol_plugin_get_by_vcs('event_processor', $vcs) as $processor_name => $processor_plugin) {
+      if (empty($form_state['values'][$vcs]["processor-$processor_name"])) {
+        continue;
+      }
+      $active_processors[] = $processor_name;
+      if (!empty($form_state['values'][$vcs]["processor-settings-$processor_name"])) {
+        $class_name = ctools_plugin_get_class($processor_plugin, 'handler');
+        $event_processor = new $class_name();
+        if (!$event_processor instanceof VersioncontrolPluginConfigurationInterface) {
+          continue;
+        }
+        $processors_data[$processor_name] = $event_processor->getFormData($form_state['values'][$vcs]["processor-settings-$processor_name"]);
+      }
+    }
+    // Save them.
+    variable_set($variable_name, $active_processors);
+    variable_set("{$variable_name}_data", $processors_data);
+  }
+}
+
+/**
  * Form callback for "admin/settings/versioncontrol-settings/plugins":
  * Provide a form for settings about Version Control API plugins.
  */
@@ -279,6 +368,8 @@ function versioncontrol_admin_settings_plugins($form, &$form_state) {
   $plugin_entity_types = versioncontrol_plugins_get_information();
   // view_sets have its own settings page, so avoid it.
   unset($plugin_entity_types['view']);
+  // event processors has its own settings page too.
+  unset($plugin_entity_types['repository']['event_processor']);
 
   foreach ($backends as $vcs => $backend) {
     $form['versioncontrol_plugins_' . $vcs] = array(
@@ -308,6 +399,7 @@ function versioncontrol_admin_settings_plugins($form, &$form_state) {
         $form['versioncontrol_plugins_' . $vcs][$plugin_slot][$variable_name] = array(
           '#type' => 'select',
           '#title' => t('Plugin name'),
+          '#multiple' => $plugin_slot_data['multiple'],
           '#default_value' => $default_value,
           '#options' => function_exists($callback) ? $options + $callback() : $options,
         );
@@ -319,7 +411,7 @@ function versioncontrol_admin_settings_plugins($form, &$form_state) {
     }
   }
 
-  // Add special configuration for webviewer_url_handler plugin.
+  // Add special configuration for webviewer_url_handler an event_processor plugins.
   foreach ($backends as $vcs => $backend) {
     foreach (ctools_get_plugins('versioncontrol', 'webviewer_url_handlers') as $machine_name => $plugin) {
       $variable = 'versioncontrol_repository_' . $vcs . '_base_url_' . $machine_name;
@@ -549,6 +641,8 @@ function versioncontrol_admin_repository_edit($form, &$form_state, $repository, 
     '#value' => t('Save repository'),
     '#weight' => 100,
   );
+
+  //@todo Support per repository configuration for event processor plugins.
 
   return $form;
 }

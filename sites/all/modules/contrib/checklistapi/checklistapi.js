@@ -2,12 +2,34 @@
   "use strict";
 
   /**
+   * Updates the progress bar as checkboxes are changed.
+   */
+  Drupal.behaviors.checklistapiUpdateProgressBar = {
+    attach: function (context) {
+      var total_items = $(':checkbox.checklistapi-item', context).size(),
+        progress_bar = $('#checklistapi-checklist-form .progress .bar .filled', context),
+        progress_percentage = $('#checklistapi-checklist-form .progress .percentage', context);
+      $(':checkbox.checklistapi-item', context).change(function () {
+        var num_items_checked = $(':checkbox.checklistapi-item:checked', context).size(),
+          percent_complete = Math.round(num_items_checked / total_items * 100),
+          args = {};
+        progress_bar.css('width', percent_complete + '%');
+        args['@complete'] = num_items_checked;
+        args['@total'] = total_items;
+        args['@percent'] = percent_complete;
+        progress_percentage.html(Drupal.t('@complete of @total (@percent%)', args));
+      });
+    }
+  };
+
+  /**
    * Provides the summary information for the checklist form vertical tabs.
    */
   Drupal.behaviors.checklistapiFieldsetSummaries = {
     attach: function (context) {
       $('#checklistapi-checklist-form .vertical-tabs-panes > fieldset', context).drupalSetSummary(function (context) {
-        var total = $(':checkbox.checklistapi-item', context).size(), args = {};
+        var total = $(':checkbox.checklistapi-item', context).size(),
+          args = {};
         if (total) {
           args['@complete'] = $(':checkbox.checklistapi-item:checked', context).size();
           args['@total'] = total;
@@ -53,10 +75,10 @@
           return Drupal.t('Your changes will be lost if you leave the page without saving.');
         }
       });
-      $('#checklistapi-checklist-form').submit(function() {
+      $('#checklistapi-checklist-form').submit(function () {
         $(window).unbind('beforeunload');
       });
-      $('#checklistapi-checklist-form .clear-saved-progress').click(function() {
+      $('#checklistapi-checklist-form .clear-saved-progress').click(function () {
         $(window).unbind('beforeunload');
       });
     }

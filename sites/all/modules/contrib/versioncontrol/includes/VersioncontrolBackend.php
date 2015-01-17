@@ -105,6 +105,7 @@ abstract class VersioncontrolBackend {
       'committer_mapper' => 'VersioncontrolUserMapperInterface',
       'author_mapper' => 'VersioncontrolUserMapperInterface',
       'auth_handler' => 'VersioncontrolAuthHandlerInterface',
+      'event_processor' => 'VersioncontrolSynchronizationEventProcessorInterface',
     ),
   );
 
@@ -356,6 +357,8 @@ abstract class VersioncontrolBackend {
 
   /**
    * Verify that a plugin object conforms to the required interface.
+   *
+   * @todo Plugin slot is a repository specific concept, move this there?
    *
    * @param mixed $entity
    *   A VersioncontrolEntity object, or string name of a VersioncontrolEntity

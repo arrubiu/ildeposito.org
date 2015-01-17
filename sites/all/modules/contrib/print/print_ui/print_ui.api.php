@@ -48,7 +48,7 @@ function hook_print_link() {
     'description' => t('Display the foo version of this page.'),
     'path' => 'printfoo',
     'class' => 'print-foo',
-    'icon' => 'foo_icon.gif',
+    'icon' => 'foo_icon.png',
     'module' => 'print_foo',
   );
 }

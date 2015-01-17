@@ -51,7 +51,7 @@ function print_print_link() {
     'description' => t('Display a printer-friendly version of this page.'),
     'path' => 'print',
     'class' => 'print-page',
-    'icon' => 'print_icon.gif',
+    'icon' => 'print_icon.png',
     'module' => 'print',
   );
 }

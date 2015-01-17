@@ -1,11 +1,14 @@
+/*global Drupal: false, jQuery: false */
+/*jslint devel: true, browser: true, maxerr: 50, indent: 2 */
 (function ($) {
+  "use strict";
 
   Drupal.behaviors.hybridauth_onclick = {};
   Drupal.behaviors.hybridauth_onclick.attach = function(context, settings) {
-    $('.hybridauth-onclick-current', context).bind('click', function() {
+    $('.hybridauth-onclick-current:not(.hybridauth-onclick-processed)', context).addClass('hybridauth-onclick-processed').bind('click', function() {
       $(this).parents('.hybridauth-widget').after('<div>' + Drupal.t('Contacting') + ' ' + this.title + '...</div>');
     });
-    $('.hybridauth-onclick-popup', context).bind('click', function() {
+    $('.hybridauth-onclick-popup:not(.hybridauth-onclick-processed)', context).addClass('hybridauth-onclick-processed').bind('click', function() {
       var width = $(this).attr('data-hybridauth-width'), height = $(this).attr('data-hybridauth-height');
       var popup_window = window.open(
         this.href,
@@ -19,9 +22,9 @@
     // Last used provider feature.
     var last_provider = $.cookie('hybridauth_last_provider');
     if (last_provider != null) {
-      $('[data-hybridauth-provider="' + last_provider + '"]').addClass('hybridauth-last-provider');
+      $('[data-hybridauth-provider="' + last_provider + '"]', context).addClass('hybridauth-last-provider');
     }
-    $('.hybridauth-widget-provider', context).bind('click', function() {
+    $('.hybridauth-widget-provider:not(.hybridauth-provider-processed)', context).addClass('hybridauth-provider-processed').bind('click', function() {
       $.cookie('hybridauth_last_provider', $(this).attr('data-hybridauth-provider'), {expires: 30, path: '/'});
     });
   };

@@ -72,6 +72,12 @@ define('VERSIONCONTROL_ITEM_DIRECTORY_DELETED', 4);
 //@}
 
 /**
+ * An identifier to use on vcs key for plugins which can work with any version
+ * control system.
+ */
+define('VERSIONCONTROL_PLUGIN_VCS_AGNOSTIC', 1);
+
+/**
  * Implements hook_flush_caches().
  *
  * Triggers backend mode determination.
@@ -142,6 +148,14 @@ function versioncontrol_menu() {
     'description' => 'Configure the sets of Views used by Version Control API and related modules.',
     'page arguments' => array('versioncontrol_admin_views_sets_edit'),
     'type' => MENU_LOCAL_TASK,
+  ) + $admin;
+
+  $items['admin/config/development/versioncontrol-settings/event-processors'] = array(
+    'title' => 'Event processors',
+    'description' => 'Configure default event processors to use per backend.',
+    'page arguments' => array('versioncontrol_admin_event_processors_edit'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
   ) + $admin;
 
   $items['admin/config/development/versioncontrol-settings/plugins'] = array(
@@ -308,6 +322,11 @@ function versioncontrol_cron_queue_info() {
     'skip on cron' => TRUE,
   );
 
+  $queues['versioncontrol_repository_event_processor'] = array(
+    'worker callback' => 'versioncontrol_repository_event_processor_run_worker',
+    'skip on cron' => TRUE,
+  );
+
   return $queues;
 }
 
@@ -356,6 +375,21 @@ function versioncontrol_repomgr_run_worker($data) {
 function versioncontrol_reposync_run_worker($data) {
   ctools_include('worker', 'versioncontrol');
   return _versioncontrol_reposync_run_worker($data);
+}
+
+/**
+ * Process a versioncontrol_repository_event_processor queue job.
+ *
+ * Passthrough to _versioncontrol_repository_event_processor_run_worker().
+ *
+ * @see _versioncontrol_repository_event_processor_run_worker()
+ *
+ * @param array $data
+ *   The array of job data to be processed.
+ */
+function versioncontrol_repository_event_processor_run_worker($data) {
+  ctools_include('worker', 'versioncontrol');
+  return _versioncontrol_repository_event_processor_run_worker($data);
 }
 
 
@@ -537,6 +571,9 @@ function versioncontrol_ctools_plugin_type() {
     'repomgr' => array(
       'classes' => array('worker'),
     ),
+    'event_processor' => array(
+      'classes' => array('handler'),
+    ),
   );
 }
 
@@ -561,6 +598,63 @@ function versioncontrol_plugin_get_names($plugin_type) {
 
   asort($names);
   return $names;
+}
+
+/**
+ * Load the names of all required plugins with the specified vcs.
+ *
+ * To be used at forms.
+ *
+ * @param string $plugin_type
+ *   This can be: webviewer_url_handlers, event_processor.
+ * @param string $vcs
+ *   Version Control System machine name as defined by
+ *   hook_versioncontrol_backends(). If empty, no filter is applied.
+ *
+ * @return array
+ *   The list of plugin titles indexed by plugin name.
+ */
+function versioncontrol_plugin_get_names_by_vcs($plugin_type, $vcs = '') {
+  $names = array();
+  $plugins = versioncontrol_plugin_get_by_vcs($plugin_type, $vcs);
+  foreach ($plugins as $name => $plugin) {
+    $names[$name] = $plugin['title'];
+  }
+  asort($names);
+  return $names;
+}
+
+/**
+ * Load ctools plugins with the specified vcs.
+ *
+ * @todo: Let all plugins to define an optional vcs, so this can live inside
+ *        versioncontrol_plugin_get_names().
+ *
+ * @param string $plugin_type
+ *   This can be: webviewer_url_handlers, event_processor.
+ * @param string $vcs
+ *   Version Control System machine name as defined by
+ *   hook_versioncontrol_backends(). If empty, no filter is applied.
+ *
+ * @return array
+ *   The list of plugins.
+ */
+function versioncontrol_plugin_get_by_vcs($plugin_type, $vcs = '') {
+  ctools_include('plugins');
+
+  $plugins = array();
+  foreach (ctools_get_plugins('versioncontrol', $plugin_type) as $name => $plugin) {
+    if (!empty($vcs)) {
+      if ($plugin['vcs'] == $vcs || $plugin['vcs'] == VERSIONCONTROL_PLUGIN_VCS_AGNOSTIC) {
+        $plugins[$name] = $plugin;
+      }
+    }
+    else {
+      $plugins[$name] = $plugin;
+    }
+  }
+
+  return $plugins;
 }
 
 /**
@@ -593,27 +687,16 @@ function versioncontrol_repomgr_get_names() {
 
 /**
  * Load the names of all 'webviewer_url_handlers' for use at forms.
- *
- * @todo: Let all plugins to define an optional vcs, so this can live inside
- *        versioncontrol_plugin_get_names().
  */
-function versioncontrol_webviewer_url_handlers_get_names($vcs='') {
-  ctools_include('plugins');
+function versioncontrol_webviewer_url_handlers_get_names($vcs = '') {
+  return versioncontrol_plugin_get_names_by_vcs('webviewer_url_handlers', $vcs);
+}
 
-  $names = array();
-  foreach (ctools_get_plugins('versioncontrol', 'webviewer_url_handlers') as $name => $plugin) {
-    if (!empty($vcs)) {
-      if ($plugin['vcs'] == $vcs) {
-        $names[$name] = $plugin['title'];
-      }
-    }
-    else {
-      $names[$name] = $plugin['title'];
-    }
-  }
-
-  asort($names);
-  return $names;
+/**
+ * Load the names of all 'event_processor' plugins to be used at forms.
+ */
+function versioncontrol_event_processor_get_names($vcs = '') {
+  return versioncontrol_plugin_get_names_by_vcs('event_processor', $vcs);
 }
 
 /**
@@ -648,7 +731,37 @@ function versioncontrol_webviewer_url_handlers_get_default_plugin($vcs) {
 }
 
 /**
- * Helper function for handlin plugin settings.
+ * Retrieves the default 'event_processor' plugins.
+ *
+ * @param string $vcs
+ *   Version Control System machine name as defined by
+ *   hook_versioncontrol_backends().
+ *
+ * @return array
+ *   A list of plugin machine names. It can be empty.
+ */
+function versioncontrol_event_processor_get_default_plugins($vcs) {
+  $default_event_processors = array();
+  ctools_include('plugins');
+  $default_event_processors = variable_get('versioncontrol_repository_plugin_default_event_processor', array());
+  $valid_plugins = array();
+  foreach (ctools_get_plugins('versioncontrol', 'event_processor') as $name => $plugin) {
+    if ($plugin['vcs'] == $vcs) {
+      $valid_plugins[] = $name;
+    }
+  }
+  asort($valid_plugins);
+
+  foreach ($default_event_processors as $key => $default_event_processor) {
+    if (!in_array($default_event_processor, $valid_plugins)) {
+      unset($default_event_processors[$key]);
+    }
+  }
+  return $default_event_processors;
+}
+
+/**
+ * Helper function for handling plugin settings.
  */
 function versioncontrol_plugins_get_information() {
   return array(
@@ -656,26 +769,37 @@ function versioncontrol_plugins_get_information() {
       'author_mapper' => array(
         'name' => t('Repository author mapping'),
         'fetcher' => 'versioncontrol_user_mapping_methods_get_names',
+        'multiple' => FALSE,
       ),
       'committer_mapper'   => array(
         'name' => t('Repository committer mapping'),
         'fetcher' => 'versioncontrol_user_mapping_methods_get_names',
+        'multiple' => FALSE,
       ),
       'auth_handler' => array(
         'name' => t('Repository versioncontrol authentication'),
         'fetcher' => 'versioncontrol_auth_handlers_get_names',
+        'multiple' => FALSE,
       ),
       'webviewer_url_handler' => array(
         'name' => t('Repository webviewer URL handler'),
         'fetcher' => 'versioncontrol_webviewer_url_handlers_get_names',
+        'multiple' => FALSE,
       ),
       'repomgr' => array(
         'name' => t('Repository manager'),
         'fetcher' => 'versioncontrol_repomgr_get_names',
+        'multiple' => FALSE,
       ),
       'reposync' => array(
         'name' => t('Repository syncronization'),
         'fetcher' => 'versioncontrol_reposync_get_names',
+        'multiple' => FALSE,
+      ),
+      'event_processor' => array(
+        'name' => t('Event processor'),
+        'fetcher' => 'versioncontrol_event_processor_get_names',
+        'multiple' => TRUE,
       ),
     ),
     'view' => array(
@@ -685,4 +809,18 @@ function versioncontrol_plugins_get_information() {
       ),
     ),
   );
+}
+
+/**
+ * Implements hook_versioncontrol_code_arrival().
+ *
+ * Enqueues event processor plugins execution.
+ */
+function versioncontrol_versioncontrol_code_arrival(VersioncontrolRepository $repository, VersioncontrolEvent $event) {
+  $payload = array(
+    'repo_id' => $repository->repo_id,
+    'elid' => $event->elid,
+  );
+  $queue = DrupalQueue::get('versioncontrol_repository_event_processor', TRUE);
+  $queue->createItem($payload);
 }

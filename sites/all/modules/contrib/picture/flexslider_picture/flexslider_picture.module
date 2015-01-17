@@ -12,8 +12,8 @@ function flexslider_picture_theme_registry_alter(&$registry) {
   $registry['flexslider_list']['file'] = 'flexslider_picture.theme.inc';
   $registry['flexslider_list']['theme_path'] = drupal_get_path('module', 'flexslider_picture') . '/theme';
   $registry['flexslider_list']['function'] = 'theme_flexslider_picture_list';
-  $default_processor = array_search('template_process_flexslider_list', $registry['flexslider_list']['process functions']);
-  $registry['flexslider_list']['process functions'][(int) $default_processor] = 'template_process_flexslider_picture_list';
+  $default_processor = array_search('template_preprocess_flexslider_list', $registry['flexslider_list']['preprocess functions']);
+  $registry['flexslider_list']['preprocess functions'][(int) $default_processor] = 'template_preprocess_flexslider_picture_list';
   $registry['flexslider_list']['includes'][] = $registry['flexslider_list']['theme_path'] . '/' . $registry['flexslider_list']['file'];
 }
 
@@ -30,7 +30,8 @@ function flexslider_picture_field_formatter_info() {
       'field types' => array('image', 'media'),
       'settings' => array(
         'optionset' => 'default',
-        'flexslider_reference_img_src' => NULL,
+        'image_style' => '',
+        'caption' => FALSE,
       ),
     ),
   );
@@ -180,6 +181,21 @@ function flexslider_picture_join_callback(&$query, $schema, $join_schema) {
     if ($table['table'] == 'flexslider_picture_optionset') {
       $table['join type'] = 'LEFT OUTER';
       break;
+    }
+  }
+}
+
+/**
+ * Implements hook_flexslider_default_presets_alter().
+ *
+ * Mashed up the default presets of flexslider and picture.
+ */
+function flexslider_picture_flexslider_default_presets_alter(&$defaults) {
+  foreach ($defaults as $name => &$settings) {
+    $default_preset = ctools_get_default_object('flexslider_picture_optionset', $name);
+    if (!empty($default_preset)) {
+      $settings->imagestyle_type = $default_preset->imagestyle_type;
+      $settings->mapping = $default_preset->mapping;
     }
   }
 }

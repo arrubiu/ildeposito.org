@@ -154,7 +154,12 @@
 
                             if (!hasImg) {
                                 img             = document.createElement('img');
-                                img.alt         = pic.element.getAttribute('data-title') || 'picture';
+                                if (pic.element.getAttribute('data-alt') !== null) {
+                                    img.alt         = pic.element.getAttribute('data-alt');
+                                }
+                                if (pic.element.getAttribute('data-title') !== null) {
+                                    img.title       = pic.element.getAttribute('data-title');
+                                }
                                 if (width) {
                                     img.width = width;
                                 }

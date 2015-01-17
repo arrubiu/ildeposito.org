@@ -5,9 +5,9 @@ package = Taxonomy
 
 dependencies[] = taxonomy
 
-; Information added by drupal.org packaging script on 2013-09-16
-version = "7.x-1.0-beta1"
+; Information added by Drupal.org packaging script on 2014-08-26
+version = "7.x-1.0"
 core = "7.x"
 project = "popular-tags"
-datestamp = "1379348368"
+datestamp = "1409084632"
 

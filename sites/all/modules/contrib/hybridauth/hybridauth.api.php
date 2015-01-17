@@ -12,6 +12,15 @@ function hybridauth_get_instance() {
 }
 
 /**
+ * Alter HybridAuth provider configuration.
+ * @param $config
+ * @param $provider_id
+ */
+function hook_hybridauth_provider_config_alter(&$config, $provider_id) {
+
+}
+
+/**
  * Alter the generated username for the user being created by HybridAuth.
  * @param string $name
  * @param array $data

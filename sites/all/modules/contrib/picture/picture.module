@@ -8,10 +8,16 @@
 define('PICTURE_CLASS', 'picture');
 define('PICTURE_SEPARATOR', '__');
 define('PICTURE_EMPTY_IMAGE', '_empty image_');
+define('PICTURE_ORIGINAL_IMAGE', '_original image_');
 
+define('PICTURE_IMPLEMENTATION_PICTUREFILL2', 'picturefill2');
 define('PICTURE_IMPLEMENTATION_PICTUREFILL', 'picturefill');
 define('PICTURE_IMPLEMENTATION_WEBLINC', 'weblinc');
 define('PICTURE_IMPLEMENTATION_DEFAULT', 'picturefill');
+
+if (!variable_get('picture_updated_to_file_entity_2', FALSE)) {
+  module_load_include('file_entity_1.inc', 'picture');
+}
 
 /**
  * Implements hook_permission().
@@ -151,7 +157,24 @@ function picture_mapping_save(&$mapping) {
  * Implements hook_library().
  */
 function picture_library() {
+  $libraries = array();
   switch (variable_get('picture_implementation', PICTURE_IMPLEMENTATION_DEFAULT)) {
+    case PICTURE_IMPLEMENTATION_PICTUREFILL2:
+      $libraries['picturefill'] = array(
+        'title' => t('Picturefill'),
+        'website' => 'https://github.com/scottjehl/picturefill',
+        'version' => '2.0',
+        'js' => array(
+          drupal_get_path('module', 'picture') . '/picturefill2/picturefill.js' => array(
+            'type' => 'file',
+            'weight' => -10,
+            'group' => JS_DEFAULT,
+            'scope' => 'footer',
+            'need_jquery' => FALSE,
+          ),
+        ),
+      );
+      break;
     case PICTURE_IMPLEMENTATION_PICTUREFILL:
       $libraries['matchmedia'] = array(
         'title' => t('Matchmedia'),
@@ -275,22 +298,6 @@ function picture_empty_array() {
 }
 
 /**
- * Implements hook_ctools_plugin_api().
- *
- * Lets CTools know which plugin APIs are implemented by picture module.
- */
-function picture_ctools_plugin_api($owner, $api) {
-  static $api_versions = array(
-    'file_entity' => array(
-      'file_default_displays' => 1,
-    ),
-  );
-  if (isset($api_versions[$owner][$api])) {
-    return array('version' => $api_versions[$owner][$api]);
-  }
-}
-
-/**
  * Validate mappings.
  */
 function picture_mapping_validate($mapping) {
@@ -374,14 +381,27 @@ function picture_field_formatter_info() {
 function picture_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-
-  $element['picture_group'] = array(
-    '#title' => t('Picture group'),
-    '#type' => 'select',
-    '#default_value' => $settings['picture_group'],
-    '#required' => TRUE,
-    '#options' => picture_get_mapping_options(),
-  );
+  $options = picture_get_mapping_options();
+  if ($options) {
+    $element['picture_group'] = array(
+      '#title' => t('Picture group'),
+      '#type' => 'select',
+      '#default_value' => $settings['picture_group'],
+      '#required' => TRUE,
+      '#options' => $options,
+    );
+  }
+  // No picture mappings.
+  else {
+    $element['picture_group'] = array(
+      '#title' => t('Picture group'),
+      '#type' => 'item',
+      '#markup' => t(
+        'There are no picture groups defined. !create_link.',
+        array('!create_link' => l(t('Create a picture group'), 'admin/config/media/picture'))
+      )
+    );
+  }
 
   $image_styles = image_style_options(FALSE);
   $element['fallback_image_style'] = array(
@@ -392,13 +412,7 @@ function picture_field_formatter_settings_form($field, $instance, $view_mode, $f
     '#options' => $image_styles,
   );
 
-  $link_types = array(
-    'content' => t('Content'),
-    'file' => t('File'),
-  );
-  if (module_exists('colorbox')) {
-    $link_types['colorbox'] = t('Colorbox');
-  }
+  $link_types = picture_link_types($instance);
 
   $element['image_link'] = array(
     '#title' => t('Link image to'),
@@ -450,7 +464,7 @@ function picture_field_formatter_settings_summary($field, $instance, $view_mode)
 
   $summary = array();
 
-  if (isset($settings['picture_group'])) {
+  if (isset($settings['picture_group']) && !empty($settings['picture_group'])) {
     $picture_mapping = picture_mapping_load($settings['picture_group']);
     $breakpoint_group = breakpoints_breakpoint_group_load($picture_mapping->breakpoint_group);
     if ($breakpoint_group) {
@@ -473,13 +487,11 @@ function picture_field_formatter_settings_summary($field, $instance, $view_mode)
     $summary[] = t('Automatic fallback');
   }
 
-  $link_types = array(
-    'content' => t('Linked to content'),
-    'file' => t('Linked to file'),
-  );
+  $link_types = picture_link_types($instance);
+
   // Display this setting only if image is linked.
   if (isset($link_types[$settings['image_link']])) {
-    $summary[] = $link_types[$settings['image_link']];
+    $summary[] = filter_xss_admin($link_types[$settings['image_link']]);
   }
 
   return implode('<br />', $summary);
@@ -492,11 +504,23 @@ function picture_field_formatter_view($entity_type, $entity, $field, $instance, 
   $element = array();
 
   // Check if the formatter involves a link.
-  if ($display['settings']['image_link'] == 'content') {
+  $image_link = $display['settings']['image_link'];
+  if ($image_link == 'content') {
     $uri = entity_uri($entity_type, $entity);
   }
-  elseif ($display['settings']['image_link'] == 'file') {
+  elseif ($image_link == 'file') {
     $link_file = TRUE;
+  }
+  elseif ($image_link) {
+    if (isset($entity->$image_link)) {
+      // Support for field translations.
+      $language = field_language($entity_type, $entity, $field['field_name']);
+      $link_field = $entity->$image_link;
+
+      if (isset($link_field[$language])) {
+        $link_values = $link_field[$language];
+      }
+    }
   }
 
   $fallback_image_style = '';
@@ -525,6 +549,23 @@ function picture_field_formatter_view($entity_type, $entity, $field, $instance, 
         'path' => file_create_url($item['uri']),
         'options' => array(),
       );
+    }
+    // Handle multiple link with image values.
+    if (isset($link_values)) {
+      if (isset($link_values[$delta]['url'])) {
+        $uri = array(
+          'path' => $link_values[$delta]['url'],
+          'options' => array('attributes' => $link_values[$delta]['attributes']),
+        );
+        // Handle query fragment if there is any.
+        if (!empty($link_values[$delta]['query'])) {
+          $uri['options']['query'] = $link_values[$delta]['query'];
+        }
+      }
+      // If there are more image values than link values unset the link.
+      else {
+        unset($uri);
+      }
     }
     $element[$delta] = array(
       '#theme' => $formatter,
@@ -661,6 +702,10 @@ function theme_picture($variables) {
     unset($variables['width']);
     unset($variables['height']);
   }
+  if (isset($variables['metadata']['width']) && isset($variables['metadata']['height'])) {
+    $variables['width'] = $variables['metadata']['width'];
+    $variables['height'] = $variables['metadata']['height'];
+  }
 
   $sources = array();
   $output = array();
@@ -668,7 +713,7 @@ function theme_picture($variables) {
   // Fallback image, output as source with media query.
   $sources[] = array(
     'src' => _picture_image_style_url($variables['style_name'], $variables['uri']),
-    'dimensions' => picture_get_image_dimensions($variables),
+    'dimensions' => picture_get_image_dimensions($variables, 1),
   );
 
   // All breakpoints and multipliers.
@@ -678,20 +723,7 @@ function theme_picture($variables) {
       $new_sources = array();
       switch (variable_get('picture_implementation', PICTURE_IMPLEMENTATION_DEFAULT)) {
         case PICTURE_IMPLEMENTATION_PICTUREFILL:
-          foreach ($multipliers as $multiplier => $image_style) {
-            $new_source = $variables;
-            $new_source['style_name'] = $image_style;
-            $new_source['#media_query'] = picture_get_multiplier_media_query($multiplier, $breakpoint->breakpoint);
-            $new_sources[] = $new_source;
-          }
-          foreach ($new_sources as $new_source) {
-            $sources[] = array(
-              'src' => _picture_image_style_url($new_source['style_name'], $new_source['uri']),
-              'dimensions' => picture_get_image_dimensions($new_source),
-              'media' => $new_source['#media_query'],
-            );
-          }
-          break;
+        case PICTURE_IMPLEMENTATION_PICTUREFILL2:
         case PICTURE_IMPLEMENTATION_WEBLINC:
           foreach ($multipliers as $multiplier => $image_style) {
             $new_source = $variables;
@@ -706,7 +738,7 @@ function theme_picture($variables) {
             foreach ($new_sources as $new_source) {
               $sources[] = array(
                 'src' => _picture_image_style_url($new_source['style_name'], $new_source['uri']),
-                'dimensions' => picture_get_image_dimensions($new_source),
+                'dimensions' => picture_get_image_dimensions($new_source, $new_source['#multiplier']),
                 'media' => $new_source['#media_query'],
               );
             }
@@ -719,7 +751,7 @@ function theme_picture($variables) {
             }
             $sources[] = array(
               'srcset' => implode(', ', $srcset),
-              'dimensions' => picture_get_image_dimensions($new_sources[0]),
+              'dimensions' => picture_get_image_dimensions($new_sources[0], $new_sources[0]['#multiplier']),
               'media' => $new_source['#media_query'],
             );
           }
@@ -751,7 +783,13 @@ function theme_picture($variables) {
     if (isset($variables['attributes']) && !empty($variables['attributes'])) {
       $attributes = array_merge($attributes, $variables['attributes']);
     }
-    $output[] = '<span data-picture=""' . drupal_attributes($attributes) . '>';
+
+    if (variable_get('picture_implementation', PICTURE_IMPLEMENTATION_DEFAULT) === PICTURE_IMPLEMENTATION_PICTUREFILL2) {
+      $output[] = '<picture' . drupal_attributes($attributes) . '>';
+    }
+    else {
+      $output[] = '<span data-picture=""' . drupal_attributes($attributes) . '>';
+    }
 
     // Add source tags to the output.
     foreach ($sources as $source) {
@@ -759,12 +797,18 @@ function theme_picture($variables) {
     }
 
     // Output the fallback image.
-    if (empty($variables['path'])) {
+    if (!empty($variables['uri'])) {
       $variables['path'] = $variables['uri'];
     }
 
-    $output[] = '<noscript>' . theme('image_style', $variables) . '</noscript>';
-    $output[] = '</span>';
+    if (variable_get('picture_implementation', PICTURE_IMPLEMENTATION_DEFAULT) === PICTURE_IMPLEMENTATION_PICTUREFILL2) {
+      $output[] = theme('image_style', $variables);
+      $output[] = '</picture>';
+    }
+    else {
+      $output[] = '<noscript>' . theme('image_style', $variables) . '</noscript>';
+      $output[] = '</span>';
+    }
     return implode("\n", $output);
   }
 }
@@ -785,10 +829,14 @@ function picture_get_multiplier_media_query($multiplier, $breakpoint) {
   $media_query = $breakpoint;
   if ($multiplier != '1x') {
     $multiplier_formatted = str_replace('x', '', $multiplier);
-    $media_query = $breakpoint . ' and (min-device-pixel-ratio: ' . $multiplier_formatted . '), ';
-    $media_query .= $breakpoint . ' and (-o-min-device-pixel-ratio: ' . $multiplier_formatted . '), ';
-    $media_query .= $breakpoint . ' and (-webkit-min-device-pixel-ratio: ' . $multiplier_formatted . '), ';
-    $media_query .= $breakpoint . ' and (min-resolution: ' . $multiplier_formatted . 'dppx)';
+    if (variable_get('picture_implementation', PICTURE_IMPLEMENTATION_DEFAULT) === PICTURE_IMPLEMENTATION_PICTUREFILL2) {
+    }
+    else {
+      $media_query = $breakpoint . ' and (min-device-pixel-ratio: ' . $multiplier_formatted . '), ';
+      $media_query .= $breakpoint . ' and (-o-min-device-pixel-ratio: ' . $multiplier_formatted . '), ';
+      $media_query .= $breakpoint . ' and (-webkit-min-device-pixel-ratio: ' . $multiplier_formatted . '), ';
+      $media_query .= $breakpoint . ' and (min-resolution: ' . $multiplier_formatted . 'dppx)';
+    }
   }
   return $media_query;
 }
@@ -817,14 +865,29 @@ function theme_picture_source($variables) {
 
   if (isset($variables['media']) && !empty($variables['media'])) {
     if (isset($variables['srcset']) && !empty($variables['srcset'])) {
-      $output[] = '<span data-media="' . $variables['media'] . '" data-srcset="' . $variables['srcset'] . '" ' . drupal_attributes($variables['dimensions']) . '></span>';
+      if (variable_get('picture_implementation', PICTURE_IMPLEMENTATION_DEFAULT) === PICTURE_IMPLEMENTATION_PICTUREFILL2) {
+        $output[] = '<source media="' . $variables['media'] . '" srcset="' . $variables['srcset'] . '">';
+      }
+      else {
+        $output[] = '<span data-media="' . $variables['media'] . '" data-srcset="' . $variables['srcset'] . '" ' . drupal_attributes($variables['dimensions']) . '></span>';
+      }
     }
     else {
-      $output[] = '<span data-media="' . $variables['media'] . '" data-src="' . $variables['src'] . '" ' . drupal_attributes($variables['dimensions']) . '></span>';
+      if (variable_get('picture_implementation', PICTURE_IMPLEMENTATION_DEFAULT) === PICTURE_IMPLEMENTATION_PICTUREFILL2) {
+        $output[] = '<source media="' . $variables['media'] . '" srcset="' . $variables['src'] . '">';
+      }
+      else {
+        $output[] = '<span data-media="' . $variables['media'] . '" data-src="' . $variables['src'] . '" ' . drupal_attributes($variables['dimensions']) . '></span>';
+      }
     }
   }
   else {
-    $output[] = '<span data-src="' . $variables['src'] . '" ' . drupal_attributes($variables['dimensions']) . '></span>';
+    if (variable_get('picture_implementation', PICTURE_IMPLEMENTATION_DEFAULT) === PICTURE_IMPLEMENTATION_PICTUREFILL2) {
+      //$output[] = '<source src="' . $variables['src'] . '"></source>';
+    }
+    else {
+      $output[] = '<span data-src="' . $variables['src'] . '" ' . drupal_attributes($variables['dimensions']) . '></span>';
+    }
   }
   return implode("\n", $output);
 }
@@ -837,12 +900,14 @@ function theme_picture_source($variables) {
  *   - style_name: The name of the style to be used to alter the original image.
  *   - width: The width of the source image (if known).
  *   - height: The height of the source image (if known).
+ * @param $multiplier
+ *   Multiplier from the source
  *
  * @return array
  *   Dimensions to be modified - an array with components width and height, in
  *   pixels.
  */
-function picture_get_image_dimensions($variables) {
+function picture_get_image_dimensions($variables, $multiplier = 1) {
   // Determine the dimensions of the styled image.
   $dimensions = array(
     'width' => $variables['width'],
@@ -855,140 +920,18 @@ function picture_get_image_dimensions($variables) {
       'height' => 1,
     );
   }
+  elseif ($variables['style_name'] == PICTURE_ORIGINAL_IMAGE) {
+    // NOOP.
+  }
   else {
     image_style_transform_dimensions($variables['style_name'], $dimensions);
+    if ($multiplier != 0 && $multiplier != 1) {
+      $dimensions['width'] = ceil($dimensions['width'] / $multiplier);
+      $dimensions['height'] = ceil($dimensions['height'] / $multiplier);
+    }
   }
 
   return $dimensions;
-}
-
-/**
- * Implements hook_file_formatter_info().
- */
-function picture_file_formatter_info() {
-  $formatters['file_picture'] = array(
-    'label' => t('Picture'),
-    'default settings' => array(
-      'picture_group' => '',
-      'fallback_image_style' => '',
-      'alt' => '',
-      'title' => '',
-    ),
-    'view callback' => 'picture_file_formatter_picture_view',
-    'settings callback' => 'picture_file_formatter_picture_settings',
-  );
-
-  return $formatters;
-}
-
-/**
- * 'view callback' for hook_file_formatter_info().
- */
-function picture_file_formatter_picture_view($file, $display, $langcode) {
-  // Prevent PHP notices when trying to read empty files.
-  // @see http://drupal.org/node/681042
-  if (!$file->filesize) {
-    return;
-  }
-
-  // Do not bother proceeding if this file does not have an image mime type.
-  if (strpos($file->filemime, 'image/') !== 0) {
-    return;
-  }
-
-  if (file_entity_file_is_readable($file) && isset($file->image_dimensions)) {
-    $fallback_image_style = '';
-    $group_name = $display['settings']['picture_group'];
-    $mappings = picture_mapping_load($group_name);
-    $breakpoint_styles = picture_get_mapping_breakpoints($mappings, $fallback_image_style);
-
-    if (isset($display['settings']['fallback_image_style']) && !empty($display['settings']['fallback_image_style'])) {
-      $fallback_image_style = $display['settings']['fallback_image_style'];
-    }
-    if (isset($file->override) && isset($file->override['wysiwyg']) && $file->override['wysiwyg']) {
-      return array(
-        '#theme' => 'image_style',
-        '#style_name' => $fallback_image_style,
-        '#path' => $file->uri,
-      );
-    }
-    $replace_options = array(
-      'clear' => 1,
-      'sanitize' => 0,
-    );
-    $element = array(
-      '#theme' => 'picture_formatter',
-      '#attached' => array('library' => array(
-        array('picture', 'matchmedia'),
-        array('picture', 'picturefill'),
-        array('picture', 'picture.ajax'),
-      )),
-      '#item' => array(
-        'style_name' => $fallback_image_style,
-        'path' => $file->uri,
-        'uri' => $file->uri,
-        'width' => isset($file->image_dimensions['width']) ? $file->image_dimensions['width'] : $file->metadata['width'],
-        'height' => isset($file->image_dimensions['height']) ? $file->image_dimensions['height'] : $file->metadata['height'],
-        'alt' => token_replace($display['settings']['alt'], array('file' => $file), $replace_options),
-        'title' => token_replace($display['settings']['title'], array('file' => $file), $replace_options),
-      ),
-      '#image_style' => $fallback_image_style,
-      '#breakpoints' => $breakpoint_styles,
-      '#path' => '',
-    );
-
-    return $element;
-  }
-}
-
-/**
- * 'settings callback' for hook_file_formatter_info().
- */
-function picture_file_formatter_picture_settings($form, &$form_state, $settings) {
-  $picture_group_options = array();
-  $picture_mappings = picture_mapping_load_all();
-  if ($picture_mappings && !empty($picture_mappings)) {
-    foreach ($picture_mappings as $machine_name => $picture_mapping) {
-      $breakpoint_group = breakpoints_breakpoint_group_load($picture_mapping->breakpoint_group);
-      if ($breakpoint_group) {
-        $picture_group_options[$machine_name] = $breakpoint_group->name;
-      }
-    }
-  }
-
-  $element['picture_group'] = array(
-    '#title' => t('Picture group'),
-    '#type' => 'select',
-    '#default_value' => $settings['picture_group'],
-    '#required' => TRUE,
-    '#options' => $picture_group_options,
-  );
-
-  $image_styles = image_style_options(FALSE);
-  $element['fallback_image_style'] = array(
-    '#title' => t('Fallback image style'),
-    '#type' => 'select',
-    '#default_value' => $settings['fallback_image_style'],
-    '#empty_option' => t('Automatic'),
-    '#options' => $image_styles,
-  );
-
-  $element['alt'] = array(
-    '#title' => t('Alt attribute'),
-    '#description' => t('The text to use as value for the <em>img</em> tag <em>alt</em> attribute.'),
-    '#type' => 'textfield',
-    '#default_value' => $settings['alt'],
-  );
-
-  // Allow the setting of the title attribute.
-  $element['title'] = array(
-    '#title' => t('Title attribute'),
-    '#description' => t('The text to use as value for the <em>img</em> tag <em>title</em> attribute.'),
-    '#type' => 'textfield',
-    '#default_value' => $settings['title'],
-  );
-
-  return $element;
 }
 
 /**
@@ -1001,7 +944,8 @@ function picture_filter_info() {
     'description' => t('Replace img tags with markup that contains media width breakpoints. The appropriate image file size will be chosen.'),
     'process callback' => '_picture_filter_process',
     'tips callback' => '_picture_filter_tips',
-    );
+    'type' => 'FILTER_TYPE_TRANSFORM_REVERSIBLE',
+  );
 
   return $filters;
 }
@@ -1019,7 +963,7 @@ function _picture_filter_process($text, $filter) {
       // Create the render array expected by theme_picture_formatter.
       $image_render_array = _picture_filter_prepare_image($image);
       if (!$image_render_array) {
-        return $text;
+        continue;
       }
 
       // Get the responsive markup for this image.
@@ -1098,13 +1042,12 @@ function _picture_filter_prepare_image($image) {
   return $image_render_array;
 
 }
+
 /**
- * Implements picture filter tips callback.
+ * Implements callback_filter_tips().
  */
 function _picture_filter_tips($filter, $format, $long = FALSE) {
-  $tips = 'Images with a data-picture-group attribute will be responsive, with a file size appropriate for the browser width.';
-
-  return $tips;
+  return t('Images with a data-picture-group attribute will be responsive, with a file size appropriate for the browser width.');
 }
 
 /**
@@ -1128,10 +1071,10 @@ function picture_page_build(&$page) {
   $groups = array();
   // CKEditor library expects an array of options formatted as
   // ['Display name', 'machine_name'].
-  foreach ($picture_groups as $key => $value) {
-    if (array_key_exists($key, $ckeditor_groups)) {
-      if ($ckeditor_groups[$key]['enabled'] == 1) {
-        $groups[] = array($value, $key);
+  foreach ($ckeditor_groups as $machine_name => $parameters) {
+    if (array_key_exists($machine_name, $picture_groups)) {
+      if ($parameters['enabled'] == 1) {
+        $groups[] = array($picture_groups[$machine_name], $machine_name);
       }
     }
   }
@@ -1178,8 +1121,36 @@ function picture_image_uri($src) {
 
     // Check whether the file stream directory is at the beginning of
     // the image src. Use === since strpos could return false.
-    if (strpos($src, $needles[$scheme]) === 0) {
+    if (!empty($needles[$scheme]) && strpos($src, $needles[$scheme]) === 0) {
       $matches[$scheme] = $needles[$scheme];
+    }
+  }
+
+  // No file stream wrapper is starting with the image src.
+  // So it's not a public file.
+  if (empty($matches)) {
+    // Check for managed/private file with relative path like 'system/files/...'.
+    $src_exploded = explode ('/', $src);
+    if ($src_exploded[0] == 'system' && $src_exploded[1] == 'files') {
+      // Managed/private file recognized.
+      // Check for image style derivatives.
+      if ($src_exploded[2] == 'styles') {
+        // Image style recognized.
+        $unwanted_part = 'system/files/styles/' . $src_exploded[3] . '/private/';
+        $uri = str_replace($unwanted_part, 'private://', $src);
+        $uri = file_stream_wrapper_uri_normalize($uri);
+        return urldecode($uri);
+      } else {
+        // No image style recognized; must be an original.
+        $unwanted_part = 'system/files/';
+        $uri = str_replace($unwanted_part, 'private://', $src);
+        $uri = file_stream_wrapper_uri_normalize($uri);
+        return urldecode($uri);
+      }
+    // It's not a managed/private file.
+    } else {
+      // Can't figure out the Drupal uri.
+      return FALSE;
     }
   }
 
@@ -1191,10 +1162,6 @@ function picture_image_uri($src) {
   // image src: /sites/default/files/private/the-image.jpg
   // In this example, the intended scheme would be 'private'.
 
-  if (empty($matches)) {
-    // Can't figure out the Drupal uri.
-    return FALSE;
-  }
   // Find the length of each matching directory path.
   $lengths = array_map('strlen', $matches);
 
@@ -1205,7 +1172,7 @@ function picture_image_uri($src) {
   $uri = $the_scheme . '://' . str_replace($matches[$the_scheme], '', $src);
   $uri = file_stream_wrapper_uri_normalize($uri);
 
-  return $uri;
+  return urldecode($uri);
 }
 
 /**
@@ -1243,19 +1210,14 @@ function picture_ckeditor_plugin() {
 }
 
 /**
- * Implements hook_uninstall().
- */
-function picture_uninstall() {
-  variable_del('picture_ckeditor_groups');
-  variable_del('picture_ckeditor_label');
-}
-
-/**
  * Wrapper around image_style_url() so we can return an empty image.
  */
 function _picture_image_style_url($style_name, $path) {
   if ($style_name == PICTURE_EMPTY_IMAGE) {
     return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  }
+  if ($style_name == PICTURE_ORIGINAL_IMAGE) {
+    return file_create_url($path);
   }
   return image_style_url($style_name, $path);
 }
@@ -1313,4 +1275,29 @@ function picture_get_mapping_breakpoints($mappings, &$fallback_image_style = NUL
     }
   }
   return $breakpoint_styles;
+}
+
+/**
+ * Helper function to compute the list of possible link types.
+ */
+function picture_link_types($instance) {
+  $link_types = array(
+    'content' => t('Content'),
+    'file' => t('File'),
+  );
+
+  if (module_exists('colorbox')) {
+    $link_types['colorbox'] = t('Colorbox');
+  }
+
+  // If the link module is installed, also allow any link fields to be used.
+  foreach (field_info_fields() as $field_key => $field_info) {
+    if ($field_info['type'] == 'link_field') {
+      $field_instance = field_info_instance($instance['entity_type'], $field_info['field_name'], $instance['bundle']);
+      if ($field_instance) {
+        $link_types[$field_key] = "$field_instance[label] ($field_info[field_name])";
+      }
+    }
+  }
+  return $link_types;
 }

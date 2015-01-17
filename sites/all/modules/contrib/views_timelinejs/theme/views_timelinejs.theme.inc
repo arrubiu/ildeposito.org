@@ -28,6 +28,7 @@ function template_preprocess_views_timelinejs(&$vars) {
       'embed_path' => base_path() . libraries_get_path('timeline') . '/compiled/',
       'lang' => $language->language,
       'processed' => FALSE,
+      'maptype' => $vars['options']['timeline_config']['maptype'],
     );
 
     if ($vars['options']['timeline_config']['hash_bookmark']) {
@@ -38,6 +39,11 @@ function template_preprocess_views_timelinejs(&$vars) {
       $settings['start_at_end'] = TRUE;
     }
 
+    if($vars['options']['timeline_config']['start_at_current']){
+      $settings['start_at_end'] = FALSE;
+      $settings['start_at_slide'] = $vars['rows']['timeline']['start_at_current'];
+    }
+
     if (isset($vars['options']['timeline_config']['start_zoom_adjust'])) {
       $settings['start_zoom_adjust'] = check_plain($vars['options']['timeline_config']['start_zoom_adjust']);
     }
@@ -45,7 +51,8 @@ function template_preprocess_views_timelinejs(&$vars) {
     // Add inline JavaScript.
     drupal_add_js(array('timelineJS' => array($settings)), 'setting');
     drupal_add_js(drupal_get_path('module', 'views_timelinejs') . '/js/views_timelinejs.js');
-  } else {
+  }
+  else {
     drupal_set_message($library['error message'], 'error', FALSE);
   }
 }

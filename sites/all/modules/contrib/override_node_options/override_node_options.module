@@ -77,13 +77,23 @@ function override_node_options_form_alter(&$form, $form_state, $form_id) {
     // Add access to the 'Authoring information' fieldset.
     $form['author']['name']['#access'] = user_access('override ' . $node->type . ' authored by option');
     $form['author']['date']['#access'] = user_access('override ' . $node->type . ' authored on option');
-    $form['author']['#access'] |= element_get_visible_children($form['author']);
-
+    if (key_exists('#access', $form['author'])) {
+      $form['author']['#access'] |= element_get_visible_children($form['author']);
+    }
+    else {
+      $form['author']['#access'] = element_get_visible_children($form['author']);
+    }
+    
     // Add access to the 'Publishing options' fieldset.
     $form['options']['status']['#access'] = user_access('override ' . $node->type . ' published option');
     $form['options']['promote']['#access'] = user_access('override ' . $node->type . ' promote to front page option');
-    $form['options']['sticky']['#access'] = user_access('override ' . $node->type . ' sticky option');
-    $form['options']['#access'] |= element_get_visible_children($form['options']);
+    $form['options']['sticky']['#access'] = user_access('override ' . $node->type . ' sticky option');    
+    if (key_exists('#access', $form['options'])) {
+      $form['options']['#access'] |= element_get_visible_children($form['options']);
+    }
+    else {
+      $form['options']['#access'] = element_get_visible_children($form['options']);
+    }
 
     // @todo Remove when http://drupal.org/node/683630 is fixed.
     if ($form['author']['name']['#access']) {

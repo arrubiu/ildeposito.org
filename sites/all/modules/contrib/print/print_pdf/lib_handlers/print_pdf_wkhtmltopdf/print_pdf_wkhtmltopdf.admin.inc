@@ -30,5 +30,18 @@ function print_pdf_wkhtmltopdf_settings() {
     '#description' => t('(wkhtmltopdf only) Set any additional options to be passed to the wkhtmltopdf executable. Tokens may be used in these options (see list below).'),
   );
 
+  if (module_exists('token')) {
+    $form['settings']['print_pdf_filename_patterns'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Replacement patterns'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    );
+    $form['settings']['print_pdf_filename_patterns']['descriptions'] = array(
+      '#theme' => 'token_tree',
+      '#token_types' => array('node'),
+    );
+  }
+
   return system_settings_form($form);
 }

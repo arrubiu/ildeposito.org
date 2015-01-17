@@ -10,7 +10,7 @@
  * for your subtheme grows. Please read the README.txt in the /preprocess and /process subfolders
  * for more information on this topic.
  */
-function ildeposito_preprocess_page(&$vars) {
+function ildeposito_preprocess_page(&$vars) { 
   drupal_add_library('system', 'ui.tabs');
   drupal_add_js(drupal_get_path('theme', 'ildeposito') . '/js/tabs.js', 'file');
   $vars['scripts'] = drupal_get_js();

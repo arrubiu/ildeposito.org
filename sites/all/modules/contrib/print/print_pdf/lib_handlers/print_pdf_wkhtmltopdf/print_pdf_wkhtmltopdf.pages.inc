@@ -27,7 +27,7 @@ function print_pdf_wkhtmltopdf_print_pdf_generate($html, $meta, $paper_size = NU
   $dpi = 96;
 
   if (!empty($wkhtmltopdf_options) && isset($meta['node'])) {
-    $wkhtmltopdf_options = token_replace($wkhtmltopdf_options, array('node' => $meta['node']));
+    $wkhtmltopdf_options = token_replace($wkhtmltopdf_options, array('node' => $meta['node']), array('clear' => TRUE));
   }
 
   $version = print_pdf_wkhtmltopdf_pdf_tool_version($pdf_tool[1]);
@@ -42,6 +42,11 @@ function print_pdf_wkhtmltopdf_print_pdf_generate($html, $meta, $paper_size = NU
   else {
     drupal_goto($meta['url']);
     exit;
+  }
+
+  // use basic http authentication to fetch included CSS, etc
+  if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+    $wkhtmltopdf_options .= ' --username ' . check_plain($_SERVER['PHP_AUTH_USER']) . ' --password ' . check_plain($_SERVER['PHP_AUTH_PW']);
   }
 
   $descriptor = array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'a'));
@@ -65,7 +70,7 @@ function print_pdf_wkhtmltopdf_print_pdf_generate($html, $meta, $paper_size = NU
       if (empty($error)) {
         $error = 'No stderr output available.';
       }
-      watchdog('print_pdf', "wkhtmltopdf (returned $retval): $error");
+      watchdog('print_pdf', 'wkhtmltopdf [%cmd] (returned %ret): %error', array('%cmd' => $cmd, '%ret' => $retval, '%error' => $error));
     }
   }
 

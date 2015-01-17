@@ -22,7 +22,7 @@ function ildeposito_layout_openlayers_styles() {
     'strokeColor' => '#aa0000',
     'strokeWidth' => 4,
     'fillOpacity' => 0.5,
-    'strokeOpacity' => 0.7,
+    'strokeOpacity' => 0.69999999999999996,
     'strokeLinecap' => 'round',
     'strokeDashstyle' => 'solid',
     'graphicOpacity' => 1,

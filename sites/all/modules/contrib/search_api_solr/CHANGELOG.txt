@@ -1,3 +1,35 @@
+Search API Solr search 1.6 (09/08/2014):
+----------------------------------------
+- #2050961 by das-peter, drunken monkey: Added proximity/distance information
+  to search results.
+- #2242073 by RaF: Fixed handling of custom negative filters in filter-only
+  searches.
+- #2290601 by drunken monkey: Fixed handling of complex keywords and OR facets.
+- #2083357 by drunken monkey: Added note that Solr 4.x server paths should be
+  specified with core.
+- #2270767 by RaF: Fixed search_api_solr_views_data_alter() not always
+  returning all virtual fields.
+
+Search API Solr search 1.5 (05/23/2014):
+----------------------------------------
+- #2216895 by das-peter: Added support for empty/non-empty conditions on
+  location field types.
+- #2162627 by drunken monkey: Removed Solr 1.4 support.
+- #2175829 by danquah, drunken monkey: Fixed error when admin interface is not
+  accessible.
+- #2222037 by drunken monkey: Fixed "Files" tab in Solr 4.7.
+- #2151719 by Derimagia, drunken monkey: Added an alter hook for multi-index
+  search results.
+- #1776534 by drunken monkey, e2thex: Added support for using a Solr server
+  with multiple sites.
+- #2152337 by drunken monkey: Removed confusing "multiple text fields" section
+  from README.txt.
+- #2099559 by drunken monkey: Made optimizing the Solr server optional.
+- #2146749 by drunken monkey: Added soft commits as the default for Solr 4.
+- #1773440 by drunken monkey: Added performance improvement for “filter
+  only” queries.
+- #2147573 by drunken monkey: Improved error handling.
+
 Search API Solr search 1.4 (12/25/2013):
 ----------------------------------------
 - #2157839 by drunken monkey, Nick_vh: Updated config files to the newest

@@ -4,13 +4,19 @@
  * Administrative pages forms and functions for the HybridAuth module.
  */
 
-function hybridauth_admin_settings() {
+/**
+ * Form constructor for the hybridauth admin settings form.
+ *
+ * @see hybridauth_admin_settings_validate()
+ *
+ * @ingroup forms
+ */
+function hybridauth_admin_settings($form, &$form_state) {
   if (!variable_get('hybridauth_register', 0) && variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_ADMINISTRATORS_ONLY) {
     drupal_set_message(t('Currently only administrators can create new user accounts. Either change the "Who can register accounts?" option under "Account settings" tab or at the core <a href="!link">Account settings</a>.',
       array('!link' => url('admin/config/people/accounts'))), 'warning');
   }
 
-  $form = array();
   $form['vtabs'] = array(
     '#type' => 'vertical_tabs',
     '#attached' => array(
@@ -24,6 +30,7 @@ function hybridauth_admin_settings() {
     '#theme' => 'hybridauth_admin_settings_providers_table',
   );
   foreach (hybridauth_providers_list() as $provider_id => $provider_name) {
+    $available = array_key_exists($provider_id, hybridauth_providers_files());
     $form['vtabs']['fset_providers'][$provider_id]['icon'] = array(
       '#theme' => 'hybridauth_provider_icon',
       '#provider_id' => $provider_id,
@@ -33,15 +40,17 @@ function hybridauth_admin_settings() {
       '#type' => 'checkbox',
       '#title' => drupal_placeholder($provider_name),
       '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_enabled', 0),
+      '#disabled' => $available ? FALSE : TRUE,
     );
     $form['vtabs']['fset_providers'][$provider_id]['file'] = array(
-      '#markup' => array_key_exists($provider_id, hybridauth_providers_files()) ? t('Yes') : t('No'),
+      '#markup' => $available ? t('Yes') : t('No'),
     );
     $form['vtabs']['fset_providers'][$provider_id]['hybridauth_provider_' . $provider_id . '_weight'] = array(
       '#type' => 'weight',
       // '#title' => t('Weight'),
-      '#delta' => 20,
-      '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_weight', 0),
+      '#delta' => 50,
+      // Use a high default weight for disabled providers so that they sink down.
+      '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_weight', 50),
       '#attributes' => array('class' => array('hybridauth-provider-weight')),
     );
     $form['vtabs']['fset_providers'][$provider_id]['settings'] = array(
@@ -134,7 +143,7 @@ function hybridauth_admin_settings() {
   $form['vtabs']['fset_widget']['hybridauth_widget_weight'] = array(
     '#type' => 'weight',
     '#title' => t('Widget weight'),
-    '#delta' => 100,
+    '#delta' => 200,
     '#description' => t('Determines the order of the elements on the form - heavier elements get positioned later.'),
     '#default_value' => variable_get('hybridauth_widget_weight', 100),
   );
@@ -174,11 +183,43 @@ function hybridauth_admin_settings() {
       1 => t('Require e-mail verification'),
       2 => t("Don't require e-mail verification"),
     ),
-    '#description' => t('Select how to handle not verified e-mail addresses (authentication provider gives non-verified e-mail address).') . ' '
+    '#description' => t("Select how to handle not verified e-mail addresses (authentication provider gives non-verified e-mail address or doesn't provide one at all).") . ' '
       . t('The core settings are available at <a href="!link">Account settings</a>.',
         array('!link' => url('admin/config/people/accounts'))),
     '#default_value' => variable_get('hybridauth_email_verification', 0),
   );
+  // E-mail address verification template.
+  $form['vtabs']['fset_account']['fset_email_verification_template'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('E-mail verification template'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="hybridauth_email_verification"]' => array('value' => '2'),
+      ),
+    ),
+  );
+  $form['vtabs']['fset_account']['fset_email_verification_template']['hybridauth_email_verification_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#default_value' => _hybridauth_mail_text('hybridauth_email_verification_subject', NULL, array(), FALSE),
+    '#maxlength' => 180,
+  );
+  $form['vtabs']['fset_account']['fset_email_verification_template']['hybridauth_email_verification_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body'),
+    '#default_value' => _hybridauth_mail_text('hybridauth_email_verification_body', NULL, array(), FALSE),
+    '#rows' => 12,
+  );
+  if (module_exists('token')) {
+    $form['vtabs']['fset_account']['fset_email_verification_template']['hybridauth_token_tree'] = array(
+      '#theme' => 'token_tree',
+      '#token_types' => array('user'),
+      '#global_types' => TRUE,
+      '#dialog' => TRUE,
+    );
+  }
   $form['vtabs']['fset_account']['hybridauth_pictures'] = array(
     '#type' => 'checkbox',
     '#title' => t('Save HybridAuth provided picture as user picture'),
@@ -190,7 +231,7 @@ function hybridauth_admin_settings() {
   $form['vtabs']['fset_account']['hybridauth_username'] = array(
     '#type' => 'textfield',
     '#title' => t('Username pattern'),
-    '#default_value' => variable_get('hybridauth_username', 'hybridauth_[user:hybridauth:provider]_[user:hybridauth:identifier]'),
+    '#default_value' => variable_get('hybridauth_username', '[user:hybridauth:firstName] [user:hybridauth:lastName]'),
     '#description' => t('Create username for new users using this pattern; counter will be added in case of username conflict.') . ' '
       . t('You should use only HybridAuth tokens here as the user is not created yet.') . ' '
       . t('Install !link module to get list of all available tokens.',
@@ -317,6 +358,19 @@ function hybridauth_admin_settings() {
 }
 
 /**
+ * Form validation handler for the hybridauth admin settings form.
+ */
+function hybridauth_admin_settings_validate($form, &$form_state) {
+  foreach (hybridauth_providers_list() as $provider_id => $provider_name) {
+    if (empty($form_state['values']['hybridauth_provider_' . $provider_id . '_enabled'])) {
+      unset($form_state['values']['hybridauth_provider_' . $provider_id . '_enabled']);
+      unset($form_state['values']['hybridauth_provider_' . $provider_id . '_weight']);
+      variable_del('hybridauth_provider_' . $provider_id . '_enabled');
+    }
+  }
+}
+
+/**
  * Theme function for hybridauth_admin_settings() to render providers table.
  */
 function theme_hybridauth_admin_settings_providers_table($vars) {
@@ -360,60 +414,22 @@ function theme_hybridauth_admin_settings_providers_table($vars) {
   return $output;
 }
 
+/**
+ * Form constructor for the hybridauth provider admin settings form.
+ *
+ * @see hybridauth_admin_provider_settings_validate()
+ *
+ * @ingroup forms
+ */
 function hybridauth_admin_provider_settings($form, &$form_state, $provider_id = NULL) {
-  $form = array();
   $form['vtabs'] = array(
     '#type' => 'vertical_tabs',
   );
-  $language_default = language_default();
-  $language_default->prefix = '';
-
-  switch ($provider_id) {
-    case 'Facebook':
-      $help = t('
-          <p>Enter your application ID and private key. You can get these by creating a new application at <a href="!apps_uri">!apps_uri</a>.</p>
-          <p>You must set <strong>App Domain</strong> to something like <strong>example.com</strong> to cover <strong>*.example.com</strong>.</p>
-          <p>You must set <strong>Site URL</strong> to <strong>%site_uri</strong>.</p>
-        ',
-        array(
-          '!apps_uri' => 'https://developers.facebook.com/apps',
-          '%site_uri' => url('<front>', array('absolute' => TRUE)),
-        )
-      );
-      break;
-    case 'Twitter':
-      $help = t('
-          <p>Enter your consumer key and private key. You can get these by creating a new application at <a href="!apps_uri">!apps_uri</a>.</p>
-          <p>You must set <strong>Callback URL</strong> to <strong>%callback_uri</strong>.</p>
-        ',
-        array(
-          '!apps_uri' => 'https://dev.twitter.com/apps',
-          '%callback_uri' => url('hybridauth/endpoint', array('absolute' => TRUE, 'query' => array('hauth.done' => 'Twitter'), 'language' => $language_default)),
-        )
-      );
-      break;
-    case 'Google':
-      $origin_uri_parts = parse_url(url('<front>', array('absolute' => TRUE)));
-      $help = t('
-          <p>Enter your application ID and private key. You can get these by creating a new application at <a href="!apps_uri">!apps_uri</a>.</p>
-          <p>You must set <strong>Authorized Redirect URIs</strong> to <strong>%redirect_uri</strong>.</p>
-          <p>You must set <strong>Authorized JavaScript Origins</strong> to <strong>%origin_uri</strong>.</p>
-        ',
-        array(
-          '!apps_uri' => 'https://code.google.com/apis/console#access',
-          '%redirect_uri' => url('hybridauth/endpoint', array('absolute' => TRUE, 'query' => array('hauth.done' => 'Google'), 'language' => $language_default)),
-          '%origin_uri' => $origin_uri_parts['scheme'] . '://' . $origin_uri_parts['host'],
-        )
-      );
-      break;
-    default:
-      $help = t('Enter the application ID, consumer key, and/or secret key as required.');
-  }
 
   $form['vtabs']['application'] = array(
     '#type' => 'fieldset',
     '#title' => t('Application settings'),
-    '#description' => $help,
+    '#description' => t('Enter the application ID, consumer key, and/or secret key as required.'),
   );
   $form['vtabs']['application']['hybridauth_provider_' . $provider_id . '_keys_id'] = array(
     '#type' => 'textfield',
@@ -434,13 +450,6 @@ function hybridauth_admin_provider_settings($form, &$form_state, $provider_id = 
     '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_keys_secret', ''),
   );
 
-  if (in_array($provider_id, array('LinkedIn', 'MySpace', 'Twitter', 'Yahoo'))) {
-    unset($form['vtabs']['application']['hybridauth_provider_' . $provider_id . '_keys_id']);
-  }
-  if (in_array($provider_id, array('Facebook', 'Google', 'Live', 'Vkontakte', 'QQ'))) {
-    unset($form['vtabs']['application']['hybridauth_provider_' . $provider_id . '_keys_key']);
-  }
-
   $form['vtabs']['window_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Authentication window settings'),
@@ -451,19 +460,19 @@ function hybridauth_admin_provider_settings($form, &$form_state, $provider_id = 
   );
   $modal_description = FALSE;
   if (module_exists('colorbox')) {
-    $options['colorbox'] = t('Colorbox modal window');
+    $options['colorbox'] = t('Colorbox');
     $modal_description = TRUE;
   }
   if (module_exists('shadowbox')) {
-    $options['shadowbox'] = t('Shadowbox modal window');
+    $options['shadowbox'] = t('Shadowbox');
     $modal_description = TRUE;
   }
   if (module_exists('fancybox')) {
-    $options['fancybox'] = t('fancyBox modal window');
+    $options['fancybox'] = t('fancyBox');
     $modal_description = TRUE;
   }
   if (module_exists('lightbox2')) {
-    $options['lightbox2'] = t('Lightbox2 modal window');
+    $options['lightbox2'] = t('Lightbox2');
     $modal_description = TRUE;
   }
   $form['vtabs']['window_settings']['hybridauth_provider_' . $provider_id . '_window_type'] = array(
@@ -495,88 +504,25 @@ function hybridauth_admin_provider_settings($form, &$form_state, $provider_id = 
     '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_window_height', 500),
   ) + $base;
 
-  if ($provider_id == 'Facebook') {
-    $form['vtabs']['window_settings']['hybridauth_provider_' . $provider_id . '_display'] = array(
-      '#type' => 'radios',
-      '#title' => t('Display type'),
-      '#options' => array(
-        'page' => t('Page'),
-        'popup' => t('Popup'),
-      ),
-      '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_display', ''),
-      '#description' => t('Determines how the authentication window is rendered.'),
-    );
-    $form['vtabs']['advanced'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Advanced settings'),
-    );
-    $form['vtabs']['advanced']['hybridauth_provider_' . $provider_id . '_scope'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Scope'),
-      '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_scope', array(
-        'email', 'user_about_me', 'user_birthday', 'user_hometown', 'user_website', 'offline_access',
-      )),
-      '#options' => array(
-        // See http://developers.facebook.com/docs/reference/api/permissions/
-        // Regular permissions.
-        'user_about_me'             => '<strong>user_about_me</strong> -- ' . t('Provides access to the "About Me" section of the profile in the about property'),
-        'user_activities'           => '<strong>user_activities</strong> -- ' . t("Provides access to the user's list of activities as the activities connection"),
-        'user_birthday'             => '<strong>user_birthday</strong> -- ' . t('Provides access to the birthday with year as the birthday_date property'),
-        'user_checkins'             => '<strong>user_checkins</strong> -- ' . t("Provides read access to the authorized user's check-ins that the user can see."),
-        'user_education_history'    => '<strong>user_education_history</strong> -- ' . t('Provides access to education history as the education property'),
-        'user_events'               => '<strong>user_events</strong> -- ' . t('Provides access to the list of events the user is attending as the events connection'),
-        'user_groups'               => '<strong>user_groups</strong> -- ' . t('Provides access to the list of groups the user is a member of as the groups connection'),
-        'user_hometown'             => '<strong>user_hometown</strong> -- ' . t("Provides access to the user's hometown in the hometown property"),
-        'user_interests'            => '<strong>user_interests</strong> -- ' . t("Provides access to the user's list of interests as the interests connection"),
-        'user_likes'                => '<strong>user_likes</strong> -- ' . t('Provides access to the list of all of the pages the user has liked as the likes connection'),
-        'user_location'             => '<strong>user_location</strong> -- ' . t("Provides access to the user's current location as the location property"),
-        'user_notes'                => '<strong>user_notes</strong> -- ' . t("Provides access to the user's notes as the notes connection"),
-        'user_online_presence'      => '<strong>user_online_presence</strong> -- ' . t("Provides access to the user's online/offline presence"),
-        'user_photos'               => '<strong>user_photos</strong> -- ' . t('Provides access to the photos the user has uploaded, and photos the user has been tagged in'),
-        'user_questions'            => '<strong>user_questions</strong> -- ' . t('Provides access to the questions the user or friend has asked'),
-        'user_relationships'        => '<strong>user_relationships</strong> -- ' . t("Provides access to the user's family and personal relationships and relationship status"),
-        'user_relationship_details' => '<strong>user_relationship_details</strong> -- ' . t("Provides access to the user's relationship preferences"),
-        'user_religion_politics'    => '<strong>user_religion_politics</strong> -- ' . t("Provides access to the user's religious and political affiliations"),
-        'user_status'               => '<strong>user_status</strong> -- ' . t("Provides access to the user's most recent status message"),
-        'user_videos'               => '<strong>user_videos</strong> -- ' . t('Provides access to the videos the user has uploaded, and videos the user has been tagged in'),
-        'user_website'              => '<strong>user_website</strong> -- ' . t("Provides access to the user's web site URL"),
-        'user_work_history'         => '<strong>user_work_history</strong> -- ' . t('Provides access to work history as the work property'),
-        'email'                     => '<strong>email</strong> -- ' . t("Provides access to the user's primary email address in the email property. Do not spam users. Your use of email must comply both with Facebook policies and with the CAN-SPAM Act."),
-
-        // Extended permissions.
-        'read_friendlists'     => '<strong>read_friendlists</strong> -- ' . t("Provides access to any friend lists the user created. All user's friends are provided as part of basic data, this extended permission grants access to the lists of friends a user has created, and should only be requested if your application utilizes lists of friends."),
-        'read_insights'        => '<strong>read_insights</strong> -- ' . t('Provides read access to the Insights data for pages, applications, and domains the user owns.'),
-        'read_mailbox'         => '<strong>read_mailbox</strong> -- ' . t("Provides the ability to read from a user's Facebook Inbox."),
-        'read_requests'        => '<strong>read_requests</strong> -- ' . t("Provides read access to the user's friend requests"),
-        'read_stream'          => '<strong>read_stream</strong> -- ' . t("Provides access to all the posts in the user's News Feed and enables your application to perform searches against the user's News Feed"),
-        'xmpp_login'           => '<strong>xmpp_login</strong> -- ' . t('Provides applications that integrate with Facebook Chat the ability to log in users.'),
-        'ads_management'       => '<strong>ads_management</strong> -- ' . t('Provides the ability to manage ads and call the Facebook Ads API on behalf of a user.'),
-        'create_event'         => '<strong>create_event</strong> -- ' . t("Enables your application to create and modify events on the user's behalf"),
-        'manage_friendlists'   => '<strong>manage_friendlists</strong> -- ' . t("Enables your app to create and edit the user's friend lists."),
-        'manage_notifications' => '<strong>manage_notifications</strong> -- ' . t('Enables your app to read notifications and mark them as read. This permission will be required to all access to notifications after October 22, 2011.'),
-        'offline_access'       => '<strong>offline_access</strong> -- ' . t('Enables your app to perform authorized requests on behalf of the user at any time. By default, most access tokens expire after a short time period to ensure applications only make requests on behalf of the user when the are actively using the application. This permission makes the access token returned by our OAuth endpoint long-lived.'),
-        'publish_checkins'     => '<strong>publish_checkins</strong> -- ' . t('Enables your app to perform checkins on behalf of the user.'),
-        'publish_stream'       => '<strong>publish_stream</strong> -- ' . t("Enables your app to post content, comments, and likes to a user's stream and to the streams of the user's friends. With this permission, you can publish content to a user's feed at any time, without requiring offline_access. However, please note that Facebook recommends a user-initiated sharing model."),
-        'rsvp_event'           => '<strong>rsvp_event</strong> -- ' . t("Enables your application to RSVP to events on the user's behalf"),
-        'sms'                  => '<strong>sms</strong> -- ' . t('Enables your application to send messages to the user and respond to messages from the user via text message'),
-        'publish_actions'      => '<strong>publish_actions</strong> -- ' . t('Enables your application to publish user scores and achievements.'),
-      ),
-    );
-  }
-  if ($provider_id == 'Google') {
-    $form['vtabs']['advanced'] = array(
-      '#type' => 'fieldset',
-      '#title' => 'Advanced settings',
-    );
-    $form['vtabs']['advanced']['hybridauth_provider_' . $provider_id . '_scope'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Scope'),
-      '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_scope', 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'),
-      '#size' => 150,
-    );
+  if ($provider = hybridauth_get_provider($provider_id)) {
+    if ($function = ctools_plugin_get_function($provider, 'configuration_form_callback')) {
+      $function($form, $provider_id);
+    }
   }
 
   return system_settings_form($form);
+}
+
+/**
+ * Form validation handler for the hybridauth provider admin settings form.
+ */
+function hybridauth_admin_provider_settings_validate($form, &$form_state) {
+  foreach ($form_state['values'] as $variable_name => $value) {
+    if (empty($value) && strpos($variable_name, 'hybridauth_provider_') === 0) {
+      unset($form_state['values'][$variable_name]);
+      variable_del($variable_name);
+    }
+  }
 }
 
 /**

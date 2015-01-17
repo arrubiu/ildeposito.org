@@ -40,11 +40,12 @@ function ildeposito_gruppi_node_info() {
     'gruppi' => array(
       'name' => t('Gruppi'),
       'base' => 'node_content',
-      'description' => '',
+      'description' => t('Crea un nuovo gruppo da visualizzare nell\'elenco.'),
       'has_title' => '1',
       'title_label' => t('Nome del gruppo'),
       'help' => '',
     ),
   );
+  drupal_alter('node_info', $items);
   return $items;
 }

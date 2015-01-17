@@ -28,35 +28,38 @@
  */
 ?>
 <?php
-
 if ($plugin->view->current_display == 'calendario_mese') {
   $next = 'Mese successivo';
   $prev = 'Mese precedente';
 }
-
 else {
   $next = 'Next';
   $prev = 'Prev';
 }
+
+$view = views_get_current_view();
+setlocale(LC_ALL, 'it_IT.utf8', 'it_IT');
+$mese_n = substr($view->argument['date_argument']->argument, 5, 2);
+$nav_title = strtoupper(strftime('%B', mktime(0, 0, 0, $mese_n, 10)));
 ?>
 
 <?php if (!empty($pager_prefix)) print $pager_prefix; ?>
 <div class="date-nav-wrapper clearfix<?php if (!empty($extra_classes)) print $extra_classes; ?>">
-  <div class="date-nav item-list">
-    <div class="date-heading">
-      <h3><?php print $nav_title ?></h3>
+    <div class="date-nav item-list">
+        <div class="date-heading">
+            <h3><?php print l($nav_title, 'archivio/storiacantata/calendario'); ?></h3>
+        </div>
+        <ul class="pager">
+            <?php if (!empty($prev_url)) : ?>
+              <li class="date-prev">
+                  <?php print l('&laquo;' . ($mini ? '' : ' ' . t($prev, array(), array('context' => 'date_nav'))), $prev_url, $prev_options); ?>
+                  &nbsp;</li>
+            <?php endif; ?>
+            <?php if (!empty($next_url)) : ?>
+              <li class="date-next">&nbsp;
+                  <?php print l(($mini ? '' : t($next, array(), array('context' => 'date_nav')) . ' ') . '&raquo;', $next_url, $next_options); ?>
+              </li>
+            <?php endif; ?>
+        </ul>
     </div>
-    <ul class="pager">
-    <?php if (!empty($prev_url)) : ?>
-      <li class="date-prev">
-        <?php print l('&laquo;' . ($mini ? '' : ' ' . t($prev, array(), array('context' => 'date_nav'))), $prev_url, $prev_options); ?>
-      &nbsp;</li>
-    <?php endif; ?>
-    <?php if (!empty($next_url)) : ?>
-      <li class="date-next">&nbsp;
-        <?php print l(($mini ? '' : t($next, array(), array('context' => 'date_nav')) . ' ') . '&raquo;', $next_url, $next_options); ?>
-      </li>
-    <?php endif; ?>
-    </ul>
-  </div>
 </div>

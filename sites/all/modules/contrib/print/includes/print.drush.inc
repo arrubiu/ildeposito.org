@@ -137,6 +137,10 @@ function _print_drush_download_extract($filename) {
         // Decompress the tar bz2 archive
         $arch_ret = drush_shell_exec('tar xjf %s', $filename);
         break;
+      case 'application/x-xz':
+        // Decompress the tar xz archive
+        $arch_ret = drush_shell_exec('tar xJf %s', $filename);
+        break;
     }
   }
   else {

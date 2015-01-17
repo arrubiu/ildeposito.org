@@ -52,6 +52,7 @@ function picture_admin_breakpoints($form, &$form_state, $breakpoint_group_name =
 
   $image_styles = image_style_options(TRUE);
   $image_styles[PICTURE_EMPTY_IMAGE] = t('- empty image -');
+  $image_styles[PICTURE_ORIGINAL_IMAGE] = t('- original image -');
   foreach ($breakpoints as $breakpoint_name => $breakpoint) {
     $label = '1x ' . $breakpoint->name . ' [' . $breakpoint->breakpoint . ']';
     $form['picture_mapping']['mapping'][$breakpoint_name]['1x'] = array(
@@ -215,13 +216,73 @@ function picture_admin_settings($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Choose the javascript library to use'),
     '#options' => array(
+      PICTURE_IMPLEMENTATION_PICTUREFILL2 => 'picturefill 2.0',
       PICTURE_IMPLEMENTATION_PICTUREFILL => 'picturefill',
       PICTURE_IMPLEMENTATION_WEBLINC => 'weblinc',
     ),
     '#default_value' => variable_get('picture_implementation', PICTURE_IMPLEMENTATION_DEFAULT),
   );
+  if (module_exists('file_entity') && function_exists('file_type_load_all') && !variable_get('picture_updated_to_file_entity_2', FALSE)) {
+    $form['picture_updated_to_file_entity_2'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Update the file formatter to version 2 of the File Entity module'),
+      '#default_value' => variable_get('picture_updated_to_file_entity_2', FALSE),
+    );
+  }
+  $form['#submit'][] = 'picture_admin_settings_submit';
+  $form = system_settings_form($form);
+  return $form;
+}
 
-  return system_settings_form($form);
+function picture_admin_settings_submit($form, &$form_state) {
+  if (isset($form_state['values']['picture_updated_to_file_entity_2']) && $form_state['values']['picture_updated_to_file_entity_2']) {
+    variable_set('picture_updated_to_file_entity_2', _picture_update_to_file_entity_2());
+  }
+  if (isset($form['picture_updated_to_file_entity_2'])) {
+    form_set_value($form['picture_updated_to_file_entity_2'], variable_get('picture_updated_to_file_entity_2', FALSE), $form_state);
+  }
+}
+
+/**
+ * Update picture module to version 2 of File Entity module.
+ */
+function _picture_update_to_file_entity_2() {
+  // File Entity is not installed or the installed version is not version 2.
+  if (!module_exists('file_entity') || !function_exists('file_type_load_all')) {
+    return FALSE;
+  }
+  // Picture was already updated.
+  if (variable_get('picture_updated_to_file_entity_2', FALSE)) {
+    return TRUE;
+  }
+  $entity_info = entity_get_info('file');
+  $types = file_type_load_all();
+  foreach ($types as $file_type) {
+    $view_modes = array('default' => array('label' => t('Default'))) + $entity_info['view modes'];
+    foreach (array_keys($view_modes) as $view_mode) {
+      $current_displays = file_displays_load($file_type->type, $view_mode, TRUE);
+      if (isset($current_displays['file_picture']) && $current_displays['file_picture']->status) {
+        if (!isset($current_displays['file_field_picture']) || !$current_displays['file_field_picture']->status) {
+          $display = clone $current_displays['file_picture'];
+          $display->name = isset($current_displays['file_field_picture']) ? $current_displays['file_field_picture']->name : $file_type->type . '__' . $view_mode . '__file_field_picture';
+          unset($display->settings['alt']);
+          unset($display->settings['title']);
+          $display->settings['image_link'] = '';
+          $display->settings['colorbox'] = $display->settings['picture_group'];
+          $current_displays['file_field_picture'] = $display;
+          unset($current_displays['file_picture']);
+          file_display_save($display);
+        }
+      }
+      elseif (isset($current_displays['file_field_picture'])) {
+        $display = $current_displays['file_field_picture'];
+        $display->settings['picture_mapping'] = isset($display->settings['picture_mapping']) ? $display->settings['picture_mapping'] : $display->settings['picture_group'];
+        unset($display->settings['picture_group']);
+        file_display_save($display);
+      }
+    }
+  }
+  return TRUE;
 }
 
 /**

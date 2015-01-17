@@ -296,14 +296,14 @@ function rabbit_hole_form_validate($form, &$form_state) {
 function rabbit_hole_execute($entity_type, $entity) {
   switch (rabbit_hole_get_action($entity_type, $entity)) {
     case RABBIT_HOLE_ACCESS_DENIED:
-      // TODO: Is this the proper way to deliver an access denied page?
+      // Deliver a 403, and exit.
       drupal_access_denied();
-      exit();
+      drupal_exit();
 
     case RABBIT_HOLE_PAGE_NOT_FOUND:
-      // TODO: Is this the proper way to deliver a not found page?
+      // Deliver a 404, and exit.
       drupal_not_found();
-      exit();
+      drupal_exit();
 
     case RABBIT_HOLE_PAGE_REDIRECT:
       // Determine the source of the redirect. This will be the entity itself,
@@ -437,6 +437,11 @@ function rabbit_hole_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   // Iterate through the primary tabs, and look for the View tab for any entity
   // that is handled by Rabbit Hole.
   foreach ($primary['output'] as $delta => $element) {
+    // If path is not set on this item, just continue to the next item.
+    if (!isset($element['#link']['path'])) {
+      continue;
+    }
+
     foreach ($modules as $module => $info) {
       if ($element['#link']['path'] == $info['view path']) {
         // Found the View tab, get the Rabbit Hole action for this entity, and
@@ -634,9 +639,9 @@ function rabbit_hole_schema_alter(&$schema) {
 }
 
 /**
- * Implements hook_modules_installed().
+ * Implements hook_modules_enabled().
  */
-function rabbit_hole_modules_installed($modules) {
+function rabbit_hole_modules_enabled($modules) {
   foreach ($modules as $module) {
     // If this module implements hook_rabbit_hole(), we should add the Rabbit
     // Hole fields to the base table of the entity type that this module is
