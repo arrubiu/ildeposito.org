@@ -1,0 +1,1 @@
+(function(e){Drupal.behaviors.bookFieldsetSummaries={attach:function(t){e("fieldset.book-outline-form",t).drupalSetSummary(function(t){var n=e(".form-item-book-bid select"),r=n.val();return r==="0"?Drupal.t("Not in book"):r==="new"?Drupal.t("New book"):Drupal.checkPlain(n.find(":selected").text())})}}})(jQuery);
