@@ -425,7 +425,7 @@ function ildeposito_cron_default_elysia_cron_rules() {
   $cron_rule->api_version = 1;
   $cron_rule->name = 'update_cron';
   $cron_rule->disable = NULL;
-  $cron_rule->rule = NULL;
+  $cron_rule->rule = '4 0 * * *';
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['update_cron'] = $cron_rule;

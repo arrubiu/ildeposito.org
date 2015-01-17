@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * ildeposito_media.file_default_displays.inc
@@ -2036,15 +2035,16 @@ function ildeposito_media_file_default_displays() {
   $export['video__default__media_youtube_image'] = $file_display;
 
   $file_display = new stdClass();
-  $file_display->weight = 0;
-  $file_display->status = FALSE;
   $file_display->api_version = 1;
+  $file_display->name = 'video__default__media_youtube_video';
+  $file_display->weight = 0;
+  $file_display->status = TRUE;
   $file_display->settings = array(
-    'width' => 640,
-    'height' => 390,
+    'width' => '320',
+    'height' => '195',
     'theme' => 'dark',
     'color' => 'red',
-    'autohide' => 2,
+    'autohide' => '2',
     'autoplay' => 0,
     'loop' => 0,
     'showinfo' => 1,
@@ -2159,12 +2159,22 @@ function ildeposito_media_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
+  $file_display->name = 'video__preview__media_youtube_image';
+  $file_display->weight = 0;
+  $file_display->status = TRUE;
+  $file_display->settings = array(
+    'image_style' => 'media_thumbnail',
+  );
+  $export['video__preview__media_youtube_image'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
   $file_display->name = 'video__preview__media_youtube_video';
   $file_display->weight = 0;
   $file_display->status = FALSE;
   $file_display->settings = array(
-    'width' => '640',
-    'height' => '390',
+    'width' => '320',
+    'height' => '195',
     'theme' => 'dark',
     'color' => 'red',
     'autohide' => '2',
@@ -2269,16 +2279,6 @@ function ildeposito_media_file_default_displays() {
     'image_style' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
   );
   $export['video__teaser__media_vimeo_image'] = $file_display;
-  
-    $file_display = new stdClass();
-  $file_display->api_version = 1;
-  $file_display->name = 'video__teaser__media_vimeo_image';
-  $file_display->weight = 0;
-  $file_display->status = TRUE;
-  $file_display->settings = array(
-    'image_style' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
-  );
-  $export['video__teaser__media_youtube_image'] = $file_display;
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
@@ -2289,15 +2289,15 @@ function ildeposito_media_file_default_displays() {
     'image_style' => 'resp_articolobreakpoints_theme_ildeposito_normal_1x',
   );
   $export['video__teaser__media_youtube_image'] = $file_display;
-  
-    $file_display = new stdClass();
+
+  $file_display = new stdClass();
   $file_display->api_version = 1;
-  $file_display->name = 'video__video_grande__media_youtube_video';
+  $file_display->name = 'video__teaser__media_youtube_video';
   $file_display->weight = 0;
   $file_display->status = TRUE;
   $file_display->settings = array(
-    'width' => '640',
-    'height' => '390',
+    'width' => '560',
+    'height' => '340',
     'theme' => 'dark',
     'color' => 'red',
     'autohide' => '2',
