@@ -606,7 +606,6 @@ function aggiorna_autori($autore) {
 
   } */
 
-
 // noteresource.module
 /**
  * Implements hook_services_resources().
@@ -647,6 +646,25 @@ function alterator_services_resources() {
                'source' => array('path' => 0),
                'optional' => FALSE,
              ),
+          ),
+        ),
+      ),
+    ),
+    'media_uri' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Retrieves uri for media stream',
+          'file' => array('type' => 'inc', 'module' => 'alterator', 'name' => 'alterator'),
+          'callback' => 'alterator_media_uri',
+          'access callback' => 'alterator_flag_access',
+          'args' => array(
+            array(
+              'name' => 'uuid',
+              'type' => 'string',
+              'description' => 'UUID of the file',
+              'source' => array('path' => 0),
+              'optional' => FALSE,
+            ),
           ),
         ),
       ),

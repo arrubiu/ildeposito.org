@@ -47,3 +47,13 @@ function alterator_users_hybridauth($data) {
   }
   return $results;
 }
+
+
+function alterator_media_uri($data) {
+
+  $result = db_query('SELECT uri FROM {file_managed} WHERE uuid = :uuid', array(':uuid' => $data));
+  foreach ($result as $record) {
+    $uri = $record->uri;
+  }
+  return $uri;
+}
