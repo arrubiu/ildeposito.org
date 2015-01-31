@@ -57,3 +57,12 @@ function alterator_media_uri($data) {
   }
   return $uri;
 }
+
+function alterator_comment_pid($data) {
+
+  $result = db_query('SELECT uuid FROM {comment} WHERE cid = :cid', array(':cid' => $data));
+  foreach ($result as $record) {
+    $uuid = $record->uuid;
+  }
+  return $uuid;
+}

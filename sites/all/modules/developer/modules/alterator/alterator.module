@@ -669,6 +669,25 @@ function alterator_services_resources() {
         ),
       ),
     ),
+    'comment_pid' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Retrieves UUID from comment pid',
+          'file' => array('type' => 'inc', 'module' => 'alterator', 'name' => 'alterator'),
+          'callback' => 'alterator_comment_pid',
+          'access callback' => 'alterator_flag_access',
+          'args' => array(
+            array(
+              'name' => 'pid',
+              'type' => 'string',
+              'description' => 'Pid of the comment',
+              'source' => array('path' => 0),
+              'optional' => FALSE,
+            ),
+          ),
+        ),
+      ),
+    ),
   );
 }
 
@@ -676,3 +695,18 @@ function alterator_flag_access() {
   return TRUE;
 }
 
+/**
+ * Implements hook_services_resources_post_processing_alter().
+ */
+function alterator_services_resources_post_processing_alter(&$resources, &$endpoint) {
+  $a = 'ciao';
+  $a = 1;
+}
+
+/**
+ * Implements hook_services_resources_alter().
+ */
+function alterator_services_resources_alter(&$resources, &$endpoint) {
+  $a = 1;
+
+}
