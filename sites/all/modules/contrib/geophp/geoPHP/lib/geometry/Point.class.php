@@ -18,6 +18,8 @@ class Point extends Geometry
    * @param numeric $z The z coordinate (or altitude) - optional
    */
   public function __construct($x, $y, $z = NULL) {
+    $x = floatval(str_replace(',', '.', $x));
+    $y = floatval(str_replace(',', '.', $y));
     // Basic validation on x and y
     if (!is_numeric($x) || !is_numeric($y)) {
       throw new Exception("Cannot construct Point. x and y should be numeric");
