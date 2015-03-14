@@ -364,6 +364,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
   // Exported field_instance: 'node-autore-field_images'
   $field_instances['node-autore-field_images'] = array(
     'bundle' => 'autore',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -416,6 +417,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_label_plurals_singular' => '',
     'field_name' => 'field_images',
@@ -423,7 +425,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 104,
+      'default_image' => 2236,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'imagecrop' => array(
@@ -439,13 +441,14 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'image',
       'settings' => array(
         'allowed_schemes' => array(
           'public' => 'public',
+          'vimeo' => 0,
+          'youtube' => 0,
         ),
         'allowed_types' => array(
-          0 => 0,
           'application' => 0,
           'audio' => 0,
           'document' => 0,
@@ -455,13 +458,15 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'browser_plugins' => array(
           'media_default--media_browser_1' => 'media_default--media_browser_1',
           'media_default--media_browser_my_files' => 0,
+          'media_internet' => 0,
           'upload' => 'upload',
+          'youtube' => 0,
         ),
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'throbber',
       ),
-      'type' => 'media_generic',
-      'weight' => 10,
+      'type' => 'image_image',
+      'weight' => 8,
     ),
   );
 
@@ -560,7 +565,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 8,
+      'weight' => 9,
     ),
   );
 

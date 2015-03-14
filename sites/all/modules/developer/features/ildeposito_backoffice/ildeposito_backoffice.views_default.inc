@@ -105,10 +105,83 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'evento' => 'evento',
   );
+  /* Criterio del filtro: Data: Data (node) */
+  $handler->display->display_options['filters']['date_filter']['id'] = 'date_filter';
+  $handler->display->display_options['filters']['date_filter']['table'] = 'node';
+  $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
+  $handler->display->display_options['filters']['date_filter']['form_type'] = 'date_text';
+  $handler->display->display_options['filters']['date_filter']['default_date'] = 'now+1day';
+  $handler->display->display_options['filters']['date_filter']['date_fields'] = array(
+    'field_data_field_data_evento.field_data_evento_value' => 'field_data_field_data_evento.field_data_evento_value',
+  );
 
   /* Display: Eventi giorno */
   $handler = $view->new_display('page', 'Eventi giorno', 'eventi_giorno');
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Pubblicato */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'evento' => 'evento',
+  );
   $handler->display->display_options['path'] = 'prova_eventi';
+
+  /* Display: Eventi giorno dopo */
+  $handler = $view->new_display('page', 'Eventi giorno dopo', 'eventi_giorno_dopo');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = '[ilDeposito] Eventi per domani';
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Intestazione: Globale: Area di testo */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['content'] = 'Per domani sono previsti i seguenti eventi:';
+  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['header']['area']['tokenize'] = TRUE;
+  $handler->display->display_options['defaults']['empty'] = FALSE;
+  /* Comportamento se non ci sono risultati: Globale: Area di testo */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'Non sono presenti eventi per domani.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Pubblicato */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'evento' => 'evento',
+  );
+  /* Criterio del filtro: Data: Data (node) */
+  $handler->display->display_options['filters']['date_filter']['id'] = 'date_filter';
+  $handler->display->display_options['filters']['date_filter']['table'] = 'node';
+  $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
+  $handler->display->display_options['filters']['date_filter']['form_type'] = 'date_text';
+  $handler->display->display_options['filters']['date_filter']['default_date'] = 'now+1day';
+  $handler->display->display_options['filters']['date_filter']['date_fields'] = array(
+    'field_data_field_data_evento.field_data_evento_value' => 'field_data_field_data_evento.field_data_evento_value',
+  );
+  $handler->display->display_options['path'] = 'prova_eventi_domani';
   $translatables['avvisi'] = array(
     t('Master'),
     t('altro'),
@@ -124,6 +197,10 @@ function ildeposito_backoffice_views_default_views() {
     t('Tutti'),
     t('[ilDeposito] Eventi per il %1'),
     t('Eventi giorno'),
+    t('Eventi giorno dopo'),
+    t('[ilDeposito] Eventi per domani'),
+    t('Per domani sono previsti i seguenti eventi:'),
+    t('Non sono presenti eventi per domani.'),
   );
   $export['avvisi'] = $view;
 

@@ -463,7 +463,7 @@ Festeggeremo questo evento con una festa a Milano, al circolo La Scighera, il 3/
     $pane->cache = array(
       'method' => 'simple',
       'settings' => array(
-        'lifetime' => '28800',
+        'lifetime' => '14400',
         'granularity' => 'none',
       ),
     );
