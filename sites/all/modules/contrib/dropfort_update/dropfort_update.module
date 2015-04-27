@@ -1,0 +1,478 @@
+<?php
+/**
+ * @file
+ * Connects your Drupal site to a Dropfort instance to manage updates.
+ */
+
+define('DROPFORT_UPDATE_BASE_URL', 'https://app.dropfort.com');
+define('DROPFORT_UPDATE_TIMESTAMP_DELTA', variable_get('dropfort_update_timestamp_delta', 900));
+define('DROPFORT_UPDATE_ACCESS_DENIED', -1);
+
+/**
+ * Implements hook_menu().
+ */
+function dropfort_update_menu() {
+  $items['admin/config/system/dropfort/update'] = array(
+    'title' => 'Dropfort Update',
+    'description' => 'Manage the update system connection to Dropfort.com',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('dropfort_update_admin_form'),
+    'access arguments' => array('administer dropfort_update'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'dropfort_update.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_help().
+ */
+function dropfort_update_help($path, $arg) {
+  switch ($path) {
+    // Main module help for the dropfort_update module
+    case 'admin/help#dropfort_update':
+      return '<p>' . t('Please review the REAMDE file for more information') . '</p>';
+
+    // Help for another path in the dropfort_update module
+    // @todo add good documentation here
+    //case 'admin/config/system/dropfort/update':
+    //  return '<p>' . t('TODO') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function dropfort_update_permission() {
+  return array(
+    'administer dropfort_update' => array(
+      'title' => t('Administer Dropfort Update'),
+      'description' => t('Administer the Dropfort Update settings.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_cron().
+ */
+function dropfort_update_cron() {
+  $time = time();
+
+  if (($time - variable_get('dropfort_update_last_status', 0)) > 3600) {
+    dropfort_update_send_status();
+  }
+}
+
+/**
+ * Send update status data to Dropfort
+ *
+ * @param array $options [optional]
+ *  Options to pass to the status method
+ *  - (string) site_key  : The site key to use during the HTTP request
+ *  - (bool) test : Test the connection but don't send any data
+ *
+ * @return object
+ *  Return the HTTP response
+ * @see _dropfort_update_system_status().
+ */
+function dropfort_update_send_status($check = FALSE, $options = NULL) {
+  global $base_url;
+  module_load_include('inc', 'dropfort_update');
+  $site_key   = (isset($options['site_key']) and !empty($options['site_key'])) ? $options['site_key'] : dropfort_update_get_private_key();
+  $site_token = variable_get('dropfort_update_site_token', '');
+  $data       = array(
+    'status' => _dropfort_update_system_status($check),
+    'site_key' => $site_key,
+    'site_token' => $site_token,
+  );
+
+  // Build HTTP request to retrieve filtered status list
+  $request = array(
+    'headers' => array(
+      'Content-Type' => 'application/json',
+      'Accept' => 'application/json',
+    ),
+    'data' => drupal_json_encode($data),
+    'method' => 'POST',
+    'max_redirects' => 3,
+    // We set a lower timeout since we don't want the user waiting for the page too long
+    'timeout' => 10,
+  );
+
+  $status_url = variable_get('dropfort_update_base_url', DROPFORT_UPDATE_BASE_URL) . '/updates/list/site_status';
+  $response = drupal_http_request($status_url, $request);
+
+  if (isset($response->code) and $response->code == 200) {
+    variable_set('dropfort_update_last_status', time());
+  }
+
+  return $response;
+}
+
+/**
+ * Test the connection to the dropfort application
+ *
+ * @param boolean $show_message [optional]
+ *  Show a message to the user
+ * @return boolean
+ *  Return TRUE if the connection was successfull, FALSE otherwise.
+ * @see dropfort_update_send_status().
+ */
+function dropfort_update_connection_test($show_message = FALSE, $options = NULL) {
+  // Mark this as a connection test
+  $options['test'] = TRUE;
+  $test_result = FALSE;
+  $test_all = !isset($options['site_key']);
+
+  // If we aren't testing a single site_key, test all of them.
+  if ($test_all) {
+    $keys = dropfort_update_get_site_keys();
+    foreach ($keys as $key => $value) {
+      $response = dropfort_update_send_status(FALSE, array('site_key' => $key));
+      if (isset($response->code) and $response->code == 200) {
+        $test_result = TRUE;
+      }
+      else {
+        $test_result = FALSE;
+        break;
+      }
+    }
+  }
+  else {
+    $response = dropfort_update_send_status(FALSE, $options);
+    if (isset($response->code) and $response->code == 200) {
+      $test_result = TRUE;
+    }
+  }
+
+  if ($show_message) {
+    if ($test_result) {
+      drupal_set_message(t('Connected to Dropfort successfully'), 'status', FALSE);
+    }
+    else {
+      drupal_set_message(t('Failed to connect to the Dropfort at @url. Please check your connection settings.', array('@url' => variable_get('dropfort_update_base_url', DROPFORT_UPDATE_BASE_URL))), 'error', FALSE);
+    }
+  }
+
+  // Only set this variable if we've tested all keys
+  if ($test_all) {
+    variable_set('dropfort_update_connected', $test_result);
+  }
+  return $test_result;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function dropfort_update_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'update_status_alter') {
+    // Move dropfort_update_update_status_alter() to the end of the list. module_implements()
+    // iterates through $implementations with a foreach loop which PHP iterates
+    // in the order that the items were added, so to move an item to the end of
+    // the array, we remove it and then add it.
+    $group = $implementations['dropfort_update'];
+    unset($implementations['dropfort_update']);
+    $implementations['dropfort_update'] = $group;
+  }
+}
+
+/**
+ * Implements hook_modules_enabled().
+ */
+function dropfort_update_modules_enabled($modules) {
+  cache_clear_all('dropfort_update_update_status:', 'cache', TRUE);
+  dropfort_update_send_status();
+}
+
+/**
+ * Implements hook_modules_disabled().
+ */
+function dropfort_update_modules_disabled($modules) {
+  cache_clear_all('dropfort_update_update_status:', 'cache', TRUE);
+  dropfort_update_send_status();
+}
+
+/**
+ * Implements hook_update_status_alter().
+ *
+ * Three tasks are performed in this function
+ *
+ *  1. Send project update information to a Dropfort instance.
+ *  2. Filter the local update information based on return data.
+ *  3. Send system status report data to Dropfort as well.
+ */
+function dropfort_update_update_status_alter(&$projects) {
+  module_load_include('inc', 'dropfort_update');
+  _dropfort_update_update_status_alter($projects);
+}
+
+/**
+ * Implements hook_xmlrpc().
+ */
+function dropfort_update_xmlrpc() {
+  return array(
+    'dropfort.systemStatusCheck' => 'dropfort_update_status_check',
+    'dropfort.systemStatus' => 'dropfort_update_system_status',
+    'dropfort.updateGetProjects' => 'dropfort_update_get_projects',
+    'dropfort.updateGetAvailable' => 'dropfort_update_get_available',
+    'dropfort.refreshProjects' => 'dropfort_update_refresh_projects',
+    'dropfort.clearUpdateStatus' => 'dropfort_update_clear_update_status',
+  );
+}
+
+/**
+ * XML-RPC callback for checking if there are status errors
+ */
+function dropfort_update_status_check($nonce, $payload) {
+  if (dropfort_update_data_access($nonce, $payload)) {
+    return _dropfort_update_system_status(TRUE);
+  }
+  // @todo should we add a 404 response?
+  return DROPFORT_UPDATE_ACCESS_DENIED;
+}
+
+/**
+ * XML-RPC callback for loading system status information
+ */
+function dropfort_update_system_status($nonce, $payload) {
+  if (dropfort_update_data_access($nonce, $payload)) {
+    return _dropfort_update_system_status();
+  }
+  // @todo should we add a 404 response?
+  return DROPFORT_UPDATE_ACCESS_DENIED;
+}
+
+/**
+ * XML-RPC callback for loading project data
+ */
+function dropfort_update_clear_update_status($nonce, $payload) {
+  if (dropfort_update_data_access($nonce, $payload)) {
+    cache_clear_all('dropfort_update_update_status:', 'cache', TRUE);
+    return TRUE;
+  }
+  // @todo should we add a 404 response?
+  return DROPFORT_UPDATE_ACCESS_DENIED;
+}
+
+/**
+ * XML-RPC callback for loading project data
+ */
+function dropfort_update_get_available($nonce, $payload) {
+  if (dropfort_update_data_access($nonce, $payload)) {
+    module_load_include('inc', 'update', 'update.compare');
+    return update_get_available();
+  }
+  // @todo should we add a 404 response?
+  return DROPFORT_UPDATE_ACCESS_DENIED;
+}
+
+/**
+ * XML-RPC callback for loading project data
+ */
+function dropfort_update_get_projects($nonce, $payload) {
+  if (dropfort_update_data_access($nonce, $payload)) {
+    module_load_include('inc', 'update', 'update.compare');
+    return update_get_projects();
+  }
+
+  // @todo should we add a 404 response?
+  return DROPFORT_UPDATE_ACCESS_DENIED;
+}
+
+/**
+ * XML-RPC callback for refreshing project data
+ */
+function dropfort_update_refresh_projects($nonce, $payload) {
+  if (dropfort_update_data_access($nonce, $payload)) {
+    return update_refresh();
+  }
+
+  // @todo should we add a 404 response?
+  return DROPFORT_UPDATE_ACCESS_DENIED;
+}
+
+/**
+ * Access callback for accessing update data via XML-RPC
+ */
+function dropfort_update_data_access(&$nonce, &$payload) {
+  $ip_address = ip_address();
+
+  // Check if encryption is required and used, or if it is disabled
+  if ((_dropfort_update_detect_https() and !variable_get('dropfort_update_allow_unencrypted', FALSE)) or !_dropfort_update_detect_https()) {
+
+    // Finally, verify the payload using the SSL public key
+    $resource = openssl_get_publickey('file://' . drupal_realpath(drupal_get_path('module', 'dropfort_update') . '/dropfort.pub'));
+
+    if (FALSE !== $resource) {
+      $decrypted = NULL;
+      $success = openssl_public_decrypt(base64_decode($payload), $decrypted, $resource);
+      if (FALSE !== $success) {
+
+        // Validate the payload data
+        $decrypted = unserialize($decrypted);
+        if (isset($decrypted['nonce']) and hash('sha256', $nonce) == $decrypted['nonce']) {
+
+          $site_token = variable_get('dropfort_update_site_token');
+          if (isset($decrypted['site_token']) and hash('sha256', $site_token) == $decrypted['site_token']) {
+            $now = time();
+
+            if (isset($decrypted['timestamp']) and is_numeric($decrypted['timestamp']) and abs($now - $decrypted['timestamp']) < DROPFORT_UPDATE_TIMESTAMP_DELTA) {
+              return TRUE;
+            }
+            else {
+              watchdog('dropfort_update', 'Timestamp delta too high: @delta. Received from @ip.', array('@ip' => $ip_address, '@delta' => abs($now - $decrypted['timestamp'])), WATCHDOG_ERROR);
+            }
+          }
+          else {
+            watchdog('dropfort_update', 'Site keys do not match. Value sent: @site_token. Received from @ip.', array('@ip' => $ip_address, '@site_token' => $decrypted['site_token']), WATCHDOG_ERROR);
+          }
+        }
+        else {
+          watchdog('dropfort_update', 'Invalid nonce: @nonce data. Received from @ip.', array('@ip' => $ip_address, '@nonce' => $decrypted['nonce']), WATCHDOG_ERROR);
+        }
+      }
+      else {
+        watchdog('dropfort_update', 'Failed to decrypt payload received from @ip.', array('@ip' => $ip_address), WATCHDOG_ERROR);
+      }
+    }
+    else {
+      watchdog('dropfort_update', 'Unable to load public key file.', array(), WATCHDOG_ERROR);
+    }
+  }
+  else {
+    watchdog('dropfort_update', 'Attempted non-HTTPS connection with required HTTPS enabled from @ip.', array('@ip' => $ip_address), WATCHDOG_ERROR);
+  }
+
+  return FALSE;
+}
+
+/**
+ * Check for inactive keys
+ *
+ * @return boolean
+ *  Returns TRUE if there are inactive keys, FALSE otherwise.
+ */
+function dropfort_update_inactive_keys() {
+  $result = db_select('dropfort_update_site_key', 'd')
+    ->fields('d')
+    ->condition('active', 0)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  return $result > 0;
+}
+
+/**
+ * Check if this key already exists
+ */
+function dropfort_update_site_key_exists($site_key) {
+  if (!empty($site_key)) {
+    $result = db_select('dropfort_update_site_key', 'd')
+      ->fields('d')
+      ->condition('site_key', $site_key)
+      ->execute();
+    return $result->rowCount() > 0;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Load all registred site keys
+ */
+function dropfort_update_get_site_keys() {
+  $result = db_select('dropfort_update_site_key', 'd')
+    ->fields('d')
+    ->execute()
+    ->fetchAllAssoc('site_key');
+
+  return $result;
+}
+
+/**
+ * Delete all registred keys with the site
+ */
+function dropfort_update_clear_all_site_keys() {
+  $result = db_delete('dropfort_update_site_key')
+    ->execute();
+}
+
+/**
+ * Get the private key for the site processed as it would be
+ * by the update fetch.
+ */
+function dropfort_update_get_private_key() {
+  // Needs to match site key generation in update.fetch.inc
+  // @see https://api.drupal.org/api/drupal/modules%21update%21update.fetch.inc/function/_update_process_fetch_task/7
+  global $base_url;
+  $key = drupal_hmac_base64($base_url, drupal_get_private_key());
+
+  // Track this key
+  dropfort_update_track_site_keys($key, TRUE);
+  return $key;
+}
+
+/**
+ * Track site key
+ *
+ * @see _dropfort_update_track_site_keys().
+ */
+function dropfort_update_track_site_keys($site_key, $active = NULL, $last_used = NULL) {
+  if ($active === FALSE) {
+    watchdog('dropfort_update', 'Site key @site_key marked as inactive', array(), WATCHDOG_WARNING);
+    if (drupal_is_cli()) {
+      drupal_set_message(t('Dropfort Update has marked a site key as inactive. This is normally due to an authentication failure between your Drupal site and Dropfort. Please check your Dropfort Update settings and the logs for more details.'), 'warning');
+    }
+  }
+
+  module_load_include('inc', 'dropfort_update');
+  _dropfort_update_track_site_keys($site_key, $active, $last_used);
+}
+
+/**
+ * Generates the registration link for this site
+ */
+function _dropfort_update_site_registration_link($rawurl = FALSE) {
+  global $base_url;
+  $path = variable_get('dropfort_update_base_url', DROPFORT_UPDATE_BASE_URL) . '/register/site';
+  $options = array(
+    'query' => array(
+      'edit' => array(
+        'title' => variable_get('site_name',''),
+        'field_url' => array(
+          LANGUAGE_NONE => array(
+            0 => array('value' => $base_url),
+          ),
+        ),
+        'field_site_key' => array(
+          LANGUAGE_NONE => array(
+            0 => array('value' => dropfort_update_get_private_key()),
+          ),
+        ),
+        'field_site_token' => array(
+          LANGUAGE_NONE => array(
+            0 => array('value' => variable_get('dropfort_update_site_token', '')),
+          ),
+        ),
+        'field_site_drupal_location' => array(
+          LANGUAGE_NONE => array(
+            0 => array('value' => DRUPAL_ROOT),
+          ),
+        ),
+      ),
+    ),
+    'external' => TRUE,
+    'https' => TRUE,
+    'attributes' => array(
+      'target' => '_blank',
+    ),
+  );
+
+  if ($rawurl) {
+    return url($path, $options);
+  }
+
+  return l(t('Register your site with Dropfort'), $path, $options);
+}

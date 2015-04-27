@@ -1,0 +1,10 @@
+; Run drush with --prepare-install to have files and settings.php configured
+
+core = 7.x
+api = 2
+
+projects[drupal][version] = 7.34
+
+projects[dropfort_help][download][type] = "dropfort"
+projects[dropfort_help][type] = "module"
+projects[dropfort_help][download][status url] = "https://app.dropfort.com/fserver/release-history"

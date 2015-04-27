@@ -1,0 +1,15 @@
+name = Dropfort Update
+description = Modifies the Drupal update workflow to pass through Dropfort.com to enforce update policies.
+core = 7.x
+package = Dropfort
+
+dependencies[] = update
+files[] = tests/dropfort_update.test
+
+configure = admin/config/system/dropfort/update
+; Information added by Drupal.org packaging script on 2015-04-27
+version = "7.x-1.0"
+core = "7.x"
+project = "dropfort_update"
+datestamp = "1430145521"
+
