@@ -6,19 +6,19 @@
  */
 
 /**
- * Implements hook_magic().
+ * Implements hook_form_alter()-ish.
+ *
+ * Called from within magic.module's alter to ensure we always just add it in.
  */
-function magic_dev_magic($magic_settings, $theme) {
-  $settings = array();
-
+function magic_dev_form_system_theme_settings(&$form, &$form_state, $theme) {
   // Development Magic Grouping
-  $settings['dev'] = array(
+  $form['magic']['dev'] = array(
     '#type' => 'fieldset',
     '#title' => t('Development Enhancements'),
   );
 
   // Footer JavaScript Option
-  $settings['dev']['magic_rebuild_registry'] = array(
+  $form['magic']['dev']['magic_rebuild_registry'] = array(
     '#type' => 'checkbox',
     '#title' => t('Rebuild Theme Registry on Reload'),
     '#description' => t('<a href="!link" target="_blank">Rebuild the theme registry</a> during project development.', array('!link' => 'http://drupal.org/node/173880#theme-registry')),
@@ -26,7 +26,7 @@ function magic_dev_magic($magic_settings, $theme) {
   );
 
   // Viewport Indicator Option
-  $settings['dev']['magic_viewport_indicator'] = array(
+  $form['magic']['dev']['magic_viewport_indicator'] = array(
     '#type' => 'checkbox',
     '#title' => t('Viewport Width Indicator'),
     '#description' => t('Displays an indicator of the viewport. Tap/click to toggle between <em>em</em> and <em>px</em>. The CSS and JavaScript for this will bypass your CSS and JavaScript exclude options.'),
@@ -36,7 +36,7 @@ function magic_dev_magic($magic_settings, $theme) {
   if (module_exists('modernizr')) {
     // Modernizr Debug Option
     $options = array('attributes' => array('target' => '_blank'));
-    $settings['dev']['magic_modernizr_debug'] = array(
+    $form['magic']['dev']['magic_modernizr_debug'] = array(
       '#type' => 'checkbox',
       '#title' => t('Modernizr Indicator'),
       '#description' => t('Displays an indicator of !modernizr detected features. Tap/click to toggle display of all of the available features. Install the !module for full Modernizr support. The CSS and JavaScript for this will bypass your CSS and JavaScript exclude options.', array('!modernizr' => l('Modernizr', 'http://modernizr.com/', $options), '!module' => l('Modernizr Drupal module', 'http://drupal.org/project/modernizr', $options))),
@@ -45,13 +45,13 @@ function magic_dev_magic($magic_settings, $theme) {
   }
   else {
     // We don't have modernizr :-(
-    $settings['dev']['magic_modernizr_debug'] = array(
+    $form['magic']['dev']['magic_modernizr_debug'] = array(
       '#type' => 'hidden',
       '#value' => FALSE,
     );
   }
 
-  return $settings;
+  return $form;
 }
 
 /**
@@ -72,6 +72,8 @@ function magic_dev_preprocess_html(&$vars) {
   if (theme_get_setting('magic_viewport_indicator', $theme_key) || theme_get_setting('magic_modernizr_debug', $theme_key)) {
     drupal_add_css(drupal_get_path('module', 'magic_dev') . '/css/magic.debug.css');
     drupal_add_js(drupal_get_path('module', 'magic_dev') . '/js/magic.debug.js');
+    // Adding a class to the body element.
+    $vars['classes_array'][] = 'magic-indicator';
   }
 }
 
@@ -102,4 +104,24 @@ function magic_dev_process_html(&$vars) {
       $vars['page_bottom'] = $debug_output;
     }
   }
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function magic_dev_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break during installation.
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    $requirements['magic_dev'] = array(
+      'title' => $t('Magic Development'),
+      'value' => $t('Enabled'),
+      'description' => $t('Magic development module should never be enabled on production sites. Please disable for production environments.'),
+      'severity' => REQUIREMENT_WARNING,
+    );
+  }
+
+  return $requirements;
 }

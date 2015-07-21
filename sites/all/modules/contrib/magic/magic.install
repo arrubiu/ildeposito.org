@@ -1,20 +1,9 @@
 <?php
+
 /**
  * @file
  * Install hooks for the magic module.
  */
-
-/**
- * Implements hook_install().
- */
-function magic_install() {
-  // @TODO: Add in support to move Aurora settings automatically.
-
-  db_update('system')
-    ->fields(array('weight' => 200))
-    ->condition('name', 'magic', '=')
-    ->execute();
-}
 
 /**
  * Implements hook_schema().

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * A file to contain functions for the magic module to abuse.
@@ -84,7 +85,7 @@ function magic_experimental_js($scope = 'header', $javascript = NULL, $skip_alte
         $javascript[$js_key]['scope'] = 'header';
       }
 
-      if ($js_key == 'settings') {
+      if ($js_key === 'settings') {
         $javascript[$js_key]['scope'] = 'header';
       }
     }

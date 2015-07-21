@@ -1822,3 +1822,27 @@ padding: 5px 5px 0px 5px;
     margin-right: 10px;
     margin-top: 5px;
 }
+
+/* cookie */
+#sliding-popup .popup-content #popup-text p {
+    font-size: 12px;
+    font-weight: normal;
+}
+#sliding-popup .popup-content #popup-text p a {
+    color: #fff;
+    text-decoration: underline;
+}
+#sliding-popup .popup-content #popup-buttons button {
+    background-color: transparent;
+    background-image: none;
+    border: medium none !important;
+    box-shadow: none;
+    color: #fff;
+    text-shadow: none;
+}
+#sliding-popup .popup-content #popup-buttons button:hover {
+    background: transparent none repeat scroll 0 0 !important;
+}
+#sliding-popup .find-more-button {
+    display: none !important;
+}

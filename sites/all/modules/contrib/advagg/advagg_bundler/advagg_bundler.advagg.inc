@@ -6,14 +6,14 @@
  */
 
 /**
- * Implement hook_advagg_build_aggregate_plans_alter().
+ * Implements hook_advagg_build_aggregate_plans_alter().
  */
 function advagg_bundler_advagg_build_aggregate_plans_alter(&$files, &$modified, $type) {
   // Get max number of sub aggregates to create.
-  if ($type == 'css') {
+  if ($type === 'css') {
     $max = variable_get('advagg_bundler_max_css', ADVAGG_BUNDLER_MAX_CSS);
   }
-  if ($type == 'js') {
+  if ($type === 'js') {
     $max = variable_get('advagg_bundler_max_js', ADVAGG_BUNDLER_MAX_JS);
   }
   // If bundles are disabled then do not do any more processing.
@@ -27,7 +27,7 @@ function advagg_bundler_advagg_build_aggregate_plans_alter(&$files, &$modified, 
 
   $final_groupings = array();
   $total_count = 0;
-  foreach ($files as $filename => $data) {
+  foreach ($files as $data) {
     // Preserve the order while grouping.
     $last_group = '';
     $counter = 0;
@@ -44,7 +44,7 @@ function advagg_bundler_advagg_build_aggregate_plans_alter(&$files, &$modified, 
 
       if ($last_group != $group['group_hash']) {
         // Bump Counter if group has changed from the last one.
-        $counter++;
+        ++$counter;
         $last_group = $group['group_hash'];
         $modified = TRUE;
       }
@@ -78,7 +78,7 @@ function advagg_bundler_advagg_build_aggregate_plans_alter(&$files, &$modified, 
     if (is_null($remerge_candidate)) {
       break;
     }
-    advagg_bundler_merge($remerge_candidate, count($remerge_candidate)-1);
+    advagg_bundler_merge($remerge_candidate, count($remerge_candidate) - 1);
     $final_groupings[$remerge_key] = $remerge_candidate;
 
     $total_count = 0;
@@ -86,8 +86,6 @@ function advagg_bundler_advagg_build_aggregate_plans_alter(&$files, &$modified, 
       $total_count += count($groupings);
     }
   }
-
-  $files_before = $files;
 
   // Replace $files array with new aggregate filenames.
   $files = advagg_generate_filenames($final_groupings, $type);
@@ -98,12 +96,12 @@ function advagg_bundler_advagg_build_aggregate_plans_alter(&$files, &$modified, 
  *
  * This preserves the order.
  *
- * @param $groupings
- *   array of requested groups
- * @param $max
- *   max number of grouping
+ * @param array $groupings
+ *   Array of requested groups.
+ * @param int $max
+ *   Max number of grouping.
  */
-function advagg_bundler_merge(&$groupings, $max) {
+function advagg_bundler_merge(array &$groupings, $max) {
   $group_count = count($groupings);
 
   if (!empty($max)) {
@@ -196,7 +194,7 @@ function advagg_bundler_merge(&$groupings, $max) {
         }
       }
 
-      // Create the new merged set
+      // Create the new merged set.
       $a = $groupings[$first];
       $b = $groupings[$last];
       $new_set = array_merge($a, $b);
@@ -212,7 +210,7 @@ function advagg_bundler_merge(&$groupings, $max) {
         }
       }
       $groupings = $new_groupings;
-      $group_count--;
+      --$group_count;
     }
   }
 
@@ -223,7 +221,7 @@ function advagg_bundler_merge(&$groupings, $max) {
     $missing_counter = 0;
     foreach ($group as $data) {
       if (empty($data['bundler']['filesize'])) {
-        $missing_counter++;
+        ++$missing_counter;
       }
     }
 
@@ -257,7 +255,7 @@ function advagg_bundler_merge(&$groupings, $max) {
     }
 
     // Move the bad files into the smallest good group.
-    $new_set = isset($groupings[$merge_candidate_key]) ? $groupings[$merge_candidate_key] : array() ;
+    $new_set = isset($groupings[$merge_candidate_key]) ? $groupings[$merge_candidate_key] : array();
     $new_set = array_merge($new_set, $bad_group);
     $groupings[$merge_candidate_key] = $new_set;
   }
