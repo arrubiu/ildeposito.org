@@ -1,0 +1,16 @@
+name = Buffer
+description = "Provides integration between Drupal and BufferApp service"
+package = Other
+core = 7.x
+configure = admin/config/services/bufferapp
+dependencies[] = token
+dependencies[] = date
+dependencies[] = date_api
+files[] = bufferapp.admin.inc
+
+; Information added by Drupal.org packaging script on 2015-04-27
+version = "7.x-1.5"
+core = "7.x"
+project = "bufferapp"
+datestamp = "1430144847"
+
