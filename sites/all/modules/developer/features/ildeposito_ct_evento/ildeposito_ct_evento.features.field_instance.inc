@@ -233,6 +233,98 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-evento-field_descrizione_social'
+  $field_instances['node-evento-field_descrizione_social'] = array(
+    'bundle' => 'evento',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 13,
+      ),
+      'elenco_termini_contenuti' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'percorso' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'print' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'riferimento_evento' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'rss' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'rss_app' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_label_plurals_singular' => '',
+    'field_name' => 'field_descrizione_social',
+    'label' => 'Descrizione social',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'enable' => 0,
+        'insert_plugin' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => 140,
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 20,
+    ),
+  );
+
   // Exported field_instance: 'node-evento-field_evento_ordinamento'
   $field_instances['node-evento-field_evento_ordinamento'] = array(
     'bundle' => 'evento',
@@ -325,7 +417,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 21,
     ),
   );
 
@@ -442,7 +534,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'openlayers_map' => 'geofield_widget_map',
       ),
       'type' => 'geofield_openlayers',
-      'weight' => 15,
+      'weight' => 23,
     ),
   );
 
@@ -1518,7 +1610,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 14,
+      'weight' => 22,
     ),
   );
 
@@ -1616,6 +1708,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Commento');
   t('Data evento');
+  t('Descrizione social');
   t('Evento di riferimento');
   t('Evento ordinamento');
   t('Geofield');

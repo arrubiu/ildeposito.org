@@ -492,11 +492,8 @@ Festeggeremo questo evento con una festa a Milano, al circolo La Scighera, il 3/
       'override_title_text' => 'Calendario cantato',
     );
     $pane->cache = array(
-      'method' => 'simple',
-      'settings' => array(
-        'lifetime' => '43200',
-        'granularity' => 'none',
-      ),
+      'method' => '0',
+      'settings' => array(),
     );
     $pane->style = array(
       'settings' => NULL,

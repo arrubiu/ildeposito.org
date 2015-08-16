@@ -1606,7 +1606,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'riferimento_evento';
-  /* Campo: Contenuto: Lingua traduzione */
+  /* Campo: Contenuto: Lingue */
   $handler->display->display_options['fields']['field_lingua']['id'] = 'field_lingua';
   $handler->display->display_options['fields']['field_lingua']['table'] = 'field_data_field_lingua';
   $handler->display->display_options['fields']['field_lingua']['field'] = 'field_lingua';

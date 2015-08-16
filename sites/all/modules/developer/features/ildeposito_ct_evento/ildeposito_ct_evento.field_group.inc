@@ -109,8 +109,8 @@ function ildeposito_ct_evento_field_group_info() {
       1 => 'field_data_evento',
       2 => 'field_informazioni',
       3 => 'field_links',
-      4 => 'title',
-      5 => 'field_images',
+      4 => 'field_images',
+      5 => 'title',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -140,6 +140,7 @@ function ildeposito_ct_evento_field_group_info() {
       0 => 'field_tematica',
       1 => 'field_geofield',
       2 => 'field_evento_ordinamento',
+      3 => 'field_descrizione_social',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

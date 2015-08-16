@@ -45,6 +45,7 @@ features[field_base][] = field_cognome
 features[field_base][] = field_collana
 features[field_base][] = field_collegamenti
 features[field_base][] = field_data_evento
+features[field_base][] = field_descrizione_social
 features[field_base][] = field_editore
 features[field_base][] = field_email
 features[field_base][] = field_evento

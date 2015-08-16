@@ -6,6 +6,7 @@ version = 7.x-1.0
 project = ildeposito_backoffice
 dependencies[] = autofloat
 dependencies[] = ds_format
+dependencies[] = ckeditor
 dependencies[] = editableviews
 dependencies[] = emptyparagraphkiller
 dependencies[] = entity
