@@ -404,7 +404,7 @@ function ildeposito_tassonomie_views_default_views() {
   /* Display: Lingue */
   $handler = $view->new_display('block', 'Lingue', 'contenuti_lingua');
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Lingua traduzione */
+  /* Filtro contestuale: Indexed Contenuto: Lingue */
   $handler->display->display_options['arguments']['field_lingua']['id'] = 'field_lingua';
   $handler->display->display_options['arguments']['field_lingua']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_lingua']['field'] = 'field_lingua';
