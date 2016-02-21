@@ -163,7 +163,7 @@ function social_count() {
     $count_twitter = $t_profile->followers_count; */
 
 
-  require_once('facebook.php');
+  /*require_once('facebook.php');
   $facebook = new Facebook(array(
     'appId' => variable_get('alterator_fb_app_id'),
     'secret' => variable_get('alterator_fb_app_secret'),
@@ -172,8 +172,8 @@ function social_count() {
   $result = $facebook->api(array(
     'method' => 'fql.query',
     'query' => 'select fan_count from page where page_id = ' . variable_get('alterator_fb_page_id') . ''
-  ));
-  $count_facebook = $result[0]['fan_count'];
+  ));*/
+  $count_facebook = '6770'; //$result[0]['fan_count'];
 
 
   $facebook_img = theme('image', array(
@@ -256,9 +256,9 @@ function twitter_timeline_sidebar() {
 function logo_deposito() {
 
   $logo = theme('image', array(
-    'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_decennale.png',
+    'path' => drupal_get_path('theme', 'ildeposito') . '/images/logo_nota.png',
     'alt' => 'logo',
-    'title' => 'Il decennale de ilDeposito.org',
+    'title' => 'lDeposito.org',
     'attributes' => array('class' => 'logo', 'hidden-xs'),
   ));
 
