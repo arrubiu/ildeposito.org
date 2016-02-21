@@ -331,6 +331,7 @@ function ildeposito_gruppi_field_default_field_instances() {
   // Exported field_instance: 'node-gruppi-field_images'
   $field_instances['node-gruppi-field_images'] = array(
     'bundle' => 'gruppi',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -387,7 +388,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'image',
       'settings' => array(
         'allowed_schemes' => array(
           'public' => 'public',
@@ -405,9 +406,10 @@ function ildeposito_gruppi_field_default_field_instances() {
           'upload' => 0,
         ),
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'throbber',
       ),
-      'type' => 'media_generic',
+      'type' => 'image_image',
       'weight' => 4,
     ),
   );
@@ -464,6 +466,7 @@ function ildeposito_gruppi_field_default_field_instances() {
       'module' => 'addressfield',
       'settings' => array(
         'available_countries' => array(),
+        'default_country' => '',
         'format_handlers' => array(
           'address' => 'address',
           'name-oneline' => 'name-oneline',
