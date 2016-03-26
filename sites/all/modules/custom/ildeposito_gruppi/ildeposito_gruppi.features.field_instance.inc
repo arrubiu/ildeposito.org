@@ -10,7 +10,7 @@
 function ildeposito_gruppi_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_gruppi-comment_body'
+  // Exported field_instance: 'comment-comment_node_gruppi-comment_body'.
   $field_instances['comment-comment_node_gruppi-comment_body'] = array(
     'bundle' => 'comment_node_gruppi',
     'default_value' => NULL,
@@ -43,7 +43,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-body'
+  // Exported field_instance: 'node-gruppi-body'.
   $field_instances['node-gruppi-body'] = array(
     'bundle' => 'gruppi',
     'default_value' => NULL,
@@ -102,7 +102,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-field_anno'
+  // Exported field_instance: 'node-gruppi-field_anno'.
   $field_instances['node-gruppi-field_anno'] = array(
     'bundle' => 'gruppi',
     'deleted' => 0,
@@ -117,6 +117,7 @@ function ildeposito_gruppi_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
@@ -131,6 +132,7 @@ function ildeposito_gruppi_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
@@ -174,7 +176,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-field_citta'
+  // Exported field_instance: 'node-gruppi-field_citta'.
   $field_instances['node-gruppi-field_citta'] = array(
     'bundle' => 'gruppi',
     'default_value' => NULL,
@@ -229,7 +231,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-field_email'
+  // Exported field_instance: 'node-gruppi-field_email'.
   $field_instances['node-gruppi-field_email'] = array(
     'bundle' => 'gruppi',
     'default_value' => NULL,
@@ -277,7 +279,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-field_geofield'
+  // Exported field_instance: 'node-gruppi-field_geofield'.
   $field_instances['node-gruppi-field_geofield'] = array(
     'bundle' => 'gruppi',
     'default_value' => NULL,
@@ -328,7 +330,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-field_images'
+  // Exported field_instance: 'node-gruppi-field_images'.
   $field_instances['node-gruppi-field_images'] = array(
     'bundle' => 'gruppi',
     'default_value' => array(),
@@ -414,7 +416,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-field_indirizzo'
+  // Exported field_instance: 'node-gruppi-field_indirizzo'.
   $field_instances['node-gruppi-field_indirizzo'] = array(
     'bundle' => 'gruppi',
     'default_value' => array(
@@ -434,9 +436,14 @@ function ildeposito_gruppi_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'custom_formatters',
-        'settings' => array(),
-        'type' => 'custom_formatters_indirizzo_gruppi',
+        'module' => 'addressfield',
+        'settings' => array(
+          'format_handlers' => array(
+            0 => 'address',
+          ),
+          'use_widget_handlers' => 1,
+        ),
+        'type' => 'addressfield_default',
         'weight' => 9,
       ),
       'search_result' => array(
@@ -482,7 +489,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-field_links'
+  // Exported field_instance: 'node-gruppi-field_links'.
   $field_instances['node-gruppi-field_links'] = array(
     'bundle' => 'gruppi',
     'default_value' => NULL,
@@ -552,7 +559,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-field_media'
+  // Exported field_instance: 'node-gruppi-field_media'.
   $field_instances['node-gruppi-field_media'] = array(
     'bundle' => 'gruppi',
     'deleted' => 0,
@@ -629,7 +636,7 @@ function ildeposito_gruppi_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-gruppi-field_tipo_gruppo'
+  // Exported field_instance: 'node-gruppi-field_tipo_gruppo'.
   $field_instances['node-gruppi-field_tipo_gruppo'] = array(
     'bundle' => 'gruppi',
     'default_value' => NULL,

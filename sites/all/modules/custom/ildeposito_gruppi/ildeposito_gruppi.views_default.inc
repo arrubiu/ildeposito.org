@@ -36,7 +36,7 @@ function ildeposito_gruppi_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'openlayers_map';
   $handler->display->display_options['style_options']['map'] = 'cori';
-  /* Campo: Contenuto: Geofield */
+  /* Field: Content: Geofield */
   $handler->display->display_options['fields']['field_geofield']['id'] = 'field_geofield';
   $handler->display->display_options['fields']['field_geofield']['table'] = 'field_data_field_geofield';
   $handler->display->display_options['fields']['field_geofield']['field'] = 'field_geofield';
@@ -46,7 +46,7 @@ function ildeposito_gruppi_views_default_views() {
   $handler->display->display_options['fields']['field_geofield']['settings'] = array(
     'data' => 'full',
   );
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -54,7 +54,7 @@ function ildeposito_gruppi_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  /* Campo: Contenuto: Indirizzo - Locality (i.e. City) */
+  /* Field: Content: Indirizzo - Locality (i.e. City) */
   $handler->display->display_options['fields']['field_indirizzo_locality']['id'] = 'field_indirizzo_locality';
   $handler->display->display_options['fields']['field_indirizzo_locality']['table'] = 'field_data_field_indirizzo';
   $handler->display->display_options['fields']['field_indirizzo_locality']['field'] = 'field_indirizzo_locality';
@@ -62,18 +62,18 @@ function ildeposito_gruppi_views_default_views() {
   $handler->display->display_options['fields']['field_indirizzo_locality']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_indirizzo_locality']['alter']['text'] = '[title] ([field_indirizzo_locality])';
   $handler->display->display_options['fields']['field_indirizzo_locality']['element_label_colon'] = FALSE;
-  /* Criterio di ordinamento: Contenuto: Titolo */
+  /* Sort criterion: Content: Title */
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';
   $handler->display->display_options['sorts']['title']['field'] = 'title';
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'gruppi' => 'gruppi',
   );
-  /* Criterio del filtro: Workbench Moderation: Pubblicato */
+  /* Filter criterion: Workbench Moderation: Published */
   $handler->display->display_options['filters']['published']['id'] = 'published';
   $handler->display->display_options['filters']['published']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['filters']['published']['field'] = 'published';
@@ -101,13 +101,13 @@ function ildeposito_gruppi_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Nid */
+  /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Campo: Contenuto: Geofield */
+  /* Field: Content: Geofield */
   $handler->display->display_options['fields']['field_geofield']['id'] = 'field_geofield';
   $handler->display->display_options['fields']['field_geofield']['table'] = 'field_data_field_geofield';
   $handler->display->display_options['fields']['field_geofield']['field'] = 'field_geofield';
@@ -117,7 +117,7 @@ function ildeposito_gruppi_views_default_views() {
   $handler->display->display_options['fields']['field_geofield']['settings'] = array(
     'data' => 'full',
   );
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -126,14 +126,14 @@ function ildeposito_gruppi_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Campo: Contenuto: Indirizzo - Administrative area (i.e. State / Province) */
+  /* Field: Content: Indirizzo - Administrative area (i.e. State / Province) */
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['id'] = 'field_indirizzo_administrative_area';
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['table'] = 'field_data_field_indirizzo';
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['field'] = 'field_indirizzo_administrative_area';
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['label'] = '';
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['element_label_colon'] = FALSE;
-  /* Campo: Contenuto: Indirizzo - Locality (i.e. City) */
+  /* Field: Content: Indirizzo - Locality (i.e. City) */
   $handler->display->display_options['fields']['field_indirizzo_locality']['id'] = 'field_indirizzo_locality';
   $handler->display->display_options['fields']['field_indirizzo_locality']['table'] = 'field_data_field_indirizzo';
   $handler->display->display_options['fields']['field_indirizzo_locality']['field'] = 'field_indirizzo_locality';
@@ -163,7 +163,7 @@ function ildeposito_gruppi_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -172,14 +172,14 @@ function ildeposito_gruppi_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  /* Campo: Contenuto: Indirizzo - Administrative area (i.e. State / Province) */
+  /* Field: Content: Indirizzo - Administrative area (i.e. State / Province) */
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['id'] = 'field_indirizzo_administrative_area';
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['table'] = 'field_data_field_indirizzo';
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['field'] = 'field_indirizzo_administrative_area';
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['label'] = '';
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_indirizzo_administrative_area']['element_label_colon'] = FALSE;
-  /* Campo: Contenuto: Indirizzo - Locality (i.e. City) */
+  /* Field: Content: Indirizzo - Locality (i.e. City) */
   $handler->display->display_options['fields']['field_indirizzo_locality']['id'] = 'field_indirizzo_locality';
   $handler->display->display_options['fields']['field_indirizzo_locality']['table'] = 'field_data_field_indirizzo';
   $handler->display->display_options['fields']['field_indirizzo_locality']['field'] = 'field_indirizzo_locality';
@@ -197,6 +197,7 @@ function ildeposito_gruppi_views_default_views() {
     t('Disc'),
     t('[title] ([field_indirizzo_locality])'),
     t('Overlay mappa cori'),
+    t('more'),
     t('[title] - [field_indirizzo_locality] ([field_indirizzo_administrative_area])'),
     t('Mappa'),
     t('Elenco cori'),

@@ -14,7 +14,7 @@ function ildeposito_backoffice_filter_default_formats() {
   $formats['ds_code'] = array(
     'format' => 'ds_code',
     'name' => 'Display Suite code',
-    'cache' => 0,
+    'cache' => 1,
     'status' => 1,
     'weight' => 12,
     'filters' => array(),
@@ -52,11 +52,6 @@ function ildeposito_backoffice_filter_default_formats() {
           'local_paths' => '',
           'protocol_style' => 'full',
         ),
-      ),
-      'emptyparagraphkiller' => array(
-        'weight' => -39,
-        'status' => 1,
-        'settings' => array(),
       ),
     ),
   );

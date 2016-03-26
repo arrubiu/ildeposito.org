@@ -7,7 +7,6 @@ project = ildeposito_gruppi
 dependencies[] = addressfield
 dependencies[] = colorbox
 dependencies[] = ctools
-dependencies[] = custom_formatters
 dependencies[] = date
 dependencies[] = email
 dependencies[] = entityreference

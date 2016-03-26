@@ -9,7 +9,6 @@ dependencies[] = ctools
 dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = forum
-dependencies[] = ildeposito_campi
 dependencies[] = metatag
 dependencies[] = node
 dependencies[] = options

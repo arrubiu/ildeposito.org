@@ -60,7 +60,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Contenuto: Data evento */
+  /* Field: Content: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -78,7 +78,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Contextual filter: Contenuto: Data evento -  start date (field_data_evento) */
+  /* Contextual filter: Content: Data evento -  start date (field_data_evento) */
   $handler->display->display_options['arguments']['field_data_evento_value']['id'] = 'field_data_evento_value';
   $handler->display->display_options['arguments']['field_data_evento_value']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['arguments']['field_data_evento_value']['field'] = 'field_data_evento_value';
@@ -338,7 +338,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['date_format'] = 'medium';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'd/m/Y H:m';
-  /* Field: Commento: Comment */
+  /* Field: Comment: Comment */
   $handler->display->display_options['fields']['comment_body']['id'] = 'comment_body';
   $handler->display->display_options['fields']['comment_body']['table'] = 'field_data_comment_body';
   $handler->display->display_options['fields']['comment_body']['field'] = 'comment_body';
@@ -927,13 +927,13 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Sezione */
+  /* Field: Content: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Field: Contenuto: Anno */
+  /* Field: Content: Anno */
   $handler->display->display_options['fields']['field_anno']['id'] = 'field_anno';
   $handler->display->display_options['fields']['field_anno']['table'] = 'field_data_field_anno';
   $handler->display->display_options['fields']['field_anno']['field'] = 'field_anno';
@@ -946,7 +946,7 @@ function ildeposito_backoffice_views_default_views() {
     'multiple_to' => '',
     'show_repeat_rule' => 'show',
   );
-  /* Field: Contenuto: Informazioni */
+  /* Field: Content: Informazioni */
   $handler->display->display_options['fields']['field_informazioni']['id'] = 'field_informazioni';
   $handler->display->display_options['fields']['field_informazioni']['table'] = 'field_data_field_informazioni';
   $handler->display->display_options['fields']['field_informazioni']['field'] = 'field_informazioni';
@@ -1159,7 +1159,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'riferimento_evento';
-  /* Field: Contenuto: Lingue */
+  /* Field: Content: Lingue */
   $handler->display->display_options['fields']['field_lingua']['id'] = 'field_lingua';
   $handler->display->display_options['fields']['field_lingua']['table'] = 'field_data_field_lingua';
   $handler->display->display_options['fields']['field_lingua']['field'] = 'field_lingua';
@@ -1421,7 +1421,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Autori testo */
+  /* Field: Content: Autori testo */
   $handler->display->display_options['fields']['field_autore_testo']['id'] = 'field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['table'] = 'field_data_field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['field'] = 'field_autore_testo';
@@ -1434,7 +1434,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['edit_node']['label'] = '';
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'Modifica';
-  /* Field: Contenuto: Anno */
+  /* Field: Content: Anno */
   $handler->display->display_options['fields']['field_anno']['id'] = 'field_anno';
   $handler->display->display_options['fields']['field_anno']['table'] = 'field_data_field_anno';
   $handler->display->display_options['fields']['field_anno']['field'] = 'field_anno';
@@ -1456,7 +1456,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'canto' => 'canto',
   );
-  /* Filter criterion: Contenuto: Risorse audio o video (field_link_audio:url) */
+  /* Filter criterion: Content: Risorse audio o video (field_link_audio:url) */
   $handler->display->display_options['filters']['field_link_audio_url']['id'] = 'field_link_audio_url';
   $handler->display->display_options['filters']['field_link_audio_url']['table'] = 'field_data_field_link_audio';
   $handler->display->display_options['filters']['field_link_audio_url']['field'] = 'field_link_audio_url';
@@ -1483,7 +1483,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Autori testo */
+  /* Field: Content: Autori testo */
   $handler->display->display_options['fields']['field_autore_testo']['id'] = 'field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['table'] = 'field_data_field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['field'] = 'field_autore_testo';
@@ -1512,7 +1512,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'canto' => 'canto',
   );
-  /* Filter criterion: Contenuto: Anno (field_anno) */
+  /* Filter criterion: Content: Anno (field_anno) */
   $handler->display->display_options['filters']['field_anno_value']['id'] = 'field_anno_value';
   $handler->display->display_options['filters']['field_anno_value']['table'] = 'field_data_field_anno';
   $handler->display->display_options['filters']['field_anno_value']['field'] = 'field_anno_value';
@@ -1568,7 +1568,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Sezione */
+  /* Field: Content: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -1576,7 +1576,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['group_column'] = 'tid';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Field: Contenuto: Autori testo */
+  /* Field: Content: Autori testo */
   $handler->display->display_options['fields']['field_autore_testo']['id'] = 'field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['table'] = 'field_data_field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['field'] = 'field_autore_testo';
@@ -1624,7 +1624,7 @@ function ildeposito_backoffice_views_default_views() {
     5 => 0,
     6 => 0,
   );
-  /* Filter criterion: Contenuto: Fonte (field_fonte) */
+  /* Filter criterion: Content: Fonte (field_fonte) */
   $handler->display->display_options['filters']['field_fonte_value']['id'] = 'field_fonte_value';
   $handler->display->display_options['filters']['field_fonte_value']['table'] = 'field_data_field_fonte';
   $handler->display->display_options['filters']['field_fonte_value']['field'] = 'field_fonte_value';
@@ -2258,7 +2258,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Sezione */
+  /* Field: Content: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -2266,7 +2266,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Field: Contenuto: Data evento */
+  /* Field: Content: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -2357,7 +2357,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Sezione */
+  /* Field: Content: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -2397,7 +2397,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  /* Filter criterion: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
+  /* Filter criterion: Content: Cognome (o nome del gruppo) (field_cognome) */
   $handler->display->display_options['filters']['field_cognome_value']['id'] = 'field_cognome_value';
   $handler->display->display_options['filters']['field_cognome_value']['table'] = 'field_data_field_cognome';
   $handler->display->display_options['filters']['field_cognome_value']['field'] = 'field_cognome_value';
@@ -2435,7 +2435,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Data evento */
+  /* Field: Content: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -2448,7 +2448,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     'show_repeat_rule' => 'hide',
   );
   $handler->display->display_options['fields']['field_data_evento']['delta_offset'] = '0';
-  /* Field: Contenuto: Sezione */
+  /* Field: Content: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -2456,7 +2456,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Field: Contenuto: Percorsi (editable) */
+  /* Field: Content: Percorsi (editable) */
   $handler->display->display_options['fields']['field_percorso_editable']['id'] = 'field_percorso_editable';
   $handler->display->display_options['fields']['field_percorso_editable']['table'] = 'field_data_field_percorso';
   $handler->display->display_options['fields']['field_percorso_editable']['field'] = 'field_percorso_editable';
@@ -2464,7 +2464,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['field_percorso_editable']['widget_type'] = 'options_select';
   $handler->display->display_options['fields']['field_percorso_editable']['suppress_label'] = 0;
   $handler->display->display_options['fields']['field_percorso_editable']['suppress_description'] = 0;
-  /* Field: Contenuto: Tag (editable) */
+  /* Field: Content: Tag (editable) */
   $handler->display->display_options['fields']['field_tags_editable']['id'] = 'field_tags_editable';
   $handler->display->display_options['fields']['field_tags_editable']['table'] = 'field_data_field_tags';
   $handler->display->display_options['fields']['field_tags_editable']['field'] = 'field_tags_editable';
@@ -2745,7 +2745,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Sezione */
+  /* Field: Content: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -2791,7 +2791,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  /* Filter criterion: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
+  /* Filter criterion: Content: Cognome (o nome del gruppo) (field_cognome) */
   $handler->display->display_options['filters']['field_cognome_value']['id'] = 'field_cognome_value';
   $handler->display->display_options['filters']['field_cognome_value']['table'] = 'field_data_field_cognome';
   $handler->display->display_options['filters']['field_cognome_value']['field'] = 'field_cognome_value';
@@ -2898,7 +2898,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Sezione */
+  /* Field: Content: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -2944,7 +2944,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  /* Filter criterion: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
+  /* Filter criterion: Content: Cognome (o nome del gruppo) (field_cognome) */
   $handler->display->display_options['filters']['field_cognome_value']['id'] = 'field_cognome_value';
   $handler->display->display_options['filters']['field_cognome_value']['table'] = 'field_data_field_cognome';
   $handler->display->display_options['filters']['field_cognome_value']['field'] = 'field_cognome_value';
@@ -3222,7 +3222,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Presenza accordi */
+  /* Field: Content: Presenza accordi */
   $handler->display->display_options['fields']['field_presenza_accordi']['id'] = 'field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['table'] = 'field_data_field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['field'] = 'field_presenza_accordi';
@@ -3304,7 +3304,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Contenuto: Presenza accordi */
+  /* Field: Content: Presenza accordi */
   $handler->display->display_options['fields']['field_presenza_accordi']['id'] = 'field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['table'] = 'field_data_field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['field'] = 'field_presenza_accordi';

@@ -10,13 +10,6 @@
 function ildeposito_ct_libreria_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: 'clear libreria feeds'.
-  $permissions['clear libreria feeds'] = array(
-    'name' => 'clear libreria feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
   // Exported permission: 'create voce_libreria content'.
   $permissions['create voce_libreria content'] = array(
     'name' => 'create voce_libreria content',
@@ -93,13 +86,6 @@ function ildeposito_ct_libreria_user_default_permissions() {
     'module' => 'override_node_options',
   );
 
-  // Exported permission: 'import libreria feeds'.
-  $permissions['import libreria feeds'] = array(
-    'name' => 'import libreria feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
   // Exported permission: 'override voce_libreria authored by option'.
   $permissions['override voce_libreria authored by option'] = array(
     'name' => 'override voce_libreria authored by option',
@@ -140,20 +126,6 @@ function ildeposito_ct_libreria_user_default_permissions() {
     'name' => 'override voce_libreria sticky option',
     'roles' => array(),
     'module' => 'override_node_options',
-  );
-
-  // Exported permission: 'tamper libreria'.
-  $permissions['tamper libreria'] = array(
-    'name' => 'tamper libreria',
-    'roles' => array(),
-    'module' => 'feeds_tamper',
-  );
-
-  // Exported permission: 'unlock libreria feeds'.
-  $permissions['unlock libreria feeds'] = array(
-    'name' => 'unlock libreria feeds',
-    'roles' => array(),
-    'module' => 'feeds',
   );
 
   return $permissions;
