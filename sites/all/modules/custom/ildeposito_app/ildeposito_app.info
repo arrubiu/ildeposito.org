@@ -1,5 +1,6 @@
 name = ildeposito_app
 core = 7.x
+version = 7.x-1.0
 package = Features
 dependencies[] = views
 features[ctools][] = views:views_default:3.0
