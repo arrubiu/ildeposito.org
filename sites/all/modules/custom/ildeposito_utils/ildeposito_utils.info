@@ -65,3 +65,4 @@ features[elysia_cron][] = xmlsitemap_cron
 features[elysia_cron][] = xmlsitemap_engines_cron
 features[elysia_cron][] = xmlsitemap_menu_cron
 features[elysia_cron][] = xmlsitemap_node_cron
+

@@ -10,7 +10,7 @@
 function ildeposito_utenti_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'user-user-field_messggio_personale'
+  // Exported field_instance: 'user-user-field_messggio_personale'.
   $field_instances['user-user-field_messggio_personale'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -53,7 +53,7 @@ function ildeposito_utenti_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_nickname'
+  // Exported field_instance: 'user-user-field_nickname'.
   $field_instances['user-user-field_nickname'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
