@@ -47,16 +47,16 @@ function ildeposito_ct_articolo_views_default_views() {
   $handler->display->display_options['style_options']['row_class'] = 'risultato';
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'articolo';
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Indexed Contenuto: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Criterio di ordinamento: Indexed Contenuto: Data di creazione */
+  /* Sort criterion: Indexed Contenuto: Date created */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Criterio del filtro: Indexed Contenuto: Tipo di contenuto */
+  /* Filter criterion: Indexed Contenuto: Content type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -83,10 +83,11 @@ function ildeposito_ct_articolo_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('ID del nodo'),
+    t('Node ID'),
     t('.'),
     t(','),
     t('Blog'),
+    t('more'),
   );
   $export['contenuti_articoli'] = $view;
 

@@ -10,7 +10,7 @@
 function ildeposito_tassonomie_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'taxonomy_term-lingue-field_old_id'
+  // Exported field_instance: 'taxonomy_term-lingue-field_old_id'.
   $field_instances['taxonomy_term-lingue-field_old_id'] = array(
     'bundle' => 'lingue',
     'default_value' => NULL,
@@ -68,7 +68,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-localizzazione-field_old_id'
+  // Exported field_instance: 'taxonomy_term-localizzazione-field_old_id'.
   $field_instances['taxonomy_term-localizzazione-field_old_id'] = array(
     'bundle' => 'localizzazione',
     'default_value' => NULL,
@@ -126,7 +126,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-percorsi-field_images'
+  // Exported field_instance: 'taxonomy_term-percorsi-field_images'.
   $field_instances['taxonomy_term-percorsi-field_images'] = array(
     'bundle' => 'percorsi',
     'default_value' => array(),
@@ -214,7 +214,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sezioni-field_descrizione_metatag'
+  // Exported field_instance: 'taxonomy_term-sezioni-field_descrizione_metatag'.
   $field_instances['taxonomy_term-sezioni-field_descrizione_metatag'] = array(
     'bundle' => 'sezioni',
     'default_value' => NULL,
@@ -268,7 +268,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sezioni-field_images'
+  // Exported field_instance: 'taxonomy_term-sezioni-field_images'.
   $field_instances['taxonomy_term-sezioni-field_images'] = array(
     'bundle' => 'sezioni',
     'default_value' => array(),
@@ -353,7 +353,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sezioni-field_old_id'
+  // Exported field_instance: 'taxonomy_term-sezioni-field_old_id'.
   $field_instances['taxonomy_term-sezioni-field_old_id'] = array(
     'bundle' => 'sezioni',
     'default_value' => NULL,
@@ -405,7 +405,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sezioni-field_periodo'
+  // Exported field_instance: 'taxonomy_term-sezioni-field_periodo'.
   $field_instances['taxonomy_term-sezioni-field_periodo'] = array(
     'bundle' => 'sezioni',
     'default_value' => NULL,
@@ -420,7 +420,9 @@ function ildeposito_tassonomie_field_default_field_instances() {
           'more_text' => 'Read more',
           'summary_handler' => 'full',
           'trim_length' => 300,
+          'trim_link' => FALSE,
           'trim_options' => array(),
+          'trim_preserve_tags' => '',
           'trim_suffix' => '...',
           'trim_type' => 'chars',
         ),
@@ -460,7 +462,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-tags-field_descrizione_metatag'
+  // Exported field_instance: 'taxonomy_term-tags-field_descrizione_metatag'.
   $field_instances['taxonomy_term-tags-field_descrizione_metatag'] = array(
     'bundle' => 'tags',
     'default_value' => NULL,
@@ -514,7 +516,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-tags-field_old_id'
+  // Exported field_instance: 'taxonomy_term-tags-field_old_id'.
   $field_instances['taxonomy_term-tags-field_old_id'] = array(
     'bundle' => 'tags',
     'default_value' => NULL,
@@ -563,7 +565,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-tematiche-field_images'
+  // Exported field_instance: 'taxonomy_term-tematiche-field_images'.
   $field_instances['taxonomy_term-tematiche-field_images'] = array(
     'bundle' => 'tematiche',
     'deleted' => 0,
@@ -643,7 +645,7 @@ function ildeposito_tassonomie_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-tematiche-field_old_id'
+  // Exported field_instance: 'taxonomy_term-tematiche-field_old_id'.
   $field_instances['taxonomy_term-tematiche-field_old_id'] = array(
     'bundle' => 'tematiche',
     'default_value' => NULL,

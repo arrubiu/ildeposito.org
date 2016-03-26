@@ -86,21 +86,9 @@ function ildeposito_backoffice_ckeditor_profile_defaults() {
               ),
             ),
           ),
-          'media' => array(
-            'name' => 'media',
-            'desc' => 'Plugin for inserting images from Drupal media module',
-            'path' => '%plugin_dir%media/',
-            'buttons' => array(
-              'Media' => array(
-                'label' => 'Media',
-                'icon' => 'images/icon.gif',
-              ),
-            ),
-            'default' => 'f',
-          ),
           'mediaembed' => array(
             'name' => 'mediaembed',
-            'desc' => 'Plugin for inserting Drupal embeded media',
+            'desc' => 'Plugin for embedding HTML snippets',
             'path' => '%plugin_dir%mediaembed/',
             'buttons' => array(
               'MediaEmbed' => array(
@@ -114,7 +102,7 @@ function ildeposito_backoffice_ckeditor_profile_defaults() {
             'name' => 'picture_ckeditor',
             'desc' => 'Support responsive images with the Picture module.',
             'buttons' => FALSE,
-            'path' => '%base_path%sites/all/modules/contrib/picture/plugins/',
+            'path' => '%base_path%sites/all/modules/contrib/picture/ckeditor/plugins/',
             'default' => 't',
           ),
         ),
@@ -193,6 +181,7 @@ function ildeposito_backoffice_ckeditor_profile_defaults() {
         'ckeditor_load_time_out' => 0,
         'scayt_autoStartup' => 'f',
         'html_entities' => 'f',
+        'loadPlugins' => array(),
       ),
       'input_formats' => array(
         'full_html' => 'Full HTML',

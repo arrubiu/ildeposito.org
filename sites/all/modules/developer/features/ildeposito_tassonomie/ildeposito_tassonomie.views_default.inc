@@ -35,14 +35,14 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'openlayers_map';
   $handler->display->display_options['style_options']['map'] = 'mappa_percorsoclone_of_eventi_mappa';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Geofield */
+  /* Field: Contenuto: Geofield */
   $handler->display->display_options['fields']['field_geofield']['id'] = 'field_geofield';
   $handler->display->display_options['fields']['field_geofield']['table'] = 'field_data_field_geofield';
   $handler->display->display_options['fields']['field_geofield']['field'] = 'field_geofield';
@@ -52,12 +52,12 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['field_geofield']['settings'] = array(
     'data' => 'full',
   );
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filtro contestuale: Contenuto: Percorsi (field_percorso) */
+  /* Contextual filter: Broken/missing handler */
   $handler->display->display_options['arguments']['field_percorso_tid']['id'] = 'field_percorso_tid';
   $handler->display->display_options['arguments']['field_percorso_tid']['table'] = 'field_data_field_percorso';
   $handler->display->display_options['arguments']['field_percorso_tid']['field'] = 'field_percorso_tid';
@@ -67,14 +67,14 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_percorso_tid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_percorso_tid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_percorso_tid']['summary_options']['items_per_page'] = '25';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -118,6 +118,7 @@ function ildeposito_tassonomie_views_default_views() {
     t('Disc'),
     t('Tutti'),
     t('Mappa percorso'),
+    t('more'),
     t('Mappa Overlay Percorso'),
   );
   $export['mappa_percorso'] = $view;
@@ -157,18 +158,18 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['style_options']['row_class'] = 'risultato grid-9 ildeposito-col';
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'percorso';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Criterio di ordinamento: Contenuto: Data evento -  data di inizio (field_data_evento) */
+  /* Sort criterion: Contenuto: Data evento -  start date (field_data_evento) */
   $handler->display->display_options['sorts']['field_data_evento_value']['id'] = 'field_data_evento_value';
   $handler->display->display_options['sorts']['field_data_evento_value']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['sorts']['field_data_evento_value']['field'] = 'field_data_evento_value';
-  /* Filtro contestuale: Contenuto: Percorsi (field_percorso) */
+  /* Contextual filter: Broken/missing handler */
   $handler->display->display_options['arguments']['field_percorso_tid']['id'] = 'field_percorso_tid';
   $handler->display->display_options['arguments']['field_percorso_tid']['table'] = 'field_data_field_percorso';
   $handler->display->display_options['arguments']['field_percorso_tid']['field'] = 'field_percorso_tid';
@@ -178,21 +179,21 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['arguments']['field_percorso_tid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_percorso_tid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_percorso_tid']['summary_options']['items_per_page'] = '25';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'evento' => 'evento',
   );
-  /* Criterio del filtro: Contenuto: Data evento (field_data_evento:delta) */
+  /* Filter criterion: Contenuto: Data evento (field_data_evento:delta) */
   $handler->display->display_options['filters']['delta']['id'] = 'delta';
   $handler->display->display_options['filters']['delta']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['filters']['delta']['field'] = 'delta';
@@ -211,6 +212,7 @@ function ildeposito_tassonomie_views_default_views() {
     t('Disc'),
     t('Tutti'),
     t('Block'),
+    t('more'),
   );
   $export['percorsi_eventi'] = $view;
 
@@ -250,26 +252,26 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -336,21 +338,21 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['style_options']['row_class_special'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
-  /* Intestazione: Globale: Area della vista */
+  /* Header: Global: View area */
   $handler->display->display_options['header']['view']['id'] = 'view';
   $handler->display->display_options['header']['view']['table'] = 'views';
   $handler->display->display_options['header']['view']['field'] = 'view';
   $handler->display->display_options['header']['view']['view_to_insert'] = 'termini_descrizione:block';
   $handler->display->display_options['header']['view']['inherit_arguments'] = TRUE;
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Indexed Contenuto: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Criterio di ordinamento: Indexed Contenuto: Titolo - Ordinamento */
+  /* Sort criterion: Indexed Contenuto: Titolo - Ordinamento */
   $handler->display->display_options['sorts']['search_api_aggregation_1']['id'] = 'search_api_aggregation_1';
   $handler->display->display_options['sorts']['search_api_aggregation_1']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['sorts']['search_api_aggregation_1']['field'] = 'search_api_aggregation_1';
-  /* Filtro contestuale: Indexed Contenuto: Sezione */
+  /* Contextual filter: Indexed Contenuto: Sezione */
   $handler->display->display_options['arguments']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['arguments']['field_sezione']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_sezione']['field'] = 'field_sezione';
@@ -361,7 +363,7 @@ function ildeposito_tassonomie_views_default_views() {
   /* Display: Sezioni */
   $handler = $view->new_display('block', 'Sezioni', 'contenuti_sezione');
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Sezione */
+  /* Contextual filter: Indexed Contenuto: Sezione */
   $handler->display->display_options['arguments']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['arguments']['field_sezione']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_sezione']['field'] = 'field_sezione';
@@ -383,7 +385,7 @@ function ildeposito_tassonomie_views_default_views() {
   /* Display: Tematiche */
   $handler = $view->new_display('block', 'Tematiche', 'contenuti_tematica');
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Tematiche */
+  /* Contextual filter: Indexed Contenuto: Tematiche */
   $handler->display->display_options['arguments']['field_tematica']['id'] = 'field_tematica';
   $handler->display->display_options['arguments']['field_tematica']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_tematica']['field'] = 'field_tematica';
@@ -404,7 +406,7 @@ function ildeposito_tassonomie_views_default_views() {
   /* Display: Lingue */
   $handler = $view->new_display('block', 'Lingue', 'contenuti_lingua');
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Lingue */
+  /* Contextual filter: Indexed Contenuto: Lingua traduzione */
   $handler->display->display_options['arguments']['field_lingua']['id'] = 'field_lingua';
   $handler->display->display_options['arguments']['field_lingua']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_lingua']['field'] = 'field_lingua';
@@ -425,7 +427,7 @@ function ildeposito_tassonomie_views_default_views() {
   /* Display: Localizzazioni */
   $handler = $view->new_display('block', 'Localizzazioni', 'contenuti_localizzazioni');
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Localizzazioni */
+  /* Contextual filter: Indexed Contenuto: Localizzazioni */
   $handler->display->display_options['arguments']['field_localizzazione']['id'] = 'field_localizzazione';
   $handler->display->display_options['arguments']['field_localizzazione']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_localizzazione']['field'] = 'field_localizzazione';
@@ -465,13 +467,13 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['row_options']['view_mode'] = 'percorso';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Indexed Contenuto: Evento ordinamento */
+  /* Sort criterion: Indexed Contenuto: Evento ordinamento */
   $handler->display->display_options['sorts']['field_evento_ordinamento']['id'] = 'field_evento_ordinamento';
   $handler->display->display_options['sorts']['field_evento_ordinamento']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['sorts']['field_evento_ordinamento']['field'] = 'field_evento_ordinamento';
   $handler->display->display_options['sorts']['field_evento_ordinamento']['order'] = 'DESC';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Percorsi */
+  /* Contextual filter: Indexed Contenuto: Percorsi */
   $handler->display->display_options['arguments']['field_percorso']['id'] = 'field_percorso';
   $handler->display->display_options['arguments']['field_percorso']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_percorso']['field'] = 'field_percorso';
@@ -493,7 +495,7 @@ function ildeposito_tassonomie_views_default_views() {
   /* Display: Tags */
   $handler = $view->new_display('block', 'Tags', 'contenuti_tags');
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Tag */
+  /* Contextual filter: Indexed Contenuto: Tag */
   $handler->display->display_options['arguments']['field_tags']['id'] = 'field_tags';
   $handler->display->display_options['arguments']['field_tags']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_tags']['field'] = 'field_tags';
@@ -524,7 +526,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: Tipo voce */
+  /* Contextual filter: Indexed Contenuto: Tipo voce */
   $handler->display->display_options['arguments']['field_tipo_voce']['id'] = 'field_tipo_voce';
   $handler->display->display_options['arguments']['field_tipo_voce']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['field_tipo_voce']['field'] = 'field_tipo_voce';
@@ -558,11 +560,12 @@ function ildeposito_tassonomie_views_default_views() {
     t('‹ prec'),
     t('succ ›'),
     t('ultima »'),
-    t('ID del nodo'),
+    t('Node ID'),
     t('.'),
     t(','),
     t('Tutti'),
     t('Sezioni'),
+    t('more'),
     t('%1'),
     t('Tematiche'),
     t('Contentuti per la tematica \'%1\''),
@@ -607,12 +610,12 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['style_options']['row_class'] = 'risultato grid-8 ildeposito-col';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5981';
-  /* Campo: Termine della tassonomia: Nome */
+  /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['name']['field'] = 'name';
@@ -620,11 +623,11 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_taxonomy'] = TRUE;
-  /* Criterio di ordinamento: Termine della tassonomia: Peso */
+  /* Sort criterion: Taxonomy term: Weight */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
   $handler->display->display_options['sorts']['weight']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['sorts']['weight']['field'] = 'weight';
-  /* Criterio del filtro: Termine della tassonomia: Vocabolario */
+  /* Filter criterion: Taxonomy term: Vocabulary */
   $handler->display->display_options['filters']['vid']['id'] = 'vid';
   $handler->display->display_options['filters']['vid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['filters']['vid']['field'] = 'vid';
@@ -643,7 +646,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['row_options']['hide_empty'] = TRUE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Termine della tassonomia: ID Termine */
+  /* Field: Taxonomy term: Term ID */
   $handler->display->display_options['fields']['tid']['id'] = 'tid';
   $handler->display->display_options['fields']['tid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['tid']['field'] = 'tid';
@@ -651,7 +654,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['tid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['tid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['tid']['separator'] = '';
-  /* Campo: Termine della tassonomia: Nome */
+  /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['name']['field'] = 'name';
@@ -659,7 +662,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_taxonomy'] = TRUE;
-  /* Campo: Termine della tassonomia: Periodo */
+  /* Field: Termine della tassonomia: Periodo */
   $handler->display->display_options['fields']['field_periodo']['id'] = 'field_periodo';
   $handler->display->display_options['fields']['field_periodo']['table'] = 'field_data_field_periodo';
   $handler->display->display_options['fields']['field_periodo']['field'] = 'field_periodo';
@@ -669,7 +672,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['field_periodo']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_periodo']['element_wrapper_type'] = 'div';
   $handler->display->display_options['fields']['field_periodo']['element_wrapper_class'] = 'periodo';
-  /* Campo: Campo: Immagini */
+  /* Field: Field: Immagini */
   $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
   $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
   $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
@@ -680,7 +683,7 @@ function ildeposito_tassonomie_views_default_views() {
     'image_style' => 'elenco_termine',
     'image_link' => 'content',
   );
-  /* Campo: Termine della tassonomia: Descrizione del termine */
+  /* Field: Taxonomy term: Term description */
   $handler->display->display_options['fields']['description']['id'] = 'description';
   $handler->display->display_options['fields']['description']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['description']['field'] = 'description';
@@ -709,14 +712,14 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['defaults']['css_class'] = FALSE;
   $handler->display->display_options['css_class'] = 'elenco-termini elenco-tematiche';
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5982';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Termine della tassonomia: Vocabolario */
+  /* Filter criterion: Taxonomy term: Vocabulary */
   $handler->display->display_options['filters']['vid']['id'] = 'vid';
   $handler->display->display_options['filters']['vid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['filters']['vid']['field'] = 'vid';
@@ -737,14 +740,14 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['defaults']['css_class'] = FALSE;
   $handler->display->display_options['css_class'] = 'elenco-termini elenco-lingue';
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5983';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Termine della tassonomia: Vocabolario */
+  /* Filter criterion: Taxonomy term: Vocabulary */
   $handler->display->display_options['filters']['vid']['id'] = 'vid';
   $handler->display->display_options['filters']['vid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['filters']['vid']['field'] = 'vid';
@@ -777,14 +780,14 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['css_class'] = 'elenco-termini elenco-localizzazioni';
   $handler->display->display_options['display_description'] = 'Le localizzazioni dell\'archivio de ilDeposito.org';
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5987';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Termine della tassonomia: Vocabolario */
+  /* Filter criterion: Taxonomy term: Vocabulary */
   $handler->display->display_options['filters']['vid']['id'] = 'vid';
   $handler->display->display_options['filters']['vid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['filters']['vid']['field'] = 'vid';
@@ -823,13 +826,13 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5986';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Termine della tassonomia: Nome */
+  /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['name']['field'] = 'name';
@@ -837,7 +840,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_taxonomy'] = TRUE;
-  /* Campo: Campo: Immagini */
+  /* Field: Field: Immagini */
   $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
   $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
   $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
@@ -848,7 +851,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['field_images']['settings'] = array(
     'file_view_mode' => 'elenco_termini_contenuti',
   );
-  /* Campo: Termine della tassonomia: Descrizione del termine */
+  /* Field: Taxonomy term: Term description */
   $handler->display->display_options['fields']['description']['id'] = 'description';
   $handler->display->display_options['fields']['description']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['description']['field'] = 'description';
@@ -859,7 +862,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['description']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Termine della tassonomia: Vocabolario */
+  /* Filter criterion: Taxonomy term: Vocabulary */
   $handler->display->display_options['filters']['vid']['id'] = 'vid';
   $handler->display->display_options['filters']['vid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['filters']['vid']['field'] = 'vid';
@@ -891,14 +894,14 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['defaults']['css_class'] = FALSE;
   $handler->display->display_options['css_class'] = 'elenco-termini elenco-tags';
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5988';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Termine della tassonomia: Vocabolario */
+  /* Filter criterion: Taxonomy term: Vocabulary */
   $handler->display->display_options['filters']['vid']['id'] = 'vid';
   $handler->display->display_options['filters']['vid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['filters']['vid']['field'] = 'vid';
@@ -932,6 +935,7 @@ function ildeposito_tassonomie_views_default_views() {
     t('Asc'),
     t('Disc'),
     t('Sezioni'),
+    t('more'),
     t('.'),
     t('Tematiche'),
     t('I tag dell\'archivio'),
@@ -976,7 +980,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '1';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'entity';
-  /* Campo: Termine della tassonomia: Nome */
+  /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['name']['field'] = 'name';
@@ -984,7 +988,7 @@ function ildeposito_tassonomie_views_default_views() {
   $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_taxonomy'] = TRUE;
-  /* Filtro contestuale: Termine della tassonomia: ID Termine */
+  /* Contextual filter: Taxonomy term: Term ID */
   $handler->display->display_options['arguments']['tid']['id'] = 'tid';
   $handler->display->display_options['arguments']['tid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['arguments']['tid']['field'] = 'tid';
@@ -1008,6 +1012,7 @@ function ildeposito_tassonomie_views_default_views() {
     t('Disc'),
     t('Tutti'),
     t('Block'),
+    t('more'),
   );
   $export['termini_descrizione'] = $view;
 

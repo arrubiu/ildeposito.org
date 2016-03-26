@@ -8,7 +8,7 @@
  * Implements hook_field_group_info().
  */
 function ildeposito_ct_evento_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -37,7 +37,7 @@ function ildeposito_ct_evento_field_group_info() {
       ),
     ),
   );
-  $export['group_categorie|node|evento|form'] = $field_group;
+  $field_groups['group_categorie|node|evento|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -62,7 +62,7 @@ function ildeposito_ct_evento_field_group_info() {
       ),
     ),
   );
-  $export['group_impostazioni|node|evento|form'] = $field_group;
+  $field_groups['group_impostazioni|node|evento|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -90,7 +90,7 @@ function ildeposito_ct_evento_field_group_info() {
       ),
     ),
   );
-  $export['group_localizzazioni|node|evento|form'] = $field_group;
+  $field_groups['group_localizzazioni|node|evento|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -122,7 +122,7 @@ function ildeposito_ct_evento_field_group_info() {
       ),
     ),
   );
-  $export['group_principale|node|evento|form'] = $field_group;
+  $field_groups['group_principale|node|evento|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -152,7 +152,15 @@ function ildeposito_ct_evento_field_group_info() {
       ),
     ),
   );
-  $export['group_staff|node|evento|form'] = $field_group;
+  $field_groups['group_staff|node|evento|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Categorie');
+  t('Impostazioni');
+  t('Localizzazioni');
+  t('Principale');
+  t('Staff only');
+
+  return $field_groups;
 }

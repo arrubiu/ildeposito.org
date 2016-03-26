@@ -10,7 +10,7 @@
 function ildeposito_media_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'file-image-field_file_image_alt_text'
+  // Exported field_instance: 'file-image-field_file_image_alt_text'.
   $field_instances['file-image-field_file_image_alt_text'] = array(
     'bundle' => 'image',
     'default_value' => NULL,
@@ -133,7 +133,7 @@ function ildeposito_media_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'file-image-field_file_image_title_text'
+  // Exported field_instance: 'file-image-field_file_image_title_text'.
   $field_instances['file-image-field_file_image_title_text'] = array(
     'bundle' => 'image',
     'default_value' => NULL,
@@ -226,7 +226,7 @@ function ildeposito_media_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'file-image-field_fonte_text'
+  // Exported field_instance: 'file-image-field_fonte_text'.
   $field_instances['file-image-field_fonte_text'] = array(
     'bundle' => 'image',
     'default_value' => NULL,
@@ -323,7 +323,7 @@ function ildeposito_media_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'file-image-field_header_image'
+  // Exported field_instance: 'file-image-field_header_image'.
   $field_instances['file-image-field_header_image'] = array(
     'bundle' => 'image',
     'default_value' => array(
@@ -415,7 +415,7 @@ function ildeposito_media_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'file-image-field_links'
+  // Exported field_instance: 'file-image-field_links'.
   $field_instances['file-image-field_links'] = array(
     'bundle' => 'image',
     'default_value' => NULL,

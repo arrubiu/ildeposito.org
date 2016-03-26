@@ -10,7 +10,7 @@
 function ildeposito_ct_articolo_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_articolo-comment_body'
+  // Exported field_instance: 'comment-comment_node_articolo-comment_body'.
   $field_instances['comment-comment_node_articolo-comment_body'] = array(
     'bundle' => 'comment_node_articolo',
     'default_value' => NULL,
@@ -55,7 +55,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-articolo-body'
+  // Exported field_instance: 'node-articolo-body'.
   $field_instances['node-articolo-body'] = array(
     'bundle' => 'articolo',
     'default_value' => NULL,
@@ -113,9 +113,11 @@ function ildeposito_ct_articolo_field_default_field_instances() {
           'more_text' => '[Continua a leggere]',
           'summary_handler' => 'trim',
           'trim_length' => 500,
+          'trim_link' => FALSE,
           'trim_options' => array(
             'text' => 'text',
           ),
+          'trim_preserve_tags' => '',
           'trim_suffix' => '...  ',
           'trim_type' => 'chars',
         ),
@@ -158,7 +160,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-articolo-field_collegamenti'
+  // Exported field_instance: 'node-articolo-field_collegamenti'.
   $field_instances['node-articolo-field_collegamenti'] = array(
     'bundle' => 'articolo',
     'default_value' => NULL,
@@ -167,60 +169,83 @@ function ildeposito_ct_articolo_field_default_field_instances() {
     'display' => array(
       'articolo' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'node_reference',
-        'settings' => array(),
-        'type' => 'node_reference_default',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 4,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
-        'module' => 'node_reference',
-        'settings' => array(),
-        'type' => 'node_reference_default',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'print' => array(
         'label' => 'above',
-        'module' => 'node_reference',
-        'settings' => array(),
-        'type' => 'node_reference_default',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 3,
       ),
       'rss' => array(
         'label' => 'above',
-        'module' => 'node_reference',
-        'settings' => array(),
-        'type' => 'node_reference_default',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'rss_app' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 3,
       ),
       'search_result' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
@@ -233,18 +258,18 @@ function ildeposito_ct_articolo_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'autocomplete_match' => 'contains',
-        'autocomplete_path' => 'node_reference/autocomplete',
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
-      'type' => 'node_reference_autocomplete',
+      'type' => 'entityreference_autocomplete',
       'weight' => 5,
     ),
   );
 
-  // Exported field_instance: 'node-articolo-field_images'
+  // Exported field_instance: 'node-articolo-field_images'.
   $field_instances['node-articolo-field_images'] = array(
     'bundle' => 'articolo',
     'default_value' => array(),
@@ -262,9 +287,20 @@ function ildeposito_ct_articolo_field_default_field_instances() {
         'module' => 'picture',
         'settings' => array(
           'colorbox' => 'articolo',
+          'colorbox_settings' => array(
+            'colorbox_caption' => 'none',
+            'colorbox_caption_custom' => '',
+            'colorbox_gallery' => 'none',
+            'colorbox_gallery_custom' => '',
+            'colorbox_group' => 'articolo',
+            'colorbox_multivalue_index' => NULL,
+          ),
           'fallback_image_style' => 'resp_articolobreakpoints_theme_ildeposito_tv_1x',
           'image_link' => '',
+          'lazyload' => '',
+          'lazyload_aspect_ratio' => '',
           'picture_group' => 'articolo',
+          'picture_mapping' => 'articolo',
         ),
         'type' => 'picture',
         'weight' => 1,
@@ -365,7 +401,7 @@ function ildeposito_ct_articolo_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-articolo-field_tags'
+  // Exported field_instance: 'node-articolo-field_tags'.
   $field_instances['node-articolo-field_tags'] = array(
     'bundle' => 'articolo',
     'default_value' => NULL,
@@ -374,68 +410,87 @@ function ildeposito_ct_articolo_field_default_field_instances() {
     'display' => array(
       'articolo' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'print' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'rss' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'rss_app' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'search_result' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => '',
     'field_name' => 'field_tags',
     'label' => 'Tag',
     'required' => 0,
@@ -443,19 +498,14 @@ function ildeposito_ct_articolo_field_default_field_instances() {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
+      'active' => 1,
+      'module' => 'entityreference',
       'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'popular_tags' => array(
-          'limit' => '',
-          'showhide' => 0,
-          'use' => 1,
-        ),
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
-      'type' => 'taxonomy_autocomplete',
+      'type' => 'entityreference_autocomplete',
       'weight' => 4,
     ),
   );

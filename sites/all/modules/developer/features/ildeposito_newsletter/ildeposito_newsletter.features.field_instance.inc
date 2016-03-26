@@ -10,7 +10,7 @@
 function ildeposito_newsletter_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_simplenews-comment_body'
+  // Exported field_instance: 'comment-comment_node_simplenews-comment_body'.
   $field_instances['comment-comment_node_simplenews-comment_body'] = array(
     'bundle' => 'comment_node_simplenews',
     'default_value' => NULL,
@@ -43,7 +43,7 @@ function ildeposito_newsletter_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-simplenews-body'
+  // Exported field_instance: 'node-simplenews-body'.
   $field_instances['node-simplenews-body'] = array(
     'bundle' => 'simplenews',
     'default_value' => NULL,
@@ -87,7 +87,7 @@ function ildeposito_newsletter_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-simplenews-field_simplenews_term'
+  // Exported field_instance: 'node-simplenews-field_simplenews_term'.
   $field_instances['node-simplenews-field_simplenews_term'] = array(
     'bundle' => 'simplenews',
     'default_value' => NULL,
@@ -96,32 +96,47 @@ function ildeposito_newsletter_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'email_html' => array(
         'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'email_plain' => array(
         'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'email_textalt' => array(
         'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
     ),
@@ -133,14 +148,19 @@ function ildeposito_newsletter_field_default_field_instances() {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
       'type' => 'options_buttons',
       'weight' => 32,
     ),
   );
 
-  // Exported field_instance: 'node-simplenews-field_ultimi_contenuti'
+  // Exported field_instance: 'node-simplenews-field_ultimi_contenuti'.
   $field_instances['node-simplenews-field_ultimi_contenuti'] = array(
     'bundle' => 'simplenews',
     'default_value' => NULL,

@@ -10,7 +10,7 @@
 function ildeposito_ct_autore_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_autore-comment_body'
+  // Exported field_instance: 'comment-comment_node_autore-comment_body'.
   $field_instances['comment-comment_node_autore-comment_body'] = array(
     'bundle' => 'comment_node_autore',
     'default_value' => NULL,
@@ -55,7 +55,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_altri_nomi'
+  // Exported field_instance: 'node-autore-field_altri_nomi'.
   $field_instances['node-autore-field_altri_nomi'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -132,7 +132,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_autori_correlati'
+  // Exported field_instance: 'node-autore-field_autori_correlati'.
   $field_instances['node-autore-field_autori_correlati'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -141,55 +141,78 @@ function ildeposito_ct_autore_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 9,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 9,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 14,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'rss' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 5,
       ),
       'rss_app' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 9,
       ),
       'search_result' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => 'Autore correlato',
     'field_name' => 'field_autori_correlati',
     'label' => 'Autori correlati',
     'required' => 0,
@@ -198,18 +221,18 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'autocomplete_match' => 'contains',
-        'autocomplete_path' => 'node_reference/autocomplete',
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
-      'type' => 'node_reference_autocomplete',
+      'type' => 'entityreference_autocomplete',
       'weight' => 4,
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_biografia'
+  // Exported field_instance: 'node-autore-field_biografia'.
   $field_instances['node-autore-field_biografia'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -286,7 +309,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_cognome'
+  // Exported field_instance: 'node-autore-field_cognome'.
   $field_instances['node-autore-field_cognome'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -361,7 +384,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_images'
+  // Exported field_instance: 'node-autore-field_images'.
   $field_instances['node-autore-field_images'] = array(
     'bundle' => 'autore',
     'default_value' => array(),
@@ -470,7 +493,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_links'
+  // Exported field_instance: 'node-autore-field_links'.
   $field_instances['node-autore-field_links'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -569,7 +592,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_localizzazione'
+  // Exported field_instance: 'node-autore-field_localizzazione'.
   $field_instances['node-autore-field_localizzazione'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -578,46 +601,60 @@ function ildeposito_ct_autore_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'rss' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'rss_app' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'search_result' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => 'Localizzazione',
     'field_name' => 'field_localizzazione',
     'label' => 'Localizzazioni',
     'required' => 0,
@@ -628,14 +665,16 @@ function ildeposito_ct_autore_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
       ),
       'type' => 'options_select',
       'weight' => 7,
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_nome'
+  // Exported field_instance: 'node-autore-field_nome'.
   $field_instances['node-autore-field_nome'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -710,7 +749,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_old_id'
+  // Exported field_instance: 'node-autore-field_old_id'.
   $field_instances['node-autore-field_old_id'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -786,7 +825,7 @@ function ildeposito_ct_autore_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_sezione'
+  // Exported field_instance: 'node-autore-field_sezione'.
   $field_instances['node-autore-field_sezione'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -795,66 +834,78 @@ function ildeposito_ct_autore_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'ds',
+        'module' => 'entityreference',
         'settings' => array(
-          'taxonomy_term_link' => TRUE,
-          'taxonomy_term_separator' => ', ',
+          'link' => TRUE,
         ),
-        'type' => 'ds_taxonomy_separator',
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 3,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 19,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'rss' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 9,
       ),
       'rss_app' => array(
         'label' => 'inline',
-        'module' => 'ds',
+        'module' => 'entityreference',
         'settings' => array(
-          'taxonomy_term_link' => TRUE,
-          'taxonomy_term_separator' => ', ',
+          'link' => TRUE,
         ),
-        'type' => 'ds_taxonomy_separator',
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'search_result' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
-    'ds_extras_field_template' => '',
     'entity_type' => 'node',
-    'field_label_plurals_singular' => '',
     'field_name' => 'field_sezione',
     'label' => 'Sezione',
     'required' => 1,
@@ -865,14 +916,16 @@ function ildeposito_ct_autore_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
       ),
       'type' => 'options_buttons',
       'weight' => 6,
     ),
   );
 
-  // Exported field_instance: 'node-autore-field_tags'
+  // Exported field_instance: 'node-autore-field_tags'.
   $field_instances['node-autore-field_tags'] = array(
     'bundle' => 'autore',
     'default_value' => NULL,
@@ -881,55 +934,78 @@ function ildeposito_ct_autore_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 15,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'rss' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 6,
       ),
       'rss_app' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
       'search_result' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => '',
     'field_name' => 'field_tags',
     'label' => 'Tag',
     'required' => 0,
@@ -937,19 +1013,14 @@ function ildeposito_ct_autore_field_default_field_instances() {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
+      'active' => 1,
+      'module' => 'entityreference',
       'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'popular_tags' => array(
-          'limit' => '',
-          'showhide' => 0,
-          'use' => 1,
-        ),
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
-      'type' => 'taxonomy_autocomplete',
+      'type' => 'entityreference_autocomplete',
       'weight' => 6,
     ),
   );

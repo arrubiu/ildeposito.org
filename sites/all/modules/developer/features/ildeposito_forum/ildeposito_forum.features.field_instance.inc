@@ -10,7 +10,7 @@
 function ildeposito_forum_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_forum-comment_body'
+  // Exported field_instance: 'comment-comment_node_forum-comment_body'.
   $field_instances['comment-comment_node_forum-comment_body'] = array(
     'bundle' => 'comment_node_forum',
     'default_value' => NULL,
@@ -43,7 +43,7 @@ function ildeposito_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-forum-body'
+  // Exported field_instance: 'node-forum-body'.
   $field_instances['node-forum-body'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -99,7 +99,7 @@ function ildeposito_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-forum-taxonomy_forums'
+  // Exported field_instance: 'node-forum-taxonomy_forums'.
   $field_instances['node-forum-taxonomy_forums'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -108,9 +108,11 @@ function ildeposito_forum_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
       'rss' => array(
@@ -121,16 +123,20 @@ function ildeposito_forum_field_default_field_instances() {
       ),
       'search_result' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
     ),
@@ -142,8 +148,13 @@ function ildeposito_forum_field_default_field_instances() {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
       'type' => 'options_select',
       'weight' => 32,
     ),

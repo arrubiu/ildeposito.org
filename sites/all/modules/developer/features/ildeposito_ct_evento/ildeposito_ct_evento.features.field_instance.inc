@@ -10,7 +10,7 @@
 function ildeposito_ct_evento_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_evento-comment_body'
+  // Exported field_instance: 'comment-comment_node_evento-comment_body'.
   $field_instances['comment-comment_node_evento-comment_body'] = array(
     'bundle' => 'comment_node_evento',
     'default_value' => NULL,
@@ -55,7 +55,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_data_evento'
+  // Exported field_instance: 'node-evento-field_data_evento'.
   $field_instances['node-evento-field_data_evento'] = array(
     'bundle' => 'evento',
     'deleted' => 0,
@@ -70,6 +70,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
           'multiple_from' => 0,
           'multiple_number' => 1,
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'hide',
         ),
         'type' => 'date_default',
@@ -84,6 +85,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
           'multiple_from' => 0,
           'multiple_number' => 1,
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'hide',
         ),
         'type' => 'date_default',
@@ -104,6 +106,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'hide',
         ),
         'type' => 'date_default',
@@ -124,6 +127,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
           'multiple_from' => 0,
           'multiple_number' => 1,
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'hide',
         ),
         'type' => 'date_default',
@@ -138,6 +142,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
           'multiple_from' => 0,
           'multiple_number' => 1,
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'hide',
         ),
         'type' => 'date_default',
@@ -152,6 +157,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
           'multiple_from' => 0,
           'multiple_number' => 1,
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'hide',
         ),
         'type' => 'date_default',
@@ -166,6 +172,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
           'multiple_from' => 0,
           'multiple_number' => 1,
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'hide',
         ),
         'type' => 'date_default',
@@ -180,6 +187,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
           'multiple_from' => 0,
           'multiple_number' => 1,
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'hide',
         ),
         'type' => 'date_default',
@@ -233,7 +241,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_descrizione_social'
+  // Exported field_instance: 'node-evento-field_descrizione_social'.
   $field_instances['node-evento-field_descrizione_social'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -247,37 +255,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 13,
       ),
-      'elenco_termini_contenuti' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'percorso' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'print' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
       ),
-      'riferimento_evento' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'rss' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'rss_app' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
@@ -325,7 +309,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_evento_ordinamento'
+  // Exported field_instance: 'node-evento-field_evento_ordinamento'.
   $field_instances['node-evento-field_evento_ordinamento'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -421,7 +405,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_geofield'
+  // Exported field_instance: 'node-evento-field_geofield'.
   $field_instances['node-evento-field_geofield'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -538,7 +522,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_geolocation'
+  // Exported field_instance: 'node-evento-field_geolocation'.
   $field_instances['node-evento-field_geolocation'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -629,7 +613,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_images'
+  // Exported field_instance: 'node-evento-field_images'.
   $field_instances['node-evento-field_images'] = array(
     'bundle' => 'evento',
     'deleted' => 0,
@@ -746,7 +730,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_informazioni'
+  // Exported field_instance: 'node-evento-field_informazioni'.
   $field_instances['node-evento-field_informazioni'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -853,7 +837,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_links'
+  // Exported field_instance: 'node-evento-field_links'.
   $field_instances['node-evento-field_links'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -973,7 +957,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_localizzazione'
+  // Exported field_instance: 'node-evento-field_localizzazione'.
   $field_instances['node-evento-field_localizzazione'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -982,88 +966,114 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 7,
       ),
       'drupalgap' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 7,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 9,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'percorso' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'print' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 3,
       ),
       'riferimento_evento' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 8,
       ),
       'rss' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 6,
       ),
       'rss_app' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'search_result' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => 'Localizzazione',
     'field_name' => 'field_localizzazione',
     'label' => 'Localizzazioni',
     'required' => 1,
@@ -1073,13 +1083,17 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
       'type' => 'options_select',
       'weight' => 11,
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_old_id'
+  // Exported field_instance: 'node-evento-field_old_id'.
   $field_instances['node-evento-field_old_id'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -1191,7 +1205,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_percorso'
+  // Exported field_instance: 'node-evento-field_percorso'.
   $field_instances['node-evento-field_percorso'] = array(
     'bundle' => 'evento',
     'default_value' => array(),
@@ -1200,86 +1214,114 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 6,
       ),
       'drupalgap' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 6,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 3,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 6,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'percorso' => array(
         'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 8,
       ),
       'print' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'riferimento_evento' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 6,
       ),
       'rss' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 5,
       ),
       'rss_app' => array(
         'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 13,
       ),
       'search_result' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => 'Percorso',
     'field_name' => 'field_percorso',
     'label' => 'Percorsi',
     'required' => 0,
@@ -1289,13 +1331,17 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
       'type' => 'options_buttons',
       'weight' => 9,
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_sezione'
+  // Exported field_instance: 'node-evento-field_sezione'.
   $field_instances['node-evento-field_sezione'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -1304,89 +1350,114 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 8,
       ),
       'drupalgap' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 8,
       ),
       'elenco_archivio' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 12,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'percorso' => array(
         'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 4,
       ),
       'print' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'riferimento_evento' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 9,
       ),
       'rss' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 7,
       ),
       'rss_app' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'search_result' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
-    'ds_extras_field_template' => 'theme_field',
     'entity_type' => 'node',
-    'fences_wrapper' => 'div',
-    'field_label_plurals_singular' => '',
     'field_name' => 'field_sezione',
     'label' => 'Sezione',
     'required' => 1,
@@ -1396,13 +1467,17 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
       'type' => 'options_select',
       'weight' => 8,
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_tags'
+  // Exported field_instance: 'node-evento-field_tags'.
   $field_instances['node-evento-field_tags'] = array(
     'bundle' => 'evento',
     'default_value' => array(),
@@ -1411,84 +1486,114 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 4,
       ),
       'drupalgap' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 4,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 5,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'percorso' => array(
         'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 3,
       ),
       'print' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 4,
       ),
       'riferimento_evento' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 5,
       ),
       'rss' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 4,
       ),
       'rss_app' => array(
         'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 6,
       ),
       'search_result' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => '',
     'field_name' => 'field_tags',
     'label' => 'Tag',
     'required' => 0,
@@ -1496,24 +1601,19 @@ function ildeposito_ct_evento_field_default_field_instances() {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
+      'active' => 1,
+      'module' => 'entityreference',
       'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'popular_tags' => array(
-          'limit' => '',
-          'showhide' => 0,
-          'use' => 1,
-        ),
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
-      'type' => 'taxonomy_autocomplete',
+      'type' => 'entityreference_autocomplete',
       'weight' => 10,
     ),
   );
 
-  // Exported field_instance: 'node-evento-field_tematica'
+  // Exported field_instance: 'node-evento-field_tematica'.
   $field_instances['node-evento-field_tematica'] = array(
     'bundle' => 'evento',
     'default_value' => NULL,
@@ -1522,83 +1622,114 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 5,
       ),
       'drupalgap' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 5,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 12,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 13,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'percorso' => array(
         'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 7,
       ),
       'print' => array(
         'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 8,
       ),
       'riferimento_evento' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
       'rss' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 8,
       ),
       'rss_app' => array(
         'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 7,
       ),
       'search_result' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => 'Tematica',
     'field_name' => 'field_tematica',
     'label' => 'Tematiche',
     'required' => 0,
@@ -1608,13 +1739,17 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
       'type' => 'options_buttons',
       'weight' => 22,
     ),
   );
 
-  // Exported field_instance: 'node-traduzione-field_evento'
+  // Exported field_instance: 'node-traduzione-field_evento'.
   $field_instances['node-traduzione-field_evento'] = array(
     'bundle' => 'traduzione',
     'default_value' => NULL,
@@ -1623,68 +1758,96 @@ function ildeposito_ct_evento_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'node_reference',
-        'settings' => array(),
-        'type' => 'node_reference_default',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 8,
       ),
       'elenco_archivio' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'elenco_termini_contenuti' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'ical' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'print' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'riferimento_evento' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'rss' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'rss_app' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 7,
       ),
       'search_result' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'fences_wrapper' => 'div',
     'field_name' => 'field_evento',
     'label' => 'Evento di riferimento',
     'required' => 0,
@@ -1693,13 +1856,13 @@ function ildeposito_ct_evento_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'autocomplete_match' => 'contains',
-        'autocomplete_path' => 'node_reference/autocomplete',
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
-      'type' => 'node_reference_autocomplete',
+      'type' => 'entityreference_autocomplete',
       'weight' => 9,
     ),
   );

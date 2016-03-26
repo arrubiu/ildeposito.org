@@ -44,19 +44,19 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['style_options']['theme_style'] = '1';
   $handler->display->display_options['style_options']['max_items'] = '0';
   $handler->display->display_options['row_plugin'] = 'calendar_entity';
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['empty'] = TRUE;
   $handler->display->display_options['header']['entity']['entity_id'] = '5989';
-  /* Intestazione: Globale: Block area */
+  /* Header: Global: Block area */
   $handler->display->display_options['header']['block']['id'] = 'block';
   $handler->display->display_options['header']['block']['table'] = 'views';
   $handler->display->display_options['header']['block']['field'] = 'block';
   $handler->display->display_options['header']['block']['empty'] = TRUE;
   $handler->display->display_options['header']['block']['block_to_insert'] = 'menu:menu-eventi';
-  /* Campo: Contenuto: Data evento */
+  /* Field: Contenuto: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -74,7 +74,7 @@ function ildeposito_ct_evento_views_default_views() {
   );
   $handler->display->display_options['fields']['field_data_evento']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_data_evento']['delta_offset'] = '0';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -83,13 +83,13 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_sezione']['element_label_type'] = 'span';
-  /* Campo: Contenuto: Localizzazioni */
+  /* Field: Contenuto: Localizzazioni */
   $handler->display->display_options['fields']['field_localizzazione']['id'] = 'field_localizzazione';
   $handler->display->display_options['fields']['field_localizzazione']['table'] = 'field_data_field_localizzazione';
   $handler->display->display_options['fields']['field_localizzazione']['field'] = 'field_localizzazione';
@@ -97,7 +97,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_localizzazione']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_localizzazione']['element_label_type'] = 'span';
   $handler->display->display_options['fields']['field_localizzazione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Percorsi */
+  /* Field: Contenuto: Percorsi */
   $handler->display->display_options['fields']['field_percorso']['id'] = 'field_percorso';
   $handler->display->display_options['fields']['field_percorso']['table'] = 'field_data_field_percorso';
   $handler->display->display_options['fields']['field_percorso']['field'] = 'field_percorso';
@@ -105,7 +105,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_percorso']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_percorso']['element_label_type'] = 'span';
   $handler->display->display_options['fields']['field_percorso']['delta_offset'] = '0';
-  /* Campo: Contenuto: Geofield */
+  /* Field: Contenuto: Geofield */
   $handler->display->display_options['fields']['field_geofield']['id'] = 'field_geofield';
   $handler->display->display_options['fields']['field_geofield']['table'] = 'field_data_field_geofield';
   $handler->display->display_options['fields']['field_geofield']['field'] = 'field_geofield';
@@ -117,18 +117,18 @@ function ildeposito_ct_evento_views_default_views() {
     'map_preset' => 'evento_slide',
     'data' => 'full',
   );
-  /* Criterio di ordinamento: Contenuto: Data evento -  data di inizio (field_data_evento) */
+  /* Sort criterion: Contenuto: Data evento -  start date (field_data_evento) */
   $handler->display->display_options['sorts']['field_data_evento_value']['id'] = 'field_data_evento_value';
   $handler->display->display_options['sorts']['field_data_evento_value']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['sorts']['field_data_evento_value']['field'] = 'field_data_evento_value';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 0;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -154,7 +154,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Contenuto: Data evento -  data di inizio (field_data_evento) */
+  /* Contextual filter: Contenuto: Data evento -  start date (field_data_evento) */
   $handler->display->display_options['arguments']['field_data_evento_value']['id'] = 'field_data_evento_value';
   $handler->display->display_options['arguments']['field_data_evento_value']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['arguments']['field_data_evento_value']['field'] = 'field_data_evento_value';
@@ -166,14 +166,14 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['field_data_evento_value']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 0;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -204,7 +204,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Data: Data (node) */
+  /* Contextual filter: Date: Date (node) */
   $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['table'] = 'node';
   $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
@@ -240,7 +240,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Data: Data (node) */
+  /* Contextual filter: Date: Date (node) */
   $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['table'] = 'node';
   $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
@@ -280,7 +280,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'calendar_entity';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Data evento */
+  /* Field: Contenuto: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -298,7 +298,7 @@ function ildeposito_ct_evento_views_default_views() {
   );
   $handler->display->display_options['fields']['field_data_evento']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_data_evento']['delta_offset'] = '0';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -307,7 +307,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -319,7 +319,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_sezione']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Data: Data (node) */
+  /* Contextual filter: Date: Date (node) */
   $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['table'] = 'node';
   $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
@@ -370,7 +370,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -379,7 +379,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -390,7 +390,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Data: Data (node) */
+  /* Contextual filter: Date: Date (node) */
   $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['table'] = 'node';
   $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
@@ -426,7 +426,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Data evento */
+  /* Field: Contenuto: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -445,7 +445,7 @@ function ildeposito_ct_evento_views_default_views() {
   );
   $handler->display->display_options['fields']['field_data_evento']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_data_evento']['delta_offset'] = '0';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -456,14 +456,14 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 0;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Data: Data (node) */
+  /* Filter criterion: Date: Date (node) */
   $handler->display->display_options['filters']['date_filter']['id'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['table'] = 'node';
   $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
@@ -521,12 +521,12 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Globale: Riassunto del risultato */
+  /* Header: Global: Result summary */
   $handler->display->display_options['header']['result']['id'] = 'result';
   $handler->display->display_options['header']['result']['table'] = 'views';
   $handler->display->display_options['header']['result']['field'] = 'result';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Data evento */
+  /* Field: Contenuto: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -543,7 +543,7 @@ function ildeposito_ct_evento_views_default_views() {
   );
   $handler->display->display_options['fields']['field_data_evento']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_data_evento']['delta_offset'] = '0';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -552,13 +552,13 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_sezione']['element_label_type'] = 'span';
-  /* Campo: Contenuto: Localizzazioni */
+  /* Field: Contenuto: Localizzazioni */
   $handler->display->display_options['fields']['field_localizzazione']['id'] = 'field_localizzazione';
   $handler->display->display_options['fields']['field_localizzazione']['table'] = 'field_data_field_localizzazione';
   $handler->display->display_options['fields']['field_localizzazione']['field'] = 'field_localizzazione';
@@ -566,7 +566,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_localizzazione']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_localizzazione']['element_label_type'] = 'span';
   $handler->display->display_options['fields']['field_localizzazione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Percorsi */
+  /* Field: Contenuto: Percorsi */
   $handler->display->display_options['fields']['field_percorso']['id'] = 'field_percorso';
   $handler->display->display_options['fields']['field_percorso']['table'] = 'field_data_field_percorso';
   $handler->display->display_options['fields']['field_percorso']['field'] = 'field_percorso';
@@ -576,14 +576,14 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_percorso']['delta_offset'] = '0';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 0;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Data: Data (node) */
+  /* Filter criterion: Date: Date (node) */
   $handler->display->display_options['filters']['date_filter']['id'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['table'] = 'node';
   $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
@@ -607,7 +607,7 @@ function ildeposito_ct_evento_views_default_views() {
     t('Percorso'),
     t('Month'),
     t('Il calendario mensile degli eventi'),
-    t('altro'),
+    t('more'),
     t('Tutti'),
     t('Week'),
     t('Day'),
@@ -661,39 +661,39 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['style_options']['row_class'] = 'risultato';
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['empty'] = TRUE;
   $handler->display->display_options['header']['entity']['entity_id'] = '5973';
-  /* Intestazione: Globale: Block area */
+  /* Header: Global: Block area */
   $handler->display->display_options['header']['block']['id'] = 'block';
   $handler->display->display_options['header']['block']['table'] = 'views';
   $handler->display->display_options['header']['block']['field'] = 'block';
   $handler->display->display_options['header']['block']['block_to_insert'] = 'menu:menu-eventi';
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Indexed Contenuto: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Campo: Gestore rotto/mancante */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_geofield_wkt']['id'] = 'field_geofield_wkt';
   $handler->display->display_options['fields']['field_geofield_wkt']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['field_geofield_wkt']['field'] = 'field_geofield_wkt';
   $handler->display->display_options['fields']['field_geofield_wkt']['label'] = '';
   $handler->display->display_options['fields']['field_geofield_wkt']['element_label_colon'] = FALSE;
-  /* Campo: Indexed Contenuto: Titolo */
+  /* Field: Indexed Contenuto: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_entity'] = 1;
-  /* Criterio di ordinamento: Indexed Contenuto: Evento ordinamento */
+  /* Sort criterion: Indexed Contenuto: Evento ordinamento */
   $handler->display->display_options['sorts']['field_evento_ordinamento']['id'] = 'field_evento_ordinamento';
   $handler->display->display_options['sorts']['field_evento_ordinamento']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['sorts']['field_evento_ordinamento']['field'] = 'field_evento_ordinamento';
-  /* Criterio del filtro: Indexed Contenuto: Tipo di contenuto */
+  /* Filter criterion: Indexed Contenuto: Content type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -704,13 +704,13 @@ function ildeposito_ct_evento_views_default_views() {
   /* Display: Elenco */
   $handler = $view->new_display('page', 'Elenco', 'eventi_elenco');
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['empty'] = TRUE;
   $handler->display->display_options['header']['entity']['entity_id'] = '5972';
-  /* Intestazione: Globale: Block area */
+  /* Header: Global: Block area */
   $handler->display->display_options['header']['block']['id'] = 'block';
   $handler->display->display_options['header']['block']['table'] = 'views';
   $handler->display->display_options['header']['block']['field'] = 'block';
@@ -743,11 +743,11 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Indexed Contenuto: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Campo: Indexed Contenuto: Titolo */
+  /* Field: Indexed Contenuto: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -793,11 +793,11 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Indexed Contenuto: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Campo: Indexed Contenuto: Sezione */
+  /* Field: Indexed Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -809,7 +809,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_sezione']['element_wrapper_class'] = 'sezione';
   $handler->display->display_options['fields']['field_sezione']['link_to_entity'] = 1;
   $handler->display->display_options['fields']['field_sezione']['view_mode'] = 'full';
-  /* Campo: Indexed Contenuto: Percorsi */
+  /* Field: Indexed Contenuto: Percorsi */
   $handler->display->display_options['fields']['field_percorso']['id'] = 'field_percorso';
   $handler->display->display_options['fields']['field_percorso']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['field_percorso']['field'] = 'field_percorso';
@@ -823,7 +823,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_percorso']['element_wrapper_class'] = 'percorso';
   $handler->display->display_options['fields']['field_percorso']['link_to_entity'] = 1;
   $handler->display->display_options['fields']['field_percorso']['view_mode'] = 'full';
-  /* Campo: Indexed Contenuto: Titolo */
+  /* Field: Indexed Contenuto: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -833,14 +833,14 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['text'] = '[title]';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_entity'] = 0;
-  /* Campo: Indexed Contenuto: Titolo - Ordinamento */
+  /* Field: Indexed Contenuto: Titolo - Ordinamento */
   $handler->display->display_options['fields']['search_api_aggregation_1']['id'] = 'search_api_aggregation_1';
   $handler->display->display_options['fields']['search_api_aggregation_1']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['search_api_aggregation_1']['field'] = 'search_api_aggregation_1';
   $handler->display->display_options['fields']['search_api_aggregation_1']['label'] = '';
   $handler->display->display_options['fields']['search_api_aggregation_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['search_api_aggregation_1']['link_to_entity'] = 1;
-  /* Campo: Geofield: Well-known text (indexed) */
+  /* Field: Geofield: Well-known text (indexed) */
   $handler->display->display_options['fields']['field_geofield_geom_1']['id'] = 'field_geofield_geom_1';
   $handler->display->display_options['fields']['field_geofield_geom_1']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['field_geofield_geom_1']['field'] = 'field_geofield_geom';
@@ -866,7 +866,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: ID del nodo */
+  /* Contextual filter: Indexed Contenuto: Node ID */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['nid']['field'] = 'nid';
@@ -907,7 +907,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Geofield: Well-known text (indexed) */
+  /* Field: Geofield: Well-known text (indexed) */
   $handler->display->display_options['fields']['field_geofield_geom']['id'] = 'field_geofield_geom';
   $handler->display->display_options['fields']['field_geofield_geom']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['field_geofield_geom']['field'] = 'field_geofield_geom';
@@ -915,7 +915,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_geofield_geom']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_geofield_geom']['link_to_entity'] = 0;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Indexed Contenuto: ID del nodo */
+  /* Contextual filter: Indexed Contenuto: Node ID */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['arguments']['nid']['field'] = 'nid';
@@ -940,10 +940,11 @@ function ildeposito_ct_evento_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('ID del nodo'),
+    t('Node ID'),
     t('.'),
     t(','),
     t('Elenco'),
+    t('more'),
     t('Mappa'),
     t('La mappa degli eventi'),
     t('Overlay'),
@@ -990,31 +991,31 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Intestazione: Globale: Block area */
+  /* Header: Global: Block area */
   $handler->display->display_options['header']['block']['id'] = 'block';
   $handler->display->display_options['header']['block']['table'] = 'views';
   $handler->display->display_options['header']['block']['field'] = 'block';
   $handler->display->display_options['header']['block']['empty'] = TRUE;
   $handler->display->display_options['header']['block']['block_to_insert'] = 'menu:menu-eventi';
-  /* Campo: Globale: Testo personalizzato */
+  /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -1025,12 +1026,12 @@ function ildeposito_ct_evento_views_default_views() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'eventi_timeline');
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5995';
-  /* Intestazione: Globale: Block area */
+  /* Header: Global: Block area */
   $handler->display->display_options['header']['block']['id'] = 'block';
   $handler->display->display_options['header']['block']['table'] = 'views';
   $handler->display->display_options['header']['block']['field'] = 'block';
@@ -1047,6 +1048,7 @@ function ildeposito_ct_evento_views_default_views() {
     t('Asc'),
     t('Disc'),
     t('Page'),
+    t('more'),
   );
   $export['contenuti_eventi_timeline'] = $view;
 
@@ -1076,7 +1078,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '1';
   $handler->display->display_options['style_plugin'] = 'openlayers_map';
   $handler->display->display_options['style_options']['map'] = 'evento_singolo';
-  /* Campo: Contenuto: Data evento */
+  /* Field: Contenuto: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -1091,7 +1093,7 @@ function ildeposito_ct_evento_views_default_views() {
     'show_repeat_rule' => 'hide',
   );
   $handler->display->display_options['fields']['field_data_evento']['delta_offset'] = '0';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -1101,7 +1103,7 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  /* Campo: Contenuto: Geofield */
+  /* Field: Contenuto: Geofield */
   $handler->display->display_options['fields']['field_geofield']['id'] = 'field_geofield';
   $handler->display->display_options['fields']['field_geofield']['table'] = 'field_data_field_geofield';
   $handler->display->display_options['fields']['field_geofield']['field'] = 'field_geofield';
@@ -1111,12 +1113,12 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['fields']['field_geofield']['settings'] = array(
     'data' => 'full',
   );
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filtro contestuale: Contenuto: Nid */
+  /* Contextual filter: Content: Nid */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'node';
   $handler->display->display_options['arguments']['nid']['field'] = 'nid';
@@ -1126,14 +1128,14 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -1203,21 +1205,21 @@ function ildeposito_ct_evento_views_default_views() {
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'evento' => 'evento',
   );
-  /* Criterio del filtro: Contenuto: Geofield (field_geofield) - proximity */
+  /* Filter criterion: Contenuto: Geofield (field_geofield) - proximity */
   $handler->display->display_options['filters']['field_geofield_distance']['id'] = 'field_geofield_distance';
   $handler->display->display_options['filters']['field_geofield_distance']['table'] = 'field_data_field_geofield';
   $handler->display->display_options['filters']['field_geofield_distance']['field'] = 'field_geofield_distance';
@@ -1243,6 +1245,7 @@ function ildeposito_ct_evento_views_default_views() {
     t('[title]'),
     t('Tutti'),
     t('Mappa evento'),
+    t('more'),
     t('Mappa Evento Overlay'),
     t('Mappa Evento Overlay Prox'),
   );

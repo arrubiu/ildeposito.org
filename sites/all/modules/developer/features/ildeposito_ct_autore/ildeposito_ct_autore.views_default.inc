@@ -47,29 +47,29 @@ function ildeposito_ct_autore_views_default_views() {
   $handler->display->display_options['style_options']['row_class'] = 'risultato';
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Indexed Contenuto: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Campo: Indexed Contenuto: Titolo */
+  /* Field: Indexed Contenuto: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['link_to_entity'] = 1;
-  /* Criterio di ordinamento: Indexed Contenuto: Cognome - Ordinmanento */
+  /* Sort criterion: Indexed Contenuto: Cognome - Ordinmanento */
   $handler->display->display_options['sorts']['search_api_aggregation_3']['id'] = 'search_api_aggregation_3';
   $handler->display->display_options['sorts']['search_api_aggregation_3']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['sorts']['search_api_aggregation_3']['field'] = 'search_api_aggregation_3';
   $handler->display->display_options['filter_groups']['groups'] = array(
     1 => 'OR',
   );
-  /* Criterio del filtro: Indexed Contenuto: Autori musica */
+  /* Filter criterion: Indexed Contenuto: Autori musica */
   $handler->display->display_options['filters']['field_autore_musica']['id'] = 'field_autore_musica';
   $handler->display->display_options['filters']['field_autore_musica']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['field_autore_musica']['field'] = 'field_autore_musica';
   $handler->display->display_options['filters']['field_autore_musica']['value'] = '1';
   $handler->display->display_options['filters']['field_autore_musica']['group'] = 1;
-  /* Criterio del filtro: Indexed Contenuto: Autori testo */
+  /* Filter criterion: Indexed Contenuto: Autori testo */
   $handler->display->display_options['filters']['field_autore_testo']['id'] = 'field_autore_testo';
   $handler->display->display_options['filters']['field_autore_testo']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['field_autore_testo']['field'] = 'field_autore_testo';
@@ -84,19 +84,19 @@ function ildeposito_ct_autore_views_default_views() {
     2 => 'AND',
   );
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Indexed Contenuto: Autori musica */
+  /* Filter criterion: Indexed Contenuto: Autori musica */
   $handler->display->display_options['filters']['field_autore_musica']['id'] = 'field_autore_musica';
   $handler->display->display_options['filters']['field_autore_musica']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['field_autore_musica']['field'] = 'field_autore_musica';
   $handler->display->display_options['filters']['field_autore_musica']['value'] = '1';
   $handler->display->display_options['filters']['field_autore_musica']['group'] = 1;
-  /* Criterio del filtro: Indexed Contenuto: Autori testo */
+  /* Filter criterion: Indexed Contenuto: Autori testo */
   $handler->display->display_options['filters']['field_autore_testo']['id'] = 'field_autore_testo';
   $handler->display->display_options['filters']['field_autore_testo']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['field_autore_testo']['field'] = 'field_autore_testo';
   $handler->display->display_options['filters']['field_autore_testo']['value'] = '2';
   $handler->display->display_options['filters']['field_autore_testo']['group'] = 1;
-  /* Criterio del filtro: Indexed Contenuto: Tipo di contenuto */
+  /* Filter criterion: Indexed Contenuto: Content type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -119,14 +119,14 @@ function ildeposito_ct_autore_views_default_views() {
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5985';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Indexed Contenuto: Tipo di contenuto */
+  /* Filter criterion: Indexed Contenuto: Content type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -163,11 +163,12 @@ function ildeposito_ct_autore_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('ID del nodo'),
+    t('Node ID'),
     t('.'),
     t(','),
-    t('Titolo'),
+    t('Title'),
     t('Autore'),
+    t('more'),
     t('Autori'),
     t('Gli autori dell\'archivio'),
   );

@@ -10,7 +10,7 @@
 function ildeposito_ct_libreria_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_voce_libreria-comment_body'
+  // Exported field_instance: 'comment-comment_node_voce_libreria-comment_body'.
   $field_instances['comment-comment_node_voce_libreria-comment_body'] = array(
     'bundle' => 'comment_node_voce_libreria',
     'default_value' => NULL,
@@ -43,7 +43,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_a_cura_di'
+  // Exported field_instance: 'node-voce_libreria-field_a_cura_di'.
   $field_instances['node-voce_libreria-field_a_cura_di'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => array(
@@ -93,7 +93,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_anno'
+  // Exported field_instance: 'node-voce_libreria-field_anno'.
   $field_instances['node-voce_libreria-field_anno'] = array(
     'bundle' => 'voce_libreria',
     'deleted' => 0,
@@ -108,6 +108,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
@@ -122,6 +123,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
@@ -164,7 +166,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_autore'
+  // Exported field_instance: 'node-voce_libreria-field_autore'.
   $field_instances['node-voce_libreria-field_autore'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => NULL,
@@ -218,7 +220,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_autori_correlati'
+  // Exported field_instance: 'node-voce_libreria-field_autori_correlati'.
   $field_instances['node-voce_libreria-field_autori_correlati'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => NULL,
@@ -227,25 +229,33 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
       'search_result' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => '',
     'field_name' => 'field_autori_correlati',
     'label' => 'Autori correlati',
     'required' => 0,
@@ -254,19 +264,18 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'autocomplete_match' => 'contains',
-        'autocomplete_path' => 'node_reference/autocomplete',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
-      'type' => 'node_reference_autocomplete',
+      'type' => 'entityreference_autocomplete',
       'weight' => 9,
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_citta'
+  // Exported field_instance: 'node-voce_libreria-field_citta'.
   $field_instances['node-voce_libreria-field_citta'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => NULL,
@@ -319,7 +328,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_collana'
+  // Exported field_instance: 'node-voce_libreria-field_collana'.
   $field_instances['node-voce_libreria-field_collana'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => NULL,
@@ -372,7 +381,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_editore'
+  // Exported field_instance: 'node-voce_libreria-field_editore'.
   $field_instances['node-voce_libreria-field_editore'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => NULL,
@@ -425,7 +434,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_images'
+  // Exported field_instance: 'node-voce_libreria-field_images'.
   $field_instances['node-voce_libreria-field_images'] = array(
     'bundle' => 'voce_libreria',
     'deleted' => 0,
@@ -498,7 +507,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_informazioni'
+  // Exported field_instance: 'node-voce_libreria-field_informazioni'.
   $field_instances['node-voce_libreria-field_informazioni'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => NULL,
@@ -551,7 +560,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_links'
+  // Exported field_instance: 'node-voce_libreria-field_links'.
   $field_instances['node-voce_libreria-field_links'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => NULL,
@@ -621,7 +630,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_tags'
+  // Exported field_instance: 'node-voce_libreria-field_tags'.
   $field_instances['node-voce_libreria-field_tags'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => NULL,
@@ -630,26 +639,33 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 7,
       ),
       'search_result' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => '',
     'field_name' => 'field_tags',
     'label' => 'Tag',
     'required' => 0,
@@ -657,24 +673,19 @@ function ildeposito_ct_libreria_field_default_field_instances() {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
+      'active' => 1,
+      'module' => 'entityreference',
       'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'popular_tags' => array(
-          'limit' => '',
-          'showhide' => 0,
-          'use' => 1,
-        ),
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
-      'type' => 'taxonomy_autocomplete',
+      'type' => 'entityreference_autocomplete',
       'weight' => 10,
     ),
   );
 
-  // Exported field_instance: 'node-voce_libreria-field_tipo_voce'
+  // Exported field_instance: 'node-voce_libreria-field_tipo_voce'.
   $field_instances['node-voce_libreria-field_tipo_voce'] = array(
     'bundle' => 'voce_libreria',
     'default_value' => array(),
@@ -683,27 +694,33 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => TRUE,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_label_plurals_singular' => '',
     'field_name' => 'field_tipo_voce',
     'label' => 'Tipo voce',
     'required' => 1,
@@ -714,8 +731,8 @@ function ildeposito_ct_libreria_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
       'type' => 'options_buttons',
@@ -723,7 +740,7 @@ function ildeposito_ct_libreria_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-tipo_libreria-field_images'
+  // Exported field_instance: 'taxonomy_term-tipo_libreria-field_images'.
   $field_instances['taxonomy_term-tipo_libreria-field_images'] = array(
     'bundle' => 'tipo_libreria',
     'deleted' => 0,

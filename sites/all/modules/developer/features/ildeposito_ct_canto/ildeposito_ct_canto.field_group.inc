@@ -8,7 +8,7 @@
  * Implements hook_field_group_info().
  */
 function ildeposito_ct_canto_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -38,7 +38,7 @@ function ildeposito_ct_canto_field_group_info() {
       ),
     ),
   );
-  $export['group_categorie|node|canto|form'] = $field_group;
+  $field_groups['group_categorie|node|canto|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -70,7 +70,7 @@ function ildeposito_ct_canto_field_group_info() {
       ),
     ),
   );
-  $export['group_principale|node|canto|form'] = $field_group;
+  $field_groups['group_principale|node|canto|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -101,7 +101,7 @@ function ildeposito_ct_canto_field_group_info() {
       ),
     ),
   );
-  $export['group_risorse|node|canto|form'] = $field_group;
+  $field_groups['group_risorse|node|canto|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -133,7 +133,7 @@ function ildeposito_ct_canto_field_group_info() {
       ),
     ),
   );
-  $export['group_staff|node|canto|form'] = $field_group;
+  $field_groups['group_staff|node|canto|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -161,7 +161,15 @@ function ildeposito_ct_canto_field_group_info() {
       ),
     ),
   );
-  $export['group_testo|node|canto|form'] = $field_group;
+  $field_groups['group_testo|node|canto|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Categorie');
+  t('Principale');
+  t('Risorse');
+  t('Staff only');
+  t('Testo/Accordi');
+
+  return $field_groups;
 }

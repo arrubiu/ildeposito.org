@@ -6,6 +6,7 @@ version = 7.x-1.0
 project = ildeposito_forum
 dependencies[] = advanced_forum
 dependencies[] = ctools
+dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = forum
 dependencies[] = ildeposito_campi

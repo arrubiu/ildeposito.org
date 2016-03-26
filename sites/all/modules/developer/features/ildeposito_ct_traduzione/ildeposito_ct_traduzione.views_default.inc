@@ -47,33 +47,33 @@ function ildeposito_ct_traduzione_views_default_views() {
   $handler->display->display_options['style_options']['row_class'] = 'risultato';
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5992';
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Indexed Contenuto: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Campo: Gestore rotto/mancante */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_geofield_wkt']['id'] = 'field_geofield_wkt';
   $handler->display->display_options['fields']['field_geofield_wkt']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['field_geofield_wkt']['field'] = 'field_geofield_wkt';
   $handler->display->display_options['fields']['field_geofield_wkt']['label'] = '';
   $handler->display->display_options['fields']['field_geofield_wkt']['element_label_colon'] = FALSE;
-  /* Campo: Indexed Contenuto: Titolo */
+  /* Field: Indexed Contenuto: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_entity'] = 1;
-  /* Criterio di ordinamento: Indexed Contenuto: Titolo - Ordinamento */
+  /* Sort criterion: Indexed Contenuto: Titolo - Ordinamento */
   $handler->display->display_options['sorts']['search_api_aggregation_1']['id'] = 'search_api_aggregation_1';
   $handler->display->display_options['sorts']['search_api_aggregation_1']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['sorts']['search_api_aggregation_1']['field'] = 'search_api_aggregation_1';
-  /* Criterio del filtro: Indexed Contenuto: Tipo di contenuto */
+  /* Filter criterion: Indexed Contenuto: Content type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -113,10 +113,11 @@ function ildeposito_ct_traduzione_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('ID del nodo'),
+    t('Node ID'),
     t('.'),
     t(','),
     t('Elenco'),
+    t('more'),
   );
   $export['contenuti_traduzioni'] = $view;
 

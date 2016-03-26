@@ -17,13 +17,7 @@ function ildeposito_backoffice_filter_default_formats() {
     'cache' => 0,
     'status' => 1,
     'weight' => 12,
-    'filters' => array(
-      'ds_code' => array(
-        'weight' => 0,
-        'status' => 1,
-        'settings' => array(),
-      ),
-    ),
+    'filters' => array(),
   );
 
   // Exported format: Filtered HTML.

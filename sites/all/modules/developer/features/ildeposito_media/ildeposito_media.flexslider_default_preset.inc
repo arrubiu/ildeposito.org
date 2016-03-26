@@ -16,8 +16,6 @@ function ildeposito_media_flexslider_default_presets() {
   $preset->name = 'foto_autore';
   $preset->title = 'Foto autore';
   $preset->theme = 'classic';
-  $preset->imagestyle_normal = 'foto_autore';
-  $preset->imagestyle_thumbnail = 'foto_autore';
   $preset->options = array(
     'namespace' => 'flex-',
     'selector' => '.slides > li',

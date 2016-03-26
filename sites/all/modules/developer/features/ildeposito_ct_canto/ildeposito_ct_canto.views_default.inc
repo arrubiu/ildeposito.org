@@ -47,27 +47,27 @@ function ildeposito_ct_canto_views_default_views() {
   $handler->display->display_options['style_options']['row_class'] = 'risultato';
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '5991';
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Indexed Contenuto: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Campo: Indexed Contenuto: Titolo */
+  /* Field: Indexed Contenuto: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_entity'] = 1;
-  /* Criterio di ordinamento: Indexed Contenuto: Titolo - Ordinamento */
+  /* Sort criterion: Indexed Contenuto: Titolo - Ordinamento */
   $handler->display->display_options['sorts']['search_api_aggregation_1']['id'] = 'search_api_aggregation_1';
   $handler->display->display_options['sorts']['search_api_aggregation_1']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['sorts']['search_api_aggregation_1']['field'] = 'search_api_aggregation_1';
-  /* Criterio del filtro: Indexed Contenuto: Tipo di contenuto */
+  /* Filter criterion: Indexed Contenuto: Content type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -108,13 +108,13 @@ function ildeposito_ct_canto_views_default_views() {
   $handler->display->display_options['row_options']['view_mode'] = 'canti_capoversi';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Entità: Rendered entity */
+  /* Header: Entity: Rendered entity */
   $handler->display->display_options['header']['entity']['id'] = 'entity';
   $handler->display->display_options['header']['entity']['table'] = 'entity__global';
   $handler->display->display_options['header']['entity']['field'] = 'entity';
   $handler->display->display_options['header']['entity']['entity_id'] = '11498';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Indexed Contenuto: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
@@ -123,7 +123,7 @@ function ildeposito_ct_canto_views_default_views() {
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nid']['separator'] = '';
   $handler->display->display_options['fields']['nid']['link_to_entity'] = 0;
-  /* Campo: Indexed Contenuto: Capoverso */
+  /* Field: Indexed Contenuto: Capoverso */
   $handler->display->display_options['fields']['field_capoverso']['id'] = 'field_capoverso';
   $handler->display->display_options['fields']['field_capoverso']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['field_capoverso']['field'] = 'field_capoverso';
@@ -131,13 +131,13 @@ function ildeposito_ct_canto_views_default_views() {
   $handler->display->display_options['fields']['field_capoverso']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['field_capoverso']['alter']['path'] = 'node/[nid]';
   $handler->display->display_options['fields']['field_capoverso']['element_label_colon'] = FALSE;
-  /* Campo: Indexed Contenuto: Titolo */
+  /* Field: Indexed Contenuto: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['link_to_entity'] = 0;
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Indexed Contenuto:  Capoverso - Ordinamento */
+  /* Sort criterion: Indexed Contenuto:  Capoverso - Ordinamento */
   $handler->display->display_options['sorts']['search_api_aggregation_2']['id'] = 'search_api_aggregation_2';
   $handler->display->display_options['sorts']['search_api_aggregation_2']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['sorts']['search_api_aggregation_2']['field'] = 'search_api_aggregation_2';
@@ -163,13 +163,14 @@ function ildeposito_ct_canto_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('ID del nodo'),
+    t('Node ID'),
     t('.'),
     t(','),
     t('Canti'),
+    t('more'),
     t('Capoversi'),
     t('I capoversi dei canti'),
-    t('Titolo'),
+    t('Title'),
   );
   $export['contenuti_canti'] = $view;
 
@@ -199,13 +200,12 @@ function ildeposito_ct_canto_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'flexslider';
   $handler->display->display_options['style_options']['optionset'] = 'foto_autore';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Relazione: Contenuto: Autori testo (field_autore_testo) */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['field_autore_testo_nid']['id'] = 'field_autore_testo_nid';
   $handler->display->display_options['relationships']['field_autore_testo_nid']['table'] = 'field_data_field_autore_testo';
   $handler->display->display_options['relationships']['field_autore_testo_nid']['field'] = 'field_autore_testo_nid';
   $handler->display->display_options['relationships']['field_autore_testo_nid']['required'] = TRUE;
-  $handler->display->display_options['relationships']['field_autore_testo_nid']['delta'] = '-1';
-  /* Campo: Campo: Immagini */
+  /* Field: Field: Immagini */
   $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
   $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
   $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
@@ -218,7 +218,7 @@ function ildeposito_ct_canto_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_images']['delta_offset'] = '0';
-  /* Filtro contestuale: Contenuto: Nid */
+  /* Contextual filter: Content: Nid */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'node';
   $handler->display->display_options['arguments']['nid']['field'] = 'nid';
@@ -228,7 +228,7 @@ function ildeposito_ct_canto_views_default_views() {
   $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
-  /* Criterio del filtro: Campo: Immagini (field_images:fid) */
+  /* Filter criterion: Field: Immagini (field_images:fid) */
   $handler->display->display_options['filters']['field_images_fid']['id'] = 'field_images_fid';
   $handler->display->display_options['filters']['field_images_fid']['table'] = 'field_data_field_images';
   $handler->display->display_options['filters']['field_images_fid']['field'] = 'field_images_fid';
@@ -245,9 +245,10 @@ function ildeposito_ct_canto_views_default_views() {
     t('Ordina per'),
     t('Asc'),
     t('Disc'),
-    t('field_autore_testo'),
+    t('field_autore_testo_nid'),
     t('Tutti'),
     t('Foto autori'),
+    t('more'),
   );
   $export['contenuti_canti_db'] = $view;
 

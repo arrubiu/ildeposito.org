@@ -37,21 +37,21 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['exposed_form']['options']['sort_desc_label'] = 'Disc';
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'table';
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = 'Per il giorno %1 sono presenti i seguenti canti:';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
   $handler->display->display_options['header']['area']['tokenize'] = TRUE;
-  /* Comportamento se non ci sono risultati: Globale: Area di testo */
+  /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = 'Non sono presenti eventi per il giorno corrente.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -60,7 +60,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Campo: Contenuto: Data evento */
+  /* Field: Contenuto: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -73,12 +73,12 @@ function ildeposito_backoffice_views_default_views() {
     'show_repeat_rule' => 'hide',
   );
   $handler->display->display_options['fields']['field_data_evento']['delta_offset'] = '0';
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filtro contestuale: Contenuto: Data evento -  data di inizio (field_data_evento) */
+  /* Contextual filter: Contenuto: Data evento -  start date (field_data_evento) */
   $handler->display->display_options['arguments']['field_data_evento_value']['id'] = 'field_data_evento_value';
   $handler->display->display_options['arguments']['field_data_evento_value']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['arguments']['field_data_evento_value']['field'] = 'field_data_evento_value';
@@ -91,21 +91,21 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['arguments']['field_data_evento_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_data_evento_value']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['arguments']['field_data_evento_value']['granularity'] = 'day';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'evento' => 'evento',
   );
-  /* Criterio del filtro: Data: Data (node) */
+  /* Filter criterion: Date: Date (node) */
   $handler->display->display_options['filters']['date_filter']['id'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['table'] = 'node';
   $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
@@ -119,14 +119,14 @@ function ildeposito_backoffice_views_default_views() {
   $handler = $view->new_display('page', 'Eventi giorno', 'eventi_giorno');
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -140,7 +140,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = '[ilDeposito] Eventi per domani';
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
@@ -148,7 +148,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
   $handler->display->display_options['header']['area']['tokenize'] = TRUE;
   $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* Comportamento se non ci sono risultati: Globale: Area di testo */
+  /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
@@ -158,21 +158,21 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'evento' => 'evento',
   );
-  /* Criterio del filtro: Data: Data (node) */
+  /* Filter criterion: Date: Date (node) */
   $handler->display->display_options['filters']['date_filter']['id'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['table'] = 'node';
   $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
@@ -192,11 +192,12 @@ function ildeposito_backoffice_views_default_views() {
     t('Disc'),
     t('Per il giorno %1 sono presenti i seguenti canti:'),
     t('Non sono presenti eventi per il giorno corrente.'),
-    t('Titolo'),
+    t('Title'),
     t('Data evento'),
     t('Tutti'),
     t('[ilDeposito] Eventi per il %1'),
     t('Eventi giorno'),
+    t('more'),
     t('Eventi giorno dopo'),
     t('[ilDeposito] Eventi per domani'),
     t('Per domani sono previsti i seguenti eventi:'),
@@ -291,12 +292,12 @@ function ildeposito_backoffice_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Relazione: Commento: Contenuto */
+  /* Relationship: Comment: Content */
   $handler->display->display_options['relationships']['nid']['id'] = 'nid';
   $handler->display->display_options['relationships']['nid']['table'] = 'comment';
   $handler->display->display_options['relationships']['nid']['field'] = 'nid';
   $handler->display->display_options['relationships']['nid']['required'] = TRUE;
-  /* Campo: Bulk operations: Commento */
+  /* Field: Bulk operations: Comment */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'comment';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
@@ -312,65 +313,8 @@ function ildeposito_backoffice_views_default_views() {
       'override_label' => 0,
       'label' => '',
     ),
-    'action::views_bulk_operations_script_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::flag_comment_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::system_send_email_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_modify_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'show_all_tokens' => 1,
-        'display_values' => array(
-          '_all_' => '_all_',
-        ),
-      ),
-    ),
-    'action::views_bulk_operations_argument_selector_action' => array(
-      'selected' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'url' => '',
-      ),
-    ),
     'action::comment_publish_action' => array(
       'selected' => 1,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::comment_save_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::comment_unpublish_by_keyword_action' => array(
-      'selected' => 0,
       'postpone_processing' => 0,
       'skip_confirmation' => 0,
       'override_label' => 0,
@@ -384,17 +328,17 @@ function ildeposito_backoffice_views_default_views() {
       'label' => '',
     ),
   );
-  /* Campo: Commento: Autore */
+  /* Field: Comment: Author */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'comment';
   $handler->display->display_options['fields']['name']['field'] = 'name';
-  /* Campo: Commento: Data di inserimento */
+  /* Field: Comment: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'comment';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['date_format'] = 'medium';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'd/m/Y H:m';
-  /* Campo: Commento: Comment */
+  /* Field: Commento: Comment */
   $handler->display->display_options['fields']['comment_body']['id'] = 'comment_body';
   $handler->display->display_options['fields']['comment_body']['table'] = 'field_data_comment_body';
   $handler->display->display_options['fields']['comment_body']['field'] = 'comment_body';
@@ -402,24 +346,24 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['comment_body']['alter']['max_length'] = '100';
   $handler->display->display_options['fields']['comment_body']['alter']['strip_tags'] = TRUE;
   $handler->display->display_options['fields']['comment_body']['alter']['trim'] = TRUE;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['relationship'] = 'nid';
   $handler->display->display_options['fields']['title']['label'] = 'Contenuto';
-  /* Campo: Commento: Approvato */
+  /* Field: Comment: Approved */
   $handler->display->display_options['fields']['status']['id'] = 'status';
   $handler->display->display_options['fields']['status']['table'] = 'comment';
   $handler->display->display_options['fields']['status']['field'] = 'status';
   $handler->display->display_options['fields']['status']['label'] = 'Pubblicato';
   $handler->display->display_options['fields']['status']['not'] = 0;
-  /* Criterio di ordinamento: Commento: Data di inserimento */
+  /* Sort criterion: Comment: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'comment';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Criterio del filtro: Commento: Approvato */
+  /* Filter criterion: Comment: Approved */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'comment';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -437,7 +381,7 @@ function ildeposito_backoffice_views_default_views() {
     4 => 0,
     5 => 0,
   );
-  /* Criterio del filtro: Commento: Data di inserimento */
+  /* Filter criterion: Comment: Post date */
   $handler->display->display_options['filters']['created']['id'] = 'created';
   $handler->display->display_options['filters']['created']['table'] = 'comment';
   $handler->display->display_options['filters']['created']['field'] = 'created';
@@ -478,14 +422,18 @@ function ildeposito_backoffice_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('Contenuto'),
+    t('Content'),
+    t('Comment'),
+    t('- Choose an operation -'),
+    t('Author'),
+    t('Post date'),
     t('Commento'),
-    t('- Scegli una azione -'),
-    t('Autore'),
-    t('Data di inserimento'),
+    t('Contenuto'),
     t('Pubblicato'),
+    t('Data di inserimento'),
     t('Una data in qualsiasi formato leggibile dal computer. È preferibile CCYY-MM-DD HH:MM:SS'),
     t('Commenti'),
+    t('more'),
   );
   $export['bo_commenti'] = $view;
 
@@ -586,15 +534,15 @@ function ildeposito_backoffice_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Relazione: Revisione del contenuto: Contenuto */
+  /* Relationship: Content revision: Content */
   $handler->display->display_options['relationships']['vid']['id'] = 'vid';
   $handler->display->display_options['relationships']['vid']['table'] = 'node_revision';
   $handler->display->display_options['relationships']['vid']['field'] = 'vid';
-  /* Relazione: Revisione del contenuto: Utente */
+  /* Relationship: Content revision: User */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node_revision';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Campo: Bulk operations: Revisione del contenuto */
+  /* Field: Bulk operations: Content revision */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node_revision';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
@@ -605,20 +553,6 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::pathauto_node_update_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_assign_owner_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
     'action::views_bulk_operations_delete_item' => array(
       'selected' => 1,
       'postpone_processing' => 0,
@@ -626,165 +560,58 @@ function ildeposito_backoffice_views_default_views() {
       'override_label' => 0,
       'label' => '',
     ),
-    'action::views_bulk_operations_script_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::flag_node_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::system_send_email_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_modify_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'show_all_tokens' => 1,
-        'display_values' => array(
-          '_all_' => '_all_',
-        ),
-      ),
-    ),
-    'action::views_bulk_operations_argument_selector_action' => array(
-      'selected' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'url' => '',
-      ),
-    ),
-    'action::node_make_sticky_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_promote_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_publish_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpromote_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpublish_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpublish_by_keyword_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_make_unsticky_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_save_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::workbench_moderation_set_state_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
   );
-  /* Campo: Utente: Nome */
+  /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'uid';
   $handler->display->display_options['fields']['name']['label'] = 'Autore';
-  /* Campo: Revisione del contenuto: Vid */
+  /* Field: Content revision: Vid */
   $handler->display->display_options['fields']['vid']['id'] = 'vid';
   $handler->display->display_options['fields']['vid']['table'] = 'node_revision';
   $handler->display->display_options['fields']['vid']['field'] = 'vid';
-  /* Campo: Revisione del contenuto: Nid */
+  /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Campo: Revisione del contenuto: Titolo */
+  /* Field: Content revision: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node_revision';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node_revision'] = TRUE;
-  /* Campo: Workbench Moderation: Stato */
+  /* Field: Workbench Moderation: State */
   $handler->display->display_options['fields']['state']['id'] = 'state';
   $handler->display->display_options['fields']['state']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['fields']['state']['field'] = 'state';
   $handler->display->display_options['fields']['state']['machine_name'] = 0;
-  /* Campo: Revisione del contenuto: Data modifica */
+  /* Field: Content revision: Updated date */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'node_revision';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
-  /* Campo: Revisione del contenuto: Vid */
+  /* Field: Content revision: Vid */
   $handler->display->display_options['fields']['vid_1']['id'] = 'vid_1';
   $handler->display->display_options['fields']['vid_1']['table'] = 'node_revision';
   $handler->display->display_options['fields']['vid_1']['field'] = 'vid';
-  /* Campo: Workbench Moderation: Corrente */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['current']['id'] = 'current';
   $handler->display->display_options['fields']['current']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['fields']['current']['field'] = 'current';
-  $handler->display->display_options['fields']['current']['not'] = 0;
-  /* Campo: Revisione del contenuto: Link elimina */
+  /* Field: Content revision: Delete link */
   $handler->display->display_options['fields']['delete_revision']['id'] = 'delete_revision';
   $handler->display->display_options['fields']['delete_revision']['table'] = 'node_revision';
   $handler->display->display_options['fields']['delete_revision']['field'] = 'delete_revision';
-  /* Criterio di ordinamento: Revisione del contenuto: Vid */
+  /* Sort criterion: Content revision: Vid */
   $handler->display->display_options['sorts']['vid']['id'] = 'vid';
   $handler->display->display_options['sorts']['vid']['table'] = 'node_revision';
   $handler->display->display_options['sorts']['vid']['field'] = 'vid';
   $handler->display->display_options['sorts']['vid']['order'] = 'DESC';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -823,19 +650,20 @@ function ildeposito_backoffice_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('Ottieni il contenuto effettivo da una revisione del contenuto.'),
-    t('utente revisione'),
-    t('- Scegli una azione -'),
+    t('Get the actual content from a content revision.'),
+    t('revision user'),
+    t('- Choose an operation -'),
     t('Autore'),
     t('Vid'),
     t('Nid'),
-    t('Titolo'),
-    t('Stato'),
-    t('Data modifica'),
-    t('Corrente'),
-    t('Link elimina'),
+    t('Title'),
+    t('State'),
+    t('Updated date'),
+    t('Broken handler workbench_moderation_node_history.current'),
+    t('Delete link'),
     t('Pubblicato'),
     t('Page'),
+    t('more'),
   );
   $export['bo_revisioni'] = $view;
 
@@ -888,14 +716,14 @@ function ildeposito_backoffice_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Bulk operations: Contenuto */
+  /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
@@ -904,119 +732,6 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::pathauto_node_update_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_assign_owner_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_delete_item' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_script_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::flag_node_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::system_send_email_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_modify_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'show_all_tokens' => 1,
-        'display_values' => array(
-          '_all_' => '_all_',
-        ),
-      ),
-    ),
-    'action::views_bulk_operations_argument_selector_action' => array(
-      'selected' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'url' => '',
-      ),
-    ),
-    'action::node_make_sticky_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_promote_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_publish_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpromote_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpublish_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpublish_by_keyword_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_make_unsticky_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
     'action::node_save_action' => array(
       'selected' => 1,
       'postpone_processing' => 0,
@@ -1024,27 +739,20 @@ function ildeposito_backoffice_views_default_views() {
       'override_label' => 0,
       'label' => '',
     ),
-    'action::workbench_moderation_set_state_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
   );
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -1083,10 +791,11 @@ function ildeposito_backoffice_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('Contenuto'),
-    t('- Scegli una azione -'),
+    t('Content'),
+    t('- Choose an operation -'),
     t('Tipo'),
     t('Page'),
+    t('more'),
   );
   $export['bulk'] = $view;
 
@@ -1173,7 +882,7 @@ function ildeposito_backoffice_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Campo: Bulk operations: Contenuto */
+  /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
@@ -1184,50 +893,8 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::pathauto_node_update_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_assign_owner_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_delete_item' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_script_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::flag_node_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
     'action::676' => array(
       'selected' => 1,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::system_send_email_action' => array(
-      'selected' => 0,
       'postpone_processing' => 0,
       'skip_confirmation' => 0,
       'override_label' => 0,
@@ -1249,96 +916,24 @@ function ildeposito_backoffice_views_default_views() {
         ),
       ),
     ),
-    'action::views_bulk_operations_argument_selector_action' => array(
-      'selected' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'url' => '',
-      ),
-    ),
-    'action::node_make_sticky_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_promote_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_publish_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpromote_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpublish_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpublish_by_keyword_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_make_unsticky_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_save_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::workbench_moderation_set_state_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
   );
-  /* Campo: Contenuto: Tipo */
+  /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
   $handler->display->display_options['fields']['type']['field'] = 'type';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Anno */
+  /* Field: Contenuto: Anno */
   $handler->display->display_options['fields']['field_anno']['id'] = 'field_anno';
   $handler->display->display_options['fields']['field_anno']['table'] = 'field_data_field_anno';
   $handler->display->display_options['fields']['field_anno']['field'] = 'field_anno';
@@ -1351,23 +946,23 @@ function ildeposito_backoffice_views_default_views() {
     'multiple_to' => '',
     'show_repeat_rule' => 'show',
   );
-  /* Campo: Contenuto: Informazioni */
+  /* Field: Contenuto: Informazioni */
   $handler->display->display_options['fields']['field_informazioni']['id'] = 'field_informazioni';
   $handler->display->display_options['fields']['field_informazioni']['table'] = 'field_data_field_informazioni';
   $handler->display->display_options['fields']['field_informazioni']['field'] = 'field_informazioni';
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -1377,7 +972,7 @@ function ildeposito_backoffice_views_default_views() {
     'evento' => 'evento',
     'traduzione' => 'traduzione',
   );
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
   $handler->display->display_options['filters']['type_1']['table'] = 'node';
   $handler->display->display_options['filters']['type_1']['field'] = 'type';
@@ -1398,11 +993,10 @@ function ildeposito_backoffice_views_default_views() {
     5 => 0,
     6 => 0,
   );
-  /* Criterio del filtro: Contenuto: Sezione (field_sezione) */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['field_sezione_tid']['id'] = 'field_sezione_tid';
   $handler->display->display_options['filters']['field_sezione_tid']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['filters']['field_sezione_tid']['field'] = 'field_sezione_tid';
-  $handler->display->display_options['filters']['field_sezione_tid']['value'] = '';
   $handler->display->display_options['filters']['field_sezione_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator_id'] = 'field_sezione_tid_op';
   $handler->display->display_options['filters']['field_sezione_tid']['expose']['label'] = 'Sezione (field_sezione)';
@@ -1416,7 +1010,6 @@ function ildeposito_backoffice_views_default_views() {
     5 => 0,
     6 => 0,
   );
-  $handler->display->display_options['filters']['field_sezione_tid']['vocabulary'] = 'sezioni';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -1437,14 +1030,16 @@ function ildeposito_backoffice_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('- Scegli una azione -'),
-    t('Tipo'),
-    t('Titolo'),
+    t('- Choose an operation -'),
+    t('Type'),
+    t('Title'),
     t('Sezione'),
     t('Anno di pubblicazione'),
     t('Informazioni'),
+    t('Tipo'),
     t('Sezione (field_sezione)'),
     t('Page'),
+    t('more'),
   );
   $export['bulk_sezioni'] = $view;
 
@@ -1485,14 +1080,14 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
   $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
   $handler->display->display_options['style_plugin'] = 'table';
-  /* Campo: Termine della tassonomia: Nome */
+  /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_taxonomy'] = TRUE;
-  /* Campo: Bulk operations: Termine della tassonomia */
+  /* Field: Bulk operations: Taxonomy term */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
@@ -1501,55 +1096,12 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::pathauto_taxonomy_term_update_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_delete_item' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
     'action::views_bulk_operations_script_action' => array(
       'selected' => 1,
       'postpone_processing' => 0,
       'skip_confirmation' => 0,
       'override_label' => 0,
       'label' => '',
-    ),
-    'action::system_send_email_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_modify_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'show_all_tokens' => 1,
-        'display_values' => array(
-          '_all_' => '_all_',
-        ),
-      ),
-    ),
-    'action::views_bulk_operations_argument_selector_action' => array(
-      'selected' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'url' => '',
-      ),
     ),
   );
 
@@ -1572,10 +1124,11 @@ function ildeposito_backoffice_views_default_views() {
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('Nome'),
-    t('Termine della tassonomia'),
-    t('- Scegli una azione -'),
+    t('Name'),
+    t('Taxonomy term'),
+    t('- Choose an operation -'),
     t('Page'),
+    t('more'),
   );
   $export['bulk_term'] = $view;
 
@@ -1606,7 +1159,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'riferimento_evento';
-  /* Campo: Contenuto: Lingue */
+  /* Field: Contenuto: Lingue */
   $handler->display->display_options['fields']['field_lingua']['id'] = 'field_lingua';
   $handler->display->display_options['fields']['field_lingua']['table'] = 'field_data_field_lingua';
   $handler->display->display_options['fields']['field_lingua']['field'] = 'field_lingua';
@@ -1615,7 +1168,7 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['field_lingua']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_lingua']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_lingua']['delta_offset'] = '0';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -1625,12 +1178,12 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filtro contestuale: Contenuto: Canto di riferimento (field_canto_riferimento) */
+  /* Contextual filter: Broken/missing handler */
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['id'] = 'field_canto_riferimento_nid';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['table'] = 'field_data_field_canto_riferimento';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['field'] = 'field_canto_riferimento_nid';
@@ -1640,14 +1193,14 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_canto_riferimento_nid']['summary_options']['items_per_page'] = '25';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -1670,7 +1223,7 @@ function ildeposito_backoffice_views_default_views() {
   /* Display: Check eventi */
   $handler = $view->new_display('block', 'Check eventi', 'eventi');
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Contenuto: Canti collegati (field_canti_evento) */
+  /* Contextual filter: Broken/missing handler */
   $handler->display->display_options['arguments']['field_canti_evento_nid']['id'] = 'field_canti_evento_nid';
   $handler->display->display_options['arguments']['field_canti_evento_nid']['table'] = 'field_data_field_canti_evento';
   $handler->display->display_options['arguments']['field_canti_evento_nid']['field'] = 'field_canti_evento_nid';
@@ -1682,14 +1235,14 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['arguments']['field_canti_evento_nid']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -1707,6 +1260,7 @@ function ildeposito_backoffice_views_default_views() {
     t('[title] ([field_lingua])'),
     t('Tutti'),
     t('Check traduzioni'),
+    t('more'),
     t('Check eventi'),
   );
   $export['check_relazioni'] = $view;
@@ -1747,41 +1301,41 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
   $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
   $handler->display->display_options['style_plugin'] = 'table';
-  /* Relazione: Flag: da_rivedere */
+  /* Relationship: Flags: da_rivedere */
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'da_rivedere';
   $handler->display->display_options['relationships']['flag_content_rel']['user_scope'] = 'any';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Tipo */
+  /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
   $handler->display->display_options['fields']['type']['field'] = 'type';
-  /* Campo: Flag: Flag link */
+  /* Field: Flags: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
   $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
   $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['ops']['link_type'] = 'toggle';
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['label'] = '';
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'Modifica';
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -1812,11 +1366,12 @@ function ildeposito_backoffice_views_default_views() {
     t('seguente ›'),
     t('ultima »'),
     t('flag'),
-    t('Titolo'),
-    t('Tipo'),
+    t('Title'),
+    t('Type'),
     t('Flag link'),
     t('Modifica'),
     t('Page'),
+    t('more'),
   );
   $export['contenuti_da_revisionare'] = $view;
 
@@ -1856,52 +1411,52 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
   $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
   $handler->display->display_options['style_plugin'] = 'table';
-  /* Intestazione: Globale: Riassunto del risultato */
+  /* Header: Global: Result summary */
   $handler->display->display_options['header']['result']['id'] = 'result';
   $handler->display->display_options['header']['result']['table'] = 'views';
   $handler->display->display_options['header']['result']['field'] = 'result';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Autori testo */
+  /* Field: Contenuto: Autori testo */
   $handler->display->display_options['fields']['field_autore_testo']['id'] = 'field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['table'] = 'field_data_field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['field'] = 'field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['type'] = 'node_reference_plain';
   $handler->display->display_options['fields']['field_autore_testo']['delta_offset'] = '0';
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['label'] = '';
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'Modifica';
-  /* Campo: Contenuto: Anno */
+  /* Field: Contenuto: Anno */
   $handler->display->display_options['fields']['field_anno']['id'] = 'field_anno';
   $handler->display->display_options['fields']['field_anno']['table'] = 'field_data_field_anno';
   $handler->display->display_options['fields']['field_anno']['field'] = 'field_anno';
-  /* Criterio di ordinamento: Contenuto: Titolo */
+  /* Sort criterion: Content: Title */
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';
   $handler->display->display_options['sorts']['title']['field'] = 'title';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'canto' => 'canto',
   );
-  /* Criterio del filtro: Contenuto: Risorse audio o video (field_link_audio:url) */
+  /* Filter criterion: Contenuto: Risorse audio o video (field_link_audio:url) */
   $handler->display->display_options['filters']['field_link_audio_url']['id'] = 'field_link_audio_url';
   $handler->display->display_options['filters']['field_link_audio_url']['table'] = 'field_data_field_link_audio';
   $handler->display->display_options['filters']['field_link_audio_url']['field'] = 'field_link_audio_url';
@@ -1922,19 +1477,19 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Elenco canti senza anno';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Autori testo */
+  /* Field: Contenuto: Autori testo */
   $handler->display->display_options['fields']['field_autore_testo']['id'] = 'field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['table'] = 'field_data_field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['field'] = 'field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['type'] = 'node_reference_plain';
   $handler->display->display_options['fields']['field_autore_testo']['delta_offset'] = '0';
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
@@ -1943,21 +1498,21 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['edit_node']['text'] = 'Modifica';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'canto' => 'canto',
   );
-  /* Criterio del filtro: Contenuto: Anno (field_anno) */
+  /* Filter criterion: Contenuto: Anno (field_anno) */
   $handler->display->display_options['filters']['field_anno_value']['id'] = 'field_anno_value';
   $handler->display->display_options['filters']['field_anno_value']['table'] = 'field_data_field_anno';
   $handler->display->display_options['filters']['field_anno_value']['field'] = 'field_anno_value';
@@ -1977,11 +1532,11 @@ function ildeposito_backoffice_views_default_views() {
   );
   $handler->display->display_options['filters']['field_anno_value']['granularity'] = 'year';
   $handler->display->display_options['filters']['field_anno_value']['form_type'] = 'date_text';
-  /* Criterio del filtro: Contenuto: Sezione (field_sezione) */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['field_sezione_tid']['id'] = 'field_sezione_tid';
   $handler->display->display_options['filters']['field_sezione_tid']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['filters']['field_sezione_tid']['field'] = 'field_sezione_tid';
-  $handler->display->display_options['filters']['field_sezione_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_sezione_tid']['operator'] = 'or';
   $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator_id'] = 'field_sezione_tid_op';
   $handler->display->display_options['filters']['field_sezione_tid']['expose']['label'] = 'Sezione';
   $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator'] = 'field_sezione_tid_op';
@@ -1994,8 +1549,6 @@ function ildeposito_backoffice_views_default_views() {
     5 => 0,
     6 => 0,
   );
-  $handler->display->display_options['filters']['field_sezione_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_sezione_tid']['vocabulary'] = 'sezioni';
   $handler->display->display_options['path'] = 'canti-senza-anno';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Canti senza anno';
@@ -2009,25 +1562,27 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Elenco canti senza fonte';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['click_sort_column'] = 'tid';
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_sezione']['group_column'] = 'tid';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Autori testo */
+  /* Field: Contenuto: Autori testo */
   $handler->display->display_options['fields']['field_autore_testo']['id'] = 'field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['table'] = 'field_data_field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['field'] = 'field_autore_testo';
   $handler->display->display_options['fields']['field_autore_testo']['type'] = 'node_reference_plain';
   $handler->display->display_options['fields']['field_autore_testo']['delta_offset'] = '0';
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
@@ -2036,14 +1591,14 @@ function ildeposito_backoffice_views_default_views() {
   $handler->display->display_options['fields']['edit_node']['text'] = 'Modifica';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -2051,11 +1606,10 @@ function ildeposito_backoffice_views_default_views() {
     'canto' => 'canto',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Criterio del filtro: Contenuto: Sezione (field_sezione) */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['field_sezione_tid']['id'] = 'field_sezione_tid';
   $handler->display->display_options['filters']['field_sezione_tid']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['filters']['field_sezione_tid']['field'] = 'field_sezione_tid';
-  $handler->display->display_options['filters']['field_sezione_tid']['value'] = '';
   $handler->display->display_options['filters']['field_sezione_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_sezione_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_sezione_tid']['expose']['operator_id'] = 'field_sezione_tid_op';
@@ -2070,9 +1624,7 @@ function ildeposito_backoffice_views_default_views() {
     5 => 0,
     6 => 0,
   );
-  $handler->display->display_options['filters']['field_sezione_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_sezione_tid']['vocabulary'] = 'sezioni';
-  /* Criterio del filtro: Contenuto: Fonte (field_fonte) */
+  /* Filter criterion: Contenuto: Fonte (field_fonte) */
   $handler->display->display_options['filters']['field_fonte_value']['id'] = 'field_fonte_value';
   $handler->display->display_options['filters']['field_fonte_value']['table'] = 'field_data_field_fonte';
   $handler->display->display_options['filters']['field_fonte_value']['field'] = 'field_fonte_value';
@@ -2119,11 +1671,12 @@ function ildeposito_backoffice_views_default_views() {
     t('seguente ›'),
     t('ultima »'),
     t('Displaying @start - @end of @total'),
-    t('Titolo'),
+    t('Title'),
     t('Autori testo'),
     t('Modifica'),
     t('Anno'),
     t('Canti senza audio'),
+    t('more'),
     t('Canti senza anno'),
     t('Elenco canti senza anno'),
     t('Sezione'),
@@ -2225,7 +1778,7 @@ function ildeposito_backoffice_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Intestazione: Globale: Riassunto del risultato */
+  /* Header: Global: Result summary */
   $handler->display->display_options['header']['result']['id'] = 'result';
   $handler->display->display_options['header']['result']['table'] = 'views';
   $handler->display->display_options['header']['result']['field'] = 'result';
@@ -2233,11 +1786,11 @@ function ildeposito_backoffice_views_default_views() {
 <strong>Di default l\'elenco comprende l\'ultima revisione, in modo da verificare subito se ci sono contenuti con revisioni da approvare.</strong></p>
 
 Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.';
-  /* Relazione: Revisione del contenuto: Utente */
+  /* Relationship: Content revision: User */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node_revision';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Campo: Bulk operations: Revisione del contenuto */
+  /* Field: Bulk operations: Content revision */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node_revision';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
@@ -2248,121 +1801,8 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::pathauto_node_update_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_assign_owner_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_delete_item' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
     'action::views_bulk_operations_script_action' => array(
       'selected' => 1,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::flag_node_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::system_send_email_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::views_bulk_operations_modify_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'show_all_tokens' => 1,
-        'display_values' => array(
-          '_all_' => '_all_',
-        ),
-      ),
-    ),
-    'action::views_bulk_operations_argument_selector_action' => array(
-      'selected' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'settings' => array(
-        'url' => '',
-      ),
-    ),
-    'action::node_make_sticky_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_promote_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_publish_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpromote_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpublish_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_unpublish_by_keyword_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_make_unsticky_action' => array(
-      'selected' => 0,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-    'action::node_save_action' => array(
-      'selected' => 0,
       'postpone_processing' => 0,
       'skip_confirmation' => 0,
       'override_label' => 0,
@@ -2376,43 +1816,42 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
       'label' => '',
     ),
   );
-  /* Campo: Revisione del contenuto: Titolo */
+  /* Field: Content revision: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node_revision';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node_revision'] = TRUE;
-  /* Campo: Revisione del contenuto: Data modifica */
+  /* Field: Content revision: Updated date */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'node_revision';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['alter']['ellipsis'] = FALSE;
-  /* Campo: Workbench Moderation: Stato */
+  /* Field: Workbench Moderation: State */
   $handler->display->display_options['fields']['state']['id'] = 'state';
   $handler->display->display_options['fields']['state']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['fields']['state']['field'] = 'state';
   $handler->display->display_options['fields']['state']['machine_name'] = 0;
-  /* Campo: Workbench Moderation: Corrente */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['current']['id'] = 'current';
   $handler->display->display_options['fields']['current']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['fields']['current']['field'] = 'current';
   $handler->display->display_options['fields']['current']['label'] = 'Ultima revisione';
-  $handler->display->display_options['fields']['current']['not'] = 0;
-  /* Campo: Workbench Moderation: Pubblicato */
+  /* Field: Workbench Moderation: Published */
   $handler->display->display_options['fields']['published']['id'] = 'published';
   $handler->display->display_options['fields']['published']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['fields']['published']['field'] = 'published';
   $handler->display->display_options['fields']['published']['label'] = 'Revisione pubblica';
   $handler->display->display_options['fields']['published']['not'] = 0;
-  /* Campo: Utente: Nome */
+  /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'uid';
   $handler->display->display_options['fields']['name']['label'] = 'Autore revisione';
-  /* Campo: Revisione del contenuto: Nid */
+  /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
@@ -2422,12 +1861,12 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['nid']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['nid']['alter']['path'] = 'node/[nid]/moderation';
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Criterio di ordinamento: Revisione del contenuto: Data modifica */
+  /* Sort criterion: Content revision: Updated date */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'node_revision';
   $handler->display->display_options['sorts']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['order'] = 'DESC';
-  /* Criterio del filtro: Workbench Moderation: Corrente */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['filters']['current']['field'] = 'current';
@@ -2445,7 +1884,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  /* Criterio del filtro: Workbench Moderation: Pubblicato */
+  /* Filter criterion: Workbench Moderation: Published */
   $handler->display->display_options['filters']['published']['id'] = 'published';
   $handler->display->display_options['filters']['published']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['filters']['published']['field'] = 'published';
@@ -2463,7 +1902,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  /* Criterio del filtro: Workbench Moderation: Stato */
+  /* Filter criterion: Workbench Moderation: State */
   $handler->display->display_options['filters']['state']['id'] = 'state';
   $handler->display->display_options['filters']['state']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['filters']['state']['field'] = 'state';
@@ -2523,11 +1962,11 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
 <strong>Di default l\'elenco comprende l\'ultima revisione, in modo da verificare subito se ci sono contenuti con revisioni da approvare.</strong></p>
 
 Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'),
-    t('utente revisione'),
-    t('- Scegli una azione -'),
-    t('Titolo'),
-    t('Data modifica'),
-    t('Stato'),
+    t('revision user'),
+    t('- Choose an operation -'),
+    t('Title'),
+    t('Updated date'),
+    t('State'),
     t('Ultima revisione'),
     t('Revisione pubblica'),
     t('Autore revisione'),
@@ -2536,7 +1975,9 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     t('Se la revisione è l\'ultima inserita'),
     t('Pubblicato'),
     t('Se la revisione è quella pubblica'),
+    t('Stato'),
     t('Page'),
+    t('more'),
   );
   $export['gestione_archivio'] = $view;
 
@@ -2626,65 +2067,65 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
       'empty_column' => 0,
     ),
   );
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['empty'] = TRUE;
   $handler->display->display_options['header']['area']['content'] = 'Questo è l\'elenco dei tuoi commenti.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
-  /* Comportamento se non ci sono risultati: Globale: Area di testo */
+  /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = 'Non hai ancora inserito nessun commento.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
-  /* Relazione: Commento: Contenuto */
+  /* Relationship: Comment: Content */
   $handler->display->display_options['relationships']['nid']['id'] = 'nid';
   $handler->display->display_options['relationships']['nid']['table'] = 'comment';
   $handler->display->display_options['relationships']['nid']['field'] = 'nid';
   $handler->display->display_options['relationships']['nid']['required'] = TRUE;
-  /* Relazione: Commento: Autore */
+  /* Relationship: Comment: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'comment';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['required'] = TRUE;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['relationship'] = 'nid';
   $handler->display->display_options['fields']['title']['label'] = 'Contenuto';
-  /* Campo: Commento: Data di inserimento */
+  /* Field: Comment: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'comment';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'd/m/Y h:i:s';
-  /* Campo: Contenuto: Numero commenti */
+  /* Field: Content: Comment count */
   $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
   $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['relationship'] = 'nid';
-  /* Campo: Contenuto: Nuovi commenti */
+  /* Field: Content: New comments */
   $handler->display->display_options['fields']['new_comments']['id'] = 'new_comments';
   $handler->display->display_options['fields']['new_comments']['table'] = 'node';
   $handler->display->display_options['fields']['new_comments']['field'] = 'new_comments';
   $handler->display->display_options['fields']['new_comments']['relationship'] = 'nid';
   $handler->display->display_options['fields']['new_comments']['label'] = 'Nuovi';
   $handler->display->display_options['fields']['new_comments']['separator'] = '';
-  /* Campo: Commento: Approvato */
+  /* Field: Comment: Approved */
   $handler->display->display_options['fields']['status']['id'] = 'status';
   $handler->display->display_options['fields']['status']['table'] = 'comment';
   $handler->display->display_options['fields']['status']['field'] = 'status';
   $handler->display->display_options['fields']['status']['not'] = 0;
-  /* Criterio di ordinamento: Commento: Data di inserimento */
+  /* Sort criterion: Comment: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'comment';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Criterio del filtro: Utente: Corrente */
+  /* Filter criterion: User: Current */
   $handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
@@ -2715,15 +2156,17 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     t('ultima »'),
     t('Questo è l\'elenco dei tuoi commenti.'),
     t('Non hai ancora inserito nessun commento.'),
+    t('Content'),
+    t('author'),
     t('Contenuto'),
-    t('autore'),
-    t('Data di inserimento'),
-    t('Numero commenti'),
+    t('Post date'),
+    t('Comment count'),
     t('.'),
     t(','),
     t('Nuovi'),
-    t('Approvato'),
+    t('Approved'),
     t('Commenti'),
+    t('more'),
   );
   $export['gestione_commenti'] = $view;
 
@@ -2809,13 +2252,13 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
       'empty_column' => 0,
     ),
   );
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -2823,22 +2266,22 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Data evento */
+  /* Field: Contenuto: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['label'] = '';
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
-  /* Criterio di ordinamento: Contenuto: Titolo */
+  /* Sort criterion: Content: Title */
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';
   $handler->display->display_options['sorts']['title']['field'] = 'title';
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -2903,25 +2346,25 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Nid */
+  /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = 'ID';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
@@ -2930,14 +2373,14 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'autore' => 'autore',
   );
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -2954,7 +2397,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  /* Criterio del filtro: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
+  /* Filter criterion: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
   $handler->display->display_options['filters']['field_cognome_value']['id'] = 'field_cognome_value';
   $handler->display->display_options['filters']['field_cognome_value']['table'] = 'field_data_field_cognome';
   $handler->display->display_options['filters']['field_cognome_value']['field'] = 'field_cognome_value';
@@ -2986,13 +2429,13 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Gestione Eventi';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Data evento */
+  /* Field: Contenuto: Data evento */
   $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
   $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
@@ -3005,7 +2448,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     'show_repeat_rule' => 'hide',
   );
   $handler->display->display_options['fields']['field_data_evento']['delta_offset'] = '0';
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
@@ -3013,7 +2456,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Percorsi (editable) */
+  /* Field: Contenuto: Percorsi (editable) */
   $handler->display->display_options['fields']['field_percorso_editable']['id'] = 'field_percorso_editable';
   $handler->display->display_options['fields']['field_percorso_editable']['table'] = 'field_data_field_percorso';
   $handler->display->display_options['fields']['field_percorso_editable']['field'] = 'field_percorso_editable';
@@ -3021,7 +2464,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['field_percorso_editable']['widget_type'] = 'options_select';
   $handler->display->display_options['fields']['field_percorso_editable']['suppress_label'] = 0;
   $handler->display->display_options['fields']['field_percorso_editable']['suppress_description'] = 0;
-  /* Campo: Contenuto: Tag (editable) */
+  /* Field: Contenuto: Tag (editable) */
   $handler->display->display_options['fields']['field_tags_editable']['id'] = 'field_tags_editable';
   $handler->display->display_options['fields']['field_tags_editable']['table'] = 'field_data_field_tags';
   $handler->display->display_options['fields']['field_tags_editable']['field'] = 'field_tags_editable';
@@ -3031,14 +2474,14 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['field_tags_editable']['suppress_description'] = 0;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'evento' => 'evento',
   );
-  /* Criterio del filtro: Contenuto: Sezione (field_sezione) */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['field_sezione_tid']['id'] = 'field_sezione_tid';
   $handler->display->display_options['filters']['field_sezione_tid']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['filters']['field_sezione_tid']['field'] = 'field_sezione_tid';
@@ -3055,8 +2498,6 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  $handler->display->display_options['filters']['field_sezione_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_sezione_tid']['vocabulary'] = 'sezioni';
   $handler->display->display_options['path'] = 'gestione-eventi';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Gestione eventi';
@@ -3141,33 +2582,33 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Tipo */
+  /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
   $handler->display->display_options['fields']['type']['field'] = 'type';
-  /* Campo: Contenuto: Data di inserimento */
+  /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'd.m.Y h:i';
-  /* Campo: Revisione del contenuto: Data modifica */
+  /* Field: Content revision: Updated date */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'node_revision';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'short';
-  /* Campo: Contenuto: Pubblicato */
+  /* Field: Content: Published */
   $handler->display->display_options['fields']['status']['id'] = 'status';
   $handler->display->display_options['fields']['status']['table'] = 'node';
   $handler->display->display_options['fields']['status']['field'] = 'status';
   $handler->display->display_options['fields']['status']['not'] = 0;
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
@@ -3175,14 +2616,14 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Contenuto: Data di inserimento */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Titolo */
+  /* Filter criterion: Content: Title */
   $handler->display->display_options['filters']['title']['id'] = 'title';
   $handler->display->display_options['filters']['title']['table'] = 'node';
   $handler->display->display_options['filters']['title']['field'] = 'title';
@@ -3206,7 +2647,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_suggestion'] = 1;
   $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_dropdown'] = 1;
   $handler->display->display_options['filters']['title']['expose']['autocomplete_dependent'] = 0;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -3286,32 +2727,32 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = 'L\'elenco è ordinato in base al numero di visite dell\'utlimo mese.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Nid */
+  /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = 'ID';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
@@ -3319,21 +2760,21 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Statistiche: Page Views in the past 31 days */
+  /* Sort criterion: Statistics: Page Views in the past 31 days */
   $handler->display->display_options['sorts']['count']['id'] = 'count';
   $handler->display->display_options['sorts']['count']['table'] = 'ga_stats_count_pageviews_month';
   $handler->display->display_options['sorts']['count']['field'] = 'count';
   $handler->display->display_options['sorts']['count']['order'] = 'DESC';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'autore' => 'autore',
   );
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -3350,7 +2791,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  /* Criterio del filtro: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
+  /* Filter criterion: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
   $handler->display->display_options['filters']['field_cognome_value']['id'] = 'field_cognome_value';
   $handler->display->display_options['filters']['field_cognome_value']['table'] = 'field_data_field_cognome';
   $handler->display->display_options['filters']['field_cognome_value']['field'] = 'field_cognome_value';
@@ -3372,7 +2813,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_suggestion'] = 1;
   $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_dropdown'] = 0;
   $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_dependent'] = 0;
-  /* Criterio del filtro: Campo: Immagini (field_images:delta) */
+  /* Filter criterion: Field: Immagini (field_images:delta) */
   $handler->display->display_options['filters']['delta']['id'] = 'delta';
   $handler->display->display_options['filters']['delta']['table'] = 'field_data_field_images';
   $handler->display->display_options['filters']['delta']['field'] = 'delta';
@@ -3439,32 +2880,32 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = 'L\'elenco è ordinato in base al numero di visite dell\'utlimo mese.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Contenuto: Nid */
+  /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = 'ID';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Sezione */
+  /* Field: Contenuto: Sezione */
   $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
   $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
   $handler->display->display_options['fields']['field_sezione']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_sezione']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
@@ -3472,21 +2913,21 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_node']['text'] = 'modifica';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Statistiche: Page Views in the past 31 days */
+  /* Sort criterion: Statistics: Page Views in the past 31 days */
   $handler->display->display_options['sorts']['count']['id'] = 'count';
   $handler->display->display_options['sorts']['count']['table'] = 'ga_stats_count_pageviews_month';
   $handler->display->display_options['sorts']['count']['field'] = 'count';
   $handler->display->display_options['sorts']['count']['order'] = 'DESC';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'evento' => 'evento',
   );
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -3503,7 +2944,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     4 => 0,
     5 => 0,
   );
-  /* Criterio del filtro: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
+  /* Filter criterion: Contenuto: Cognome (o nome del gruppo) (field_cognome) */
   $handler->display->display_options['filters']['field_cognome_value']['id'] = 'field_cognome_value';
   $handler->display->display_options['filters']['field_cognome_value']['table'] = 'field_data_field_cognome';
   $handler->display->display_options['filters']['field_cognome_value']['field'] = 'field_cognome_value';
@@ -3525,7 +2966,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_suggestion'] = 1;
   $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_raw_dropdown'] = 0;
   $handler->display->display_options['filters']['field_cognome_value']['expose']['autocomplete_dependent'] = 0;
-  /* Criterio del filtro: Campo: Immagini (field_images:delta) */
+  /* Filter criterion: Field: Immagini (field_images:delta) */
   $handler->display->display_options['filters']['delta']['id'] = 'delta';
   $handler->display->display_options['filters']['delta']['table'] = 'field_data_field_images';
   $handler->display->display_options['filters']['delta']['field'] = 'delta';
@@ -3553,11 +2994,12 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     t('‹ precedente'),
     t('seguente ›'),
     t('ultima »'),
-    t('Titolo'),
+    t('Title'),
     t('Data evento'),
     t('modifica'),
     t('Tipo'),
     t('Autori'),
+    t('more'),
     t('ID'),
     t('Sezione'),
     t('Pubblicato'),
@@ -3568,8 +3010,11 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
     t('Tag (editable)'),
     t('Contenuti'),
     t('Gestione contenuti'),
-    t('Data di inserimento'),
-    t('Data modifica'),
+    t('Type'),
+    t('Post date'),
+    t('Updated date'),
+    t('Published'),
+    t('Titolo'),
     t('Autori senza foto'),
     t('L\'elenco è ordinato in base al numero di visite dell\'utlimo mese.'),
     t('Eventi senza foto'),
@@ -3653,7 +3098,7 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
       'empty_column' => 0,
     ),
   );
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
@@ -3661,30 +3106,30 @@ Trovati <strong>@total contenuti</strong>, pagina @current page di @page_count.'
   $handler->display->display_options['header']['area']['content'] = 'Questi sono i segnalibri che hai salvato.
 Puoi eliminarli e riordinarli';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
-  /* Relazione: Flag: segnalibri */
+  /* Relationship: Flags: segnalibri */
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['label'] = 'segnalibri';
   $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'segnalibri';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Tipo */
+  /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
   $handler->display->display_options['fields']['type']['field'] = 'type';
-  /* Campo: Flag: Flagged time */
+  /* Field: Flags: Flagged time */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'flagging';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['timestamp']['label'] = 'Dati';
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'time ago';
-  /* Campo: Flag: Flag link */
+  /* Field: Flags: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
   $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
@@ -3692,7 +3137,7 @@ Puoi eliminarli e riordinarli';
   $handler->display->display_options['fields']['ops']['label'] = '';
   $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['ops']['link_type'] = 'confirm';
-  /* Criterio di ordinamento: Flag: Flagged time */
+  /* Sort criterion: Flags: Flagged time */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'flagging';
   $handler->display->display_options['sorts']['timestamp']['field'] = 'timestamp';
@@ -3702,7 +3147,7 @@ Puoi eliminarli e riordinarli';
   /* Display: Segnalibri */
   $handler = $view->new_display('page', 'Segnalibri', 'flag_segnalibri');
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
@@ -3710,7 +3155,7 @@ Puoi eliminarli e riordinarli';
   $handler->display->display_options['header']['area']['content'] = 'Questo è l\'elenco dei contenuti che hai inserito tra i tuoi preferiti.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
   $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* Comportamento se non ci sono risultati: Globale: Area di testo */
+  /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
@@ -3727,7 +3172,7 @@ Puoi eliminarli e riordinarli';
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
@@ -3735,7 +3180,7 @@ Puoi eliminarli e riordinarli';
   $handler->display->display_options['header']['area']['content'] = 'Questo è l\'elenco dei canti che hai inserito nel tuo canzoniere personale.
 Puoi riordinare i canti e salvare l\'elenco.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area_1']['id'] = 'area_1';
   $handler->display->display_options['header']['area_1']['table'] = 'views';
   $handler->display->display_options['header']['area_1']['field'] = 'area';
@@ -3745,7 +3190,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
 ?>';
   $handler->display->display_options['header']['area_1']['format'] = 'php_code';
   $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* Comportamento se non ci sono risultati: Globale: Area di testo */
+  /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
@@ -3753,14 +3198,14 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['empty']['area']['content'] = 'Non hai ancora inserito canti nel tuo canzoniere personale.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relazione: Flag: canzoniere */
+  /* Relationship: Flags: canzoniere */
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['label'] = 'canzoniere';
   $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'canzoniere';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Draggableviews: Contenuto */
+  /* Field: Draggableviews: Content */
   $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
   $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
   $handler->display->display_options['fields']['draggableviews']['field'] = 'draggableviews';
@@ -3771,25 +3216,25 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['handler'] = 'draggableviews_handler_flag_weights';
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['save_button_label'] = 'Salva';
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 1;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Presenza accordi */
+  /* Field: Contenuto: Presenza accordi */
   $handler->display->display_options['fields']['field_presenza_accordi']['id'] = 'field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['table'] = 'field_data_field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['field'] = 'field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['label'] = 'Accordi';
-  /* Campo: Flag: Flagged time */
+  /* Field: Flags: Flagged time */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'flagging';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['timestamp']['label'] = 'Dati';
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'time ago';
-  /* Campo: Flag: Flag link */
+  /* Field: Flags: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
   $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
@@ -3798,7 +3243,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['ops']['link_type'] = 'confirm';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Gestore rotto/mancante */
+  /* Sort criterion: Broken/missing handler */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
   $handler->display->display_options['sorts']['weight']['table'] = 'flagging';
   $handler->display->display_options['sorts']['weight']['field'] = 'weight';
@@ -3822,7 +3267,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* Comportamento se non ci sono risultati: Globale: Area di testo */
+  /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
@@ -3830,19 +3275,19 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['empty']['area']['content'] = 'Non hai ancora inserito canti nel tuo canzoniere personale.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relazione: Flag: canzoniere */
+  /* Relationship: Flags: canzoniere */
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['label'] = 'canzoniere';
   $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'canzoniere';
-  /* Relazione: Flag: Utente */
+  /* Relationship: Flags: User */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'flagging';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Draggableviews: Contenuto */
+  /* Field: Draggableviews: Content */
   $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
   $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
   $handler->display->display_options['fields']['draggableviews']['field'] = 'draggableviews';
@@ -3853,25 +3298,25 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['handler'] = 'draggableviews_handler_flag_weights';
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['save_button_label'] = 'Salva';
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 1;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Presenza accordi */
+  /* Field: Contenuto: Presenza accordi */
   $handler->display->display_options['fields']['field_presenza_accordi']['id'] = 'field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['table'] = 'field_data_field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['field'] = 'field_presenza_accordi';
   $handler->display->display_options['fields']['field_presenza_accordi']['label'] = 'Accordi';
-  /* Campo: Flag: Flagged time */
+  /* Field: Flags: Flagged time */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'flagging';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['timestamp']['label'] = 'Dati';
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'time ago';
-  /* Campo: Flag: Flag link */
+  /* Field: Flags: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
   $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
@@ -3880,13 +3325,13 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['ops']['link_type'] = 'confirm';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Criterio di ordinamento: Gestore rotto/mancante */
+  /* Sort criterion: Broken/missing handler */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
   $handler->display->display_options['sorts']['weight']['table'] = 'flagging';
   $handler->display->display_options['sorts']['weight']['field'] = 'weight';
   $handler->display->display_options['sorts']['weight']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Filtro contestuale: Utente: Nome */
+  /* Contextual filter: User: Name */
   $handler->display->display_options['arguments']['name']['id'] = 'name';
   $handler->display->display_options['arguments']['name']['table'] = 'users';
   $handler->display->display_options['arguments']['name']['field'] = 'name';
@@ -3920,10 +3365,11 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
     t('Questi sono i segnalibri che hai salvato.
 Puoi eliminarli e riordinarli'),
     t('segnalibri'),
-    t('Titolo'),
-    t('Tipo'),
+    t('Title'),
+    t('Type'),
     t('Dati'),
     t('Segnalibri'),
+    t('more'),
     t('Questo è l\'elenco dei contenuti che hai inserito tra i tuoi preferiti.'),
     t('Non hai ancora inserito contenuti tra i tuoi preferiti.'),
     t('Canzoniere'),
@@ -3970,13 +3416,13 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Campo: Contenuto: Percorso */
+  /* Field: Content: Path */
   $handler->display->display_options['fields']['path']['id'] = 'path';
   $handler->display->display_options['fields']['path']['table'] = 'node';
   $handler->display->display_options['fields']['path']['field'] = 'path';
   $handler->display->display_options['fields']['path']['label'] = '';
   $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
-  /* Filtro contestuale: Campo: Old ID (field_old_id) */
+  /* Contextual filter: Field: Old ID (field_old_id) */
   $handler->display->display_options['arguments']['field_old_id_value']['id'] = 'field_old_id_value';
   $handler->display->display_options['arguments']['field_old_id_value']['table'] = 'field_data_field_old_id';
   $handler->display->display_options['arguments']['field_old_id_value']['field'] = 'field_old_id_value';
@@ -3986,7 +3432,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['arguments']['field_old_id_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_old_id_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_old_id_value']['summary_options']['items_per_page'] = '25';
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -4001,7 +3447,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler = $view->new_display('block', 'Autori', 'autore');
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -4018,6 +3464,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
     t('Disc'),
     t('Tutti'),
     t('Canti'),
+    t('more'),
     t('Autori'),
   );
   $export['redirect_nodi'] = $view;
@@ -4049,14 +3496,14 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['pager']['options']['items_per_page'] = '1';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Campo: Termine della tassonomia: ID Termine */
+  /* Field: Taxonomy term: Term ID */
   $handler->display->display_options['fields']['tid']['id'] = 'tid';
   $handler->display->display_options['fields']['tid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['tid']['field'] = 'tid';
   $handler->display->display_options['fields']['tid']['label'] = '';
   $handler->display->display_options['fields']['tid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['tid']['separator'] = '';
-  /* Filtro contestuale: Vocabolario della tassonomia: Nome ad uso interno */
+  /* Contextual filter: Taxonomy vocabulary: Machine name */
   $handler->display->display_options['arguments']['machine_name']['id'] = 'machine_name';
   $handler->display->display_options['arguments']['machine_name']['table'] = 'taxonomy_vocabulary';
   $handler->display->display_options['arguments']['machine_name']['field'] = 'machine_name';
@@ -4067,7 +3514,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['arguments']['machine_name']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['machine_name']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['arguments']['machine_name']['limit'] = '0';
-  /* Filtro contestuale: Campo: Old ID (field_old_id) */
+  /* Contextual filter: Field: Old ID (field_old_id) */
   $handler->display->display_options['arguments']['field_old_id_value']['id'] = 'field_old_id_value';
   $handler->display->display_options['arguments']['field_old_id_value']['table'] = 'field_data_field_old_id';
   $handler->display->display_options['arguments']['field_old_id_value']['field'] = 'field_old_id_value';
@@ -4121,16 +3568,16 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Campo: Vocabolario della tassonomia: Nome */
+  /* Field: Taxonomy vocabulary: Name */
   $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
   $handler->display->display_options['fields']['name_1']['table'] = 'taxonomy_vocabulary';
   $handler->display->display_options['fields']['name_1']['field'] = 'name';
   $handler->display->display_options['fields']['name_1']['label'] = 'Voc';
-  /* Campo: Termine della tassonomia: Nome */
+  /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['fields']['name']['field'] = 'name';
-  /* Campo: Campo: Old ID (editable) */
+  /* Field: Field: Old ID (editable) */
   $handler->display->display_options['fields']['field_old_id_editable']['id'] = 'field_old_id_editable';
   $handler->display->display_options['fields']['field_old_id_editable']['table'] = 'field_data_field_old_id';
   $handler->display->display_options['fields']['field_old_id_editable']['field'] = 'field_old_id_editable';
@@ -4144,7 +3591,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Criterio del filtro: Termine della tassonomia: Vocabolario */
+  /* Filter criterion: Taxonomy term: Vocabulary */
   $handler->display->display_options['filters']['vid']['id'] = 'vid';
   $handler->display->display_options['filters']['vid']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['filters']['vid']['field'] = 'vid';
@@ -4173,9 +3620,10 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
     t('.'),
     t('Tutti'),
     t('Block'),
+    t('more'),
     t('Pagina'),
     t('Voc'),
-    t('Nome'),
+    t('Name'),
     t('Old ID (editable)'),
     t('Vocabolario'),
   );
@@ -4263,50 +3711,50 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
       'separator' => '',
     ),
   );
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['text']['id'] = 'area';
   $handler->display->display_options['header']['text']['table'] = 'views';
   $handler->display->display_options['header']['text']['field'] = 'area';
   $handler->display->display_options['header']['text']['content'] = 'Summary of site content';
   $handler->display->display_options['header']['text']['format'] = 'filtered_html';
-  /* Comportamento se non ci sono risultati: Globale: Area di testo */
+  /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['text']['id'] = 'area';
   $handler->display->display_options['empty']['text']['table'] = 'views';
   $handler->display->display_options['empty']['text']['field'] = 'area';
   $handler->display->display_options['empty']['text']['content'] = 'No content matches your query.';
   $handler->display->display_options['empty']['text']['format'] = 'filtered_html';
-  /* Relazione: Contenuto: Autore */
+  /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Campo: Contenuto: Nid */
+  /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['path'] = 'node/[nid]/view';
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Campo: Contenuto: Tipo */
+  /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
   $handler->display->display_options['fields']['type']['field'] = 'type';
-  /* Campo: Contenuto: Data modifica */
+  /* Field: Content: Updated date */
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
   $handler->display->display_options['fields']['changed']['table'] = 'node';
   $handler->display->display_options['fields']['changed']['field'] = 'changed';
   $handler->display->display_options['fields']['changed']['label'] = 'Ultimo aggiornamento';
-  /* Campo: Utente: Nome */
+  /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'uid';
   $handler->display->display_options['fields']['name']['label'] = 'Autore';
-  /* Campo: Gestore rotto/mancante */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['revision_moderation']['id'] = 'revision_moderation';
   $handler->display->display_options['fields']['revision_moderation']['table'] = 'node';
   $handler->display->display_options['fields']['revision_moderation']['field'] = 'revision_moderation';
@@ -4316,32 +3764,32 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['fields']['revision_moderation']['alter']['path'] = 'node/[nid]/revisions';
   $handler->display->display_options['fields']['revision_moderation']['empty'] = 'No';
   $handler->display->display_options['fields']['revision_moderation']['hide_empty'] = TRUE;
-  /* Campo: Gestore rotto/mancante */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['number_of_revisions']['id'] = 'number_of_revisions';
   $handler->display->display_options['fields']['number_of_revisions']['table'] = 'node';
   $handler->display->display_options['fields']['number_of_revisions']['field'] = 'number_of_revisions';
   $handler->display->display_options['fields']['number_of_revisions']['label'] = 'Rev.';
   $handler->display->display_options['fields']['number_of_revisions']['alter']['alt'] = 'View revision summary';
-  /* Campo: Gestore rotto/mancante */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['state']['id'] = 'state';
   $handler->display->display_options['fields']['state']['table'] = 'node';
   $handler->display->display_options['fields']['state']['field'] = 'state';
-  /* Campo: Contenuto: Link modifica */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['label'] = '';
-  /* Campo: Contenuto: Ha nuovo contenuto */
+  /* Field: Content: Has new content */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'history';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['label'] = '';
-  /* Criterio di ordinamento: Contenuto: Data modifica */
+  /* Sort criterion: Content: Updated date */
   $handler->display->display_options['sorts']['changed']['id'] = 'changed';
   $handler->display->display_options['sorts']['changed']['table'] = 'node';
   $handler->display->display_options['sorts']['changed']['field'] = 'changed';
   $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
-  /* Criterio del filtro: Gestore rotto/mancante */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['revision_moderation']['id'] = 'revision_moderation';
   $handler->display->display_options['filters']['revision_moderation']['table'] = 'node';
   $handler->display->display_options['filters']['revision_moderation']['field'] = 'revision_moderation';
@@ -4351,7 +3799,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['filters']['revision_moderation']['expose']['operator'] = 'revision_moderation_op';
   $handler->display->display_options['filters']['revision_moderation']['expose']['identifier'] = 'revision_moderation';
   $handler->display->display_options['filters']['revision_moderation']['expose']['remember'] = TRUE;
-  /* Criterio del filtro: Gestore rotto/mancante */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['state']['id'] = 'state';
   $handler->display->display_options['filters']['state']['table'] = 'node';
   $handler->display->display_options['filters']['state']['field'] = 'state';
@@ -4360,7 +3808,7 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['filters']['state']['expose']['label'] = 'Stato';
   $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
   $handler->display->display_options['filters']['state']['expose']['identifier'] = 'state';
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -4401,20 +3849,22 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
     t('ultima »'),
     t('Summary of site content'),
     t('No content matches your query.'),
-    t('autore'),
+    t('author'),
     t('Nid'),
-    t('Titolo'),
-    t('Tipo'),
+    t('Title'),
+    t('Type'),
     t('Ultimo aggiornamento'),
     t('Autore'),
     t('Mod?'),
     t('No'),
     t('Rev.'),
     t('View revision summary'),
-    t('Errato gestore node.state'),
+    t('Broken handler node.state'),
     t('Moderated?'),
     t('Stato'),
+    t('Tipo'),
     t('Page'),
+    t('more'),
   );
   $export['revisioning_content_summary'] = $view;
 
@@ -4456,83 +3906,83 @@ print l(\'Stampa il PDF del tuo canzoniere\', \'printpdf/utente/\' . $GLOBALS[\'
   $handler->display->display_options['pager']['options']['tags']['next'] = 'seguente ›';
   $handler->display->display_options['pager']['options']['tags']['last'] = 'ultima »';
   $handler->display->display_options['style_plugin'] = 'table';
-  /* Intestazione: Globale: Area di testo */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = 'Le statistiche di visualizzazione dei singoli contenuti del sito.
 Utilizzare i filtri per selezionare il tipo di contenuto o cambiare l\'ordinamento.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
-  /* Campo: Contenuto: Titolo */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Campo: Contenuto: Tipo */
+  /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
   $handler->display->display_options['fields']['type']['field'] = 'type';
-  /* Campo: Statistiche: Page Views in the past 24 hours */
+  /* Field: Statistics: Page Views in the past 24 hours */
   $handler->display->display_options['fields']['count_1']['id'] = 'count_1';
   $handler->display->display_options['fields']['count_1']['table'] = 'ga_stats_count_pageviews_today';
   $handler->display->display_options['fields']['count_1']['field'] = 'count';
   $handler->display->display_options['fields']['count_1']['label'] = 'Ultime 24 ore';
   $handler->display->display_options['fields']['count_1']['separator'] = '.';
-  /* Campo: Statistiche: Page Views in the past 7 days */
+  /* Field: Statistics: Page Views in the past 7 days */
   $handler->display->display_options['fields']['count_3']['id'] = 'count_3';
   $handler->display->display_options['fields']['count_3']['table'] = 'ga_stats_count_pageviews_week';
   $handler->display->display_options['fields']['count_3']['field'] = 'count';
   $handler->display->display_options['fields']['count_3']['label'] = 'Ultimi 7 giorni';
   $handler->display->display_options['fields']['count_3']['separator'] = '.';
-  /* Campo: Statistiche: Page Views in the past 31 days */
+  /* Field: Statistics: Page Views in the past 31 days */
   $handler->display->display_options['fields']['count_2']['id'] = 'count_2';
   $handler->display->display_options['fields']['count_2']['table'] = 'ga_stats_count_pageviews_month';
   $handler->display->display_options['fields']['count_2']['field'] = 'count';
   $handler->display->display_options['fields']['count_2']['label'] = 'Ultimi 31 giorni';
   $handler->display->display_options['fields']['count_2']['separator'] = '.';
-  /* Campo: Statistiche: Page Views for all time */
+  /* Field: Statistics: Page Views for all time */
   $handler->display->display_options['fields']['count']['id'] = 'count';
   $handler->display->display_options['fields']['count']['table'] = 'ga_stats_count_pageviews_forever';
   $handler->display->display_options['fields']['count']['field'] = 'count';
   $handler->display->display_options['fields']['count']['label'] = 'Da "sempre"';
   $handler->display->display_options['fields']['count']['separator'] = '.';
-  /* Criterio di ordinamento: Statistiche: Page Views in the past 24 hours */
+  /* Sort criterion: Statistics: Page Views in the past 24 hours */
   $handler->display->display_options['sorts']['count_2']['id'] = 'count_2';
   $handler->display->display_options['sorts']['count_2']['table'] = 'ga_stats_count_pageviews_today';
   $handler->display->display_options['sorts']['count_2']['field'] = 'count';
   $handler->display->display_options['sorts']['count_2']['order'] = 'DESC';
   $handler->display->display_options['sorts']['count_2']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['count_2']['expose']['label'] = 'Ultime 24 ore';
-  /* Criterio di ordinamento: Statistiche: Page Views for all time */
+  /* Sort criterion: Statistics: Page Views for all time */
   $handler->display->display_options['sorts']['count']['id'] = 'count';
   $handler->display->display_options['sorts']['count']['table'] = 'ga_stats_count_pageviews_forever';
   $handler->display->display_options['sorts']['count']['field'] = 'count';
   $handler->display->display_options['sorts']['count']['order'] = 'DESC';
   $handler->display->display_options['sorts']['count']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['count']['expose']['label'] = 'Da sempre';
-  /* Criterio di ordinamento: Statistiche: Page Views in the past 7 days */
+  /* Sort criterion: Statistics: Page Views in the past 7 days */
   $handler->display->display_options['sorts']['count_1']['id'] = 'count_1';
   $handler->display->display_options['sorts']['count_1']['table'] = 'ga_stats_count_pageviews_week';
   $handler->display->display_options['sorts']['count_1']['field'] = 'count';
   $handler->display->display_options['sorts']['count_1']['order'] = 'DESC';
   $handler->display->display_options['sorts']['count_1']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['count_1']['expose']['label'] = 'Ultimi 7 giorni';
-  /* Criterio di ordinamento: Statistiche: Page Views in the past 31 days */
+  /* Sort criterion: Statistics: Page Views in the past 31 days */
   $handler->display->display_options['sorts']['count_3']['id'] = 'count_3';
   $handler->display->display_options['sorts']['count_3']['table'] = 'ga_stats_count_pageviews_month';
   $handler->display->display_options['sorts']['count_3']['field'] = 'count';
   $handler->display->display_options['sorts']['count_3']['order'] = 'DESC';
   $handler->display->display_options['sorts']['count_3']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['count_3']['expose']['label'] = 'Ultimi 31 giorni';
-  /* Criterio del filtro: Contenuto: Pubblicato */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Criterio del filtro: Contenuto: Tipo */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -4577,8 +4027,8 @@ Utilizzare i filtri per selezionare il tipo di contenuto o cambiare l\'ordinamen
     t('ultima »'),
     t('Le statistiche di visualizzazione dei singoli contenuti del sito.
 Utilizzare i filtri per selezionare il tipo di contenuto o cambiare l\'ordinamento.'),
-    t('Titolo'),
-    t('Tipo'),
+    t('Title'),
+    t('Type'),
     t('Ultime 24 ore'),
     t('.'),
     t('Ultimi 7 giorni'),
@@ -4587,6 +4037,7 @@ Utilizzare i filtri per selezionare il tipo di contenuto o cambiare l\'ordinamen
     t('Da sempre'),
     t('Tipo contenuto'),
     t('Page'),
+    t('more'),
   );
   $export['statistiche'] = $view;
 
