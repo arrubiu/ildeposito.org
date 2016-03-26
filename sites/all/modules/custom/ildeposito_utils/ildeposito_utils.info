@@ -1,0 +1,5 @@
+name = ilDeposito - Utils
+description = Utility di programmazione per ilDeposito
+core = 7.x
+package = ilDeposito.org
+version = 7.x-1.0

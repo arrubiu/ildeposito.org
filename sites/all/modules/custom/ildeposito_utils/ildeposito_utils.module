@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ */
+
+include_once ('includes/ildeposito_utils.inc');
+
+/**
+ * Implements hook_menu_alter
+ */
+function ildeposito_utils_menu_alter(&$items) {
+  unset($items['node']);
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function ildeposito_utils_mail_alter(&$message) {
+  $message['subject'] = 'ilDeposito - ' . $message['subject'];
+}
