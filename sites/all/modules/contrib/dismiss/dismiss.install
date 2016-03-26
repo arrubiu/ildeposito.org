@@ -1,0 +1,14 @@
+<?php
+/**
+ * @file
+ * The dismiss module install file, which handles the install/uninstall tasks.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function dismiss_uninstall() {
+  variable_del('dismiss_scope');
+  variable_del('dismiss_inline');
+  variable_del('dismiss_fadeout');
+}

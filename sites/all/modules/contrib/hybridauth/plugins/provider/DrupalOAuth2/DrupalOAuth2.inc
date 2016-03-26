@@ -16,13 +16,11 @@ $plugin = array(
 function hybridauth_provider_drupaloauth2_configuration_form_callback(&$form, $provider_id) {
   $app_settings = &$form['vtabs']['application'];
 
-  $language_default = language_default();
-  $language_default->prefix = '';
   $app_settings['#description'] = t('<p>Enter the <strong>OAuth2 Server</strong>, <strong>Client ID</strong> and <strong>Client Secret</strong>.<br/>'
     . 'On the server you must set the <strong>Redirect URI</strong> of the client to:<br/>'
     . '<strong>%redirect_uri</strong></p>',
     array(
-      '%redirect_uri' => url('hybridauth/endpoint', array('absolute' => TRUE, 'query' => array('hauth.done' => 'DrupalOAuth2'), 'language' => $language_default)),
+      '%redirect_uri' => url('hybridauth/endpoint', array('absolute' => TRUE, 'query' => array('hauth.done' => 'DrupalOAuth2'), 'language' => _hybridauth_language_default())),
     )
   );
 

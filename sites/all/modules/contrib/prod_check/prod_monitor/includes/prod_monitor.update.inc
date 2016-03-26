@@ -29,7 +29,7 @@ function _prod_monitor_update_refresh($id, $projects, $site_key) {
   // As replacement for DRUPAL_CORE_COMPATIBILITY since prod_check and
   // prod_monitor should be site independant.
   $core = explode('.', $projects['drupal']['info']['version']);
-  $core = $core[0].'.x';
+  $core = $core[0] . '.x';
 
   $max_fetch_attempts = UPDATE_MAX_FETCH_ATTEMPTS;
 
@@ -65,10 +65,10 @@ function _prod_monitor_update_refresh($id, $projects, $site_key) {
       }
     }
     $modules->available = serialize($available);
-    watchdog('prod_monitor', 'Attempted to fetch information about all available new releases and updates for %link.', array('%link' => _prod_monitor_get_url($id)), WATCHDOG_NOTICE, l(t('view'), 'admin/reports/prod-monitor/site/'.$id.'/view/updates'));
+    watchdog('prod_monitor', 'Fetched information about all available new releases and updates for %link.', array('%link' => _prod_monitor_get_url($id)), WATCHDOG_NOTICE, l(t('view'), 'admin/reports/prod-monitor/site/' . $id . '/view/updates'));
   }
   else {
-    watchdog('prod_monitor', 'Unable to fetch any information about available new releases and updates for %link.', array('%link' => _prod_monitor_get_url($id)), WATCHDOG_ERROR, l(t('view'), 'admin/reports/prod-monitor/site/'.$id.'/view/updates'));
+    watchdog('prod_monitor', 'Unable to fetch any information about available new releases and updates for %link.', array('%link' => _prod_monitor_get_url($id)), WATCHDOG_ERROR, l(t('view'), 'admin/reports/prod-monitor/site/' . $id . '/view/updates'));
   }
   // Whether this worked or not, we did just (try to) check for updates.
   $modules->lastupdate = time();
@@ -99,7 +99,7 @@ function _prod_monitor_update_refresh($id, $projects, $site_key) {
 function _prod_monitor_update_build_fetch_url($project, $site_key = '', $core) {
   $name = $project['name'];
   $url = _prod_monitor_update_get_fetch_url_base($project);
-  $url .= '/'. $name .'/'. $core;
+  $url .= '/' . $name . '/' . $core;
   // Only append a site_key and the version information if we have a site_key
   // in the first place, and if this is not a disabled module or theme. We do
   // not want to record usage statistics for disabled code.
@@ -168,6 +168,19 @@ function _prod_monitor_calculate_project_data($id, $projects, $available) {
       $projects[$project]['reason'] = t('No available releases found');
     }
   }
+
+  // Handle the ignored modules.
+  if (($ignored = _prod_monitor_get_site_ignored($id))
+    && !empty($ignored['updates'])) {
+    foreach ($ignored['updates'] as $project_name) {
+      if (isset($projects[$project_name])) {
+        $projects[$project_name]['ignored'] = TRUE;
+        $projects[$project_name]['status'] = UPDATE_UNKNOWN;
+      }
+    }
+  }
+
+  drupal_alter('prod_monitor_project_data', $id, $projects, $available);
 
   // Check if we need to flag a security update warning.
   // Prepare object to store generated data to DB.

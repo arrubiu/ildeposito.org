@@ -44,14 +44,14 @@ function drush_prod_check_status() {
 
   foreach ($functions as $set => $data) {
     $rows[] = array('');
-    $rows[] = array("\033[1m".dt($data['title'])."\033[0m");
+    $rows[] = array("\033[1m" . dt($data['title'])."\033[0m");
     foreach ($data['functions'] as $function => $title) {
       $result = call_user_func($function);
       $func = ltrim($function, '_');
       if (is_array($result) && !empty($result)) {
         $rows[] = array(
           $result[$func]['title'],
-          "\033[".$severity[$result[$func]['severity']].'m'.strip_tags($result[$func]['value'])."\033[0m",
+          "\033[" . $severity[$result[$func]['severity']] . 'm' . strip_tags($result[$func]['value']) . "\033[0m",
         );
         if ($error < $result[$func]['severity']) {
           $error = $result[$func]['severity'];
@@ -59,12 +59,12 @@ function drush_prod_check_status() {
       }
     }
   }
-  drush_print("\033[1m".dt('Production Check status')."\033[0m", 1);
+  drush_print("\033[1m" . dt('Production Check status')."\033[0m", 1);
   drush_print_table($rows);
   if ($error > 0) {
     // Would be cool if we could prefix the admin path with http://<host>/ so it
     // will become a clickable link in some terminals. Any ideas?
-    drush_print("\033[1m".dt('Some errors were reported!')."\033[0m ".dt('Check the full status page on')." \033[1m".'admin/reports/prod-check'."\033[0m ".dt('for details.'));
+    drush_print("\033[1m" . dt('Some errors were reported!') . "\033[0m " . dt('Check the full status page on') . " \033[1m" . 'admin/reports/prod-check' . "\033[0m " . dt('for details.'));
   }
 }
 

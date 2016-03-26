@@ -8,9 +8,9 @@ files[] = dismiss.admin.inc
 
 configure = admin/config/user-interface/dismiss
 
-; Information added by Drupal.org packaging script on 2014-03-10
-version = "7.x-1.3"
+; Information added by Drupal.org packaging script on 2015-06-23
+version = "7.x-1.5"
 core = "7.x"
 project = "dismiss"
-datestamp = "1394433330"
+datestamp = "1435066694"
 

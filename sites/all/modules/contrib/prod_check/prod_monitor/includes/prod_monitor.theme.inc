@@ -1,6 +1,21 @@
 <?php
 
 /**
+ * Implements hook_preprocess_prod_monitor_update_report().
+ */
+function prod_monitor_preprocess_prod_monitor_update_report(&$vars) {
+  if (is_array($vars['data'])) {
+    foreach (array_keys($vars['data']) as $module_id) {
+
+      // When ignoring a module, we'll give a reason.
+      if (isset($vars['data'][$module_id]['ignored'])) {
+        $vars['data'][$module_id]['reason'] = t('Being ignored');
+      }
+    }
+  }
+}
+
+/**
  * Returns HTML for the project status report.
  *
  * @param array $variables
@@ -15,12 +30,12 @@ function theme_prod_monitor_update_report($variables) {
   $data = $variables['data'];
 
   if (!is_array($data)) {
-    $output = '<p>'. $data .'</p>';
+    $output = '<p>' . $data . '</p>';
     return $output;
   }
 
   $output = '<div class="update checked">'. ($last ? t('Last checked: @time ago', array('@time' => format_interval(time() - $last))) : t('Last checked: never'));
-  $output .= ' <span class="check-manually">('. l(t('Check manually'), 'admin/reports/prod-monitor/site/'.$id.'/update-check') .')</span>';
+  $output .= ' <span class="check-manually">('. l(t('Check manually'), 'admin/reports/prod-monitor/site/' . $id . '/update-check') . ')</span>';
   $output .= "</div>\n";
 
   $header = array();
@@ -226,7 +241,7 @@ function theme_prod_monitor_update_report($variables) {
     if (!empty($rows[$type_name])) {
       ksort($rows[$type_name]);
       $output .= "\n<h3>" . $type_label . "</h3>\n";
-      $output .= theme('table', array('header' => $header, 'rows' => $rows[$type_name], 'attributes' => array('class' => array('update'))));
+      $output .= theme('table', array('prod_monitor_id' => 'update_report', 'header' => $header, 'rows' => $rows[$type_name], 'attributes' => array('class' => array('update'))));
     }
   }
   drupal_add_css(drupal_get_path('module', 'update') . '/update.css');

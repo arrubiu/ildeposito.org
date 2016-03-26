@@ -42,5 +42,33 @@ function dismiss_admin() {
     '#default_value'  => variable_get('dismiss_inline', DISMISS_INLINE_DEFAULT),
   );
 
+  // Behavior settings fieldset
+  $form['behavior'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Behavior settings',
+  );
+
+  // Option to fade
+  $form['behavior']['dismiss_fadeout'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Length of fadeout wait time (ms)'),
+    '#description' => t('The length of time in milliseconds (max 6-digits) Dismiss should wait to automatically fadeout messages. A value of 0 (zero) disables this behavior.'),
+    '#size' => 10,
+    '#maxlength' => 6,
+    '#required' => TRUE,
+    '#default_value' => variable_get('dismiss_fadeout', DISMISS_FADEOUT_DEFAULT),
+  );
+
+  $form['#validate'][] = 'dismiss_admin_validate';
+
   return system_settings_form($form);
+}
+
+/**
+ * Custom validation function for dismiss_admin().
+ */
+function dismiss_admin_validate($form, &$form_state) {
+  if (!is_numeric($form_state['values']['dismiss_fadeout'])) {
+    form_set_error('fadeout', t('Fadeout value must be numeric.'));
+  }
 }

@@ -7,7 +7,7 @@
  * All messages require relative positioning
  * for the Dismiss button to be placed properly
  */
-.messages {
+div.messages {
   position: relative;
   padding-right: 1.5em;
 }
@@ -20,7 +20,7 @@
   position: absolute;
   top: .4em;
   right: .4em;
-  width: 1.4em;
+  width: 1.8em;
   background: #ed541d;
   border: 0;
   color: #fff;
@@ -43,7 +43,7 @@
 }
 
 .dismiss:before {
-  content: 'X';
+  content: '\2715';
 }
 
 .error .dismiss {

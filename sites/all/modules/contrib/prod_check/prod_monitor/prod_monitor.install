@@ -150,29 +150,6 @@ function prod_monitor_schema() {
 }
 
 /**
- * Implementation of hook_requirements().
- */
-function prod_monitor_requirements($phase) {
-  $requirements = array();
-  
-  switch ($phase) {
-    case 'install':
-      if (module_exists('update')) {
-        $requirements['prod_monitor_update'] = array(
-          'title' => t('Production monitor'),
-          'value' => t('Update manager enabled.'),
-          'severity' => REQUIREMENT_ERROR,
-          'description' => t('You have enabled <em>Update manager</em>. You have to disable this module before enabling Production monitor!'),
-        );
-      }
-      break;
-  }
-
-  return $requirements;
-}
-
-
-/**
  * Implementation of hook_uninstall().
  */
 function prod_monitor_uninstall() {
@@ -293,4 +270,26 @@ function prod_check_update_7103() {
       'default' => '',
     )
   );
+}
+
+/**
+ * Add new dbconnect_path setting to database to prevent warnings.
+ */
+function prod_check_update_7104() {
+  $table = 'prod_monitor_sites';
+
+  // Fetch all settings.
+  $result = db_select($table, 'psm')
+    ->fields('psm', array('id', 'settings'))
+    ->execute();
+
+  // Update all sites to add new setting.
+  foreach ($result as $site) {
+    $settings = unserialize($site->settings);
+    $settings['dbconnect_path'] = '';
+    $site->settings = serialize($settings);
+
+    // Write to DB.
+    drupal_write_record($table, $site, array('id'));
+  }
 }

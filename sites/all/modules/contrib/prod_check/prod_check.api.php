@@ -71,7 +71,7 @@ function my_module_additional_check($caller = 'internal') {
   $title = 'My modules settings';
   $setting1 = t('Enable debug info');
   $setting2 = t('Disable debug info');
-  $path = 'admin/settings/my-module-settings-page';
+  $path = 'admin/config/system/my-module-settings-page';
   if ($caller != 'internal') {
     $path = PRODCHECK_BASEURL . $path;
   }
@@ -85,7 +85,7 @@ function my_module_additional_check($caller = 'internal') {
     '#description_ok'  => prod_check_ok_title($title, $path),
     '#description_nok' => t('Your !link settings are set to %setting1, they should be set to %setting2 on a producion environment!',
       array(
-        '!link' => '<em>'.l(t($title), $path, array('attributes' => array('title' => t($title)))).'</em>',
+        '!link' => '<em>' . l(t($title), $path, array('attributes' => array('title' => t($title)))) . '</em>',
         '%setting1' => $setting1,
         '%setting2' => $setting2,
       )

@@ -5,9 +5,9 @@ package = Views
 php = 5.3.0
 core = 7.x
 
-; Information added by  packaging script on 2013-11-26
-version = "7.x-1.0-alpha1+17-dev"
+; Information added by Drupal.org packaging script on 2015-04-26
+version = "7.x-1.0-beta1"
 core = "7.x"
 project = "views_timelinejs"
-datestamp = "1385456905"
+datestamp = "1430075882"
 

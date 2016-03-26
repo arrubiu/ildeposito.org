@@ -12,7 +12,7 @@
  * @ingroup forms
  */
 function hybridauth_admin_settings($form, &$form_state) {
-  if (!variable_get('hybridauth_register', 0) && variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_ADMINISTRATORS_ONLY) {
+  if (variable_get('hybridauth_register', 0) == 0 && variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_ADMINISTRATORS_ONLY) {
     drupal_set_message(t('Currently only administrators can create new user accounts. Either change the "Who can register accounts?" option under "Account settings" tab or at the core <a href="!link">Account settings</a>.',
       array('!link' => url('admin/config/people/accounts'))), 'warning');
   }
@@ -27,41 +27,45 @@ function hybridauth_admin_settings($form, &$form_state) {
   $form['vtabs']['fset_providers'] = array(
     '#type' => 'fieldset',
     '#title' => t('Authentication providers'),
-    '#theme' => 'hybridauth_admin_settings_providers_table',
   );
-  foreach (hybridauth_providers_list() as $provider_id => $provider_name) {
-    $available = array_key_exists($provider_id, hybridauth_providers_files());
-    $form['vtabs']['fset_providers'][$provider_id]['icon'] = array(
-      '#theme' => 'hybridauth_provider_icon',
-      '#provider_id' => $provider_id,
-      '#icon_pack' => 'hybridauth_16',
+  $header = array(
+    'name' => t('Name'),
+    'icon' => t('Icon'),
+    'available' => t('Available'),
+    'settings' => t('Settings'),
+  );
+  $options = array();
+  $weight = -50;
+  // Clear the providers cache here to get any new ones.
+  $providers = hybridauth_providers_list(TRUE);
+  $enabled_providers = array_filter(variable_get('hybridauth_providers', array()));
+  $available_providers = hybridauth_providers_files();
+  $form['vtabs']['fset_providers']['hybridauth_providers'] = array();
+  foreach (array_keys($enabled_providers + $providers) as $provider_id) {
+    $available = array_key_exists($provider_id, $available_providers);
+    $options[$provider_id] = array(
+      'name' => $providers[$provider_id],
+      'icon' => theme('hybridauth_provider_icon', array('provider_id' => $provider_id, 'icon_pack' => 'hybridauth_16')),
+      'available' => $available ? t('Yes') : t('No'),
+      'settings' => l(t('Settings'), 'admin/config/people/hybridauth/provider/' . $provider_id, array('query' => drupal_get_destination())),
+      '#attributes' => array('class' => array('draggable')),
     );
-    $form['vtabs']['fset_providers'][$provider_id]['hybridauth_provider_' . $provider_id . '_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => drupal_placeholder($provider_name),
-      '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_enabled', 0),
-      '#disabled' => $available ? FALSE : TRUE,
-    );
-    $form['vtabs']['fset_providers'][$provider_id]['file'] = array(
-      '#markup' => $available ? t('Yes') : t('No'),
-    );
-    $form['vtabs']['fset_providers'][$provider_id]['hybridauth_provider_' . $provider_id . '_weight'] = array(
+    $form['vtabs']['fset_providers']['hybridauth_providers']['hybridauth_provider_' . $provider_id . '_weight'] = array(
+      '#tree' => FALSE,
       '#type' => 'weight',
-      // '#title' => t('Weight'),
       '#delta' => 50,
-      // Use a high default weight for disabled providers so that they sink down.
-      '#default_value' => variable_get('hybridauth_provider_' . $provider_id . '_weight', 50),
-      '#attributes' => array('class' => array('hybridauth-provider-weight')),
-    );
-    $form['vtabs']['fset_providers'][$provider_id]['settings'] = array(
-      '#type' => 'link',
-      '#title' => t('Settings'),
-      '#href' => 'admin/config/people/hybridauth/provider/' . $provider_id,
-      '#options' => array(
-        'query' => drupal_get_destination(),
-      ),
+      '#default_value' => $weight++,
+      '#attributes' => array('class' => array('hybridauth-providers-weight')),
     );
   }
+  $form['vtabs']['fset_providers']['hybridauth_providers'] += array(
+    '#type' => 'tableselect',
+    '#title' => t('Providers'),
+    '#header' => $header,
+    '#options' => $options,
+    '#default_value' => $enabled_providers,
+    '#pre_render' => array('hybridauth_admin_providers_pre_render'),
+  );
 
   $form['vtabs']['fset_fields'] = array(
     '#type' => 'fieldset',
@@ -147,6 +151,13 @@ function hybridauth_admin_settings($form, &$form_state) {
     '#description' => t('Determines the order of the elements on the form - heavier elements get positioned later.'),
     '#default_value' => variable_get('hybridauth_widget_weight', 100),
   );
+  $form['vtabs']['fset_widget']['hybridauth_widget_hide_links'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide links'),
+    '#description' => t('Remove href property from authentication provider links.'),
+    '#default_value' => variable_get('hybridauth_widget_hide_links', 0),
+  );
+
 
   $form['vtabs']['fset_account'] = array(
     '#type' => 'fieldset',
@@ -311,14 +322,21 @@ function hybridauth_admin_settings($form, &$form_state) {
     '#type' => 'fieldset',
     '#title' => t('Other settings'),
   );
+  $destination_description = t('Drupal path to redirect to, like "node/1". Leave empty to return to the same page (set to [HTTP_REFERER] for widget in modal dialogs loaded by AJAX).') . '<br/>'
+    . t('You can use any user or global tokens here.') . ' '
+    . t('Install !link module to get list of all available tokens.',
+      array('!link' => l(t('Token'), 'http://drupal.org/project/token', array('attributes' => array('target' => '_blank')))));
   $form['vtabs']['fset_other']['hybridauth_destination'] = array(
     '#type' => 'textfield',
     '#title' => t('Redirect after login'),
     '#default_value' => variable_get('hybridauth_destination', ''),
-    '#description' => t('Drupal path to redirect to, like "node/1". Leave empty to return to the same page (set to [HTTP_REFERER] for widget in modal dialogs loaded by AJAX).') . '<br/>'
-      . t('You can use any user or global tokens here.') . ' '
-      . t('Install !link module to get list of all available tokens.',
-        array('!link' => l(t('Token'), 'http://drupal.org/project/token', array('attributes' => array('target' => '_blank'))))),
+    '#description' => $destination_description,
+  );
+  $form['vtabs']['fset_other']['hybridauth_destination_error'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Redirect after error on login'),
+    '#default_value' => variable_get('hybridauth_destination_error', ''),
+    '#description' => $destination_description,
   );
   if (module_exists('token')) {
     $form['vtabs']['fset_other']['fset_token'] = array(
@@ -347,6 +365,12 @@ function hybridauth_admin_settings($form, &$form_state) {
     '#description' => t('Select how to handle duplicate email addresses. '
       . 'This situation occurs when the same user is trying to authenticate using different authentication providers, but with the same email address.'),
   );
+  $form['vtabs']['fset_other']['hybridauth_proxy'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Proxy'),
+    '#default_value' => variable_get('hybridauth_proxy', NULL),
+    '#description' => t('The HTTP proxy to tunnel requests through. For example <strong>1.2.3.4:8080</strong>.'),
+  );
   $form['vtabs']['fset_other']['hybridauth_debug'] = array(
     '#type' => 'checkbox',
     '#title' => t('Debug mode'),
@@ -358,60 +382,46 @@ function hybridauth_admin_settings($form, &$form_state) {
 }
 
 /**
- * Form validation handler for the hybridauth admin settings form.
+ * Pre-render callback for the providers tableselect.
  */
-function hybridauth_admin_settings_validate($form, &$form_state) {
-  foreach (hybridauth_providers_list() as $provider_id => $provider_name) {
-    if (empty($form_state['values']['hybridauth_provider_' . $provider_id . '_enabled'])) {
-      unset($form_state['values']['hybridauth_provider_' . $provider_id . '_enabled']);
-      unset($form_state['values']['hybridauth_provider_' . $provider_id . '_weight']);
-      variable_del('hybridauth_provider_' . $provider_id . '_enabled');
-    }
+function hybridauth_admin_providers_pre_render($element) {
+  // Add weight column.
+  $element['#header']['weight'] = t('Weight');
+  foreach (array_keys($element['#options']) as $provider_id) {
+    $key = 'hybridauth_provider_' . $provider_id . '_weight';
+    $element['#options'][$provider_id]['weight'] = array(
+      'data' => drupal_render($element[$key]),
+    );
+    unset($element[$key]);
   }
+
+  // Assign id to the table.
+  $table_id = 'hybridauth-providers';
+  $element['#attributes'] = array('id' => $table_id);
+  drupal_add_tabledrag($table_id, 'order', 'sibling', 'hybridauth-providers-weight');
+  return $element;
 }
 
 /**
- * Theme function for hybridauth_admin_settings() to render providers table.
+ * Form validation handler for the hybridauth admin settings form.
  */
-function theme_hybridauth_admin_settings_providers_table($vars) {
-  $form = $vars['form'];
+function hybridauth_admin_settings_validate($form, &$form_state) {
+  $values = &$form_state['values'];
+  $providers = hybridauth_providers_list();
 
-  $header = array(
-    array('data' => t('Name'), 'colspan' => 2),
-    t('Available'),
-    t('Weight'),
-    t('Operations'),
-  );
-  $rows = array();
-
-  foreach (element_children($form) as $provider_id) {
-    if (isset($form[$provider_id]['icon'])) {
-      $row = array(
-        drupal_render($form[$provider_id]['hybridauth_provider_' . $provider_id . '_enabled']),
-        drupal_render($form[$provider_id]['icon']),
-        drupal_render($form[$provider_id]['file']),
-        drupal_render($form[$provider_id]['hybridauth_provider_' . $provider_id . '_weight']),
-        drupal_render($form[$provider_id]['settings']),
-      );
-
-      $rows[] = array(
-        'data' => $row,
-        'class' => array('draggable'),
-      );
-    }
+  // Remove weights so they are not saved as variables.
+  foreach (array_keys($providers) as $provider_id) {
+    $providers_weights[$provider_id] = $values['hybridauth_provider_' . $provider_id . '_weight'];
+    unset($values['hybridauth_provider_' . $provider_id . '_weight']);
   }
+  asort($providers_weights);
 
-  // Finally, output the sortable table. Make sure the id variable is the same
-  // as the table id in drupal_add_tabledrag().
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'hybridauth-providers')));
-  $output .= drupal_render_children($form);
+  $providers_values = $values['hybridauth_providers'];
+  unset($values['hybridauth_providers']);
 
-  // This function is the instantiator of the sorter. Make sure the 0th
-  // parameter is the id of your table, and the 3rd parameter is the class of
-  // your weight variable.
-  drupal_add_tabledrag('hybridauth-providers', 'order', 'sibling', 'hybridauth-provider-weight');
-
-  return $output;
+  foreach (array_keys($providers_weights) as $provider_id) {
+    $values['hybridauth_providers'][$provider_id] = $providers_values[$provider_id];
+  }
 }
 
 /**

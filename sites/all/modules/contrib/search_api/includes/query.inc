@@ -153,7 +153,9 @@ interface SearchApiQueryInterface {
    *
    * @param string $field
    *   The field to sort by. The special fields 'search_api_relevance' (sort by
-   *   relevance) and 'search_api_id' (sort by item id) may be used.
+   *   relevance) and 'search_api_id' (sort by item id) may be used. Also, if
+   *   the search server supports the "search_api_random_sort" feature, the
+   *   "search_api_random" special field can be used to sort randomly.
    * @param string $order
    *   The order to sort items in - either 'ASC' or 'DESC'.
    *
@@ -217,7 +219,10 @@ interface SearchApiQueryInterface {
    *     - execution: The actual query to the search server, in whatever form.
    *     - postprocessing: Preparing the results for returning.
    *   Additional metadata may be returned in other keys. Only 'result count'
-   *   and 'result' always have to be set, all other entries are optional.
+   *   and 'results' always have to be set, all other entries are optional.
+   *
+   * @throws SearchApiException
+   *   If an error prevented the search from completing.
    */
   public function execute();
 
@@ -466,8 +471,8 @@ class SearchApiQuery implements SearchApiQueryInterface {
     );
     $modes['terms'] = array(
       'name' => t('Multiple terms'),
-      'description' => t('The query is interpreted as multiple keywords seperated by spaces. ' .
-          'Keywords containing spaces may be "quoted". Quoted keywords must still be seperated by spaces.'),
+      'description' => t('The query is interpreted as multiple keywords separated by spaces. ' .
+          'Keywords containing spaces may be "quoted". Quoted keywords must still be separated by spaces.'),
     );
     // @todo Add fourth mode for complicated expressions, e.g.: »"vanilla ice" OR (love NOT hate)«
     return $modes;
@@ -586,6 +591,10 @@ class SearchApiQuery implements SearchApiQueryInterface {
       'search_api_relevance' => array('type' => 'decimal'),
       'search_api_id' => array('type' => 'integer'),
     );
+    if ($this->getIndex()->server()->supportsFeature('search_api_random_sort')) {
+      $fields['search_api_random'] = array('type' => 'integer');
+    }
+
     if (empty($fields[$field])) {
       throw new SearchApiException(t('Trying to sort on unknown field @field.', array('@field' => $field)));
     }
@@ -720,6 +729,9 @@ class SearchApiQuery implements SearchApiQueryInterface {
   public function postExecute(array &$results) {
     // Postprocess results.
     $this->index->postprocessSearchResults($results, $this);
+
+    // Let modules alter the results.
+    drupal_alter('search_api_results', $results, $this);
   }
 
   /**

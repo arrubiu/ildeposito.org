@@ -1,12 +1,16 @@
 name = Views block area
 description = Exposes all blocks as a views area.
+dependencies[] = block
 dependencies[] = views
+package = Views
 core = 7.x
 version = VERSION
 files[] = views/handlers/views_handler_area_block.inc
-; Information added by drupal.org packaging script on 2012-04-11
-version = "7.x-1.1"
+files[] = views/handlers/views_handler_field_block.inc
+
+; Information added by Drupal.org packaging script on 2015-12-05
+version = "7.x-1.2"
 core = "7.x"
 project = "views_block_area"
-datestamp = "1334146299"
+datestamp = "1449353940"
 

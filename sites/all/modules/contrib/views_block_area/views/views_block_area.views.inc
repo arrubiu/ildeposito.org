@@ -15,6 +15,9 @@ function views_block_area_views_data() {
     'area' => array(
       'handler' => 'views_handler_area_block',
     ),
+    'field' => array(
+      'handler' => 'views_handler_field_block',
+    ),
   );
 
   return $data;

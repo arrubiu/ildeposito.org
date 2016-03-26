@@ -13,21 +13,24 @@ define('PROD_MONITOR_REQUIREMENT_WARNING', 1);
 define('PROD_MONITOR_REQUIREMENT_ERROR', 2);
 
 /**
- * We do the same here for the update module constants: redefine them so that we
- * do not need to run the update module entirely!
+ * We don't want to load the Update module just to be able to run Production
+ * Monitor, so we copy the constants from Update. But we need to check them all
+ * so that we don't get notices if Update is already running.
  */
-define('UPDATE_DEFAULT_URL', 'http://updates.drupal.org/release-history');
-define('UPDATE_NOT_SECURE', 1);
-define('UPDATE_REVOKED', 2);
-define('UPDATE_NOT_SUPPORTED', 3);
-define('UPDATE_NOT_CURRENT', 4);
-define('UPDATE_CURRENT', 5);
-define('UPDATE_NOT_CHECKED', -1);
-define('UPDATE_UNKNOWN', -2);
-define('UPDATE_NOT_FETCHED', -3);
-define('UPDATE_FETCH_PENDING', -4);
-define('UPDATE_MAX_FETCH_ATTEMPTS', 2);
-define('UPDATE_MAX_FETCH_TIME', 5);
+if (!module_exists('update')) {
+  define('UPDATE_DEFAULT_URL', 'http://updates.drupal.org/release-history');
+  define('UPDATE_NOT_SECURE', 1);
+  define('UPDATE_REVOKED', 2);
+  define('UPDATE_NOT_SUPPORTED', 3);
+  define('UPDATE_NOT_CURRENT', 4);
+  define('UPDATE_CURRENT', 5);
+  define('UPDATE_NOT_CHECKED', -1);
+  define('UPDATE_UNKNOWN', -2);
+  define('UPDATE_NOT_FETCHED', -3);
+  define('UPDATE_FETCH_PENDING', -4);
+  define('UPDATE_MAX_FETCH_ATTEMPTS', 2);
+  define('UPDATE_MAX_FETCH_TIME', 5);
+}
 
 /**
  * Implementation of hook_help().
@@ -36,24 +39,29 @@ function prod_monitor_help($path, $arg) {
   $output = '';
   switch ($path) {
     case 'admin/help#prod_monitor':
-      $output .= '<p>'.t('Production monitor is a module that can connect to the <strong>Production check</strong> module using <strong>XMLRPC</strong> and an <strong>API key</strong>. It will retrieve all specified data from the remote site to create a satus page and monitoring facility in a central place.').'<br />';
-      $output .= t('You can add multiple sites and configure per site what data you wish (not) to monitor, allowing you to setup a central Drupal site that will monitor all of your sites that have the <em>Production check</em> module with <em>XMLRPC</em> enabled.').'<br />';
-      $output .= t('The <strong>data retrieval</strong> mechanism can be called <strong>manually</strong> and is integrated with the <strong>cron</strong>, so you get a fresh update of data each cron run.').'</p>';
+      $output .= '<p>' . t('Production monitor is a module that can connect to the <strong>Production check</strong> module using <strong>XMLRPC</strong> and an <strong>API key</strong>. It will retrieve all specified data from the remote site to create a satus page and monitoring facility in a central place.') . '<br />';
+      $output .= t('You can add multiple sites and configure per site what data you wish (not) to monitor, allowing you to setup a central Drupal site that will monitor all of your sites that have the <em>Production check</em> module with <em>XMLRPC</em> enabled.') . '<br />';
+      $output .= t('The <strong>data retrieval</strong> mechanism can be called <strong>manually</strong> and is integrated with the <strong>cron</strong>, so you get a fresh update of data each cron run.') . '</p>';
       break;
     case 'admin/reports/prod-monitor':
-      $output .= '<p><strong>'.t('Site overview table').'</strong><br />';
-      $output .= t('The overview table gives you an overview of what sites you have added together with their status. The status will be the highest error detected in the retrieved data set.').'<br />';
-      $output .= t('The per site functions <strong>View</strong>, <strong>Edit</strong>, <strong>Fetch data</strong>, <strong>Flush</strong> and <strong>Delete</strong> should be self explanatory.').'</p>';
+      $output .= '<p><strong>' . t('Site overview table') . '</strong><br />';
+      $output .= t('The overview table gives you an overview of what sites you have added together with their status. The status will be the highest error detected in the retrieved data set.') . '<br />';
+      $output .= t('The per site functions <strong>View</strong>, <strong>Edit</strong>, <strong>Fetch data</strong>, <strong>Flush</strong> and <strong>Delete</strong> should be self explanatory.') . '</p>';
       // No break!
     case 'admin/reports/prod-monitor/site/%/edit':
-      $output .= '<p><strong>'.t('Website URL & API key').'</strong><br />';
-      $output .= t('To add a site, enter it\'s <strong>full url</strong>, including the protocol, but omitting the <em>xmlrpc.php</em> part and the <strong>API key</strong> that you have configured for it using the <strong>Production check</strong> module. Now click the <strong>Get settings</strong> button.').'<br />';
-      $output .= t('All of the checks that the <em>Production check</em> module can perform are fetched from the remote site and presented as an array of checkboxes. Finally you can configure what exactly you wish to monitor for this site, then hit the <strong>Add site</strong> button.').'<br />';
-      $output .= t('Each time you edit a site, the settings are fetched from the remote server so that any new checks that might have been added to the <em>Production check</em> module there are always up to date in the monitoring section.').'<br />';      $output .= t('<strong>Fetch data immediately</strong> does exactly what it says and fetches all the configured data from the remote site and will direct you to the report page.').'</p>';
+      $output .= '<p><strong>' . t('Website URL & API key') . '</strong><br />';
+      $output .= t("To add a site, enter it's <strong>full url</strong>, including the protocol, but omitting the <em>xmlrpc.php</em> part and the <strong>API key</strong> that you have configured for it using the <strong>Production check</strong> module. Now click the <strong>Get settings</strong> button.") . '<br />';
+      $output .= t('All of the checks that the <em>Production check</em> module can perform are fetched from the remote site and presented as an array of checkboxes. Finally you can configure what exactly you wish to monitor for this site, then hit the <strong>Add site</strong> button.') . '<br />';
+      $output .= t('Each time you edit a site, the settings are fetched from the remote server so that any new checks that might have been added to the <em>Production check</em> module there are always up to date in the monitoring section.') . '<br />';
+      $output .= t('<strong>Fetch data immediately</strong> does exactly what it says and fetches all the configured data from the remote site and will direct you to the report page.') . '</p>';
+      break;
+    case 'admin/reports/prod-monitor/module-lookup':
+      $output .= '<p><strong>' . t('Module name') . '</strong><br />';
+      $output .= t("Enter (part of) the module's machine name to see what sites are using the module.") . '<br />';
       break;
     case 'admin/reports/prod-monitor/site/%':
     case 'admin/reports/prod-monitor/site/%/view':
-      $output .= '<p>'.t('This is an overview of all checks performed by the <em>Production check</em> module and their status <strong>on the remote site</strong>. You can click the links inside the report to jump to the module\'s settings page, or to go to the project page of a module, in case you need to download it for installation.').'</p>';
+      $output .= '<p>' . t("This is an overview of all checks performed by the <em>Production check</em> module and their status <strong>on the remote site</strong>. You can click the links inside the report to jump to the module's settings page, or to go to the project page of a module, in case you need to download it for installation.") . '</p>';
       break;
   }
   return $output;
@@ -87,6 +95,25 @@ function prod_monitor_menu() {
     'access arguments' => array('access production monitor'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'includes/prod_monitor.admin.inc',
+  );
+
+  // Default primary tab (callback for this is it's parent path).
+  $items['admin/reports/prod-monitor/overview'] = array(
+    'title' => 'Overview',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+   );
+
+  $items['admin/reports/prod-monitor/module-lookup'] = array(
+    'title' => 'Module lookup',
+    'description' => 'Searches monitored applications for module versions.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('prod_monitor_module_lookup_form'),
+    'access callback' => 'user_access',
+    'access arguments' => array('access production monitor'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'includes/prod_monitor.admin.inc',
+    'weight' => 1,
   );
 
   // This hook_menu() thing, still can't fully see the logic in it. However,
@@ -330,8 +357,10 @@ function prod_monitor_cron() {
   foreach ($sites as $id => $site_info) {
     $elapsed = time() - $cron_start;
     if ($elapsed < $time_limit) {
-      //TODO: add module status update check here.
+      // First: all checks.
       _prod_monitor_retrieve_data($id, $site_info);
+      // MUST be second because of the status update!
+      _prod_monitor_db_connect_check($id, $site_info);
       $process++;
     }
     else {
@@ -367,7 +396,7 @@ function _prod_monitor_retrieve_functions($url, $api_key, $msg = TRUE) {
       'error'
     );
   }
-  else if ($msg) {
+  elseif ($msg) {
     drupal_set_message(t('Settings form updated, please adjust your settings.'));
   }
 
@@ -469,7 +498,7 @@ function _prod_monitor_retrieve_data($id, $site_info, $msg = FALSE) {
             );
           }
         }
-        else if ($msg) {
+        elseif ($msg) {
           drupal_set_message(t('Module data for %link successfully updated.', array('%link' => $site_info['url'])));
         }
       }
@@ -495,13 +524,49 @@ function _prod_monitor_retrieve_data($id, $site_info, $msg = FALSE) {
               );
             }
           }
-          else if ($msg) {
+          elseif ($msg) {
             drupal_set_message(t('Performance data for %link successfully updated.', array('%link' => $site_info['url'])));
           }
         }
       }
     }
   }
+}
+
+/**
+  * Perform separate dbconnect check. We cannot incorporate this at the side of
+  * prod_check as this would make no sense at all when the DB is down.
+ */
+function _prod_monitor_db_connect_check($id, $site_info) {
+  // Execute only if setup properly.
+  if (empty($site_info['settings']['dbconnect_path'])) {
+    return;
+  }
+
+  // Do the check.
+  $dbconnect_path = rtrim($site_info['url'], '/') . '/' . $site_info['settings']['dbconnect_path'];
+  $response = drupal_http_request($dbconnect_path);
+  if ($response->code !== '200' && $response->data !== 'OK') {
+    // Update status to notify the user of the problem!
+    $site_info['status'] = PROD_MONITOR_REQUIREMENT_ERROR;
+    $response->data = 'NOK';
+  }
+
+  // ALWAYS get stored site data as it should have been updated right before
+  // calling this function!
+  $site_data = _prod_monitor_get_site($id, 'data');
+  // Add data to site and save.
+  $site_data['data']['prod_mon']['prod_check_dbconnect'] = $response->code . ' ' . $response->data;
+
+  // Store site data
+  $site = new stdClass();
+  $site->id = $id;
+  if (isset($site_info['status'])) {
+    $site->status = $site_info['status'];
+  }
+  $site->data = serialize($site_data['data']);
+  $site->lastupdate = REQUEST_TIME;
+  $result = drupal_write_record('prod_monitor_sites', $site, array('id'));
 }
 
 /**
@@ -526,7 +591,7 @@ function _prod_monitor_get_sites($start_id = FALSE) {
     if (!empty($row->data)) {
       foreach ($row->data as $set => $checks) {
         foreach ($checks as $check => $results) {
-          $status = ($results['severity'] > $status) ? $results['severity'] : $status;
+          $status = (isset($results['severity']) && $results['severity'] > $status) ? $results['severity'] : $status;
         }
       }
       $data_status = TRUE;
@@ -561,21 +626,33 @@ function _prod_monitor_get_sites($start_id = FALSE) {
  *
  * @param $id
  *  int site id.
- * @param $all
- *  Boolean whether or not to return all fields or just the url and settings.
+ * @param $type
+ *  String the amount of data to be returned.
  */
-function _prod_monitor_get_site($id, $all = FALSE) {
-  if (!$all) {
-    $site = db_query("SELECT url, settings FROM {prod_monitor_sites} WHERE id = :id", array(':id' => $id))->fetchAssoc();
-  }
-  else {
-    $site = db_query("SELECT * FROM {prod_monitor_sites} WHERE id = :id", array(':id' => $id))->fetchAssoc();
+function _prod_monitor_get_site($id, $type = 'settings') {
+  switch ($type) {
+    case 'settings':
+      $site = db_query("SELECT url, settings FROM {prod_monitor_sites} WHERE id = :id", array(':id' => $id))->fetchAssoc();
+      break;
+    case 'all':
+      $site = db_query("SELECT * FROM {prod_monitor_sites} WHERE id = :id", array(':id' => $id))->fetchAssoc();
+      break;
+    case 'data':
+      $site = db_query("SELECT data FROM {prod_monitor_sites} WHERE id = :id", array(':id' => $id))->fetchAssoc();
+      break;
   }
 
   if (!empty($site)) {
-    $site['settings'] = unserialize($site['settings']);
-    if ($all) {
-      $site['data'] = unserialize($site['data']);
+    switch ($type) {
+      case 'all':
+        $site['data'] = unserialize($site['data']);
+        // No break!
+      case 'settings':
+        $site['settings'] = unserialize($site['settings']);
+        break;
+      case 'data':
+        $site['data'] = unserialize($site['data']);
+        break;
     }
   }
 
@@ -605,6 +682,25 @@ function _prod_monitor_get_site_modules($id, $exists = FALSE) {
   }
 
   return $modules;
+}
+
+/**
+ * Returns an array of ignored directives by site id.
+ *
+ * @param  int $id The site id.
+ *
+ * @return array
+ *   - updates array List of project names, whose update status we'll ignore.
+ */
+function _prod_monitor_get_site_ignored($id) {
+  $ignored = &drupal_static(__FUNCTION__, array());
+  if (!array_key_exists($id, $ignored)) {
+    $ignored[$id] = module_invoke_all('prod_monitor_ignore', $id) + array(
+      'updates' => array(),
+    );
+  }
+
+  return $ignored[$id];
 }
 
 /**

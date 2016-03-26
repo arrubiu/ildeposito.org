@@ -97,8 +97,8 @@ function prod_check_settings_form($form, &$form_state) {
 
   $form['prod_check_apc'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Advanced APC settings'),
-    '#description' => t('These settings are used in the !link functionality.', prod_check_link_array('advanced APC', 'admin/reports/status/apc')),
+    '#title' => t('Advanced APC/OPcache settings'),
+    '#description' => t('These settings are used in the !link functionality.', prod_check_link_array('advanced APC', 'admin/reports/status/apc-opc')),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
@@ -106,7 +106,7 @@ function prod_check_settings_form($form, &$form_state) {
   // Cache full count threshold
   $form['prod_check_apc']['prod_check_apc_expunge'] = array(
     '#type' => 'textfield',
-    '#title' => t('APC cache full count threshold'),
+    '#title' => t('APC/OPcache cache full count threshold'),
     '#default_value' => variable_get('prod_check_apc_expunge', 0),
     '#size' => 2,
     '#description' => t('Issue a critical error when the cache full count is greater than the number entered here.'),
@@ -293,7 +293,7 @@ function prod_check_settings_form($form, &$form_state) {
             '!settings' => l(t('Nagios page callback'), 'admin/config/system/nagios'),
             '%callback' => 'prod_check_nagios_status_page',
           )
-        ) .'</p>',
+        ) . '</p>',
       );
 
       $form['prod_check_nagios']['nagios']['settings']['prod_check_nagios_verbose'] = array(
@@ -428,7 +428,7 @@ function prod_check_settings_form_validate($form, &$form_state) {
   }
 
   if (!is_numeric($form_state['values']['prod_check_apc_expunge'])) {
-    form_set_error('prod_check_apc_expunge', t('APC Cache full count threshold should be numeric!'));
+    form_set_error('prod_check_apc_expunge', t('APC/OPcache Cache full count threshold should be numeric!'));
   }
 
   if (isset($form_state['values']['prod_check_enable_nagios']) && $form_state['values']['prod_check_enable_nagios']) {
@@ -461,9 +461,11 @@ function prod_check_settings_form_submit($form, &$form_state) {
     case t('Save configuration'):
       variable_set('prod_check_sitemail', $form_state['values']['prod_check_sitemail']);
       // PHP errors.
-      variable_set('prod_check_dblog_php', $form_state['values']['prod_check_dblog_php']);
-      variable_set('prod_check_dblog_php_threshold', $form_state['values']['prod_check_dblog_php_threshold']);
-      // APC.
+      if (module_exists('dblog')) {
+        variable_set('prod_check_dblog_php', $form_state['values']['prod_check_dblog_php']);
+        variable_set('prod_check_dblog_php_threshold', $form_state['values']['prod_check_dblog_php_threshold']);
+      }
+      // APC/OPcache.
       variable_set('prod_check_apc_expunge', $form_state['values']['prod_check_apc_expunge']);
       variable_set('prod_check_apcuser', $form_state['values']['prod_check_apcuser']);
       if (!empty($form_state['values']['prod_check_apcpass'])) {
@@ -1031,11 +1033,22 @@ function _prod_check_dbstatus_pgsql($db_name, $details) {
 /**
  * Integration of the APC status page.
  */
-function prod_check_apc() {
-  define('ADMIN_USERNAME', variable_get('prod_check_apcuser', 'apc'));
-  define('ADMIN_PASSWORD', variable_get('prod_check_apcpass', 'password'));
-  include(drupal_get_path('module', 'prod_check') . '/includes/prod_check.apc.inc');
-  exit;
+function prod_check_apc_opc() {
+  // APC.
+  if (function_exists('apc_cache_info')) {
+    define('ADMIN_USERNAME', variable_get('prod_check_apcuser', 'apc'));
+    define('ADMIN_PASSWORD', variable_get('prod_check_apcpass', 'password'));
+    include(drupal_get_path('module', 'prod_check') . '/includes/prod_check.apc.inc');
+    exit;
+  }
+  // OPcache.
+  elseif (function_exists('opcache_get_status')) {
+    include(drupal_get_path('module', 'prod_check') . '/includes/prod_check.opcache.inc');
+    exit;
+  }
+  else {
+    return t('APC nor OPcache is installed on this webserver!');
+  }
 }
 
 /**

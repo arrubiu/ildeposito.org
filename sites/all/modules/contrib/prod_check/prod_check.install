@@ -31,15 +31,15 @@ function prod_check_requirements($phase) {
           'title' => t('Production check'),
           'value' => t('Site e-mail check not properly configured.'),
           'severity' => REQUIREMENT_WARNING,
-          'description' => t('You have not changed the e-mail address on the prod-check !link. The Site e-mail check will not function properly. Please read the README.txt file.', prod_check_link_array('settings page', 'admin/settings/prod-check')),
+          'description' => t('You have not changed the e-mail address on the prod-check !link. The Site e-mail check will not function properly. Please read the README.txt file.', prod_check_link_array('settings page', 'admin/config/system/prod-check')),
         );
       }
       if (function_exists('apc_cache_info') && variable_get('prod_check_apcpass', 'password') == 'password') {
-        $requirements['prod_check_apc'] = array(
+        $requirements['prod_check_apc_opc'] = array(
           'title' => t('Production check'),
           'value' => t('APC password not configured.'),
           'severity' => REQUIREMENT_WARNING,
-          'description' => t('You have not !link for the APC status page. The page will function, but advanced options require that you set a password. Please read the README.txt file.', prod_check_link_array('changed the password', 'admin/settings/prod-check')),
+          'description' => t('You have not !link for the APC status page. The page will function, but advanced options require that you set a password. Please read the README.txt file.', prod_check_link_array('changed the password', 'admin/config/system/prod-check')),
         );
       }
       $nagios = variable_get('prod_check_enable_nagios', 0);

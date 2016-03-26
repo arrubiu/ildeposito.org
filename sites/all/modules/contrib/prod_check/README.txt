@@ -113,6 +113,20 @@ Production monitor
 6. If you wish to fetch the data immediately, check the appropriate box and save
  the settings. Good to go!
 
+Cron setup
+----------
+To automatically check the site status and/or module updates on cron, you will
+need to install drush and configure the following tasks in the crontab:
+
+# Check ALL sites for updates, once a day starting at 0100H at night.
+0 1 * * *    /path/to/drush -r /path/to/docroot prod-monitor-updates -y --quiet
+# Fetch ALL site data every five minutes (or whatever you please obviously).
+0/5 * * * *    /path/to/drush -r /path/to/docroot  prod-monitor-fetch -y --quiet
+
+Obviously, the time and frequency of these cron jobs is at your discretion.
+Do note that, depending on the number of sites you have configured, the crons
+may be running for quite some time, especially the module update checking job!
+
 Upgrading
 ---------
 When upgrading Production monitor to a newer version, always run update.php to
@@ -123,9 +137,9 @@ Nagios
 ------
 1. Download and install the Nagios module from http://drupal.org/project/nagios
  as per its readme instructions
-2. Enable Nagios support in the prod_check module on /admin/settings/prod-check
+2. Enable Nagios support in the prod_check module on /admin/config/system/prod-check
  by ticking the appropriate box.
-3. Untick the checboxes for those items you do not whish to be monitored by
+3. Untick the checkboxes for those items you do not whish to be monitored by
  Nagios.
 4. Save the settings and you're good to go!
 
@@ -172,7 +186,7 @@ For Production monitor, these commands are available:
   $ drush prod-monitor-fetch [id]
   $ drush prod-monitor-flush [id]
   $ drush prod-monitor-delete [id]
-  $ drush prod-monitor-updates [id] (--check)
+  $ drush prod-monitor-updates [id] (--check, --security-only)
 
 or their aliases:
 
@@ -180,7 +194,7 @@ or their aliases:
   $ drush pmon-fe [id]
   $ drush pmon-fl [id]
   $ drush pmon-rm [id]
-  $ drush pmon-up [id] (--check)
+  $ drush pmon-up [id] (--check, --security-only)
 
 The id parameter is optional for the prod-monitor command. The best usage is to
 first get a list of sites:
@@ -200,16 +214,19 @@ You can pass multiple ID's by separating them with spaces:
 
 The prod-monitor-updates command acts on one id only!
 
-APC
----
+APC/OPcache
+-----------
 Production Check complains about APC not being installed or misconfigured. What
 is APC you wonder? Well, APC is an opcode caching mechanism that will pre-com-
 pile PHP files and keep them stored in memory. The full manual can be found
 here: http://php.net/manual/en/book.apc.php .
-For Drupal sites, it is important to tune APC in order to achieve maximum per-
-formance there. Drupal uses a massive amount of files and therefore you should
-assign a proper amount of RAM to APC. For a dedicated setup 64Mb should be
-sufficient, in shared setups, you should easily double that!
+PHP version 5.5 comes bundled with an alternative to APC named OPcache. The full
+manual can be found here: http://php.net/manual/en/book.opcache.php .
+
+For Drupal sites, it is important to tune APC/OPcache in order to achieve
+maximum performance there. Drupal uses a massive amount of files and therefore
+you should assign a proper amount of RAM to APC/OPcache. For a dedicated setup
+64Mb should be sufficient, in shared setups, you will need to multiply that!
 To tune your setup, you can use the aforementioned hidden link provided by
 Production check. You can see the memory usage there, verify your settings and
 much more.
@@ -219,6 +236,7 @@ extension (drupal.org CVS did not seem to accept files with .ini extension?).
 
 Note: This 'hidden link' makes use of the APC supplied PHP code and is subject
 to the PHP license: http://www.php.net/license/3_01.txt .
+The OPcache variant is taken from https://github.com/rlerdorf/opcache-status .
 
 
 Updates
@@ -233,8 +251,8 @@ Cron is NOT used to do this, since we want to keep the transfer to a minimum.
 Hidden link
 ===========
 Production check adds some 'hidden links' to the site where you can check the
-APC, Memcache and DB status of your site. These pages can be found on:
-  /admin/reports/status/apc
+APC/OPcache, Memcache and DB status of your site. These pages can be found on:
+  /admin/reports/status/apc-opc
   /admin/reports/status/memcache
   /admin/reports/status/database
 
@@ -251,8 +269,8 @@ The detailed report page
 The page is divided into 4 sections:
 
  - Settings: checks various Drupal settings
- - Server: checks that are 'outside of Drupal' such as APC and wether or not you
-           have removed the release note files from the root.
+ - Server: checks that are 'outside of Drupal' such as APC/OPcache and wether or
+           not you have removed the release note files from the root.
  - Performance: checks relevant to the performance settings in Drupal such as
                 page / block caching.
  - Modules: checks if certain modules are on / off

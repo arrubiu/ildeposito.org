@@ -9,31 +9,7 @@
  */
 function template_preprocess_hybridauth_widget(&$vars, $hook) {
   $element = $vars['element'];
-
   $query = $element['#hybridauth_query'];
-  $element['#hybridauth_destination'] = trim($element['#hybridauth_destination']);
-  // Process destination; HTTP_REFERER is needed for widget in modals
-  // to return to the current page.
-  if ($element['#hybridauth_destination'] == '[HTTP_REFERER]' && isset($_SERVER['HTTP_REFERER'])) {
-    $query += array(
-      'destination' => $_SERVER['HTTP_REFERER'],
-      'destination_error' => $_SERVER['HTTP_REFERER'],
-    );
-  }
-  elseif ($element['#hybridauth_destination']) {
-    $destination = drupal_get_destination();
-    $query += array(
-      'destination' => $element['#hybridauth_destination'],
-      'destination_error' => $destination['destination'],
-    );
-  }
-  else {
-    $destination = drupal_get_destination();
-    $query += array(
-      'destination' => $destination['destination'],
-      'destination_error' => $destination['destination'],
-    );
-  }
 
   $providers = array();
   if ($element['#hybridauth_widget_type'] == 'list') {
@@ -87,26 +63,33 @@ function template_preprocess_hybridauth_widget(&$vars, $hook) {
         $class_mod[] = 'hybridauth-onclick-popup';
       }
 
+      $text = theme('hybridauth_provider_icon', array(
+        'icon_pack' => $element['#hybridauth_widget_icon_pack'],
+        'provider_id' => $provider_id,
+        'provider_name' => $provider_name,
+      ));
       $path = 'hybridauth/window/' . $provider_id;
-      $providers[] = l(
-        theme('hybridauth_provider_icon', array('icon_pack' => $element['#hybridauth_widget_icon_pack'], 'provider_id' => $provider_id, 'provider_name' => $provider_name)),
-        $path,
-        array(
-          'html' => TRUE,
-          'query' => $query_mod,
-          'attributes' => array(
-            'title' => $provider_name,
-            'class' => $class_mod,
-            'rel' => $rel_mod,
-            'data-hybridauth-provider' => $provider_id,
-            // jQuery Mobile compatibility - so it doesn't use AJAX.
-            'data-ajax' => 'false',
-            // Add authentication window width and height.
-            'data-hybridauth-width' => $window_width,
-            'data-hybridauth-height' => $window_height,
-          ) + ($onclick ? array('onclick' => $onclick) : array()),
-        )
+      $url = url($path, array('query' => $query_mod));
+      if ($element['#hybridauth_widget_hide_links']) {
+        $path = 'user';
+      }
+      $options = array(
+        'html' => TRUE,
+        'query' => $query_mod,
+        'attributes' => array(
+          'title' => $provider_name,
+          'class' => $class_mod,
+          'rel' => $rel_mod,
+          'data-hybridauth-provider' => $provider_id,
+          'data-hybridauth-url' => $url,
+          // jQuery Mobile compatibility - so it doesn't use AJAX.
+          'data-ajax' => 'false',
+          // Add authentication window width and height.
+          'data-hybridauth-width' => $window_width,
+          'data-hybridauth-height' => $window_height,
+        ) + ($onclick ? array('onclick' => $onclick) : array()),
       );
+      $providers[] = l($text, $path, $options);
     }
   }
   else {

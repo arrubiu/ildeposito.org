@@ -24,22 +24,15 @@ class views_handler_area_block extends views_handler_area {
 
     parent::options_form($form, $form_state);
 
-    $query = db_select('block', 'b');
-    $result = $query
-      ->fields('b')
-      ->orderBy('b.module')
-      ->condition('b.module', 'views', '!=')
-      ->addTag('block_load')
-      ->addTag('translatable')
-      ->execute();
+    // Get a full list of blocks
+    module_load_include('inc', 'block', 'block.admin');
+    global $theme_key;
+    $block_info = block_admin_display_prepare_blocks($theme_key);
 
-    $block_info = $result->fetchAllAssoc('bid');
-    // Allow modules to modify the block list.
-    drupal_alter('block_list', $block_info);
-
+    // Convert the list into a dropdown box, keyed by module & delta.
     $options = array();
     foreach ($block_info as $block) {
-      $options["{$block->module}:{$block->delta}"] = "{$block->module}:{$block->delta}"; // @TODO: fetch the correct block title
+      $options[$block['module'] . ':' . $block['delta']] = $block['info'];
     }
 
     $form['block_to_insert'] = array(

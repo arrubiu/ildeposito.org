@@ -4,8 +4,15 @@
  * Build status page.
  */
 function prod_monitor_status($id) {
-  $site = _prod_monitor_get_site($id, TRUE);
-  drupal_set_title(t('Production monitor status for') .' '. _prod_monitor_sanitize_url($site['url']));
+  $site = _prod_monitor_get_site($id, 'all');
+
+  if (!$site) {
+    // See https://api.drupal.org/api/drupal/includes!common.inc/function/drupal_not_found/7
+    return MENU_NOT_FOUND;
+  }
+
+
+  drupal_set_title(t('Production monitor status for') . ' ' . _prod_monitor_sanitize_url($site['url']));
 
   $functions = $site['settings']['functions'];
   $nodata = t('No data recieved yet.');
@@ -25,24 +32,25 @@ function prod_monitor_status($id) {
   // Display results of all checks.
   foreach ($functions as $set => $data) {
     if (isset($site['data'][$set])) {
-      $output .= '<h2>'.t($data['title']).'</h2>'."\n";
-      $output .= '<div class="description"><p><em>'.t($data['description']).'</em></p></div>'."\n";
+      $output .= '<h2>' . t($data['title']) . '</h2>' . "\n";
+      $output .= '<div class="description"><p><em>' . t($data['description']) . '</em></p></div>'."\n";
       if (!empty($site['data'][$set])) {
         $output .= theme('prod_monitor_status_report', array('requirements' => $site['data'][$set]));
       }
       else  {
-        $output .= '<p>'.$nodata.'</p><p>&nbsp;</p>';
+        $output .= '<p>' . $nodata . '</p><p>&nbsp;</p>';
       }
     }
   }
 
   if (empty($output)) {
-    $output = '<p>'.$nodata.'</p><p>&nbsp;</p>';
+    $output = '<p>' . $nodata . '</p><p>&nbsp;</p>';
   }
 
   // TODO: do not use drupal_render but change this so that hook_page_alter can
   // be used as well.
-  $output .= drupal_render(drupal_get_form('_prod_monitor_update_data_form', $id, $site));
+  $form = drupal_get_form('_prod_monitor_update_data_form', $id, $site);
+  $output .= drupal_render($form);
 
   return $output;
 }
@@ -51,30 +59,54 @@ function prod_monitor_status($id) {
  * Helper function to provide general status block on status overview page
  */
 function _prod_monitor_status_general($prod_mon, $modules) {
-  // TODO: Should we hide the rows for which no data is being retrieved?
-  $cron = t('Unknown');
-  if (isset($prod_mon['prod_check_cron_last'])) {
-    $cron = format_date($prod_mon['prod_check_cron_last'], 'large');
-  }
-
   $updates = _prod_monitor_generate_updates_link($modules['id'], $modules['updates']);
 
-  $output = '<h2>'.t('Overall status').'</h2>'."\n";
+  $output = '<h2>' . t('Overall status') . '</h2>' . "\n";
   $rows = array(
     array(
       array('data' => t('Drupal core version'), 'header' => TRUE),
       $modules['projects']['drupal']['info']['version'],
     ),
-    array(
-      array('data' => t('Last cron run'), 'header' => TRUE),
-      $cron,
-    ),
-    array(
-      array('data' => t('Update status'), 'header' => TRUE),
-      $updates,
-    ),
   );
-  $output .= theme('table', array('header' => array(), 'rows' => $rows));
+
+  if (isset($prod_mon['prod_check_cron_last'])) {
+    $rows[] = array(
+      array('data' => t('Last cron run'), 'header' => TRUE),
+      format_date($prod_mon['prod_check_cron_last'], 'large'),
+    );
+  }
+
+  // Add dbconnect check info if configured.
+  if (isset($prod_mon['prod_check_dbconnect'])) {
+    $dbconnect = $prod_mon['prod_check_dbconnect'];
+    $class = array();
+    $title = t('DB connection status');
+    if (stripos($dbconnect, '200') === FALSE) {
+      $class = array('error');
+      $title = '<strong>' . $title . '</strong>';
+      $dbconnect = '<strong>' . $dbconnect . '</strong>';
+    }
+
+    $rows[] = array(
+      'data' => array(
+        array(
+          'data' => $title, 'header' => TRUE,
+          'class' => $class,
+        ),
+        array(
+          'data' => $dbconnect,
+          'class' => $class,
+        ),
+      ),
+      'class' => $class,
+    );
+  }
+
+  $rows[] = array(
+    array('data' => t('Update status'), 'header' => TRUE),
+    $updates,
+  );
+  $output .= theme('table', array('prod_monitor_id' => 'status_general', 'header' => array(), 'rows' => $rows));
 
   return $output;
 }
@@ -99,7 +131,7 @@ function _prod_monitor_generate_updates_link($id, $update_status) {
         $title = t('Security risk!');
         break;
     }
-    $updates = array('data' => '<strong>'.l($title, 'admin/reports/prod-monitor/site/'.$id.'/view/updates', array('attributes' => array('title' => $title, 'class' => $class))).'</strong>', 'class' => $class);
+    $updates = array('data' => '<strong>' . l($title, 'admin/reports/prod-monitor/site/' . $id . '/view/updates', array('attributes' => array('title' => $title, 'class' => $class))) . '</strong>', 'class' => $class);
   }
 
   return $updates;
@@ -109,10 +141,10 @@ function _prod_monitor_generate_updates_link($id, $update_status) {
  * Callback for performance page.
  */
 function prod_monitor_performance($data) {
-  drupal_set_title(t('Performance logs for') .' '. _prod_monitor_get_url($data['id']));
+  drupal_set_title(t('Performance logs for') . ' ' . _prod_monitor_get_url($data['id']));
 
   // TODO: add 'get stats now' button.
-  //$site = _prod_monitor_get_site($id, TRUE);
+  //$site = _prod_monitor_get_site($id, 'all');
 
   return array(
     'performance_data' => array(
@@ -130,7 +162,7 @@ function prod_monitor_updates($modules) {
 
   $id = $modules['id'];
 
-  drupal_set_title(t('Module update status for') .' '. _prod_monitor_get_url($id));
+  drupal_set_title(t('Module update status for') . ' ' . _prod_monitor_get_url($id));
 
   // Only show a report if the available updates have been fetched!
   if (!empty($modules) && !empty($modules['projects']) && !empty($modules['available'])) {
@@ -149,7 +181,7 @@ function prod_monitor_updates($modules) {
                     'No information is available about potential new releases for currently installed modules and themes. To check for updates, you may need to !cron or you can !check. Please note that checking for available updates can take a long time, so please be patient.',
                     array(
                       '!cron' => l(t('run cron'), 'admin/reports/status/run-cron', array('attributes' => array('title' => t('run cron')), 'query' => $destination)),
-                      '!check' => l(t('check manually'), 'admin/reports/prod-monitor/site/'.$id.'/update-check', array('attributes' => array('title' => t('check manually')))),
+                      '!check' => l(t('check manually'), 'admin/reports/prod-monitor/site/' . $id . '/update-check', array('attributes' => array('title' => t('check manually')))),
                     )
                   )
       )
@@ -179,7 +211,7 @@ function prod_monitor_updates_check($id) {
   else {
     drupal_set_message(t('No module data available: cannot check for updates!'), 'error');
   }
-  drupal_goto('admin/reports/prod-monitor/site/'.$id.'/view/updates');
+  drupal_goto('admin/reports/prod-monitor/site/' . $id . '/view/updates');
 }
 
 /**
@@ -188,18 +220,27 @@ function prod_monitor_updates_check($id) {
 function prod_monitor_overview_form($form, &$form_state, $edit = FALSE) {
   drupal_set_title(t('Production monitor settings'));
   $base = drupal_get_path('module', 'prod_monitor');
-  drupal_add_css($base.'/css/prod-monitor.css', 'file');
-  drupal_add_js($base.'/js/jquery.equalheights.js', 'file');
-  drupal_add_js($base.'/js/prod-monitor.js', 'file');
+  drupal_add_css($base . '/css/prod-monitor.css', 'file');
+  drupal_add_js($base . '/js/jquery.equalheights.js', 'file');
+  drupal_add_js($base . '/js/prod-monitor.js', 'file');
 
   $form = array();
 
   $collapsed = FALSE;
 
   if (!$edit) {
+    // Button to initiate our fetch all batcher.
+    $form['fetch_all_submit'] = array(
+      '#weight' => -100,
+      '#type' => 'submit',
+      '#value' => t('Fetch all'),
+      '#submit' => array('prod_monitor_fetch_all_submit'),
+      '#limit_validation_errors' => array(),
+    );
+
     // Add new site situation.
     $sites = _prod_monitor_get_sites();
-    $api_key = $url = '';
+    $dbconnect_path = $api_key = $url = '';
     $options = array();
     $button = t('Get settings');
     if (!empty($sites)) {
@@ -211,6 +252,7 @@ function prod_monitor_overview_form($form, &$form_state, $edit = FALSE) {
     if (!empty($form_state['storage']['get_settings'])) {
       // Second step of add new site situation.
       $api_key = $form_state['values']['api_key'];
+      $dbconnect_path = $form_state['values']['dbconnect_path'];
       $url = $form_state['values']['url'];
       $button = t('Add site');
       $collapsed = FALSE;
@@ -227,6 +269,7 @@ function prod_monitor_overview_form($form, &$form_state, $edit = FALSE) {
     }
     drupal_set_title(t('Production monitor settings for !url', array('!url' => _prod_monitor_sanitize_url($url))));
     $api_key = $site['settings']['api_key'];
+    $dbconnect_path = $site['settings']['dbconnect_path'];
     $options = $site['settings']['checks'];
     if (isset($site['settings']['checks']['perf_data'])) {
       $perf_enabled = $site['settings']['checks']['perf_data'];
@@ -255,12 +298,21 @@ function prod_monitor_overview_form($form, &$form_state, $edit = FALSE) {
 
   $form['sites']['api_key'] = array(
     '#type' => 'textfield',
-    '#title' => t('The website\'s API key'),
+    '#title' => t("The website's API key"),
     '#default_value' => $api_key,
     '#description' => t('Enter the API key you have configured for this site using the <em>Production check</em> module.'),
     '#size' => 60,
     '#maxlength' => 128,
     '#required' => TRUE,
+  );
+
+  $form['sites']['dbconnect_path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('DB connect check script'),
+    '#default_value' => $dbconnect_path,
+    '#description' => t('Enter the relative path, starting from the Drupal root, to the <em>prod_check.dbconnect.php</em> on the remote site. This wil usually be something like sites/all/modules/contrib/prod_check/prod_check.dbconnect.php . <strong>Leave empty if you do not want do enable this check!</strong>'),
+    '#size' => 60,
+    '#maxlength' => 512,
   );
 
   // Only show on second step of add form or when editing.
@@ -303,7 +355,7 @@ function prod_monitor_overview_form($form, &$form_state, $edit = FALSE) {
           '#description' => t($data['description']),
           '#options' => $data['functions'],
           '#default_value' => array_keys($data['functions']),
-          '#prefix' => '<div class="prod-check-settings '.(($rest) ? 'odd' : 'even').'">',
+          '#prefix' => '<div class="prod-check-settings ' . (($rest) ? 'odd' : 'even') . '">',
           '#suffix' => '</div>',
         );
         $i++;
@@ -398,8 +450,8 @@ function _prod_monitor_overview_form_table($sites) {
     $view = t('View');
     $flush = t('Flush');
     if ($site_info['data']) {
-      $view = l(t('View'), 'admin/reports/prod-monitor/site/'.$id, array('attributes' => array('title' => t('View'))));
-      $flush = l(t('Flush'), 'admin/reports/prod-monitor/site/'.$id.'/flush', array('attributes' => array('title' => t('Flush'))));
+      $view = l(t('View'), 'admin/reports/prod-monitor/site/' . $id, array('attributes' => array('title' => t('View'))));
+      $flush = l(t('Flush'), 'admin/reports/prod-monitor/site/' . $id . '/flush', array('attributes' => array('title' => t('Flush'))));
     }
 
     $update_status = _prod_monitor_get_update_status($id);
@@ -407,7 +459,7 @@ function _prod_monitor_overview_form_table($sites) {
 
     if (!empty($site_info['status'])) {
       $title = t(ucwords($site_info['status']));
-      $status = array('data' => '<strong>'.l($title, 'admin/reports/prod-monitor/site/'.$id, array('attributes' => array('title' => $title, 'class' => $site_info['status']))).'</strong>', 'class' => array($site_info['status']));
+      $status = array('data' => '<strong>' . l($title, 'admin/reports/prod-monitor/site/' . $id, array('attributes' => array('title' => $title, 'class' => $site_info['status']))) . '</strong>', 'class' => array($site_info['status']));
     }
     else {
       $status = '';
@@ -424,17 +476,17 @@ function _prod_monitor_overview_form_table($sites) {
         (!$site_info['lastupdate']) ? t('Not yet updated.') : $site_info['lastupdate'],
         /* Compose links. */
         $view,
-        l(t('Edit'), 'admin/reports/prod-monitor/site/'.$id.'/edit', array('query' => $home, 'attributes' => array('title' => t('Edit')))),
-        l(t('Fetch data'), 'admin/reports/prod-monitor/site/'.$id.'/fetch', array('attributes' => array('title' => t('Fetch & View')))),
+        l(t('Edit'), 'admin/reports/prod-monitor/site/' . $id . '/edit', array('query' => $home, 'attributes' => array('title' => t('Edit')))),
+        l(t('Fetch data'), 'admin/reports/prod-monitor/site/' . $id . '/fetch', array('attributes' => array('title' => t('Fetch & View')))),
         $flush,
-        l(t('Delete'), 'admin/reports/prod-monitor/site/'.$id.'/delete', array('attributes' => array('title' => t('Delete')))),
+        l(t('Delete'), 'admin/reports/prod-monitor/site/' . $id . '/delete', array('attributes' => array('title' => t('Delete')))),
       ),
       'class' => array($site_info['status']),
     );
     $rows[] = $row;
   }
 
-  return theme('table', array('header' => $headers, 'rows' => $rows));
+  return theme('table', array('prod_monitor_id' => 'overview_form', 'header' => $headers, 'rows' => $rows));
 }
 
 /**
@@ -501,6 +553,8 @@ function prod_monitor_overview_form_submit($form, &$form_state) {
       $site->settings = serialize(
         array(
           'api_key' => $form_state['values']['api_key'],
+          // Trim spaces and / from left and right side.
+          'dbconnect_path' => trim($form_state['values']['dbconnect_path'], ' /'),
           'functions' => $form_state['storage']['functions'],
           'checks' => $checks,
         )
@@ -511,9 +565,12 @@ function prod_monitor_overview_form_submit($form, &$form_state) {
       if ($result) {
         drupal_set_message(t('Website %url correctly saved.', array('%url' => $site->url)));
         if ($form_state['values']['fetch']) {
-          $site_info = _prod_monitor_get_site($site->id, TRUE);
+          $site_info = _prod_monitor_get_site($site->id, 'all');
+          // First: all checks.
           _prod_monitor_retrieve_data($site->id, $site_info, TRUE);
-          $form_state['redirect'] = 'admin/reports/prod-monitor/site/'.$site->id;
+          // MUST be second because of the status update!
+          _prod_monitor_db_connect_check($site->id, $site_info);
+          $form_state['redirect'] = 'admin/reports/prod-monitor/site/' . $site->id;
         }
       }
       else {
@@ -524,12 +581,80 @@ function prod_monitor_overview_form_submit($form, &$form_state) {
 }
 
 /**
+ * Submit handler for the fetch all button.
+ */
+function prod_monitor_fetch_all_submit($form, &$form_state) {
+  _prod_monitor_fetch_all_data_batcher_create();
+}
+
+/**
+ * Function to create the batch process. Also used in Drush!
+ */
+function _prod_monitor_fetch_all_data_batcher_create($fetch_only = FALSE, $update_only = FALSE, $msg = TRUE) {
+  $title = t('Fetching all site data and checking for updates...');
+
+  if ($fetch_only) {
+    $title = t('Fetching all site data...');
+  }
+  if ($update_only) {
+    $title = t('Checking for updates...');
+  }
+
+  $batch = array(
+    'operations' => array(
+      array('prod_monitor_fetch_all_data_batcher', array($fetch_only, $update_only, $msg)),
+    ),
+    'title' => $title,
+    'file' => drupal_get_path('module', 'prod_monitor') . '/includes/prod_monitor.admin.inc',
+  );
+  batch_set($batch);
+}
+
+/**
+ * Batch fetching of all site info.
+ */
+function prod_monitor_fetch_all_data_batcher($fetch_only, $update_only, $msg, &$context) {
+  $sandbox = &$context['sandbox'];
+  if (empty($context['sandbox'])) {
+    $sandbox['sites'] = array_keys(_prod_monitor_get_sites());
+    $sandbox['count'] = count($sandbox['sites']);
+  }
+
+  // Get site info.
+  $id = array_shift($sandbox['sites']);
+  $site_info = _prod_monitor_get_site($id, 'all');
+
+  if (!$update_only) {
+    // First: all checks.
+    _prod_monitor_retrieve_data($id, $site_info, $msg);
+    // MUST be second because of the status update!
+    _prod_monitor_db_connect_check($id, $site_info);
+  }
+
+  if (!$fetch_only) {
+    // Module update status.
+    $modules = prod_monitor_load($id);
+    if (!empty($modules) && !empty($modules['projects'])) {
+      module_load_include('inc', 'prod_monitor', 'includes/prod_monitor.update');
+      _prod_monitor_update_refresh($id, $modules['projects'], $modules['sitekey']);
+      _prod_monitor_calculate_project_data($id, $modules['projects'], $modules['available']);
+    }
+  }
+
+  $context['message'] = t('Updating data for %url', array('%url' => $site_info['url']));
+  $context['finished'] = empty($sandbox['sites']) ? 1 : (1 - count($sandbox['sites']) / $sandbox['count']);
+}
+
+/**
  * Callback to fetch site data
  */
 function prod_monitor_fetch_data($id) {
-  $site_info = _prod_monitor_get_site($id, TRUE);
+  $site_info = _prod_monitor_get_site($id, 'all');
+  // First: all checks.
   _prod_monitor_retrieve_data($id, $site_info, TRUE);
-  drupal_goto('admin/reports/prod-monitor/site/'.$id);
+  // MUST be second because of the status update!
+  _prod_monitor_db_connect_check($id, $site_info);
+  drupal_goto('admin/reports/prod-monitor/site/' . $id);
 }
 
 /**
@@ -550,7 +675,7 @@ function prod_monitor_flush_form($form, &$form_state, $id) {
     '#value' => $url,
   );
 
-  return confirm_form($form, t('Are you sure you wish to delete all fetched data for %url?', array('%url' => $url)), 'admin/reports/prod-monitor', t('Note that the module update status data will not be flushed!').'<br />'.t('This action cannot be undone.'));
+  return confirm_form($form, t('Are you sure you wish to delete all fetched data for %url?', array('%url' => $url)), 'admin/reports/prod-monitor', t('Note that the module update status data will not be flushed!') . '<br />' . t('This action cannot be undone.'));
 }
 
 /**
@@ -634,6 +759,95 @@ function _prod_monitor_update_data_form($form, $form_state, $id, $site_info) {
 }
 
 function _prod_monitor_update_data_form_submit($form, &$form_state) {
+  // First: all checks.
   _prod_monitor_retrieve_data($form_state['values']['site_id'], $form_state['values']['site_info'], TRUE);
+  // MUST be second because of the status update!
+  _prod_monitor_db_connect_check($form_state['values']['site_id'], $form_state['values']['site_info']);
 }
 
+/**
+ * Callback for module lookup form.
+ *
+ */
+function prod_monitor_module_lookup_form($form, &$form_state) {
+  $form = array();
+
+  // Show results.
+  if (isset($form_state['projects'])) {
+
+    $module = $form_state['values']['module'];
+
+    $rows = array();
+    foreach ($form_state['projects'] as $id => $project) {
+
+      $application = db_select('prod_monitor_sites', 'pms')->fields('pms', array('url'))->condition('id', $id)->execute()->fetchField();
+      $version = $project['info']['version'];
+
+      $rows[] = array(
+        $application,
+        $version,
+        l(t('View'), 'admin/reports/prod-monitor/site/' . $id),
+      );
+    }
+    $form['title'] = array(
+      '#theme' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => t('Applications where %module is used', array('%module' => $module)),
+    );
+    $form['table'] = array(
+      '#theme' => 'table',
+      '#rows' => $rows,
+      '#header' => array(t('Application'), t('Version'), t('View')),
+    );
+
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Perform another lookup'),
+    );
+  }
+  // Show lookup form.
+  else {
+    $form['module'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Module name'),
+      '#required' => TRUE,
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Fetch Applications'),
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Submission handler for module lookup form
+ */
+function prod_monitor_module_lookup_form_submit(&$form, &$form_state) {
+  if (isset($form_state['values']['module'])) {
+
+    $projects = db_select('prod_monitor_site_modules', 'psm')
+    ->fields('psm', array('id', 'projects'))
+    ->condition('projects', '%' . db_like($form_state['values']['module']) . '%', 'LIKE')
+    ->execute()->fetchAllAssoc('id');
+
+    $form_state['rebuild'] = TRUE;
+
+    if ($projects && !empty($projects)) {
+      foreach($projects as $project) {
+
+        $modules = unserialize($project->projects);
+        if (isset($modules[$form_state['values']['module']])) {
+          $form_state['projects'][$project->id] = $modules[$form_state['values']['module']];
+        }
+      }
+    }
+    if (!isset($form_state['projects'])) {
+      drupal_set_message(t('No projects found for :module', array(':module' => $form_state['values']['module'])));
+    }
+  }
+  else {
+    unset($form_state['projects']);
+  }
+}
