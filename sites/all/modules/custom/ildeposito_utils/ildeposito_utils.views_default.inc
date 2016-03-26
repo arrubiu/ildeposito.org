@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_app.views_default.inc
+ * ildeposito_utils.views_default.inc
  */
 
 /**
  * Implements hook_views_default_views().
  */
-function ildeposito_app_views_default_views() {
+function ildeposito_utils_views_default_views() {
   $export = array();
 
   $view = new view();
