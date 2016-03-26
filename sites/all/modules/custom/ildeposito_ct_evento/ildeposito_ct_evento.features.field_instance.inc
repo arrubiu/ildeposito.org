@@ -255,13 +255,37 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 13,
       ),
+      'elenco_termini_contenuti' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'percorso' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'print' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'riferimento_evento' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'rss' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'rss_app' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
@@ -1752,7 +1776,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
   // Exported field_instance: 'node-traduzione-field_evento'.
   $field_instances['node-traduzione-field_evento'] = array(
     'bundle' => 'traduzione',
-    'default_value' => NULL,
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(

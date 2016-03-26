@@ -86,6 +86,7 @@ function ildeposito_backoffice_ckeditor_profile_defaults() {
               ),
             ),
           ),
+          'media' => NULL,
           'mediaembed' => array(
             'name' => 'mediaembed',
             'desc' => 'Plugin for embedding HTML snippets',

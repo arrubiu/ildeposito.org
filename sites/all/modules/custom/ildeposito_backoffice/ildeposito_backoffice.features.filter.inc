@@ -89,11 +89,6 @@ function ildeposito_backoffice_filter_default_formats() {
           'protocol_style' => 'full',
         ),
       ),
-      'emptyparagraphkiller' => array(
-        'weight' => -39,
-        'status' => 1,
-        'settings' => array(),
-      ),
     ),
   );
 

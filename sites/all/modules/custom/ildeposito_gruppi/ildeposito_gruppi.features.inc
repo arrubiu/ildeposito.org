@@ -8,9 +8,6 @@
  * Implements hook_ctools_plugin_api().
  */
 function ildeposito_gruppi_ctools_plugin_api($module = NULL, $api = NULL) {
-  if ($module == "custom_formatters" && $api == "custom_formatters") {
-    return array("version" => "2");
-  }
   if ($module == "field_group" && $api == "field_group") {
     return array("version" => "1");
   }
