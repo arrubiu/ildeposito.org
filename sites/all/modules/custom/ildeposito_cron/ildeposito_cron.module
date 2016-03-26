@@ -4,4 +4,4 @@
  * Code for the Cron feature.
  */
 
-include_once 'ildeposito_cron.features.inc';
+
