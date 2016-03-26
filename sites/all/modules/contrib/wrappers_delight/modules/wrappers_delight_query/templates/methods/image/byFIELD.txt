@@ -1,0 +1,20 @@
+  /**
+   * Query by {{ field_name }}
+   *
+   * @param mixed ${{ field_name }}
+   * @param string $operator
+   *
+   * @return $this
+   */
+  public function by{{ field_name_camelized }}(${{field_name}}, $operator = NULL) {
+    if (is_object(${{ field_name }}) && !empty(${{ field_name }}->fid)) {
+      $fid = ${{ field_name }}->fid;
+    }
+    elseif (is_array(${{ field_name }}) && !empty(${{ field_name }}['fid'])) {
+      $fid = ${{ field_name }}['fid'];
+    }
+    else {
+      $fid = ${{field_name}};
+    }
+    return $this->byFieldConditions(array('{{ field_name }}.fid' => array(${{ field_name }}, $operator)));
+  }

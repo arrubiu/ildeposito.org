@@ -1,0 +1,18 @@
+  /**
+   * Sets {{ property_name }}
+   *
+   * @param array|{{ target_entity_class }}[] $values
+   *
+   * @return $this
+   */
+  public function set{{ property_name_camelized }}($values) {
+    if (!empty($values)) {
+      foreach ($values as $i => $value) {
+        if ($value instanceof WdEntityWrapper) {
+          $values[$i] = $value->value();
+        }
+      }
+    }
+    $this->set('{{ property_name }}', $values);
+    return $this;
+  }

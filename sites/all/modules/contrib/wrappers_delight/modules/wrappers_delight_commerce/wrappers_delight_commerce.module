@@ -1,0 +1,39 @@
+<?php
+/**
+ * @file
+ * Wrappers Delight Commerce module
+ */
+
+/**
+ * Implements hook_wrappers_delight_base_classes()
+ */
+function wrappers_delight_commerce_wrappers_delight_base_classes() {
+  return array(
+    'commerce_product' => 'WdCommerceProductWrapper',
+    'commerce_line_item' => 'WdCommerceLineItemWrapper',
+    'commerce_order' => 'WdCommerceOrderWrapper',
+  );
+}
+
+/**
+ * Implements hook_wrappers_delight_query_base_classes().
+ *
+ * @return array
+ */
+function wrappers_delight_commerce_wrappers_delight_query_base_classes() {
+  return array(
+    'commerce_product' => 'WdCommerceProductWrapperQuery',
+    'commerce_line_item' => 'WdCommerceLineItemWrapperQuery',
+    'commerce_order' => 'WdCommerceOrderWrapperQuery',
+  );
+}
+
+/**
+ * Implements hook_wrappers_delight_base_class_dependencies().
+ */
+function wrappers_delight_commerce_wrappers_delight_base_class_dependencies($entity_type) {
+  if (in_array($entity_type, array('commerce_product', 'commerce_order', 'commerce_line_item'))) {
+    return array('wrappers_delight_commerce');
+  }
+  return NULL;
+}

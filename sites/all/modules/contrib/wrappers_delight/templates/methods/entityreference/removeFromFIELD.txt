@@ -1,0 +1,23 @@
+  /**
+   * Removes a value from {{ field_name }}
+   *
+   * @param $value
+   *   Value to remove.
+   *
+   * @return $this
+   */
+  function removeFrom{{ field_name_camelized }}($value) {
+    if ($value instanceof {{ target_entity_class }}) {
+      $value = $value->value();
+    }
+    $existing_values = $this->get('{{ field_name }}');
+    if (!empty($existing_values)) {
+      foreach ($existing_values as $i => $existing_value) {
+        if (!empty($existing_value) && entity_id('{{ target_entity_type }}', $existing_value) == entity_id('{{ target_entity_type }}', $value)) {
+          unset($existing_values[$i]);
+        }
+      }
+    }
+    $this->set('{{ field_name }}', array_values($existing_values));
+    return $this;
+  }

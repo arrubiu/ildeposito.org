@@ -1,0 +1,37 @@
+wrappers_delight 7.x-1.3
+==============================
+#2495727: getDate() functions don't build 'medium' date formats correctly
+#2675720: by Derimagia: Peformance issues in WdWrapperQuery and WdWrapperQueryResults
+#2516908: Bug in entity reference removeFromFieldName($value) method template
+#2667596: by DrColossos: Handle invalid date using a custom date type
+
+wrappers_delight 7.x-1.2
+==============================
+#2485887: by brockfanning: Add copy of EntityStructureWrapper::language to allow customization
+#2469481: by brockfanning: Add some convenience to WdTaxonomyTermWrapper::create()
+#2468965: Exceptions when getting/setting normal text fields
+#2469061: Include Taxonomy Vocabulary and Term Wrapper classes with core module
+#2468561: target_entity_class showing up in some methods of base class
+
+wrappers_delight 7.x-1.1
+==============================
+#2310355: Multi-value entityreference fields should have add/remove methods
+#2455063: Add scaffold tool for new entity base classes
+#2386589: Add delete() method to base wrapper classes
+#2386591: getImageHtml() method should call theme_image when no style is requested
+#2464707: by pianomansam: Image url helper function doesn't use image_style_url()
+#2464623: by pianomansam: Support all Drupal entities without a custom base class
+#2465615: Generated WrapperQuery class constructiors have ->byType() instead of ->byBundle() in them
+#2465601: Add base wrappers for EntityQueue module
+#2455039: Info file dependencies not written when bundle names have numbers in them
+#2364319: Fix count queries in query builder
+#2364321: Add support for email field type
+#2364433: Text field getters return formatted values by default
+#2364489: Date fields support format options
+#2399563: Add formatted and raw options for user signature
+#2398561: Load global user if not passing argument to user entity wrapper
+#2398565: by yogaf: Added isNew() and getOriginal() methods to WdEntityWrapper
+
+wrappers_delight 7.x-1.0
+==============================
+Initial release

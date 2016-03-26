@@ -1,0 +1,24 @@
+name = Wrappers Delight Commerce
+description = Class Wrappers for Drupal Commerce Entities
+package = Wrappers Delight
+core = 7.x
+
+files[] = includes/WdCommerceLineItemWrapper.php
+files[] = includes/WdCommerceProductWrapper.php
+files[] = includes/WdCommerceOrderWrapper.php
+files[] = includes/WdCommerceProductWrapperQuery.php
+files[] = includes/WdCommerceOrderWrapperQuery.php
+files[] = includes/WdCommerceLineItemWrapperQuery.php
+
+files[] = tests/wrappers_delight_commerce.test
+
+dependencies[] = wrappers_delight
+dependencies[] = commerce_product
+dependencies[] = commerce_line_item
+dependencies[] = commerce_order
+; Information added by Drupal.org packaging script on 2016-02-26
+version = "7.x-1.3"
+core = "7.x"
+project = "wrappers_delight"
+datestamp = "1456507573"
+

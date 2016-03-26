@@ -1,0 +1,21 @@
+  /**
+   * Query by {{ property_name }}
+   *
+   * @param int|{{ target_entity_type }}|{{ target_entity_class }} ${{ property_name }}
+   * @param string $operator
+   *
+   * @return $this
+   */
+  public function by{{ property_name_camelized }}(${{property_name}}, $operator = NULL) {
+    if (${{property_name}} instanceof WdEntityWrapper) {
+      $id = ${{property_name}}->getId();
+    }
+    elseif (is_object(${{property_name}})) {
+      $wrapper = new {{ target_entity_class }}(${{property_name}});
+      $id = $wrapper->getId();
+    }
+    else {
+      $id = ${{property_name}};
+    }
+    return $this->byPropertyConditions(array('{{ property_name }}' => array($id, $operator)));
+  }

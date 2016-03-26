@@ -1,0 +1,23 @@
+  /**
+   * Adds a value to {{ field_name }}
+   *
+   * @param $value
+   *
+   * @return $this
+   */
+  public function addTo{{ field_name_camelized }}($value) {
+    if ($value instanceof {{ target_entity_class }}) {
+      $value = $value->value();
+    }
+    $existing_values = $this->get('{{ field_name }}');
+    if (!empty($existing_values)) {
+      foreach ($existing_values as $i => $existing_value) {
+        if (!empty($existing_value) && entity_id('{{ target_entity_type }}', $existing_value) == entity_id('{{ target_entity_type }}', $value)) {
+          return $this;  // already here
+        }
+      }
+    }
+    $existing_values[] = $value;
+    $this->set('{{ field_name }}', $existing_values);
+    return $this;
+  }

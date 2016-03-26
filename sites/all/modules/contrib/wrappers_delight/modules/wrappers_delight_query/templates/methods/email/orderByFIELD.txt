@@ -1,0 +1,10 @@
+  /**
+   * Order by {{ field_name }}
+   *
+   * @param string $direction
+   *
+   * @return $this
+   */
+  public function orderBy{{ field_name_camelized }}($direction = 'ASC') {
+    return $this->orderByField('{{ field_name }}.email', $direction);
+  }

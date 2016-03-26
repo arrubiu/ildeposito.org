@@ -1,0 +1,71 @@
+<?php
+/**
+ * @file
+ * Tests for Wrappers Delight Message
+ */
+
+class WrappersDelightMessageTestCase extends DrupalWebTestCase {
+  protected $user1;
+  protected $user2;
+  protected $node1;
+  protected $node2;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Message Wrapper tests',
+      'description' => 'Tests the Message wrapper for consistency with the wrapped object.',
+      'group' => 'Wrappers Delight',
+      'dependencies' => array('message', 'wrappers_delight_message'),
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('message', 'wrappers_delight_message');
+    $this->user1 = $this->drupalCreateUser();
+    $this->user2 = $this->drupalCreateUser();
+    $this->node1 = $this->drupalCreateNode();
+    $this->node2 = $this->drupalCreateNode();
+  }
+
+  public function testMessageWrapper() {
+
+    // Wrap existing.
+    $message_type = message_type_create('foo', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))));
+    $message_type->save();
+
+    $message = message_create('foo', array(), $this->user1);
+    $message->save();
+
+    $wrapped = new WdMessageWrapper($message);
+
+    $this->assertEqual($wrapped->getMid(), $message->mid);
+    $this->assertEqual($wrapped->getOwner()->getUid(), $message->uid);
+    $this->assertEqual($wrapped->getOwnerId(), $message->uid);
+    $this->assertEqual($wrapped->getTimestamp(), $message->timestamp);
+
+    // Update Test
+    $wrapped->setOwner($this->user2);
+    $timestamp = time() - 1000;
+    $wrapped->setTimestamp($timestamp);
+    $wrapped->save();
+
+    entity_get_controller('message')->resetCache();
+    $message = message_load($message->mid);
+    $this->assertEqual($this->user2->uid, $message->uid);
+    $this->assertEqual($wrapped->getOwner()->getUid(), $message->uid);
+    $this->assertEqual($timestamp, $message->timestamp);
+    $this->assertEqual($wrapped->getTimestamp(), $message->timestamp);
+
+    // Create Test
+    $new = WdMessageWrapper::create(array('bundle' => 'foo', 'uid' => $this->user1->uid));
+    $new->save();
+
+    $this->assertNotNull($new->getMid());
+    $message = message_load($new->getMid());
+    $this->assertEqual($new->getOwner()->getUid(), $message->uid);
+    $this->assertEqual($new->getOwnerId(), $message->uid);
+    $this->assertEqual($new->getTimestamp(), $message->timestamp);
+    $this->assertEqual($new->getBundle(), $message->type);
+  }
+
+}

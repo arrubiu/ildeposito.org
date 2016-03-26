@@ -1,0 +1,19 @@
+name = Wrappers Delight Query
+description = Wrapper around EntityFieldQuery that provides entity and bundle-specific query classes.
+package = Wrappers Delight
+core = 7.x
+
+files[] = includes/WdNodeWrapperQuery.php
+files[] = includes/WdUserWrapperQuery.php
+files[] = includes/WdTaxonomyVocabularyWrapperQuery.php
+files[] = includes/WdTaxonomyTermWrapperQuery.php
+
+files[] = tests/wrappers_delight_query.test
+
+dependencies[] = wrappers_delight
+; Information added by Drupal.org packaging script on 2016-02-26
+version = "7.x-1.3"
+core = "7.x"
+project = "wrappers_delight"
+datestamp = "1456507573"
+

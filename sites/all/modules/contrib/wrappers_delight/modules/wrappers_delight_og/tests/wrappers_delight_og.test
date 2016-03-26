@@ -1,0 +1,87 @@
+<?php
+/**
+ * @file
+ * Tests for Wrappers Delight OG
+ */
+
+class WrappersDelightOGTestCase extends DrupalWebTestCase {
+  protected $user1;
+  protected $user2;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'OG Membership Wrapper tests',
+      'description' => 'Tests the OG Membership wrapper for consistency with the wrapped object.',
+      'group' => 'Wrappers Delight',
+      'dependencies' => array('og', 'wrappers_delight_og'),
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('og', 'entity_feature', 'wrappers_delight_og');
+    $this->user1 = $this->drupalCreateUser();
+    $this->user2 = $this->drupalCreateUser();
+  }
+
+  public function testOgMembershipWrapper() {
+    $perm = 'administer group';
+
+    // Add OG group fields.
+    og_create_field(OG_GROUP_FIELD, 'entity_test', 'main');
+    $roles = array_flip(og_roles('entity_test', 'main'));
+    og_role_change_permissions($roles[OG_AUTHENTICATED_ROLE], array($perm => 1));
+
+    $og_field = og_fields_info(OG_AUDIENCE_FIELD);
+    $og_field['field']['settings']['target_type'] = 'entity_test';
+    og_create_field(OG_AUDIENCE_FIELD, 'node', 'article', $og_field);
+
+    $group = $this->createGroup();
+
+    // Wrap existing.
+    $og_membership = og_group('entity_test', $group->pid, array('entity_type' => 'user', 'entity' => $this->user1));
+    $wrapped = new WdOgMembershipWrapper($og_membership);
+
+    $this->assertEqual($wrapped->getId(), $og_membership->id);
+    $this->assertEqual($wrapped->getEntityType(), $og_membership->entity_type);
+    $this->assertEqual($wrapped->getEntity()->getUid(), $og_membership->etid);
+    $this->assertEqual($wrapped->getGroup()->get('pid'), $og_membership->gid);
+    $this->assertEqual($wrapped->getGroupType(), $og_membership->group_type);
+    $this->assertEqual($wrapped->getState(), $og_membership->state);
+    $this->assertEqual($wrapped->getFieldName(), $og_membership->field_name);
+
+    // Update Test
+    $wrapped->setState(OG_STATE_BLOCKED);
+    $wrapped->save();
+
+    entity_get_controller('og_membership')->resetCache();
+    $og_membership = og_membership_load($og_membership->id);
+    $this->assertEqual($og_membership->state, OG_STATE_BLOCKED);
+    $this->assertEqual($wrapped->getState(), $og_membership->state);
+
+    // Create Test
+    $new = WdOgMembershipWrapper::create(array('entity_type' => 'user', 'entity' => $this->user2, 'group_type' => 'entity_test', 'gid' => $group->pid, 'state' => OG_STATE_PENDING));
+    $new->save();
+
+    $this->assertNotNull($new->getId());
+    $og_membership = og_membership_load($new->getId());
+    $this->assertEqual($new->getId(), $og_membership->id);
+    $this->assertEqual($new->getEntityType(), $og_membership->entity_type);
+    $this->assertEqual($new->getEntity()->getUid(), $og_membership->etid);
+    $this->assertEqual($new->getGroup()->get('pid'), $og_membership->gid);
+    $this->assertEqual($new->getGroupType(), $og_membership->group_type);
+    $this->assertEqual($new->getState(), $og_membership->state);
+    $this->assertEqual($new->getFieldName(), $og_membership->field_name);
+  }
+
+  private function createGroup() {
+
+    // Create a group.
+    $entity1 = entity_create('entity_test', array('name' => 'main', 'uid' => $this->user1->uid));
+    $wrapper = entity_metadata_wrapper('entity_test', $entity1);
+    $wrapper->{OG_GROUP_FIELD}->set(1);
+    $wrapper->save();
+    return $wrapper->value();
+  }
+
+
+}

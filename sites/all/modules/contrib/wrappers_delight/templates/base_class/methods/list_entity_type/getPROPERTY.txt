@@ -1,0 +1,15 @@
+  /**
+   * Retrieves {{ property_name }}
+   *
+   * @return {{ target_entity_class }}[]
+   */
+  public function get{{ property_name_camelized }}() {
+    $items = array();
+    $values = $this->get('{{ property_name }}');
+    if (!empty($values)) {
+      foreach ($values as $value) {
+        $items[] = new {{ target_entity_class }}($value);
+      }
+    }
+    return $items;
+  }

@@ -1,0 +1,8 @@
+  /**
+   * Retrieves {{ property_name }}
+   *
+   * @return string
+   */
+  public function get{{ property_name_camelized }}() {
+    return $this->get('{{ property_name }}');
+  }

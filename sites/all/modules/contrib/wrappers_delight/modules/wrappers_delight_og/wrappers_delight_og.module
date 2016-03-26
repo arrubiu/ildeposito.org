@@ -1,0 +1,33 @@
+<?php
+/**
+ * @file
+ * Wrappers Delight OG module
+ */
+
+/**
+ * Implements hook_wrappers_delight_base_classes()
+ */
+function wrappers_delight_og_wrappers_delight_base_classes() {
+  return array(
+    'og_membership' => 'WdOgMembershipWrapper',
+  );
+}
+
+/**
+ * Implements hook_wrappers_delight_query_base_classes()
+ */
+function wrappers_delight_og_wrappers_delight_query_base_classes() {
+  return array(
+    'og_membership' => 'WdOgMembershipWrapperQuery',
+  );
+}
+
+/**
+ * Implements hook_wrappers_delight_base_class_dependencies().
+ */
+function wrappers_delight_og_wrappers_delight_base_class_dependencies($entity_type) {
+  if ($entity_type == 'og_membership') {
+    return array('wrappers_delight_og');
+  }
+  return NULL;
+}

@@ -1,0 +1,8 @@
+  /**
+   * Retrieves {{ field_name }}
+   *
+   * @return mixed
+   */
+  public function get{{ field_name_camelized }}() {
+    return $this->get('{{ field_name }}');
+  }

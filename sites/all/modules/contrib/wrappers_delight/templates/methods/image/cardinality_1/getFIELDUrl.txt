@@ -1,0 +1,22 @@
+  /**
+   * Retrieves {{ field_name }} as a URL
+   *
+   * @param string $image_style
+   *   (optional) Image style for the URL
+   * @param bool $absolute
+   *   Whether to return an absolute URL or not
+   *
+   * @return string
+   */
+  public function get{{ field_name_camelized }}Url($image_style = NULL) {
+    $image = $this->get('{{ field_name }}');
+    if (!empty($image)) {
+      if (!is_null($image_style)) {
+        return image_style_url($image_style, $image['uri']);
+      }
+      else {
+        return url(file_create_url($image['uri']));
+      }
+    }
+    return NULL;
+  }

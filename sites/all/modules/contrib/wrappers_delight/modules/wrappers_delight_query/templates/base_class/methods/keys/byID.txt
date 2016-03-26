@@ -1,0 +1,11 @@
+  /**
+   * Query by {{ property_name }}
+   *
+   * @param int ${{ property_name }}
+   * @param string $operator
+   *
+   * @return $this
+   */
+  public function by{{ property_name_camelized }}(${{property_name}}, $operator = NULL) {
+    return parent::byId(${{ property_name }}, $operator);
+  }

@@ -1,0 +1,30 @@
+  /**
+   * Retrieves {{ field_name }} as an HTML <img> tag
+   *
+   * @param string $image_style
+   *   (optional) Image style for the HTML
+   * @param array $options
+   *   (optional) options to pass to the theme function. If you want to add
+   *   attributes, you can do that under the attributes key of this array.
+   *
+   * @return string[]
+   */
+  public function get{{ field_name_camelized }}Html($image_style = NULL, $options = array()) {
+    $images = $this->get('{{ field_name }}');
+    $image_html = array();
+    if (!empty($images)) {
+      foreach ($images as $i => $image) {
+        $options += array(
+          'path' => $image['uri'],
+        );
+        if (!is_null($image_style)) {
+          $options['style_name'] = $image_style;
+          $image_html[$i] = theme('image_style', $options);
+        }
+        else {
+          $image_html[$i] = theme('image', $options);
+        }
+      }
+    }
+    return $image_html;
+  }

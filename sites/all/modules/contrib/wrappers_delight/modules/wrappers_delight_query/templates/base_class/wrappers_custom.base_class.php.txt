@@ -1,0 +1,42 @@
+<?php
+/**
+ * @file
+ * class {{ class_name }}
+ */
+
+class {{ class_name }}Results extends {{ parent_class }}Results {
+
+  /**
+   * @return {{ entity_class }}
+   */
+  public function current() {
+    return parent::current();
+  }
+}
+
+class {{ class_name }} extends {{ parent_class }} {
+
+  /**
+   * Construct a {{ class_name }}
+   */
+  public function __construct() {
+    parent::__construct('{{ entity_type }}');
+  }
+
+  /**
+   * Construct a {{ class_name }}
+   *
+   * @return {{ class_name }}
+   */
+  public static function find() {
+    return new self();
+  }
+
+  /**
+   * @return {{ class_name }}Results
+   */
+  public function execute() {
+    return new {{ class_name }}Results($this->entityType, $this->query->execute());
+  }
+
+}

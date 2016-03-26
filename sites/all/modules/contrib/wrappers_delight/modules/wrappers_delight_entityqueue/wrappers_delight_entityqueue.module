@@ -1,0 +1,34 @@
+<?php
+/**
+ * @file
+ * Wrappers Delight Entityqueue module
+ */
+
+
+/**
+ * Implements hook_wrappers_delight_base_classes()
+ */
+function wrappers_delight_entityqueue_wrappers_delight_base_classes() {
+  return array(
+    'entityqueue_subqueue' => 'WdEntityqueueSubqueueWrapper',
+  );
+}
+
+/**
+ * Implements hook_wrappers_delight_query_base_classes()
+ */
+function wrappers_delight_entityqueue_wrappers_delight_query_base_classes() {
+  return array(
+    'entityqueue_subqueue' => 'WdEntityqueueSubqueueWrapperQuery',
+  );
+}
+
+/**
+ * Implements hook_wrappers_delight_base_class_dependencies().
+ */
+function wrappers_delight_entityqueue_wrappers_delight_base_class_dependencies($entity_type) {
+  if ($entity_type == 'entityqueue_subqueue') {
+    return array('wrappers_delight_entityqueue');
+  }
+  return NULL;
+}

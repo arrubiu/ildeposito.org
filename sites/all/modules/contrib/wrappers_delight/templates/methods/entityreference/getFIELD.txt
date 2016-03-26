@@ -1,0 +1,12 @@
+  /**
+   * Retrieves {{ field_name }}
+   *
+   * @return {{ return_class }}[]
+   */
+  public function get{{ field_name_camelized }}() {
+    $values = $this->get('{{ field_name }}');
+    foreach ($values as $i => $value) {
+      $values[$i] = new {{ return_class }}($value);
+    }
+    return $values;
+  }

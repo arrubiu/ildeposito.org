@@ -1,0 +1,14 @@
+  /**
+   * Sets {{ property_name }}
+   *
+   * @param int|{{ target_entity_type }}|{{ target_entity_class }} $value
+   *
+   * @return $this
+   */
+  public function set{{ property_name_camelized }}($value) {
+    if ($value instanceof WdEntityWrapper) {
+      $value = $value->value();
+    }
+    $this->set('{{ property_name }}', $value);
+    return $this;
+  }

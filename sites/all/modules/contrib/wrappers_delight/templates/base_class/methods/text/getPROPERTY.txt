@@ -1,0 +1,8 @@
+  /**
+   * Retrieves {{ property_name }}
+   *
+   * @return string
+   */
+  public function get{{ property_name_camelized }}($format = WdEntityWrapper::FORMAT_PLAIN) {
+    return $this->getText('{{ property_name }}', $format);
+  }

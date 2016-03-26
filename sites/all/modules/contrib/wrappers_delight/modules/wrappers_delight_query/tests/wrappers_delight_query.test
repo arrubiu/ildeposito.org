@@ -1,0 +1,215 @@
+<?php
+/**
+ * @file
+ * Tests for Wrappers Delight module
+ */
+
+class WrappersDelightQueryTestCase extends DrupalWebTestCase {
+  public function setUp() {
+    parent::setUp('wrappers_delight_query');
+  }
+}
+
+class WrappersDelightQueryNodeTestCase extends WrappersDelightQueryTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Node query wrapper tests',
+      'description' => 'Tests the node wrapper query.',
+      'group' => 'Wrappers Delight',
+    );
+  }
+
+  public function testNodeQueryWrapper() {
+    $body[LANGUAGE_NONE][0]['value'] = '<b>The body or nothing.</b>';
+    $body2[LANGUAGE_NONE][0]['value'] = '<b>The body & everthing.</b>';
+    $user1 = $this->drupalCreateUser();
+    $user2 = $this->drupalCreateUser();
+    $node = $this->drupalCreateNode(array('body' => $body, 'title' => 'A', 'status' => 1, 'sticky' => 1, 'promote' => 1, 'created' => 1, 'uid' => $user1->uid));
+    $node2 = $this->drupalCreateNode(array('body' => $body2, 'title' => 'B', 'status' => 0, 'sticky' => 0, 'promote' => 0, 'created' => 2, 'uid' => $user2->uid));
+
+    $results = WdNodeWrapperQuery::find()->byNid($node->nid)->execute();
+    $this->assertFoundCorrectNode($results, $node);
+
+    $results = WdNodeWrapperQuery::find()->byTitle($node->title)->execute();
+    $this->assertFoundCorrectNode($results, $node);
+
+    $results = WdNodeWrapperQuery::find()->byAuthor($node->uid)->execute();
+    $this->assertFoundCorrectNode($results, $node);
+
+    $results = WdNodeWrapperQuery::find()->byCreatedTime($node->created)->execute();
+    $this->assertFoundCorrectNode($results, $node);
+
+    $results = WdNodeWrapperQuery::find()->byPromoted($node->promote)->execute();
+    $this->assertFoundCorrectNode($results, $node);
+
+    $results = WdNodeWrapperQuery::find()->byPublished($node->status)->execute();
+    $this->assertFoundCorrectNode($results, $node);
+
+    $results = WdNodeWrapperQuery::find()->bySticky($node->sticky)->execute();
+    $this->assertFoundCorrectNode($results, $node);
+
+    // Test order queries.
+    $results = WdNodeWrapperQuery::find()->orderByNid()->execute();
+    $this->assertFoundCorrectOrder($results, array($node, $node2));
+
+    $results = WdNodeWrapperQuery::find()->orderByTitle()->execute();
+    $this->assertFoundCorrectOrder($results, array($node, $node2));
+
+    $results = WdNodeWrapperQuery::find()->orderByAuthor()->execute();
+    $this->assertFoundCorrectOrder($results, array($node, $node2));
+
+    $results = WdNodeWrapperQuery::find()->orderByCreatedTime()->execute();
+    $this->assertFoundCorrectOrder($results, array($node, $node2));
+
+    $results = WdNodeWrapperQuery::find()->orderByPromoted()->execute();
+    $this->assertFoundCorrectOrder($results, array($node2, $node));
+
+    $results = WdNodeWrapperQuery::find()->orderByPublished()->execute();
+    $this->assertFoundCorrectOrder($results, array($node2, $node));
+
+    $results = WdNodeWrapperQuery::find()->orderBySticky()->execute();
+    $this->assertFoundCorrectOrder($results, array($node2, $node));
+
+  }
+
+  private function assertFoundCorrectNode(WdNodeWrapperQueryResults $results, $node) {
+    $count = 0;
+    foreach ($results as $record) {
+      $count++;
+      $this->assertEqual($record->getNid(), $node->nid);
+    }
+    $this->assertEqual($count, 1);
+  }
+
+  private function assertFoundCorrectOrder(WdNodeWrapperQueryResults $results, $nodes) {
+    $count = 0;
+    foreach ($results as $record) {
+      $this->assertEqual($record->getNid(), $nodes[$count]->nid);
+      $count++;
+    }
+    $this->assertEqual($count, count($nodes));
+  }
+
+}
+
+class WrappersDelightQueryUserTestCase extends WrappersDelightQueryTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'User query wrapper tests',
+      'description' => 'Tests the user wrapper query.',
+      'group' => 'Wrappers Delight',
+    );
+  }
+
+  public function testUserQueryWrapper() {
+
+    $account = $this->drupalCreateUser(array('administer nodes'));
+    // Login as web user and add a signature and a user picture.
+    $this->drupalLogin($account);
+    variable_set('user_signatures', 1);
+    variable_set('user_pictures', 1);
+    $edit['signature[value]'] = 'Sig A';
+    $edit['signature[format]'] = 'filtered_html';
+    $image = current($this->drupalGetTestFiles('image'));
+    $edit['files[picture_upload]'] = drupal_realpath($image->uri);
+    $this->drupalPost('user/' . $account->uid . '/edit', $edit, t('Save'));
+    $this->drupalLogout();
+
+    $account2 = $this->drupalCreateUser(array('administer nodes'));
+    // Login as web user and add a signature and a user picture.
+    $this->drupalLogin($account2);
+    $edit['signature[value]'] = 'Sig B';
+    $edit['signature[format]'] = 'filtered_html';
+    $image = current($this->drupalGetTestFiles('image'));
+    $edit['files[picture_upload]'] = drupal_realpath($image->uri);
+    $this->drupalPost('user/' . $account2->uid . '/edit', $edit, t('Save'));
+    $this->drupalLogout();
+
+    $account = user_load($account->uid, TRUE);
+    $account->name = 'A';
+    $account->status = 1;
+    $account->mail = 'A@example.com';
+    $account->created = 10;
+    user_save($account);
+    $account = user_load($account->uid, TRUE);
+
+    $account2 = user_load($account2->uid, TRUE);
+    $account2->name = 'B';
+    $account2->status = 0;
+    $account2->mail = 'B@example.com';
+    $account2->created = 12;
+    user_save($account2);
+    $account2 = user_load($account2->uid, TRUE);
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->byUid($account->uid)->execute();
+    $this->assertFoundCorrectUser($results, $account);
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->byName($account->name)->execute();
+    $this->assertFoundCorrectUser($results, $account);
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->byMail($account->mail)->execute();
+    $this->assertFoundCorrectUser($results, $account);
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->byLastAccess($account->access)->execute();
+    $this->assertFoundCorrectUser($results, $account);
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->byStatus($account->status)->execute();
+    $this->assertFoundCorrectUser($results, $account);
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->byLastLogin($account->login)->execute();
+    $this->assertFoundCorrectUser($results, $account);
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->bySignature($account->signature)->execute();
+    $this->assertFoundCorrectUser($results, $account);
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->byCreatedTime($account->created)->execute();
+    $this->assertFoundCorrectUser($results, $account);
+
+
+    // Test order queries.
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->orderByUid()->execute();
+    $this->assertFoundCorrectOrder($results, array($account, $account2));
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->orderByName()->execute();
+    $this->assertFoundCorrectOrder($results, array($account, $account2));
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->orderByMail()->execute();
+    $this->assertFoundCorrectOrder($results, array($account, $account2));
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->orderByLastAccess()->execute();
+    $this->assertFoundCorrectOrder($results, array($account, $account2));
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->orderByStatus()->execute();
+    $this->assertFoundCorrectOrder($results, array($account2, $account));
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->orderByLastLogin()->execute();
+    $this->assertFoundCorrectOrder($results, array($account, $account2));
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->orderBySignature()->execute();
+    $this->assertFoundCorrectOrder($results, array($account, $account2));
+
+    $results = WdUserWrapperQuery::find()->byUid(1, '>')->orderByCreatedTime()->execute();
+    $this->assertFoundCorrectOrder($results, array($account, $account2));
+
+  }
+
+  private function assertFoundCorrectUser(WdUserWrapperQueryResults $results, $account) {
+    $count = 0;
+    foreach ($results as $record) {
+      $count++;
+      $this->assertEqual($record->getUid(), $account->uid);
+    }
+    $this->assertEqual($count, 1);
+  }
+
+  private function assertFoundCorrectOrder(WdUserWrapperQueryResults $results, $accounts) {
+    $count = 0;
+    foreach ($results as $record) {
+      $this->assertEqual($record->getUid(), $accounts[$count]->uid);
+      $count++;
+    }
+    $this->assertEqual($count, count($accounts));
+  }
+}

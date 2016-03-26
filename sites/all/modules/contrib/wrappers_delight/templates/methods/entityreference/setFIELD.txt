@@ -1,0 +1,24 @@
+  /**
+   * Sets {{ field_name }}
+   *
+   * @param $value
+   *
+   * @return $this
+   */
+  public function set{{ field_name_camelized }}($value) {
+    if (is_array($value)) {
+      foreach ($value as $i => $v) {
+        if ($v instanceof {{ target_entity_class }}) {
+          $value[$i] = $v->value();
+        }
+      }
+    }
+    else {
+      if ($value instanceof {{ target_entity_class }}) {
+        $value = $value->value();
+      }
+    }
+
+    $this->set('{{ field_name }}', $value);
+    return $this;
+  }

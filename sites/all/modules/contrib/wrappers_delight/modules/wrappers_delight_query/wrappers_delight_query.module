@@ -1,0 +1,451 @@
+<?php
+/**
+ * @file
+ * Wrappers Delight Query module
+ */
+
+/**
+ * Implements hook_wrappers_delight_generate_classes().
+ *
+ * @param $entity_type
+ * @param $bundle
+ *
+ * @return array
+ */
+function wrappers_delight_query_wrappers_delight_generate_classes($entity_type, $bundle) {
+  $class_name = wrappers_delight_query_generate_class_name($entity_type, $bundle);
+  $class_contents = wrappers_delight_query_generate_class($entity_type, $bundle);
+  return array($class_name => $class_contents);
+}
+
+/**
+ * Implements hook_wrappers_delight_generate_field_methods().
+ *
+ * @param $entity_type
+ * @param $bundle
+ *
+ * @return array
+ */
+function wrappers_delight_query_wrappers_delight_generate_field_methods($entity_type, $bundle) {
+  $class_name = wrappers_delight_query_generate_class_name($entity_type, $bundle);
+  $methods = wrappers_delight_query_generate_field_methods($entity_type, $bundle);
+  return array($class_name => $methods);
+}
+
+/**
+ * Implements hook_wrappers_delight_generate_base_classes().
+ *
+ * @param string $entity_type
+ *
+ * @return array
+ */
+function wrappers_delight_query_wrappers_delight_generate_base_classes($entity_type) {
+  $classes = array();
+  $class_name = wrappers_delight_query_generate_base_class_name($entity_type);
+  $class_contents = wrappers_delight_query_generate_base_class($entity_type);
+  if (!empty($class_contents)) {
+    $classes[$class_name] = $class_contents;
+    if (!class_exists($class_name)) {
+      $GLOBALS['wd_new_query_base_classes'][$entity_type] = $class_name;
+    }
+  }
+  return $classes;
+}
+
+/**
+ * Implements hook_wrappers_delight_generate_base_property_methods().
+ *
+ * @param string $entity_type
+ *
+ * @return array
+ */
+function wrappers_delight_query_wrappers_delight_generate_base_property_methods($entity_type) {
+  $class_name = wrappers_delight_query_generate_base_class_name($entity_type);
+  $methods = wrappers_delight_query_generate_base_property_methods($entity_type);
+  return array($class_name => $methods);
+}
+
+/**
+ * Implements hook_wrappers_delight_base_class_dependencies().
+ */
+function wrappers_delight_query_wrappers_delight_base_class_dependencies($entity_type) {
+  $dependencies = array('wrappers_delight_query');
+  return $dependencies;
+}
+
+/**
+ * Generate a query class name for entity type and bundle.
+ *
+ * @param $entity_type
+ * @param $bundle
+ *
+ * @return string
+ */
+function wrappers_delight_query_generate_class_name($entity_type, $bundle) {
+  $camel_bundle = str_replace(' ', '', ucwords(str_replace('_', ' ', $bundle)));
+  $camel_entity = str_replace(' ', '', ucwords(str_replace('_', ' ', $entity_type)));
+  return $camel_bundle. $camel_entity . 'WrapperQuery';
+}
+
+/**
+ * Generate the "standard" name for a base query class.
+ *
+ * @param string $entity_type
+ * @return string
+ */
+function wrappers_delight_query_generate_base_class_name($entity_type) {
+  return wrappers_delight_camelize('wd_' . $entity_type . '_wrapper_query');
+}
+
+
+/**
+ * Generate a stub query class for a given entity type and bundle.
+ *
+ * @param $entity_type
+ * @param $bundle
+ *
+ * @return string
+ *   Class file contents as string
+ */
+function wrappers_delight_query_generate_class($entity_type, $bundle) {
+  $class_name = wrappers_delight_query_generate_class_name($entity_type, $bundle);
+  $entity_class = wrappers_delight_generate_class_name($entity_type, $bundle);
+  $parent_class = wrappers_delight_query_get_parent_class($entity_type);
+
+  $class_contents = file_get_contents(drupal_get_path('module', 'wrappers_delight_query') . '/templates/wrappers_custom.php.txt');
+  $replacements = array(
+    'class_name' => $class_name,
+    'parent_class' => $parent_class,
+    'entity_class' => $entity_class,
+    'entity_type' => $entity_type,
+    'bundle' => $bundle,
+  );
+  $class_contents = wrappers_delight_replace_tokens($replacements, $class_contents);
+
+  return $class_contents;
+}
+
+/**
+ * Generate a stub base query class for a given entity type.
+ *
+ * @param string $entity_type
+ *
+ * @return string
+ *   Class file contents as string
+ */
+function wrappers_delight_query_generate_base_class($entity_type) {
+  $class_contents = '';
+  $entity_classes = wrappers_delight_get_base_classes();
+  if (!empty($entity_classes[$entity_type])) {
+    $info = entity_get_info($entity_type);
+    if (!empty($info)) {
+      $default_base_class_name = wrappers_delight_query_generate_base_class_name($entity_type);
+      $base_class_name = wrappers_delight_query_get_parent_class($entity_type);
+      if ($base_class_name == 'WdWrapperQuery' || $base_class_name == $default_base_class_name) {
+        // Let's generate a new class if there is no existing one.
+        $base_class_name = wrappers_delight_query_generate_base_class_name($entity_type);
+        $class_contents = file_get_contents(drupal_get_path('module', 'wrappers_delight_query') . '/templates/base_class/wrappers_custom.base_class.php.txt');
+        $replacements = array(
+          'class_name' => $base_class_name,
+          'parent_class' => 'WdWrapperQuery',
+          'entity_class' => $entity_classes[$entity_type],
+          'entity_type' => $entity_type,
+        );
+        $class_contents = wrappers_delight_replace_tokens($replacements, $class_contents);
+      }
+    }
+  }
+
+  return $class_contents;
+}
+
+/**
+ * Determine parent class for an entity type query.
+ *
+ * @param $entity_type
+ * @return string
+ */
+function wrappers_delight_query_get_parent_class($entity_type) {
+  $base_classes = wrappers_delight_query_get_base_classes();
+
+  if (!empty($base_classes[$entity_type])) {
+    return $base_classes[$entity_type];
+  }
+  return 'WdWrapperQuery';
+}
+
+/**
+ * Get all query base classes.
+ *
+ * @return array
+ */
+function wrappers_delight_query_get_base_classes() {
+  $base_classes = module_invoke_all('wrappers_delight_query_base_classes');
+  drupal_alter('wrappers_delight_query_base_classes', $base_classes);
+  return $base_classes;
+}
+
+/**
+ * Implements hook_wrappers_delight_query_base_classes()
+ *
+ * @return array
+ */
+function wrappers_delight_query_wrappers_delight_query_base_classes() {
+  return array(
+    'node' => 'WdNodeWrapperQuery',
+    'user' => 'WdUserWrapperQuery',
+    'taxonomy_vocabulary' => 'WdTaxonomyVocabularyWrapperQuery',
+    'taxonomy_term' => 'WdTaxonomyTermWrapperQuery',
+  );
+}
+
+/**
+ * Implements hook_wrappers_delight_query_base_classes_alter()
+ *
+ * @param $base_classes
+ */
+function wrappers_delight_query_wrappers_delight_query_base_classes_alter(&$base_classes) {
+  // Get any base classes that are being created right now.
+  if (!empty($GLOBALS['wd_new_query_base_classes'])) {
+    foreach ($GLOBALS['wd_new_query_base_classes'] as $entity_type => $class_name) {
+      $base_classes[$entity_type] = $class_name;
+    }
+  }
+  // Look for active generated base classes that may have gone in another module.
+  $info = entity_get_info();
+  foreach (array_keys($info) as $entity_type) {
+    if (empty($base_classes[$entity_type])) {
+      $class_name = wrappers_delight_query_generate_base_class_name($entity_type);
+      if (class_exists($class_name)) {
+        $base_classes[$entity_type] = $class_name;
+      }
+    }
+  }
+}
+
+/**
+ * Query fields on entity bundle and generate methods for
+ * them. Methods are defined templates/methods/XXXX.txt,
+ * where the resulting method name is XXXXFieldName()
+ *
+ * @param $entity_type
+ * @param $bundle
+ * @return array
+ *   array of method names => method string
+ */
+function wrappers_delight_query_generate_field_methods($entity_type, $bundle) {
+  $methods = array();
+
+  $bundle_fields = field_info_instances($entity_type, $bundle);
+
+  foreach ($bundle_fields as $field_name => $instance) {
+    $short_field_name = preg_replace('/^field_/', '', $field_name);
+    $camelized_field_name = wrappers_delight_camelize($short_field_name);
+    $field_info = field_info_field($field_name);
+
+    $method_templates = file_scan_directory(drupal_get_path('module', 'wrappers_delight_query') . '/templates/methods', '//', array('recurse' => FALSE));
+    foreach ($method_templates as $template) {
+      if (!is_dir($template->uri)) {
+        $methods[str_replace('FIELD', $camelized_field_name, $template->name)] = wrappers_delight_query_build_method_from_template($template->uri, $field_info);
+      }
+    }
+
+    // Check for field type specific methods
+    $field_type_template_dir = drupal_get_path('module', 'wrappers_delight_query') . '/templates/methods/' . $field_info['type'];
+    if (file_exists($field_type_template_dir)) {
+      $method_templates = file_scan_directory($field_type_template_dir, '//', array('recurse' => FALSE));
+      foreach ($method_templates as $template) {
+        if (!is_dir($template->uri)) {
+          $methods[str_replace('FIELD', $camelized_field_name, $template->name)] = wrappers_delight_query_build_method_from_template($template->uri, $field_info);
+        }
+      }
+    }
+  }
+
+  return $methods;
+}
+
+/**
+ * Query properties on entity and generate methods for
+ * them. Methods are defined templates/base_class/methods/XXXX.txt,
+ * where the resulting method name is XXXXPropertyName()
+ *
+ * @param string $entity_type
+ * @return array
+ *   array of method names => method string
+ */
+function wrappers_delight_query_generate_base_property_methods($entity_type) {
+  $methods = array();
+  $key_methods = array();
+  $entity_methods = array();
+  $list_entity_methods = array();
+  $computed_methods = array();
+
+  $known_property_types = array(
+    'boolean',
+    'date',
+    'decimal',
+    'duration',
+    'entity',
+    'integer',
+    'text',
+    'token',
+    'struct',
+    'uri',
+    'list',
+  );
+
+  $entity_info = entity_get_info($entity_type);
+  $properties = entity_get_property_info($entity_type);
+
+  foreach ($properties['properties'] as $property_name => $property_info) {
+    $camelized_prop_name = wrappers_delight_camelize($property_name);
+
+    $method_templates = file_scan_directory(drupal_get_path('module', 'wrappers_delight_query') . '/templates/base_class/methods', '//', array('recurse' => FALSE));
+    foreach ($method_templates as $template) {
+      if (is_dir($template->uri) && preg_match('/keys$/', $template->uri, $matches)) {
+        $key_method_templates = file_scan_directory($template->uri, '//', array('recurse' => FALSE));
+        foreach ($key_method_templates as $key_template) {
+          if ($property_name == $entity_info['entity keys']['id'] && (preg_match('/byID$/', $key_template->name) || preg_match('/orderByID$/', $key_template->name))) {
+            $key_methods[str_replace('ID', $camelized_prop_name, $key_template->name)] = wrappers_delight_query_build_property_method_from_template($key_template->uri, $property_name, $property_info);
+          }
+          elseif ($property_name == $entity_info['entity keys']['bundle'] && (preg_match('/byBUNDLE$/', $key_template->name) || preg_match('/orderByBUNDLE$/', $key_template->name))) {
+            $key_methods[str_replace('BUNDLE', $camelized_prop_name, $key_template->name)] = wrappers_delight_query_build_property_method_from_template($key_template->uri, $property_name, $property_info);
+          }
+          elseif ($property_name == 'language' && (preg_match('/byLANGUAGE$/', $key_template->name) || preg_match('/orderByLANGUAGE$/', $key_template->name))) {
+            $key_methods[str_replace('LANGUAGE', $camelized_prop_name, $key_template->name)] = wrappers_delight_query_build_property_method_from_template($key_template->uri, $property_name, $property_info);
+          }
+        }
+      }
+      elseif (is_dir($template->uri) && preg_match('/list_entity_type$/', $template->uri)) {
+        $list_entity_method_templates = file_scan_directory($template->uri, '//', array('recurse' => FALSE));
+        foreach ($list_entity_method_templates as $list_entity_template) {
+          if (preg_match('/list<(.+)>/', $property_info['type'], $matches) && entity_get_info($matches[1])) {
+            $list_entity_methods[str_replace('PROPERTY', $camelized_prop_name, $list_entity_template->name)] = wrappers_delight_query_build_property_method_from_template($list_entity_template->uri, $property_name, $property_info);
+          }
+        }
+      }
+      elseif (is_dir($template->uri) && preg_match('/entity_type$/', $template->uri, $matches)) {
+        $entity_method_templates = file_scan_directory($template->uri, '//', array('recurse' => FALSE));
+        foreach ($entity_method_templates as $entity_template) {
+          if (!empty($property_info['type']) && !in_array($property_info['type'], $known_property_types)) {
+            $entity_methods[str_replace('PROPERTY', $camelized_prop_name, $entity_template->name)] = wrappers_delight_query_build_property_method_from_template($entity_template->uri, $property_name, $property_info);
+          }
+        }
+      }
+      elseif (is_dir($template->uri) && preg_match('/computed$/', $template->uri)) {
+        $computed_method_templates = file_scan_directory($template->uri, '//', array('recurse' => FALSE));
+        foreach ($computed_method_templates as $computed_template) {
+          if (!empty($property_info['computed'])) {
+            $computed_methods[str_replace('PROPERTY', $camelized_prop_name, $computed_template->name)] = wrappers_delight_query_build_property_method_from_template($computed_template->uri, $property_name, $property_info);
+          }
+        }
+      }
+      elseif (!is_dir($template->uri)) {
+        $methods[str_replace('PROPERTY', $camelized_prop_name, $template->name)] = wrappers_delight_query_build_property_method_from_template($template->uri, $property_name, $property_info);
+      }
+    }
+
+    // Check for field type specific methods
+    $property_type_template_dir = drupal_get_path('module', 'wrappers_delight_query') . '/templates/base_class/methods/' . $property_info['type'];
+    if (file_exists($property_type_template_dir)) {
+      $method_templates = file_scan_directory($property_type_template_dir, '//', array('recurse' => FALSE));
+      foreach ($method_templates as $template) {
+        if (!is_dir($template->uri)) {
+          $methods[str_replace('PROPERTY', $camelized_prop_name, $template->name)] = wrappers_delight_query_build_property_method_from_template($template->uri, $property_name, $property_info);
+        }
+      }
+    }
+
+    // Cardinal-specific methods take the place of regular methods.
+    $methods = array_merge($methods, $entity_methods);
+    $methods = array_merge($methods, $list_entity_methods);
+    $methods = array_merge($methods, $computed_methods);
+    $methods = array_merge($methods, $key_methods);
+  }
+
+  return $methods;
+}
+
+/**
+ * Build a query method from template.
+ *
+ * @param $template_file
+ * @param $field_info
+ *
+ * @return string
+ */
+function wrappers_delight_query_build_method_from_template($template_file, $field_info) {
+  $short_field_name = preg_replace('/^field_/', '', $field_info['field_name']);
+  $camelized_field_name = wrappers_delight_camelize($short_field_name);
+
+  $method = file_get_contents($template_file);
+  $replacements = array(
+    'field_name_camelized' => $camelized_field_name,
+    'field_name' => $field_info['field_name']
+  );
+  $method = wrappers_delight_replace_tokens($replacements, $method);
+
+  return $method;
+}
+
+/**
+ * Build a base property method from the template file.
+ *
+ * @param $template_file
+ * @param $field_info
+ *
+ * @return string
+ */
+function wrappers_delight_query_build_property_method_from_template($template_file, $property_name, $property_info) {
+  $camelized_property_name = wrappers_delight_camelize($property_name);
+
+  if (empty($property_info['schema field'])) {
+    // This is not queryable.
+    return '';
+  }
+  else {
+    $property_name = $property_info['schema field'];
+  }
+  $method = file_get_contents($template_file);
+  $replacements = array();
+  $replacements['property_name_camelized'] = $camelized_property_name;
+  $replacements['property_name'] = $property_name;
+
+  $known_property_types = array(
+    'boolean',
+    'date',
+    'decimal',
+    'duration',
+    'entity',
+    'integer',
+    'text',
+    'token',
+    'struct',
+    'uri',
+    'list',
+  );
+
+  if ($property_info['type'] == 'entity') {
+    $replacements['target_entity_type'] = 'object';
+    $replacements['target_entity_class'] = 'WdEntityWrapper';
+  }
+  elseif (preg_match('/list<(.+)>/', $property_info['type'], $matches) && $target_entity_info = entity_get_info($matches[1])) {
+    // Check to see if it's an entity type.
+    if (!empty($target_entity_info)) {
+      $replacements['target_entity_type'] = 'object';
+      $replacements['target_entity_class'] = wrappers_delight_get_parent_class($matches[1]);
+    }
+  }
+  elseif (!in_array($property_info['type'], $known_property_types)) {
+    // Check to see if it's an entity type.
+    $target_entity_info = entity_get_info($property_info['type']);
+    if (!empty($target_entity_info)) {
+      $replacements['target_entity_type'] = 'object';
+      $replacements['target_entity_class'] = wrappers_delight_get_parent_class($property_info['type']);
+    }
+  }
+
+  $method = wrappers_delight_replace_tokens($replacements, $method);
+  return $method;
+}

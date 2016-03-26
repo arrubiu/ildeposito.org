@@ -1,0 +1,12 @@
+  /**
+   * Retrieves {{ field_name }}
+   *
+   * @return {{ return_class }}
+   */
+  public function get{{ field_name_camelized }}() {
+    $value = $this->get('{{ field_name }}');
+    if (!empty($value)) {
+      $value = new {{ return_class }}($value);
+    }
+    return $value;
+  }

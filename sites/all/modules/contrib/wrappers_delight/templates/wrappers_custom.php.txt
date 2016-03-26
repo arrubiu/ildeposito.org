@@ -1,0 +1,25 @@
+<?php
+/**
+ * @file
+ * class {{ class_name }}
+ */
+
+class {{ class_name }} extends {{ parent_class }} {
+
+  protected $entity_type = '{{ entity_type }}';
+  private static $bundle = '{{ bundle }}';
+
+  /**
+   * Create a new {{ bundle }} {{ entity_type }}.
+   *
+   * @param array $values
+   * @param string $language
+   * @return {{ class_name }}
+   */
+  public static function create($values = array(), $language = LANGUAGE_NONE) {
+    $values += array('entity_type' => '{{ entity_type }}', 'bundle' => self::$bundle, 'type' => self::$bundle);
+    $entity_wrapper = parent::create($values, $language);
+    return new {{ class_name }}($entity_wrapper->value());
+  }
+
+}

@@ -1,0 +1,112 @@
+<?php
+/**
+ * @file
+ * Tests for Wrappers Delight Message
+ */
+
+class WrappersDelightEntityQueueTestCase extends DrupalWebTestCase {
+  protected $user1;
+  protected $user2;
+  protected $nodes;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'EntityQueue Wrapper tests',
+      'description' => 'Tests the EntityQueue wrapper for consistency with the wrapped object.',
+      'group' => 'Wrappers Delight',
+      'dependencies' => array('entityqueue', 'wrappers_delight_entityqueue'),
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('entityqueue', 'wrappers_delight_entityqueue');
+    $this->user1 = $this->drupalCreateUser();
+    $this->user2 = $this->drupalCreateUser();
+  }
+
+  public function testEntityQueueWrapper() {
+
+    // Wrap existing.
+    module_load_include('inc', 'ctools', 'includes/export');
+    $queue = entityqueue_queue_create(array(
+      'name' => 'test_queue',
+      'label' => 'Test Queue',
+      'language' => LANGUAGE_NONE,
+      'handler' => 'simple',
+      'target_type' => 'node',
+      'export_type' => EXPORT_IN_CODE,
+      'uid' => $this->user1->uid,
+    ));
+    entityqueue_queue_save($queue);
+    $subqueue = entityqueue_subqueue_load('test_queue');
+
+    $wrapped = new WdEntityqueueSubqueueWrapper($subqueue);
+    $this->assertEqual($wrapped->getSubqueueId(), $subqueue->subqueue_id);
+    $this->assertEqual($wrapped->getLabel(), $subqueue->label);
+    $this->assertEqual($wrapped->getName(), $subqueue->name);
+    $this->assertEqual($wrapped->getQueue(), $subqueue->queue);
+    $this->assertEqual($wrapped->getOwnerId(), $subqueue->uid);
+    $this->assertEqual($wrapped->getOwner()->getUid(), $subqueue->uid);
+
+    // Wrap Existing by ID
+    $wrapped = new WdEntityqueueSubqueueWrapper($subqueue->subqueue_id);
+    $this->assertEqual($wrapped->getSubqueueId(), $subqueue->subqueue_id);
+    $this->assertEqual($wrapped->getLabel(), $subqueue->label);
+    $this->assertEqual($wrapped->getName(), $subqueue->name);
+    $this->assertEqual($wrapped->getQueue(), $subqueue->queue);
+    $this->assertEqual($wrapped->getOwnerId(), $subqueue->uid);
+    $this->assertEqual($wrapped->getOwner()->getUid(), $subqueue->uid);
+
+    // Update Test
+    $wrapped->setOwner($this->user2)
+//      ->setLabel('Test Updated Queue')
+      ->save();
+
+    entity_get_controller('entityqueue_subqueue')->resetCache();
+    $subqueue = entityqueue_subqueue_load('test_queue');
+    $this->assertEqual($wrapped->getSubqueueId(), $subqueue->subqueue_id);
+    //$this->assertEqual($subqueue->label, 'Test Updated Queue');
+    $this->assertEqual($subqueue->uid, $this->user2->uid);
+
+    // Create Test
+    $queue_values = array(
+      'name' => 'create_queue',
+      'label' => 'Create Queue',
+      'handler' => 'simple',
+      'target_type' => 'node',
+    );
+    // Simple queue creation automatically creates the subqueue.
+    $newQueue = WdEntityqueueSubqueueWrapper::createQueue($queue_values, TRUE);
+    $this->verbose(print_r($newQueue, TRUE));
+    $all_subqueues = db_query("SELECT * FROM {entityqueue_subqueue}")->fetchAllAssoc('subqueue_id');
+    $this->verbose(print_r($all_subqueues, TRUE));
+    $new_wrapped = new WdEntityqueueSubqueueWrapper($queue_values['name']);
+    $this->assertEqual($new_wrapped->getLabel(), $queue_values['label']);
+    $this->assertEqual($new_wrapped->getQueue(), $queue_values['name']);
+    $this->assertEqual($new_wrapped->getName(), $queue_values['name']);
+
+    // Multiple subqueues does not create the subqueues automatically.
+    $queue_values = array(
+      'name' => 'multi_queue',
+      'label' => 'Multi Queue',
+      'handler' => 'multiple',
+      'target_type' => 'node',
+    );
+    $newQueue = WdEntityqueueSubqueueWrapper::createQueue($queue_values, TRUE);
+    $newSubqueue = WdEntityqueueSubqueueWrapper::create(array(
+      'queue' => $queue_values['name'],
+      'label' => 'Subqueue 1',
+      'uid' => $this->user2->uid,
+      'name' => 'multi_queue_one',
+    ));
+    $newSubqueue->save();
+    $new_subqueue_object = entityqueue_subqueue_load($newSubqueue->getSubqueueId());
+    $this->assertEqual($newSubqueue->getLabel(), 'Subqueue 1');
+    $this->assertEqual($newSubqueue->getLabel(), $new_subqueue_object->label);
+    $this->assertEqual($newSubqueue->getQueue(), 'multi_queue');
+    $this->assertEqual($newSubqueue->getQueue(), $new_subqueue_object->queue);
+    $this->assertEqual($newSubqueue->getOwnerId(), $new_subqueue_object->uid);
+    $this->assertEqual($newSubqueue->getOwnerId(), $this->user2->uid);
+  }
+
+}

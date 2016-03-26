@@ -1,0 +1,11 @@
+name = Wrappers Delight Test Modules
+description = For testing Wrappers Delight with entity hooks
+package = Wrappers Delight
+core = 7.x
+hidden = TRUE
+; Information added by Drupal.org packaging script on 2016-02-26
+version = "7.x-1.3"
+core = "7.x"
+project = "wrappers_delight"
+datestamp = "1456507573"
+

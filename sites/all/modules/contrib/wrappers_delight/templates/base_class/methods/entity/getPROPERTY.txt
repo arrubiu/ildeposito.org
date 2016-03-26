@@ -1,0 +1,12 @@
+  /**
+   * Retrieves {{ property_name }}
+   *
+   * @return {{ target_entity_class }}
+   */
+  public function get{{ property_name_camelized }}() {
+    $value = $this->get('{{ property_name }}');
+    if (!empty($value)) {
+      return new {{ target_entity_class }}($value);
+    }
+    return NULL;
+  }

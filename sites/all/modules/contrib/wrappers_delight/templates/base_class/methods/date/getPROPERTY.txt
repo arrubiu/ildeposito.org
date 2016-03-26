@@ -1,0 +1,8 @@
+  /**
+   * Retrieves {{ property_name }}
+   *
+   * @return int|string
+   */
+  public function get{{ property_name_camelized }}($format = WdEntityWrapper::DATE_UNIX, $custom_format = '') {
+    return $this->getDate('{{ property_name }}', $format, $custom_format);
+  }

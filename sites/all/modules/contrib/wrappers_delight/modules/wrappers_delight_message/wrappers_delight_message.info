@@ -1,0 +1,19 @@
+name = Wrappers Delight Message
+description = Class Wrappers for Message Entities
+package = Wrappers Delight
+core = 7.x
+
+files[] = includes/WdMessageWrapper.php
+files[] = includes/WdMessageWrapperQuery.php
+
+files[] = tests/wrappers_delight_message.test
+
+dependencies[] = wrappers_delight
+dependencies[] = message
+
+; Information added by Drupal.org packaging script on 2016-02-26
+version = "7.x-1.3"
+core = "7.x"
+project = "wrappers_delight"
+datestamp = "1456507573"
+

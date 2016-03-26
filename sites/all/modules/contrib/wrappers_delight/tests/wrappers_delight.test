@@ -1,0 +1,225 @@
+<?php
+/**
+ * @file
+ * Tests for Wrappers Delight module
+ */
+
+class WrappersDelightTestCase extends DrupalWebTestCase {
+  public function setUp() {
+    parent::setUp('wrappers_delight', 'wrappers_delight_test_module');
+  }
+}
+
+class WrappersDelightNodeTestCase extends WrappersDelightTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Node wrapper tests',
+      'description' => 'Tests the node wrapper for consistency with the wrapped object.',
+      'group' => 'Wrappers Delight',
+    );
+  }
+
+  public function testNodeWrapper() {
+    $body[LANGUAGE_NONE][0]['value'] = '<b><script type="text/javascript">alert("ouch!");</script>The body & nothing.</b>';
+    $node = $this->drupalCreateNode(array('body' => $body));
+
+    $wrapped = new WdNodeWrapper($node);
+
+    $this->assertEqual($wrapped->getNid(), $node->nid);
+    $this->assertEqual($wrapped->getType(), $node->type);
+    $this->assertEqual($wrapped->getTitle(), $node->title);
+    $this->assertEqual($wrapped->getAuthorId(), $node->uid);
+    $this->assertEqual($wrapped->getAuthor()->getUid(), $node->uid);
+    $this->assertEqual($wrapped->getCreatedTime(), $node->created);
+    $this->assertEqual($wrapped->getCreatedTime('short'), format_date($node->created, 'short'));
+    $this->assertEqual($wrapped->getCreatedTime('medium'), format_date($node->created, 'medium'));
+    $this->assertEqual($wrapped->getCreatedTime('long'), format_date($node->created, 'long'));
+    $this->assertEqual($wrapped->getCreatedTime('custom', 'H:i:s m/d/Y'), format_date($node->created, 'custom', 'H:i:s m/d/Y'));
+    $this->assertEqual($wrapped->getChangedTime(), $node->changed);
+    $this->assertEqual($wrapped->isPromoted(), (bool) $node->promote);
+    $this->assertEqual($wrapped->isPublished(), (bool) $node->status);
+    $this->assertEqual($wrapped->isSticky(), (bool) $node->sticky);
+
+    // Update Test.
+    $new_user = $this->drupalCreateUser();
+    $new_values = array(
+      'title' => $this->randomName(12),
+      'created' => time() - 100,
+      'promote' => (int) !$node->promote,
+      'status' => (int) !$node->status,
+      'sticky' => (int) !$node->sticky,
+    );
+    $wrapped->setTitle($new_values['title']);
+    $wrapped->setAuthor($new_user);
+    $wrapped->setCreatedTime($new_values['created']);
+    $wrapped->setPromoted($new_values['promote']);
+    $wrapped->setPublished($new_values['status']);
+    $wrapped->setSticky($new_values['sticky']);
+    $wrapped->save();
+    $node = node_load($node->nid, NULL, TRUE);
+
+    $this->assertEqual($node->title, $new_values['title']);
+    $this->assertEqual($wrapped->getTitle(), $node->title);
+
+    $this->assertEqual($new_user->uid, $node->uid);
+    $this->assertEqual($wrapped->getAuthorId(), $node->uid);
+
+    $this->assertEqual($node->created, $new_values['created']);
+    $this->assertEqual($wrapped->getCreatedTime(), $node->created);
+
+    $this->assertEqual($wrapped->getChangedTime(), $node->changed);
+
+    $this->assertEqual($node->promote, $new_values['promote']);
+    $this->assertEqual($wrapped->isPromoted(), (bool) $node->promote);
+
+    $this->assertEqual($node->status, $new_values['status']);
+    $this->assertEqual($wrapped->isPublished(), (bool) $node->status);
+
+    $this->assertEqual($node->sticky, $new_values['sticky']);
+    $this->assertEqual($wrapped->isSticky(), (bool) $node->sticky);
+
+
+    // Create Test.
+    $new = WdNodeWrapper::create(array('bundle' => 'page', 'title' => $new_values['title']));
+    $new->save();
+    $this->assertNotNull($new->getNid());
+    $new_node = node_load($new->getNid(), NULL, TRUE);
+    $this->assertEqual($new->getTitle(), $new_node->title);
+    $this->assertEqual($new->getCreatedTime(), $new_node->created);
+    $this->assertEqual($new->getAuthorId(), $new_node->uid);
+  }
+}
+
+class WrappersDelightUserTestCase extends WrappersDelightTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'User wrapper tests',
+      'description' => 'Tests the user wrapper for consistency with the wrapped object.',
+      'group' => 'Wrappers Delight',
+    );
+  }
+
+  public function testUserWrapper() {
+
+    $account = $this->drupalCreateUser(array('administer nodes'));
+    // Login as web user and add a signature and a user picture.
+    $this->drupalLogin($account);
+    variable_set('user_signatures', 1);
+    variable_set('user_pictures', 1);
+    $test_signature = $this->randomName();
+    $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a><script>alert("boom");</script>';
+    $edit['signature[format]'] = 'filtered_html';
+    $filtered_sig = check_markup($edit['signature[value]'], $edit['signature[format]']);
+    $image = current($this->drupalGetTestFiles('image'));
+    $edit['files[picture_upload]'] = drupal_realpath($image->uri);
+    $this->drupalPost('user/' . $account->uid . '/edit', $edit, t('Save'));
+
+    $account = user_load($account->uid, TRUE);
+
+    $wrapped = new WdUserWrapper($account);
+    $this->assertEqual($wrapped->getUid(), $account->uid);
+    $this->assertEqual($wrapped->getName(), $account->name);
+    $this->assertEqual($wrapped->getMail(), $account->mail);
+    $this->assertEqual($wrapped->getLastAccess(), $account->access);
+    $this->assertEqual($wrapped->getStatus(), $account->status);
+    $this->assertEqual($wrapped->getPicture(), $account->picture);
+    $this->assertEqual($wrapped->getLastLogin(), $account->login);
+    $this->assertEqual($wrapped->getSignature(WdEntityWrapper::FORMAT_RAW), $account->signature);
+    $this->assertEqual($wrapped->getSignature(), $filtered_sig);
+    $this->assertEqual($wrapped->getCreatedTime(), $account->created);
+
+    // Entity metadata wrapper returns default theme instead of blank.
+    $this->assertEqual($wrapped->getTheme(), 'bartik');
+    $this->assertEqual($wrapped->getInitialEmail(), $account->init);
+
+
+    // Update Test.
+    $new_image = current($this->drupalGetTestFiles('image'));
+    $new_image_file = file_save_data(file_get_contents($new_image->uri));
+    $new_values = array(
+      'name' => $this->randomName(12),
+      'mail' => $this->randomName(8) . '@example.com',
+      'status' => (int) !$account->status,
+      'picture' => $new_image_file,
+      'signature' => '<a href="http://new.example.com/">' . $this->randomName(12). '</a>',
+      'theme' => 'stark',
+      'init' => $this->randomName(8) . '@example.com',
+    );
+    $wrapped->setName($new_values['name']);
+    $wrapped->setMail($new_values['mail']);
+    $wrapped->setStatus($new_values['status']);
+    $wrapped->setSignature($new_values['signature']);
+    $wrapped->setTheme($new_values['theme']);
+    $wrapped->setInitialEmail($new_values['init']);
+    $wrapped->save();
+
+    $account = user_load($account->uid, TRUE);
+
+    $this->assertEqual($account->name, $new_values['name']);
+    $this->assertEqual($wrapped->getName(), $account->name);
+
+    $this->assertEqual($account->mail, $new_values['mail']);
+    $this->assertEqual($wrapped->getMail(), $account->mail);
+
+    $this->assertEqual($account->status, $new_values['status']);
+    $this->assertEqual($wrapped->getStatus(), $account->status);
+
+    $this->assertEqual($wrapped->getPicture(), $account->picture);
+
+    $this->assertEqual($account->signature, $new_values['signature']);
+    $this->assertEqual($wrapped->getSignature(WdEntityWrapper::FORMAT_RAW), $account->signature);
+
+    $this->assertEqual($account->theme, $new_values['theme']);
+    $this->assertEqual($wrapped->getTheme(), $account->theme);
+
+    $this->assertEqual($account->init, $new_values['init']);
+    $this->assertEqual($wrapped->getInitialEmail(), $account->init);
+
+
+    // Create Test.
+    $new = WdUserWrapper::create(array('name' => $this->randomName(8), 'mail' => $this->randomName(8) . '@example.com'));
+    $new->save();
+    $this->assertNotNull($new->getUid());
+    $new_user = user_load($new->getUid(), TRUE);
+    $this->assertEqual($new->getName(), $new_user->name);
+    $this->assertEqual($new->getCreatedTime(), $new_user->created);
+    $this->assertEqual($new->getStatus(), $new_user->status);
+    $this->assertEqual($new->getTheme(), 'bartik');
+
+  }
+}
+
+class WrappersDelightEntityHooksTestCase extends WrappersDelightTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Entity hooks tests',
+      'description' => 'Tests wrapper methods in entity presave/update hooks.',
+      'group' => 'Wrappers Delight',
+    );
+  }
+
+  public function testHooks() {
+    global $wd_test_results;
+
+    // Test isNew method
+    $body[LANGUAGE_NONE][0]['value'] = 'The body.';
+    $node = $this->drupalCreateNode(array('body' => $body));
+    $title = $node->title;
+    $this->assertTrue($wd_test_results['node']['presave']['is_new']);
+    $this->assertTrue($wd_test_results['node']['insert']['is_new']);
+
+    $node->body[LANGUAGE_NONE][0]['value'] = 'The body electric.';
+    $node->title = 'A new title';
+    node_save($node);
+    $this->assertFalse($wd_test_results['node']['presave']['is_new']);
+    $this->assertFalse($wd_test_results['node']['update']['is_new']);
+    // Test original
+    $this->assertEqual($wd_test_results['node']['presave']['original']['title'], $title);
+    $this->assertEqual($wd_test_results['node']['presave']['original']['body'], $body[LANGUAGE_NONE][0]['value']);
+    $this->assertEqual($wd_test_results['node']['update']['original']['title'], $title);
+    $this->assertEqual($wd_test_results['node']['update']['original']['body'], $body[LANGUAGE_NONE][0]['value']);
+  }
+}

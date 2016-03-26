@@ -1,0 +1,45 @@
+<?php
+/**
+ * @file
+ * Wrappers Delight Test Module
+ */
+
+/**
+ * Implements hook_entity_presave().
+ */
+function wrappers_delight_test_module_entity_presave($entity, $type) {
+  global $wd_test_results;
+  if ($type == 'node') {
+    $wd_test_results['node']['presave'] = array();
+    $wrapped = new WdNodeWrapper($entity);
+    $wd_test_results['node']['presave']['is_new'] = $wrapped->isNew();
+    $wd_test_results['node']['presave']['original']['title'] = $wrapped->getOriginal()->getTitle();
+    $wd_test_results['node']['presave']['original']['body'] = $wrapped->getOriginal()->getText('body', WdEntityWrapper::FORMAT_PLAIN);
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function wrappers_delight_test_module_entity_insert($entity, $type) {
+  global $wd_test_results;
+  if ($type == 'node') {
+    $wd_test_results['node']['insert'] = array();
+    $wrapped = new WdNodeWrapper($entity);
+    $wd_test_results['node']['insert']['is_new'] = $wrapped->isNew();
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function wrappers_delight_test_module_entity_update($entity, $type) {
+  global $wd_test_results;
+  if ($type == 'node') {
+    $wd_test_results['node']['update'] = array();
+    $wrapped = new WdNodeWrapper($entity);
+    $wd_test_results['node']['update']['is_new'] = $wrapped->isNew();
+    $wd_test_results['node']['update']['original']['title'] = $wrapped->getOriginal()->getTitle();
+    $wd_test_results['node']['update']['original']['body'] = $wrapped->getOriginal()->getText('body', WdEntityWrapper::FORMAT_PLAIN);
+  }
+}

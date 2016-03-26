@@ -1,0 +1,34 @@
+<?php
+/**
+ * @file
+ * Wrappers Delight Message module
+ */
+
+
+/**
+ * Implements hook_wrappers_delight_base_classes()
+ */
+function wrappers_delight_message_wrappers_delight_base_classes() {
+  return array(
+    'message' => 'WdMessageWrapper',
+  );
+}
+
+/**
+ * Implements hook_wrappers_delight_query_base_classes()
+ */
+function wrappers_delight_message_wrappers_delight_query_base_classes() {
+  return array(
+    'message' => 'WdMessageWrapperQuery',
+  );
+}
+
+/**
+ * Implements hook_wrappers_delight_base_class_dependencies().
+ */
+function wrappers_delight_message_wrappers_delight_base_class_dependencies($entity_type) {
+  if ($entity_type == 'message') {
+    return array('wrappers_delight_message');
+  }
+  return NULL;
+}

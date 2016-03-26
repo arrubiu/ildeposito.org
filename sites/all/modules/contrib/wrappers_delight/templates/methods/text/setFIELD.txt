@@ -1,0 +1,11 @@
+  /**
+   * Sets {{ field_name }}
+   *
+   * @param $value
+   *
+   * @return $this
+   */
+  public function set{{ field_name_camelized }}($value, $format = NULL) {
+    $this->setText('{{ field_name }}', $value, $format);
+    return $this;
+  }

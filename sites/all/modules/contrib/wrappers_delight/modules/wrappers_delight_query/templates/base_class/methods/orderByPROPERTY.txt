@@ -1,0 +1,10 @@
+  /**
+   * Order by {{ property_name }}
+   *
+   * @param string $direction
+   *
+   * @return $this
+   */
+  public function orderBy{{ property_name_camelized }}($direction = 'ASC') {
+    return $this->orderByProperty('{{ property_name }}', $direction);
+  }

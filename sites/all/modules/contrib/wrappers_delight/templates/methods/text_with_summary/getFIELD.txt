@@ -1,0 +1,8 @@
+  /**
+   * Retrieves {{ field_name }}
+   *
+   * @return mixed
+   */
+  public function get{{ field_name_camelized }}($format = WdEntityWrapper::FORMAT_DEFAULT, $markup_format = NULL) {
+    return $this->getText('{{ field_name }}', $format, $markup_format);
+  }
