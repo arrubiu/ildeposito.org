@@ -1,1 +1,42 @@
-// Insert your styling here.
+/** Footer less file **/
+
+.footer {
+  background-color: @text-color;
+  color: #fff;
+  border-top: 5px solid @gray-light;
+
+  .container {
+    margin: 0 auto;
+
+    @media(max-width: @screen-xs-max){
+      text-align: center;
+    }
+  }
+
+  h4 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  h2.block-title {
+    display: none;
+  }
+
+  ul.menu {
+    .make-row();
+    li {
+      .make-md-column(6);
+      a {
+        padding: 0px;
+        color: #fff;
+        font-size: 16px;
+        &:hover {
+          background-color: @text-color;
+        }
+      }
+
+
+    }
+  }
+
+}

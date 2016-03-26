@@ -1,1 +1,77 @@
-// Insert your styling here.
+header {
+
+  // generali
+  .block-title {
+    display: none;
+  }
+
+  #header {
+    background-color: @gray-lighter;
+    position: relative;
+  }
+
+
+  ul.menu {
+    li {
+      float: left;
+
+      a {
+        padding: 10px 20px;
+        color: #fff;
+        text-transform: lowercase;
+      }
+    }
+  }
+
+
+  // LOGHI
+  .logo-logo {
+    .pull-left();
+    padding: 10px;
+  }
+
+  .logo-title {
+    .pull-left();
+    padding: 10px 0px;
+  }
+
+  // TOP RIGHT MENU
+  .top-right-menu {
+    float: right;
+    background-color: @brand-primary;
+    padding: 5px;
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 15px;
+
+    a {
+      font-size: 18px;
+      &:hover {
+        background-color: @brand-primary;
+      }
+    }
+  }
+
+  // MAIN MENU
+  #mainmenu {
+    background-color: @text-color;
+    a {
+      color: #fff;
+      background-color: @text-color;
+      font-size: 24px;
+      text-transform: lowercase;
+    }
+  }
+
+  // SUBMENU
+  #submenu {
+    background-color: @gray-light;
+    a {
+       background-color: @gray-light;
+      font-size: 16px;
+    }
+  }
+
+}
