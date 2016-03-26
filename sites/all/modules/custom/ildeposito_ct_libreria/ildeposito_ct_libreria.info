@@ -13,7 +13,6 @@ dependencies[] = link
 dependencies[] = media
 dependencies[] = metatag
 dependencies[] = node
-dependencies[] = node_reference
 dependencies[] = options
 dependencies[] = override_node_options
 dependencies[] = strongarm

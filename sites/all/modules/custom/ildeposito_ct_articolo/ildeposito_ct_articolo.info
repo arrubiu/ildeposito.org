@@ -83,6 +83,5 @@ features_exclude[dependencies][features] = features
 features_exclude[dependencies][file_entity] = file_entity
 features_exclude[dependencies][image] = image
 features_exclude[dependencies][media] = media
-features_exclude[dependencies][node_reference] = node_reference
 features_exclude[dependencies][taxonomy] = taxonomy
 project path = sites/all/modules/developer/features

@@ -126,7 +126,6 @@ features_exclude[dependencies][geolocation] = geolocation
 features_exclude[dependencies][ildeposito_campi] = ildeposito_campi
 features_exclude[dependencies][link] = link
 features_exclude[dependencies][metatag] = metatag
-features_exclude[dependencies][node_reference] = node_reference
 features_exclude[dependencies][number] = number
 features_exclude[dependencies][options] = options
 features_exclude[dependencies][override_node_options] = override_node_options
