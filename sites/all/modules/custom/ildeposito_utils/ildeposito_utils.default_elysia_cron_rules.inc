@@ -213,16 +213,6 @@ function ildeposito_utils_default_elysia_cron_rules() {
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
   $cron_rule->api_version = 1;
-  $cron_rule->name = 'ildeposito_newsletter_cron';
-  $cron_rule->disable = NULL;
-  $cron_rule->rule = '10 04 1 * *';
-  $cron_rule->weight = NULL;
-  $cron_rule->context = NULL;
-  $cron_rules['ildeposito_newsletter_cron'] = $cron_rule;
-
-  $cron_rule = new stdClass;
-  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
-  $cron_rule->api_version = 1;
   $cron_rule->name = 'ildeposito_news_cron';
   $cron_rule->disable = NULL;
   $cron_rule->rule = '10 04 1 * *';
@@ -569,6 +559,16 @@ function ildeposito_utils_default_elysia_cron_rules() {
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['xmlsitemap_node_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
+  $cron_rule->name = 'ildeposito_newsletter_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = '10 04 1 * *';
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['ildeposito_newsletter_cron'] = $cron_rule;
 
   return $cron_rules;
 
