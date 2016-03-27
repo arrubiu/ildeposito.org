@@ -5,3 +5,23 @@
  */
 
 include_once 'ildeposito_ct_evento.features.inc';
+
+/**
+ * Implements hook_node_presave
+ */
+function ildeposito_ct_evento_node_presave($node) {
+  switch ($node->type) {
+    case 'evento':
+      $values = array(
+        'lat' => $node->field_geolocation['und'][0]['lat'],
+        'lon' => $node->field_geolocation['und'][0]['lng'],
+      );
+      $node->field_geofield['und'][0] = geofield_compute_values($values, 'latlon');
+      $node->field_evento_ordinamento['und'][0]['value'] = $node->field_data_evento['und'][0]['value'];
+      break;
+  }
+
+  if (in_array('staff', $GLOBALS['user']->roles) && $node->type != 'articolo' && !isset($node->original) && $node->uid != '227') {
+    $node->uid = '227';
+  }
+}
