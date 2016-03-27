@@ -41,16 +41,15 @@ function ildepositoboot_preprocess_page(&$vars) {
   );
   $vars['site_subtitle'] = l(theme('image', $img), $GLOBALS['base_path'], array('html'=>TRUE, 'attributes'=>array('id'=>'subtitle')));
 
-
-  $block = block_load('system','user-menu');
+  $block = block_load('menu','menu-ildeposito-top-right');
   $block_array = _block_get_renderable_array(_block_render_blocks(array($block)));
   $vars['top_right_menu'] = render($block_array);
 
-  $block = block_load('menu','menu-top-menu');
+  $block = block_load('menu','menu-ildeposito-top-menu');
   $block_array = _block_get_renderable_array(_block_render_blocks(array($block)));
   $vars['top_menu'] = render($block_array);
 
-  $block = block_load('menu','menu-sub-menu');
+  $block = block_load('menu','menu-ildeposito-utente');
   $block_array = _block_get_renderable_array(_block_render_blocks(array($block)));
   $vars['sub_menu'] = render($block_array);
 
@@ -65,7 +64,7 @@ function ildepositoboot_preprocess_page(&$vars) {
 
 
   /** FOOTER COMPONENTS **/
-  $block = block_load('menu','menu-footer');
+  $block = block_load('menu','menu-ildeposito-footer');
   $block_array = _block_get_renderable_array(_block_render_blocks(array($block)));
   $vars['footer_menu'] = render($block_array);
 
