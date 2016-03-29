@@ -1,0 +1,200 @@
+<?php
+
+/**
+ * @file
+ * Contains tests for Classy Paragraphs.
+ */
+
+/**
+ * Class ClassyParagraphsTestBase
+ *
+ * Base test class used for all functional test.
+ */
+class ClassyParagraphsTestBase extends DrupalWebTestCase {
+
+  /**
+   * Helper method used to create node with paragraphs.
+   *
+   * @param array $css_classes
+   *   Classes that should be added to the class field.
+   * @param string $node_type
+   *   A type of a node that should be created.
+   * @return array
+   *   An array containing newly created node and entity, in this order.
+   */
+  public function createNodeWithParagraph($css_classes, $node_type = 'cp_test_landing_page') {
+    // Make an array if necessary.
+    if (!is_array($css_classes)) {
+      $css_classes = array($css_classes);
+    }
+
+    // Decide whether paragraph item with one class or multiple classes should be created.
+    $field_name = (count($css_classes) == 1) ? 'field_cp_test_class' : 'field_cp_multiple_classes';
+    $bundle = (count($css_classes) == 1) ? 'cp_test_content' : 'cp_test_content_multiple_classes';
+
+    $node = $this->drupalCreateNode(array('type' => $node_type));
+
+    $entity = entity_create('paragraphs_item', array('bundle' => $bundle, 'field_name' => 'field_cp_test_paragraphs'));
+    // Add all css classes.
+    $index = 0;
+    foreach ($css_classes as $css_class) {
+      $entity->{$field_name}[LANGUAGE_NONE][$index]['value'] = $css_class;
+      ++$index;
+    }
+    $entity->field_cp_test_body[LANGUAGE_NONE][0]['value'] = $this->randomString();
+    $entity->setHostEntity('node', $node);
+    $entity->save();
+
+    return array($node, $entity);
+  }
+
+}
+
+/**
+ * Class ClassyParagraphsTestTestFeatureCase
+ *
+ * Ensure that the test features has been installed.
+ */
+class ClassyParagraphsTestTestFeatureCase extends ClassyParagraphsTestBase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Test Classy paragraphs feature module',
+      'description' => 'Ensure that the Classy paragraphs feature installs.',
+      'group' => 'Classy Paragraphs',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('classy_paragraphs_test');
+    // Log user in.
+    $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types', 'administer paragraphs bundles'));
+    $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Test content type stored in features.
+   */
+  public function testClassyParagraphsNodeType() {
+    $node_types = node_type_get_types();
+    $this->assertTrue(isset($node_types['cp_test_landing_page']), 'Node type landing page is available.');
+    // Go to test content type.
+    $this->drupalGet('node/add/cp-test-landing-page');
+    $this->assertRaw('Paragraphs', 'Found paragraphs field');
+  }
+
+  /**
+   * Test paragraph type and custom fields.
+   */
+  public function testClassyParagraphsCheckParagraph() {
+    // Get to paragraphs admin page.
+    $this->drupalGet('admin/structure/paragraphs');
+    $this->assertText('Content (test) (cp_test_content)', 'Found test paragraph');
+    // Ensure fields are present.
+    $this->drupalGet('admin/structure/paragraphs/cp-test-content/fields');
+    $this->assertText('field_cp_test_class', 'Found class field.');
+    $this->assertText('field_cp_test_body', 'Found body field.');
+  }
+
+}
+
+/**
+ * Class ClassyParagraphsTestCase
+ *
+ * Ensure that the markup appears.
+ */
+class ClassyParagraphsTestClassCase extends ClassyParagraphsTestBase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Test class mark and multiple classes mark',
+      'description' => 'Ensure that the class or multiple classes appear in markup.',
+      'group' => 'Classy Paragraphs',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('classy_paragraphs_test');
+  }
+
+  /**
+   * Check markup class.
+   */
+  public function testClassyParagraphsCheckMarkup() {
+    $css_class = 'test-soft-value';
+    list ($node, $entity) = $this->createNodeWithParagraph($css_class);
+    $this->drupalGet('node/' . $node->nid);
+    $class = $this->xpath('//*[contains(@class, "' . $css_class . '")]');
+    $this->assertTrue(count($class) == 1, $css_class . ' class found.');
+  }
+
+  /**
+   * Check markup of multiple class.
+   */
+  public function testClassyParagraphsCheckMarkupOfMultipleClasses() {
+    $css_classes = array('test-soft-value', 'test-hard-value');
+    list ($node, $entity) = $this->createNodeWithParagraph($css_classes);
+    $this->drupalGet('node/' . $node->nid);
+    foreach ($css_classes as $css_class) {
+      $class = $this->xpath('//*[contains(@class, "' . $css_class . '")]');
+      $this->assertTrue(count($class) == 1, $css_class . ' class found.');
+    }
+  }
+
+}
+
+/**
+ * Class ClassyParagraphsTestFieldClass
+ *
+ * Ensure that the class field and its instance can be created successfully.
+ */
+class ClassyParagraphsTestFieldClass extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Test class field',
+      'description' => 'Ensure that the class field and its instance can be created successfully.',
+      'group' => 'Classy Paragraphs',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('classy_paragraphs_test');
+  }
+
+  /**
+   * Check markup class.
+   */
+  public function testClassyParagraphsFieldClass() {
+    $field_name = 'cp_test_field';
+    $field_label = 'Test field';
+    $entity_type = 'paragraphs_item';
+    $bundle = 'cp_test_content';
+
+    // Test creation of class field.
+    $field = array(
+      'field_name' => $field_name,
+      'type' => CLASSY_PARAGRAPHS_FIELD_TYPE_LIST,
+      'entity_types' => array(CLASSY_PARAGRAPHS_ENTITY_TYPE),
+    );
+    field_create_field($field);
+
+    $field_info = field_info_field($field['field_name']);
+    $field_info_exists = !empty($field_info);
+    $this->assertTrue($field_info_exists, t('Field was created successfully.'));
+
+    // Test creation of class field instance.
+    $instance = array(
+      'field_name' => $field['field_name'],
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+      'label' => $field_label,
+    );
+    field_create_instance($instance);
+
+    $instance_info = field_info_instance($entity_type, $field['field_name'], $bundle);
+    $instance_exists = !empty($instance_info);
+    $this->assertTrue($instance_exists, t('Instance was created successfully.'));
+  }
+
+}

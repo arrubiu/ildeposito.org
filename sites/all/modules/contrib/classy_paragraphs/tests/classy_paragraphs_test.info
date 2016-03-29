@@ -1,0 +1,32 @@
+name = Classy paragraphs test
+core = 7.x
+package = Features
+hidden = TRUE
+dependencies[] = classy_paragraphs
+dependencies[] = features
+dependencies[] = list
+dependencies[] = options
+dependencies[] = paragraphs
+dependencies[] = text
+features[features_api][] = api:2
+features[field_base][] = body
+features[field_base][] = field_cp_multiple_classes
+features[field_base][] = field_cp_test_body
+features[field_base][] = field_cp_test_class
+features[field_base][] = field_cp_test_paragraphs
+features[field_instance][] = node-cp_test_landing_page-body
+features[field_instance][] = node-cp_test_landing_page-field_cp_test_paragraphs
+features[field_instance][] = paragraphs_item-cp_test_content-field_cp_test_body
+features[field_instance][] = paragraphs_item-cp_test_content-field_cp_test_class
+features[field_instance][] = paragraphs_item-cp_test_content_multiple_classes-field_cp_multiple_classes
+features[field_instance][] = paragraphs_item-cp_test_content_multiple_classes-field_cp_test_body
+features[node][] = cp_test_landing_page
+features[paragraphs][] = cp_test_content
+mtime = 1418647680
+
+; Information added by Drupal.org packaging script on 2015-03-03
+version = "7.x-1.0-alpha4"
+core = "7.x"
+project = "classy_paragraphs"
+datestamp = "1425355083"
+

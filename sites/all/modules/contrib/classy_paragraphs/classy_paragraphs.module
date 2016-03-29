@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Main module file for Classy Paragraphs.
+ */
+
+// Paragraphs entity bundle.
+define('CLASSY_PARAGRAPHS_ENTITY_TYPE', 'paragraphs_item');
+// Full content view mode machine name.
+define('CLASSY_PARAGRAPHS_VIEW_MODE', 'full');
+// Field type classy paragraphs list.
+define('CLASSY_PARAGRAPHS_FIELD_TYPE_LIST', 'cp_list');
+
+// Include fields.
+require_once dirname(__FILE__) . '/includes/classy_paragraphs.fields.inc';
+
+/**
+ * Get list of options from other modules.
+ *
+ * @param $field
+ * @param $instance
+ * @return array
+ */
+function classy_paragraphs_get_options($field, $instance) {
+  $options = array();
+  $options = module_invoke_all('classy_paragraphs_list_options', $options, $field, $instance);
+  drupal_alter('classy_paragraphs_list_options', $options);
+
+  return $options;
+}
+
+/**
+ * Implements template_preprocess_entity()
+ */
+function classy_paragraphs_preprocess_entity(&$variables) {
+  if ($variables['entity_type'] == CLASSY_PARAGRAPHS_ENTITY_TYPE && $variables['view_mode'] == CLASSY_PARAGRAPHS_VIEW_MODE) {
+    $classes = classy_paragraphs_get_classes($variables['paragraphs_item']);
+    foreach ($classes as $class) {
+      $variables['classes_array'][] = drupal_html_class($class);
+    }
+  }
+}
+
+/**
+ * Get class names from paragraph item.
+ *
+ * @param ParagraphsItemEntity $item
+ * @return string
+ */
+function classy_paragraphs_get_classes(ParagraphsItemEntity $item) {
+  $classes = array();
+  $instances = field_info_instances(CLASSY_PARAGRAPHS_ENTITY_TYPE, $item->bundle);
+
+  foreach ($instances as $instance) {
+    $field_name = $instance['field_name'];
+    $field = field_info_field($field_name);
+
+    if ($field['type'] == CLASSY_PARAGRAPHS_FIELD_TYPE_LIST) {
+      // Determine the list of languages to iterate on.
+      $languages = field_available_languages(CLASSY_PARAGRAPHS_ENTITY_TYPE, $field);
+
+      foreach ($languages as $langcode) {
+        if (!empty($item->{$field_name}[$langcode])) {
+          foreach ($item->{$field_name}[$langcode] as $field_item) {
+            $classes[] = $field_item['value'];
+          }
+        }
+      }
+    }
+  }
+
+  return $classes;
+}
+
+/**
+ * Implements template_preprocess_edgy_paragraphs_item().
+ */
+function classy_paragraphs_preprocess_edgy_paragraphs_item(&$variables) {
+  // Integrates Classy paragraphs with Edgy.
+  classy_paragraphs_preprocess_entity($variables);
+}

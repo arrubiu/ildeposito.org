@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Classy Paragraphs module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function classy_paragraphs_install() {
+  field_info_cache_clear();
+}
+
+/**
+ * Implements hook_field_schema().
+ */
+function classy_paragraphs_field_schema($field) {
+  $columns = array();
+
+  switch ($field['type']) {
+    case CLASSY_PARAGRAPHS_FIELD_TYPE_LIST:
+      $columns = array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ),
+      );
+      break;
+  }
+
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+      'value' => array('value'),
+    ),
+  );
+}
