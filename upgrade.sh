@@ -15,7 +15,7 @@ then
     drush vset eu_cookie_compliance_domain '' -y
 fi
 
-drush en entityreference_migration ildeposito_utils imagecache_token ildepositoboot -y
+drush en entityreference_migration paragraphs ildeposito_utils imagecache_token ildepositoboot -y
 drush emr
 
 ## Moduli contrib
