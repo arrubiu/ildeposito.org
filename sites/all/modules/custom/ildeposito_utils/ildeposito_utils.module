@@ -764,7 +764,6 @@ function strumenti_contents() {
   $items['items'] = array(
     flag_create_link('segnalibri', $id),
     flag_create_link('canzoniere', $id),
-    flag_create_link('da_rivedere', $id),
     print_insert_link(),
     $print_pdf,
   );

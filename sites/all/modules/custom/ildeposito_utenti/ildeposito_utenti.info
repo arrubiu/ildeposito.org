@@ -19,7 +19,6 @@ features[features_api][] = api:2
 features[field_instance][] = user-user-field_messggio_personale
 features[field_instance][] = user-user-field_nickname
 features[flag][] = canzoniere
-features[flag][] = da_rivedere
 features[flag][] = fl_template
 features[flag][] = segnalibri
 features[metatag][] = user

@@ -54,41 +54,6 @@ function ildeposito_utenti_flag_default_flags() {
     ),
     'api_version' => 3,
   );
-  // Exported flag: "Da rivedere".
-  $flags['da_rivedere'] = array(
-    'entity_type' => 'node',
-    'title' => 'Da rivedere',
-    'global' => 1,
-    'types' => array(
-      0 => 'articolo',
-      1 => 'autore',
-      2 => 'canto',
-      3 => 'evento',
-      4 => 'pagina',
-      5 => 'book',
-      6 => 'traduzione',
-    ),
-    'flag_short' => 'Contenuto da revisionare',
-    'flag_long' => '',
-    'flag_message' => '',
-    'unflag_short' => 'Contenuto revisionato',
-    'unflag_long' => '',
-    'unflag_message' => '',
-    'unflag_denied_text' => '',
-    'link_type' => 'toggle',
-    'weight' => 0,
-    'show_in_links' => array(),
-    'show_as_field' => FALSE,
-    'show_on_form' => 0,
-    'access_author' => '',
-    'show_contextual_link' => 0,
-    'i18n' => 0,
-    'module' => 'ildeposito_utenti',
-    'locked' => array(
-      0 => 'name',
-    ),
-    'api_version' => 3,
-  );
   // Exported flag: "Flag lists template".
   $flags['fl_template'] = array(
     'entity_type' => 'node',
