@@ -4,7 +4,6 @@ core = 7.x
 package = ilDeposito.org
 version = 7.x-1.0
 project = ildeposito_layout
-dependencies[] = alterator
 dependencies[] = boxes
 dependencies[] = context
 dependencies[] = ctools
