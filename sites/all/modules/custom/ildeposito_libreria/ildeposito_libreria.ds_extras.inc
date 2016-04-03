@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_ct_libreria.ds_extras.inc
+ * ildeposito_libreria.ds_extras.inc
  */
 
 /**
  * Implements hook_ds_vd_info().
  */
-function ildeposito_ct_libreria_ds_vd_info() {
+function ildeposito_libreria_ds_vd_info() {
   $export = array();
 
   $ds_vd = new stdClass();

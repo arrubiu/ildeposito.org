@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_ct_libreria.strongarm.inc
+ * ildeposito_libreria.strongarm.inc
  */
 
 /**
  * Implements hook_strongarm().
  */
-function ildeposito_ct_libreria_strongarm() {
+function ildeposito_libreria_strongarm() {
   $export = array();
 
   $strongarm = new stdClass();

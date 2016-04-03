@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_ct_libreria.features.metatag.inc
+ * ildeposito_libreria.features.metatag.inc
  */
 
 /**
  * Implements hook_metatag_export_default().
  */
-function ildeposito_ct_libreria_metatag_export_default() {
+function ildeposito_libreria_metatag_export_default() {
   $config = array();
 
   // Exported Metatag config instance: node:voce_libreria.

@@ -4,3 +4,4 @@
  * Code for the CT - Libreria feature.
  */
 
+include_once 'ildeposito_libreria.features.inc';

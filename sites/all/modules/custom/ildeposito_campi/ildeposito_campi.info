@@ -13,7 +13,6 @@ dependencies[] = file
 dependencies[] = file_entity
 dependencies[] = geofield
 dependencies[] = geolocation
-dependencies[] = ildeposito_ct_libreria
 dependencies[] = ildeposito_newsletter
 dependencies[] = ildeposito_tassonomie
 dependencies[] = image

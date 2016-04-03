@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_ct_libreria.features.taxonomy.inc
+ * ildeposito_libreria.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function ildeposito_ct_libreria_taxonomy_default_vocabularies() {
+function ildeposito_libreria_taxonomy_default_vocabularies() {
   return array(
     'tipo_libreria' => array(
       'name' => 'Tipo libreria',

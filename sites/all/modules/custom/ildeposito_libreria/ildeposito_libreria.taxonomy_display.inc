@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_ct_libreria.taxonomy_display.inc
+ * ildeposito_libreria.taxonomy_display.inc
  */
 
 /**
  * Implements hook_taxonomy_display_default_displays().
  */
-function ildeposito_ct_libreria_taxonomy_display_default_displays() {
+function ildeposito_libreria_taxonomy_display_default_displays() {
   $export = array();
 
   $taxonomy_display = new stdClass();

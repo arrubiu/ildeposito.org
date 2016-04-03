@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_ct_libreria.features.inc
+ * ildeposito_libreria.features.inc
  */
 
 /**
  * Implements hook_ctools_plugin_api().
  */
-function ildeposito_ct_libreria_ctools_plugin_api($module = NULL, $api = NULL) {
+function ildeposito_libreria_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "ds" && $api == "ds") {
     return array("version" => "1");
   }
@@ -31,7 +31,7 @@ function ildeposito_ct_libreria_ctools_plugin_api($module = NULL, $api = NULL) {
 /**
  * Implements hook_node_info().
  */
-function ildeposito_ct_libreria_node_info() {
+function ildeposito_libreria_node_info() {
   $items = array(
     'voce_libreria' => array(
       'name' => t('Voce libreria'),

@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_ct_libreria.features.user_permission.inc
+ * ildeposito_libreria.features.user_permission.inc
  */
 
 /**
  * Implements hook_user_default_permissions().
  */
-function ildeposito_ct_libreria_user_default_permissions() {
+function ildeposito_libreria_user_default_permissions() {
   $permissions = array();
 
   // Exported permission: 'create voce_libreria content'.

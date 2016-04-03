@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_ct_libreria.features.field_instance.inc
+ * ildeposito_libreria.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function ildeposito_ct_libreria_field_default_field_instances() {
+function ildeposito_libreria_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'comment-comment_node_voce_libreria-comment_body'.

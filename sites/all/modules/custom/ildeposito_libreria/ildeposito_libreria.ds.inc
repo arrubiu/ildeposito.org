@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ildeposito_ct_libreria.ds.inc
+ * ildeposito_libreria.ds.inc
  */
 
 /**
  * Implements hook_ds_field_settings_info().
  */
-function ildeposito_ct_libreria_ds_field_settings_info() {
+function ildeposito_libreria_ds_field_settings_info() {
   $export = array();
 
   $ds_fieldsetting = new stdClass();
@@ -71,7 +71,7 @@ function ildeposito_ct_libreria_ds_field_settings_info() {
 /**
  * Implements hook_ds_custom_fields_info().
  */
-function ildeposito_ct_libreria_ds_custom_fields_info() {
+function ildeposito_libreria_ds_custom_fields_info() {
   $export = array();
 
   $ds_field = new stdClass();
@@ -129,7 +129,7 @@ function ildeposito_ct_libreria_ds_custom_fields_info() {
 /**
  * Implements hook_ds_layout_settings_info().
  */
-function ildeposito_ct_libreria_ds_layout_settings_info() {
+function ildeposito_libreria_ds_layout_settings_info() {
   $export = array();
 
   $ds_layout = new stdClass();
