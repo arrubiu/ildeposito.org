@@ -4,4 +4,3 @@
  * Code for the CT - Custom content feature.
  */
 
-include_once 'ildeposito_ct_customcontent.features.inc';
