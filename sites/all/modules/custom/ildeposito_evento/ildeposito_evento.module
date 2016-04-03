@@ -4,11 +4,12 @@
  * Code for the CT - Evento feature.
  */
 
+include_once 'ildeposito_evento.features.inc';
 
 /**
  * Implements hook_node_presave
  */
-function ildeposito_ct_evento_node_presave($node) {
+function ildeposito_evento_node_presave($node) {
   switch ($node->type) {
     case 'evento':
       $values = array(

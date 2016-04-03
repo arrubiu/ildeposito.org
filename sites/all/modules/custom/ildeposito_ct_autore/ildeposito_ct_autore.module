@@ -4,4 +4,3 @@
  * Code for the CT - Autore feature.
  */
 
-include_once 'ildeposito_ct_autore.features.inc';

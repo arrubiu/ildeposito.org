@@ -4,4 +4,4 @@
  * Code for the CT - Traduzione feature.
  */
 
-
+include_once 'ildeposito_traduzione.features.inc';

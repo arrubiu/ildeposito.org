@@ -4,4 +4,3 @@
  * Code for the CT - Articolo feature.
  */
 
-include_once 'ildeposito_ct_articolo.features.inc';

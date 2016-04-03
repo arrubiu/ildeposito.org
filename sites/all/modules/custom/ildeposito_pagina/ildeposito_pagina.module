@@ -4,3 +4,4 @@
  * Code for the CT - Pagina feature.
  */
 
+include_once 'ildeposito_pagina.features.inc';
