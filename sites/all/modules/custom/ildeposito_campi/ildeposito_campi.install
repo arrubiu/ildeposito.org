@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * Delete some unused fields
+ */
+function ildeposito_campi_update_7001() {
+  field_delete_field('field_schemaorg_date');
+  field_delete_field('field_schemaorg_description');
+
+  if ($instance = field_info_instance('node', 'body', 'forum')) {
+    field_delete_instance($instance);
+  }
+
+  if ($instance = field_info_instance('node', 'taxonomy_forums', 'forum')) {
+    field_delete_instance($instance);
+  }
+
+  if ($instance = field_info_instance('comment', 'comment_body', 'comment_node_forum')) {
+    field_delete_instance($instance);
+  }
+}
