@@ -26,21 +26,21 @@ function ildeposito_utils_mail_alter(&$message) {
  * Implements hook_node_insert
  */
 function ildeposito_utils_node_insert($node) {
-  ildeposito_purge_clear_cache($node);
+  ildeposito_utils_clear_cache($node);
 }
 
 /**
  * Implements hook_node_insert
  */
 function ildeposito_utils_node_update($node) {
-  ildeposito_purge_clear_cache($node);
+  ildeposito_utils_clear_cache($node);
 }
 
 /**
  * Implements hook_node_insert
  */
 function ildeposito_utils_node_delete($node) {
-  ildeposito_purge_clear_cache($node);
+  ildeposito_utils_clear_cache($node);
 }
 
 /**
@@ -48,57 +48,59 @@ function ildeposito_utils_node_delete($node) {
  * @param type $node
  */
 function ildeposito_utils_clear_cache($node) {
-  $varnish_host = _varnish_get_host();
-  switch ($node->type) {
-    case 'canto':
-      $path = 'archivio/canti';
-      varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
-      varnish_purge($varnish_host, '^/' . $path);
-      break;
+  if (function_exists('_varnish_get_hosts')) {
+    $varnish_host = _varnish_get_host();
+    switch ($node->type) {
+      case 'canto':
+        $path = 'archivio/canti';
+        varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
+        varnish_purge($varnish_host, '^/' . $path);
+        break;
 
-    case 'traduzione':
-      $path = 'archivio/traduzioni';
-      varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
-      varnish_purge($varnish_host, '^/' . $path);
-      break;
+      case 'traduzione':
+        $path = 'archivio/traduzioni';
+        varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
+        varnish_purge($varnish_host, '^/' . $path);
+        break;
 
-    case 'autore':
-      $path = 'archivio/autori';
-      varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
-      varnish_purge($varnish_host, '^/' . $path);
-      break;
+      case 'autore':
+        $path = 'archivio/autori';
+        varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
+        varnish_purge($varnish_host, '^/' . $path);
+        break;
 
-    case 'voce_libreria':
-      $path = 'archivio/librera/mediateca';
-      varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
+      case 'voce_libreria':
+        $path = 'archivio/librera/mediateca';
+        varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
 
-      $path = 'archivio/librera/discoteca';
-      varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
+        $path = 'archivio/librera/discoteca';
+        varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
 
-      $path = 'archivio/librera/sitoteca';
-      varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
+        $path = 'archivio/librera/sitoteca';
+        varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
 
-      break;
+        break;
 
-    case 'evento':
-      $path = 'archivio/storiacantata/elenco';
-      varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
-      varnish_purge($varnish_host, '^/' . $path);
+      case 'evento':
+        $path = 'archivio/storiacantata/elenco';
+        varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
+        varnish_purge($varnish_host, '^/' . $path);
 
-      $path = 'archivio/storiacantata/mappa';
-      varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
-      varnish_purge($varnish_host, '^/' . $path);
+        $path = 'archivio/storiacantata/mappa';
+        varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
+        varnish_purge($varnish_host, '^/' . $path);
 
-      $path = 'archivio/storiacantata/calendario';
-      varnish_purge($varnish_host, '^/' . $path . '/.+$');
-      varnish_purge($varnish_host, '^/' . $path);
-      break;
+        $path = 'archivio/storiacantata/calendario';
+        varnish_purge($varnish_host, '^/' . $path . '/.+$');
+        varnish_purge($varnish_host, '^/' . $path);
+        break;
 
-    case 'articolo':
-      $path = 'blog';
-      varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
-      varnish_purge($varnish_host, '^/' . $path);
-      break;
+      case 'articolo':
+        $path = 'blog';
+        varnish_purge($varnish_host, '^/' . $path . '[^/].+$');
+        varnish_purge($varnish_host, '^/' . $path);
+        break;
+    }
   }
 }
 
