@@ -38,6 +38,12 @@ function ildeposito_ricerca_views_default_views() {
     'general' => array(
       'allow_secondary' => 0,
       'secondary_label' => 'Opzioni avanzate',
+      'collapsible_label' => NULL,
+      'combine_rewrite' => NULL,
+      'reset_label' => NULL,
+      'bef_filter_description' => NULL,
+      'any_label' => NULL,
+      'filter_rewrite_values' => NULL,
     ),
     'sort' => array(
       'bef_format' => 'bef_links',
@@ -49,7 +55,18 @@ function ildeposito_ricerca_views_default_views() {
         'reset' => 0,
         'reset_label' => '',
         'is_secondary' => 0,
+        'secondary_label' => NULL,
+        'bef_filter_description' => NULL,
+        'any_label' => NULL,
+        'filter_rewrite_values' => NULL,
       ),
+      'secondary_label' => NULL,
+      'collapsible_label' => NULL,
+      'combine_rewrite' => NULL,
+      'reset_label' => NULL,
+      'bef_filter_description' => NULL,
+      'any_label' => NULL,
+      'filter_rewrite_values' => NULL,
     ),
     'search_api_views_fulltext' => array(
       'more_options' => array(
@@ -58,10 +75,44 @@ function ildeposito_ricerca_views_default_views() {
         'tokens' => array(
           'available' => array(
             0 => 'global_types',
+            'secondary_label' => NULL,
+            'collapsible_label' => NULL,
+            'combine_rewrite' => NULL,
+            'reset_label' => NULL,
+            'bef_filter_description' => NULL,
+            'any_label' => NULL,
+            'filter_rewrite_values' => NULL,
           ),
+          'secondary_label' => NULL,
+          'collapsible_label' => NULL,
+          'combine_rewrite' => NULL,
+          'reset_label' => NULL,
+          'bef_filter_description' => NULL,
+          'any_label' => NULL,
+          'filter_rewrite_values' => NULL,
         ),
+        'secondary_label' => NULL,
+        'collapsible_label' => NULL,
+        'combine_rewrite' => NULL,
+        'reset_label' => NULL,
+        'any_label' => NULL,
+        'filter_rewrite_values' => NULL,
       ),
+      'secondary_label' => NULL,
+      'collapsible_label' => NULL,
+      'combine_rewrite' => NULL,
+      'reset_label' => NULL,
+      'bef_filter_description' => NULL,
+      'any_label' => NULL,
+      'filter_rewrite_values' => NULL,
     ),
+    'secondary_label' => NULL,
+    'collapsible_label' => NULL,
+    'combine_rewrite' => NULL,
+    'reset_label' => NULL,
+    'bef_filter_description' => NULL,
+    'any_label' => NULL,
+    'filter_rewrite_values' => NULL,
   );
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
@@ -81,16 +132,16 @@ function ildeposito_ricerca_views_default_views() {
   $handler->display->display_options['style_options']['row_class_special'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'entity';
   $handler->display->display_options['row_options']['view_mode'] = 'search_result';
-  /* Campo: Indexed Contenuto: ID del nodo */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  /* Criterio di ordinamento: Cerca: Relevance */
+  /* Sort criterion: Broken/missing handler */
   $handler->display->display_options['sorts']['search_api_relevance']['id'] = 'search_api_relevance';
   $handler->display->display_options['sorts']['search_api_relevance']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['sorts']['search_api_relevance']['field'] = 'search_api_relevance';
   $handler->display->display_options['sorts']['search_api_relevance']['order'] = 'DESC';
-  /* Criterio del filtro: Cerca: Fulltext search */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
   $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
@@ -106,40 +157,6 @@ function ildeposito_ricerca_views_default_views() {
     5 => 0,
     6 => 0,
   );
-  $handler->display->display_options['filters']['search_api_views_fulltext']['fields'] = array(
-    'title' => 'title',
-    'field_altri_nomi' => 'field_altri_nomi',
-    'field_cognome' => 'field_cognome',
-    'field_nome' => 'field_nome',
-    'field_testo' => 'field_testo',
-    'field_accordi' => 'field_accordi',
-    'field_capoverso' => 'field_capoverso',
-    'field_titolo_alt' => 'field_titolo_alt',
-    'field_editore' => 'field_editore',
-    'field_collana' => 'field_collana',
-    'field_citta' => 'field_citta',
-    'search_api_aggregation_4' => 'search_api_aggregation_4',
-    'search_api_viewed' => 'search_api_viewed',
-    'body:value' => 'body:value',
-    'body:summary' => 'body:summary',
-    'field_tags:name' => 'field_tags:name',
-    'field_sezione:name' => 'field_sezione:name',
-    'field_sezione:description' => 'field_sezione:description',
-    'field_localizzazione:name' => 'field_localizzazione:name',
-    'field_localizzazione:description' => 'field_localizzazione:description',
-    'field_informazioni:value' => 'field_informazioni:value',
-    'field_lingua:name' => 'field_lingua:name',
-    'field_lingua:description' => 'field_lingua:description',
-    'field_autore_musica:title' => 'field_autore_musica:title',
-    'field_autore_testo:title' => 'field_autore_testo:title',
-    'field_tematica:name' => 'field_tematica:name',
-    'field_tematica:description' => 'field_tematica:description',
-    'field_percorso:name' => 'field_percorso:name',
-    'field_percorso:description' => 'field_percorso:description',
-    'field_geofield:geom' => 'field_geofield:geom',
-    'field_tipo_voce:name' => 'field_tipo_voce:name',
-    'field_tipo_voce:description' => 'field_tipo_voce:description',
-  );
 
   /* Display: Ricerca */
   $handler = $view->new_display('page', 'Ricerca', 'ricerca_page');
@@ -154,7 +171,9 @@ function ildeposito_ricerca_views_default_views() {
     t('Ordina per'),
     t('Asc'),
     t('Disc'),
-    t('Seleziona qualsiasi filtro e clicca su Applica per visualizzare i risultati'),
+    t('Opzioni avanzate'),
+    t('Sort options'),
+    t('Select any filter and click on Apply to see results'),
     t('Voci per pagina'),
     t('- Tutto -'),
     t('Scostamento'),
@@ -162,10 +181,9 @@ function ildeposito_ricerca_views_default_views() {
     t('‹ prec'),
     t('succ ›'),
     t('ultima »'),
-    t('ID del nodo'),
-    t('.'),
-    t(','),
+    t('Broken handler search_api_index_default_node_index.nid'),
     t('Ricerca'),
+    t('more'),
   );
   $export['ricerca'] = $view;
 
