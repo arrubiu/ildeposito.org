@@ -18,4 +18,10 @@ function ildeposito_campi_update_7001() {
   if ($instance = field_info_instance('comment', 'comment_body', 'comment_node_forum')) {
     field_delete_instance($instance);
   }
+
+  if ($instance = field_info_instance('comment', 'comment_body', 'comment_node_fonte_bibliografica')) {
+    field_delete_instance($instance);
+  }
+
+
 }
