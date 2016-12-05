@@ -66,7 +66,7 @@ function ildeposito_home_default_page_manager_pages() {
     $pane->panel = 'left';
     $pane->type = 'custom';
     $pane->subtype = 'custom';
-    $pane->shown = TRUE;
+    $pane->shown = FALSE;
     $pane->access = array(
       'plugins' => array(),
     );
@@ -102,7 +102,10 @@ function ildeposito_home_default_page_manager_pages() {
       'override_title' => 1,
       'override_title_text' => 'In evidenza',
     );
-    $pane->cache = array();
+    $pane->cache = array(
+      'method' => '0',
+      'settings' => array(),
+    );
     $pane->style = array(
       'settings' => NULL,
     );
@@ -545,11 +548,8 @@ Festeggeremo questo evento con una festa a Milano, al circolo La Scighera, il 3/
       'override_title_text' => 'Articoli del blog',
     );
     $pane->cache = array(
-      'method' => 'simple',
-      'settings' => array(
-        'lifetime' => '28800',
-        'granularity' => 'none',
-      ),
+      'method' => '0',
+      'settings' => array(),
     );
     $pane->style = array(
       'settings' => NULL,
@@ -749,7 +749,7 @@ Festeggeremo questo evento con una festa a Milano, al circolo La Scighera, il 3/
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
   $page->default_handlers[$handler->name] = $handler;
-  $pages['homepage'] = $page;
+  $pages[''] = $page;
 
   return $pages;
 

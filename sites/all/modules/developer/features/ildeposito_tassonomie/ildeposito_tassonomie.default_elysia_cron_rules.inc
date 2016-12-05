@@ -18,7 +18,7 @@ function ildeposito_tassonomie_default_elysia_cron_rules() {
   $cron_rule->rule = '0 * * * *';
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
-  $cron_rules['xmlsitemap_taxonomy_cron'] = $cron_rule;
+  $cron_rules[''] = $cron_rule;
 
   return $cron_rules;
 
