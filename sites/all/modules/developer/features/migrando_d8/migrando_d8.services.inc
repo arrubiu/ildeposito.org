@@ -33,6 +33,13 @@ function migrando_d8_default_services_endpoint() {
         ),
       ),
     ),
+    'pagine' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
     'sezioni_percorsi' => array(
       'operations' => array(
         'index' => array(
