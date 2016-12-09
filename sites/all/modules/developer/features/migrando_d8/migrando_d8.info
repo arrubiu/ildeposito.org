@@ -1,0 +1,17 @@
+name = Migrando D8
+core = 7.x
+package = ilDeposito.org
+dependencies[] = services
+dependencies[] = services_views
+dependencies[] = views
+dependencies[] = views_json
+features[ctools][] = services:services:3
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[services_endpoint][] = migrando
+features[views_view][] = d8_files
+features[views_view][] = d8_nodi
+features[views_view][] = d8_termini
+features[views_view][] = d8_utenti
+features_exclude[dependencies][ctools] = ctools
+project path = sites/all/modules/developer/features

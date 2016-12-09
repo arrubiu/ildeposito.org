@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Migrando D8 feature.
+ */
+
+include_once 'migrando_d8.features.inc';
