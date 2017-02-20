@@ -188,8 +188,7 @@ function migrando_d8_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'views_json';
-  $handler->display->display_options['style_options']['field_output'] = 'raw';
-  $handler->display->display_options['style_options']['plaintext_output'] = 0;
+  $handler->display->display_options['style_options']['plaintext_output'] = 1;
   $handler->display->display_options['style_options']['remove_newlines'] = 0;
   $handler->display->display_options['style_options']['jsonp_prefix'] = '';
   $handler->display->display_options['style_options']['using_views_api_mode'] = 0;
@@ -298,7 +297,7 @@ function migrando_d8_views_default_views() {
 
   /* Display: Articoli */
   $handler = $view->new_display('services', 'Articoli', 'services_1');
-  $handler->display->display_options['path'] = 'articoli';
+  $handler->display->display_options['path'] = 'migrando_articoli';
 
   /* Display: Pagine */
   $handler = $view->new_display('services', 'Pagine', 'services_2');
@@ -369,7 +368,894 @@ function migrando_d8_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'pagina' => 'pagina',
   );
-  $handler->display->display_options['path'] = 'pagine';
+  $handler->display->display_options['path'] = 'migrando_pagine';
+
+  /* Display: Pagine libro */
+  $handler = $view->new_display('services', 'Pagine libro', 'services_3');
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  /* Campo: Contenuto: Contenuto UUID */
+  $handler->display->display_options['fields']['uuid']['id'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['table'] = 'node';
+  $handler->display->display_options['fields']['uuid']['field'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['label'] = 'uuid';
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = 'titolo';
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Campo: Contenuto: Identificativo uid dell'autore */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = 'uid';
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Campo: Contenuto: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = 'testo';
+  $handler->display->display_options['fields']['body']['type'] = 'services';
+  $handler->display->display_options['fields']['body']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Data di inserimento */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Data modifica */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'changed';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['changed']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Pubblicato */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'node';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['label'] = 'stato';
+  $handler->display->display_options['fields']['status']['type'] = 'boolean';
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'book' => 'book',
+  );
+  $handler->display->display_options['path'] = 'migrando_pagine_libro';
+
+  /* Display: Autori */
+  $handler = $view->new_display('services', 'Autori', 'services_4');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  /* Campo: Contenuto: Contenuto UUID */
+  $handler->display->display_options['fields']['uuid']['id'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['table'] = 'node';
+  $handler->display->display_options['fields']['uuid']['field'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['label'] = 'uuid';
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = 'titolo';
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Campo: Contenuto: Identificativo uid dell'autore */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = 'uid';
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Campo: Contenuto: Data di inserimento */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Data modifica */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'changed';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['changed']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Pubblicato */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'node';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['label'] = 'stato';
+  $handler->display->display_options['fields']['status']['type'] = 'boolean';
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Campo: Campo: Immagini */
+  $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
+  $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['label'] = 'immagini';
+  $handler->display->display_options['fields']['field_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_images']['type'] = 'services';
+  $handler->display->display_options['fields']['field_images']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_images']['delta_offset'] = '0';
+  /* Campo: Campo: Links */
+  $handler->display->display_options['fields']['field_links']['id'] = 'field_links';
+  $handler->display->display_options['fields']['field_links']['table'] = 'field_data_field_links';
+  $handler->display->display_options['fields']['field_links']['field'] = 'field_links';
+  $handler->display->display_options['fields']['field_links']['label'] = 'links';
+  $handler->display->display_options['fields']['field_links']['click_sort_column'] = 'url';
+  $handler->display->display_options['fields']['field_links']['type'] = 'services';
+  $handler->display->display_options['fields']['field_links']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_links']['delta_offset'] = '0';
+  /* Campo: Contenuto: Altri nomi */
+  $handler->display->display_options['fields']['field_altri_nomi']['id'] = 'field_altri_nomi';
+  $handler->display->display_options['fields']['field_altri_nomi']['table'] = 'field_data_field_altri_nomi';
+  $handler->display->display_options['fields']['field_altri_nomi']['field'] = 'field_altri_nomi';
+  $handler->display->display_options['fields']['field_altri_nomi']['label'] = 'altri_nomi';
+  $handler->display->display_options['fields']['field_altri_nomi']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  $handler->display->display_options['fields']['field_altri_nomi']['delta_offset'] = '0';
+  /* Campo: Contenuto: Cognome (o nome del gruppo) */
+  $handler->display->display_options['fields']['field_cognome']['id'] = 'field_cognome';
+  $handler->display->display_options['fields']['field_cognome']['table'] = 'field_data_field_cognome';
+  $handler->display->display_options['fields']['field_cognome']['field'] = 'field_cognome';
+  $handler->display->display_options['fields']['field_cognome']['label'] = 'cognome';
+  $handler->display->display_options['fields']['field_cognome']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Localizzazioni */
+  $handler->display->display_options['fields']['field_localizzazione']['id'] = 'field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['table'] = 'field_data_field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['field'] = 'field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['label'] = 'localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['type'] = 'services';
+  $handler->display->display_options['fields']['field_localizzazione']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_localizzazione']['delta_offset'] = '0';
+  /* Campo: Contenuto: Nome */
+  $handler->display->display_options['fields']['field_nome']['id'] = 'field_nome';
+  $handler->display->display_options['fields']['field_nome']['table'] = 'field_data_field_nome';
+  $handler->display->display_options['fields']['field_nome']['field'] = 'field_nome';
+  $handler->display->display_options['fields']['field_nome']['label'] = 'nome';
+  $handler->display->display_options['fields']['field_nome']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Sezione */
+  $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['label'] = 'sezione';
+  $handler->display->display_options['fields']['field_sezione']['type'] = 'services';
+  $handler->display->display_options['fields']['field_sezione']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'autore' => 'autore',
+  );
+  $handler->display->display_options['path'] = 'migrando_autori';
+
+  /* Display: Canti */
+  $handler = $view->new_display('services', 'Canti', 'services_5');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  /* Campo: Contenuto: Contenuto UUID */
+  $handler->display->display_options['fields']['uuid']['id'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['table'] = 'node';
+  $handler->display->display_options['fields']['uuid']['field'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['label'] = 'uuid';
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = 'titolo';
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Campo: Contenuto: Identificativo uid dell'autore */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = 'uid';
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Campo: Contenuto: Data di inserimento */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Data modifica */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'changed';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['changed']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Pubblicato */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'node';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['label'] = 'stato';
+  $handler->display->display_options['fields']['status']['type'] = 'boolean';
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Campo: Campo: Links */
+  $handler->display->display_options['fields']['field_links']['id'] = 'field_links';
+  $handler->display->display_options['fields']['field_links']['table'] = 'field_data_field_links';
+  $handler->display->display_options['fields']['field_links']['field'] = 'field_links';
+  $handler->display->display_options['fields']['field_links']['label'] = 'links';
+  $handler->display->display_options['fields']['field_links']['click_sort_column'] = 'url';
+  $handler->display->display_options['fields']['field_links']['type'] = 'services';
+  $handler->display->display_options['fields']['field_links']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_links']['delta_offset'] = '0';
+  /* Campo: Contenuto: Accordi */
+  $handler->display->display_options['fields']['field_accordi']['id'] = 'field_accordi';
+  $handler->display->display_options['fields']['field_accordi']['table'] = 'field_data_field_accordi';
+  $handler->display->display_options['fields']['field_accordi']['field'] = 'field_accordi';
+  $handler->display->display_options['fields']['field_accordi']['label'] = 'accordi';
+  $handler->display->display_options['fields']['field_accordi']['type'] = 'services';
+  $handler->display->display_options['fields']['field_accordi']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Anno */
+  $handler->display->display_options['fields']['field_anno']['id'] = 'field_anno';
+  $handler->display->display_options['fields']['field_anno']['table'] = 'field_data_field_anno';
+  $handler->display->display_options['fields']['field_anno']['field'] = 'field_anno';
+  $handler->display->display_options['fields']['field_anno']['label'] = 'anno';
+  $handler->display->display_options['fields']['field_anno']['type'] = 'services';
+  $handler->display->display_options['fields']['field_anno']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Campo: Contenuto: Autori musica */
+  $handler->display->display_options['fields']['field_autore_musica']['id'] = 'field_autore_musica';
+  $handler->display->display_options['fields']['field_autore_musica']['table'] = 'field_data_field_autore_musica';
+  $handler->display->display_options['fields']['field_autore_musica']['field'] = 'field_autore_musica';
+  $handler->display->display_options['fields']['field_autore_musica']['label'] = 'autori_musica';
+  $handler->display->display_options['fields']['field_autore_musica']['type'] = 'services';
+  $handler->display->display_options['fields']['field_autore_musica']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_autore_musica']['delta_offset'] = '0';
+  /* Campo: Contenuto: Autori testo */
+  $handler->display->display_options['fields']['field_autore_testo']['id'] = 'field_autore_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['table'] = 'field_data_field_autore_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['field'] = 'field_autore_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['label'] = 'autori_testo';
+  $handler->display->display_options['fields']['field_autore_testo']['type'] = 'services';
+  $handler->display->display_options['fields']['field_autore_testo']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_autore_testo']['delta_offset'] = '0';
+  /* Campo: Contenuto: Capoverso */
+  $handler->display->display_options['fields']['field_capoverso']['id'] = 'field_capoverso';
+  $handler->display->display_options['fields']['field_capoverso']['table'] = 'field_data_field_capoverso';
+  $handler->display->display_options['fields']['field_capoverso']['field'] = 'field_capoverso';
+  $handler->display->display_options['fields']['field_capoverso']['label'] = 'capoverso';
+  $handler->display->display_options['fields']['field_capoverso']['type'] = 'services';
+  $handler->display->display_options['fields']['field_capoverso']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Fonte */
+  $handler->display->display_options['fields']['field_fonte']['id'] = 'field_fonte';
+  $handler->display->display_options['fields']['field_fonte']['table'] = 'field_data_field_fonte';
+  $handler->display->display_options['fields']['field_fonte']['field'] = 'field_fonte';
+  $handler->display->display_options['fields']['field_fonte']['label'] = 'fonte';
+  $handler->display->display_options['fields']['field_fonte']['type'] = 'services';
+  $handler->display->display_options['fields']['field_fonte']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Informazioni */
+  $handler->display->display_options['fields']['field_informazioni']['id'] = 'field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['table'] = 'field_data_field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['field'] = 'field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['label'] = 'informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['type'] = 'services';
+  $handler->display->display_options['fields']['field_informazioni']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Lingua traduzione */
+  $handler->display->display_options['fields']['field_lingua']['id'] = 'field_lingua';
+  $handler->display->display_options['fields']['field_lingua']['table'] = 'field_data_field_lingua';
+  $handler->display->display_options['fields']['field_lingua']['field'] = 'field_lingua';
+  $handler->display->display_options['fields']['field_lingua']['label'] = 'lingua';
+  $handler->display->display_options['fields']['field_lingua']['type'] = 'services';
+  $handler->display->display_options['fields']['field_lingua']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_lingua']['delta_offset'] = '0';
+  /* Campo: Contenuto: Risorse audio o video */
+  $handler->display->display_options['fields']['field_link_audio']['id'] = 'field_link_audio';
+  $handler->display->display_options['fields']['field_link_audio']['table'] = 'field_data_field_link_audio';
+  $handler->display->display_options['fields']['field_link_audio']['field'] = 'field_link_audio';
+  $handler->display->display_options['fields']['field_link_audio']['label'] = 'audio';
+  $handler->display->display_options['fields']['field_link_audio']['click_sort_column'] = 'url';
+  $handler->display->display_options['fields']['field_link_audio']['type'] = 'services';
+  $handler->display->display_options['fields']['field_link_audio']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_link_audio']['delta_offset'] = '0';
+  /* Campo: Contenuto: Sezione */
+  $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['label'] = 'sezione';
+  $handler->display->display_options['fields']['field_sezione']['type'] = 'services';
+  $handler->display->display_options['fields']['field_sezione']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
+  /* Campo: Contenuto: Tag */
+  $handler->display->display_options['fields']['field_tags']['id'] = 'field_tags';
+  $handler->display->display_options['fields']['field_tags']['table'] = 'field_data_field_tags';
+  $handler->display->display_options['fields']['field_tags']['field'] = 'field_tags';
+  $handler->display->display_options['fields']['field_tags']['label'] = 'tags';
+  $handler->display->display_options['fields']['field_tags']['type'] = 'services';
+  $handler->display->display_options['fields']['field_tags']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_tags']['delta_offset'] = '0';
+  /* Campo: Contenuto: Testo */
+  $handler->display->display_options['fields']['field_testo']['id'] = 'field_testo';
+  $handler->display->display_options['fields']['field_testo']['table'] = 'field_data_field_testo';
+  $handler->display->display_options['fields']['field_testo']['field'] = 'field_testo';
+  $handler->display->display_options['fields']['field_testo']['label'] = 'testo';
+  $handler->display->display_options['fields']['field_testo']['type'] = 'services';
+  $handler->display->display_options['fields']['field_testo']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Titolo alternativo */
+  $handler->display->display_options['fields']['field_titolo_alt']['id'] = 'field_titolo_alt';
+  $handler->display->display_options['fields']['field_titolo_alt']['table'] = 'field_data_field_titolo_alt';
+  $handler->display->display_options['fields']['field_titolo_alt']['field'] = 'field_titolo_alt';
+  $handler->display->display_options['fields']['field_titolo_alt']['label'] = 'titolo_alternativo';
+  $handler->display->display_options['fields']['field_titolo_alt']['type'] = 'services';
+  $handler->display->display_options['fields']['field_titolo_alt']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  $handler->display->display_options['fields']['field_titolo_alt']['delta_offset'] = '0';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'canto' => 'canto',
+  );
+  $handler->display->display_options['path'] = 'migrando_canti';
+
+  /* Display: Eventi */
+  $handler = $view->new_display('services', 'Eventi', 'services_6');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  /* Campo: Contenuto: Contenuto UUID */
+  $handler->display->display_options['fields']['uuid']['id'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['table'] = 'node';
+  $handler->display->display_options['fields']['uuid']['field'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['label'] = 'uuid';
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = 'titolo';
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Campo: Contenuto: Identificativo uid dell'autore */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = 'uid';
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Campo: Contenuto: Data di inserimento */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Data modifica */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'changed';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['changed']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Pubblicato */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'node';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['label'] = 'stato';
+  $handler->display->display_options['fields']['status']['type'] = 'boolean';
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Campo: Campo: Immagini */
+  $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
+  $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['label'] = 'immagini';
+  $handler->display->display_options['fields']['field_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_images']['type'] = 'services';
+  $handler->display->display_options['fields']['field_images']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_images']['delta_offset'] = '0';
+  /* Campo: Campo: Links */
+  $handler->display->display_options['fields']['field_links']['id'] = 'field_links';
+  $handler->display->display_options['fields']['field_links']['table'] = 'field_data_field_links';
+  $handler->display->display_options['fields']['field_links']['field'] = 'field_links';
+  $handler->display->display_options['fields']['field_links']['label'] = 'links';
+  $handler->display->display_options['fields']['field_links']['click_sort_column'] = 'url';
+  $handler->display->display_options['fields']['field_links']['type'] = 'services';
+  $handler->display->display_options['fields']['field_links']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_links']['delta_offset'] = '0';
+  /* Campo: Contenuto: Canti collegati */
+  $handler->display->display_options['fields']['field_canti_evento']['id'] = 'field_canti_evento';
+  $handler->display->display_options['fields']['field_canti_evento']['table'] = 'field_data_field_canti_evento';
+  $handler->display->display_options['fields']['field_canti_evento']['field'] = 'field_canti_evento';
+  $handler->display->display_options['fields']['field_canti_evento']['label'] = 'canti_collegati';
+  $handler->display->display_options['fields']['field_canti_evento']['type'] = 'services';
+  $handler->display->display_options['fields']['field_canti_evento']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_canti_evento']['delta_offset'] = '0';
+  /* Campo: Contenuto: Data evento */
+  $handler->display->display_options['fields']['field_data_evento']['id'] = 'field_data_evento';
+  $handler->display->display_options['fields']['field_data_evento']['table'] = 'field_data_field_data_evento';
+  $handler->display->display_options['fields']['field_data_evento']['field'] = 'field_data_evento';
+  $handler->display->display_options['fields']['field_data_evento']['label'] = 'data_evento';
+  $handler->display->display_options['fields']['field_data_evento']['type'] = 'services';
+  $handler->display->display_options['fields']['field_data_evento']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_data_evento']['delta_limit'] = '1';
+  $handler->display->display_options['fields']['field_data_evento']['delta_offset'] = '0';
+  /* Campo: Contenuto: Geolocation */
+  $handler->display->display_options['fields']['field_geolocation']['id'] = 'field_geolocation';
+  $handler->display->display_options['fields']['field_geolocation']['table'] = 'field_data_field_geolocation';
+  $handler->display->display_options['fields']['field_geolocation']['field'] = 'field_geolocation';
+  $handler->display->display_options['fields']['field_geolocation']['label'] = 'geolocation';
+  $handler->display->display_options['fields']['field_geolocation']['click_sort_column'] = 'lat';
+  $handler->display->display_options['fields']['field_geolocation']['type'] = 'services';
+  $handler->display->display_options['fields']['field_geolocation']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Campo: Contenuto: Informazioni */
+  $handler->display->display_options['fields']['field_informazioni']['id'] = 'field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['table'] = 'field_data_field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['field'] = 'field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['label'] = 'informazioni';
+  /* Campo: Contenuto: Localizzazioni */
+  $handler->display->display_options['fields']['field_localizzazione']['id'] = 'field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['table'] = 'field_data_field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['field'] = 'field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['label'] = 'localizzazioni';
+  $handler->display->display_options['fields']['field_localizzazione']['type'] = 'services';
+  $handler->display->display_options['fields']['field_localizzazione']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_localizzazione']['delta_offset'] = '0';
+  /* Campo: Contenuto: Percorsi */
+  $handler->display->display_options['fields']['field_percorso']['id'] = 'field_percorso';
+  $handler->display->display_options['fields']['field_percorso']['table'] = 'field_data_field_percorso';
+  $handler->display->display_options['fields']['field_percorso']['field'] = 'field_percorso';
+  $handler->display->display_options['fields']['field_percorso']['label'] = 'percorsi';
+  $handler->display->display_options['fields']['field_percorso']['type'] = 'services';
+  $handler->display->display_options['fields']['field_percorso']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_percorso']['delta_offset'] = '0';
+  /* Campo: Contenuto: Sezione */
+  $handler->display->display_options['fields']['field_sezione']['id'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['table'] = 'field_data_field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['field'] = 'field_sezione';
+  $handler->display->display_options['fields']['field_sezione']['label'] = 'sezione';
+  $handler->display->display_options['fields']['field_sezione']['type'] = 'services';
+  $handler->display->display_options['fields']['field_sezione']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_sezione']['delta_offset'] = '0';
+  /* Campo: Contenuto: Tag */
+  $handler->display->display_options['fields']['field_tags']['id'] = 'field_tags';
+  $handler->display->display_options['fields']['field_tags']['table'] = 'field_data_field_tags';
+  $handler->display->display_options['fields']['field_tags']['field'] = 'field_tags';
+  $handler->display->display_options['fields']['field_tags']['label'] = 'tags';
+  $handler->display->display_options['fields']['field_tags']['type'] = 'services';
+  $handler->display->display_options['fields']['field_tags']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_tags']['delta_offset'] = '0';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'evento' => 'evento',
+  );
+  $handler->display->display_options['path'] = 'migrando_eventi';
+
+  /* Display: Gruppi */
+  $handler = $view->new_display('services', 'Gruppi', 'services_7');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  /* Campo: Contenuto: Contenuto UUID */
+  $handler->display->display_options['fields']['uuid']['id'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['table'] = 'node';
+  $handler->display->display_options['fields']['uuid']['field'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['label'] = 'uuid';
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = 'titolo';
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Campo: Contenuto: Identificativo uid dell'autore */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = 'uid';
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Campo: Contenuto: Data di inserimento */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Data modifica */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'changed';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['changed']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Pubblicato */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'node';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['label'] = 'stato';
+  $handler->display->display_options['fields']['status']['type'] = 'boolean';
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Campo: Campo: Immagini */
+  $handler->display->display_options['fields']['field_images']['id'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['table'] = 'field_data_field_images';
+  $handler->display->display_options['fields']['field_images']['field'] = 'field_images';
+  $handler->display->display_options['fields']['field_images']['label'] = 'immagini';
+  $handler->display->display_options['fields']['field_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_images']['type'] = 'services';
+  $handler->display->display_options['fields']['field_images']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_images']['delta_offset'] = '0';
+  /* Campo: Campo: Links */
+  $handler->display->display_options['fields']['field_links']['id'] = 'field_links';
+  $handler->display->display_options['fields']['field_links']['table'] = 'field_data_field_links';
+  $handler->display->display_options['fields']['field_links']['field'] = 'field_links';
+  $handler->display->display_options['fields']['field_links']['label'] = 'links';
+  $handler->display->display_options['fields']['field_links']['click_sort_column'] = 'url';
+  $handler->display->display_options['fields']['field_links']['type'] = 'services';
+  $handler->display->display_options['fields']['field_links']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_links']['delta_offset'] = '0';
+  /* Campo: Contenuto: Anno */
+  $handler->display->display_options['fields']['field_anno']['id'] = 'field_anno';
+  $handler->display->display_options['fields']['field_anno']['table'] = 'field_data_field_anno';
+  $handler->display->display_options['fields']['field_anno']['field'] = 'field_anno';
+  $handler->display->display_options['fields']['field_anno']['label'] = 'anno';
+  $handler->display->display_options['fields']['field_anno']['type'] = 'services';
+  $handler->display->display_options['fields']['field_anno']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Campo: Contenuto: Email */
+  $handler->display->display_options['fields']['field_email']['id'] = 'field_email';
+  $handler->display->display_options['fields']['field_email']['table'] = 'field_data_field_email';
+  $handler->display->display_options['fields']['field_email']['field'] = 'field_email';
+  $handler->display->display_options['fields']['field_email']['label'] = 'email';
+  $handler->display->display_options['fields']['field_email']['type'] = 'services';
+  $handler->display->display_options['fields']['field_email']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Campo: Contenuto: Geofield */
+  $handler->display->display_options['fields']['field_geofield']['id'] = 'field_geofield';
+  $handler->display->display_options['fields']['field_geofield']['table'] = 'field_data_field_geofield';
+  $handler->display->display_options['fields']['field_geofield']['field'] = 'field_geofield';
+  $handler->display->display_options['fields']['field_geofield']['label'] = 'geofield';
+  $handler->display->display_options['fields']['field_geofield']['click_sort_column'] = 'geom';
+  $handler->display->display_options['fields']['field_geofield']['type'] = 'services';
+  $handler->display->display_options['fields']['field_geofield']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Campo: Contenuto: Indirizzo */
+  $handler->display->display_options['fields']['field_indirizzo']['id'] = 'field_indirizzo';
+  $handler->display->display_options['fields']['field_indirizzo']['table'] = 'field_data_field_indirizzo';
+  $handler->display->display_options['fields']['field_indirizzo']['field'] = 'field_indirizzo';
+  $handler->display->display_options['fields']['field_indirizzo']['label'] = 'address';
+  $handler->display->display_options['fields']['field_indirizzo']['click_sort_column'] = 'country';
+  $handler->display->display_options['fields']['field_indirizzo']['type'] = 'services';
+  $handler->display->display_options['fields']['field_indirizzo']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Campo: Contenuto: Informazioni */
+  $handler->display->display_options['fields']['field_informazioni']['id'] = 'field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['table'] = 'field_data_field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['field'] = 'field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['label'] = 'informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['type'] = 'services';
+  $handler->display->display_options['fields']['field_informazioni']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Localizzazioni */
+  $handler->display->display_options['fields']['field_localizzazione']['id'] = 'field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['table'] = 'field_data_field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['field'] = 'field_localizzazione';
+  $handler->display->display_options['fields']['field_localizzazione']['label'] = 'localizzazioni';
+  $handler->display->display_options['fields']['field_localizzazione']['type'] = 'services';
+  $handler->display->display_options['fields']['field_localizzazione']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_localizzazione']['delta_offset'] = '0';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'gruppi' => 'gruppi',
+  );
+  $handler->display->display_options['path'] = 'migrando_gruppi';
+
+  /* Display: Traduzioni */
+  $handler = $view->new_display('services', 'Traduzioni', 'services_8');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Campo: Contenuto: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  /* Campo: Contenuto: Contenuto UUID */
+  $handler->display->display_options['fields']['uuid']['id'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['table'] = 'node';
+  $handler->display->display_options['fields']['uuid']['field'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['label'] = 'uuid';
+  /* Campo: Contenuto: Titolo */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = 'titolo';
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Campo: Contenuto: Identificativo uid dell'autore */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = 'uid';
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Campo: Contenuto: Data di inserimento */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Data modifica */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'changed';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['changed']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'privatemsg_current_day';
+  /* Campo: Contenuto: Pubblicato */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'node';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['label'] = 'stato';
+  $handler->display->display_options['fields']['status']['type'] = 'boolean';
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Campo: Contenuto: Canto di riferimento */
+  $handler->display->display_options['fields']['field_canto_riferimento']['id'] = 'field_canto_riferimento';
+  $handler->display->display_options['fields']['field_canto_riferimento']['table'] = 'field_data_field_canto_riferimento';
+  $handler->display->display_options['fields']['field_canto_riferimento']['field'] = 'field_canto_riferimento';
+  $handler->display->display_options['fields']['field_canto_riferimento']['label'] = 'canto_riferimento';
+  $handler->display->display_options['fields']['field_canto_riferimento']['type'] = 'services';
+  $handler->display->display_options['fields']['field_canto_riferimento']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Campo: Contenuto: Informazioni */
+  $handler->display->display_options['fields']['field_informazioni']['id'] = 'field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['table'] = 'field_data_field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['field'] = 'field_informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['label'] = 'informazioni';
+  $handler->display->display_options['fields']['field_informazioni']['type'] = 'services';
+  $handler->display->display_options['fields']['field_informazioni']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
+  /* Campo: Contenuto: Lingua traduzione */
+  $handler->display->display_options['fields']['field_lingua']['id'] = 'field_lingua';
+  $handler->display->display_options['fields']['field_lingua']['table'] = 'field_data_field_lingua';
+  $handler->display->display_options['fields']['field_lingua']['field'] = 'field_lingua';
+  $handler->display->display_options['fields']['field_lingua']['label'] = 'lingua';
+  $handler->display->display_options['fields']['field_lingua']['type'] = 'services';
+  $handler->display->display_options['fields']['field_lingua']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_lingua']['delta_offset'] = '0';
+  /* Campo: Contenuto: Testo */
+  $handler->display->display_options['fields']['field_testo']['id'] = 'field_testo';
+  $handler->display->display_options['fields']['field_testo']['table'] = 'field_data_field_testo';
+  $handler->display->display_options['fields']['field_testo']['field'] = 'field_testo';
+  $handler->display->display_options['fields']['field_testo']['label'] = 'testo';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Criterio del filtro: Contenuto: Tipo */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'traduzione' => 'traduzione',
+  );
+  $handler->display->display_options['path'] = 'migrando_traduzioni';
   $translatables['d8_nodi'] = array(
     t('Master'),
     t('altro'),
@@ -390,6 +1276,37 @@ function migrando_d8_views_default_views() {
     t('stato'),
     t('Articoli'),
     t('Pagine'),
+    t('Pagine libro'),
+    t('Autori'),
+    t('links'),
+    t('altri_nomi'),
+    t('cognome'),
+    t('localizzazione'),
+    t('nome'),
+    t('sezione'),
+    t('Canti'),
+    t('accordi'),
+    t('anno'),
+    t('autori_musica'),
+    t('autori_testo'),
+    t('capoverso'),
+    t('fonte'),
+    t('informazioni'),
+    t('lingua'),
+    t('audio'),
+    t('titolo_alternativo'),
+    t('Eventi'),
+    t('canti_collegati'),
+    t('data_evento'),
+    t('geolocation'),
+    t('localizzazioni'),
+    t('percorsi'),
+    t('Gruppi'),
+    t('email'),
+    t('geofield'),
+    t('address'),
+    t('Traduzioni'),
+    t('canto_riferimento'),
   );
   $export['d8_nodi'] = $view;
 

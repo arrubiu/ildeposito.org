@@ -19,13 +19,6 @@ function migrando_d8_default_services_endpoint() {
   $endpoint->authentication = array();
   $endpoint->server_settings = array();
   $endpoint->resources = array(
-    'articoli' => array(
-      'operations' => array(
-        'index' => array(
-          'enabled' => '1',
-        ),
-      ),
-    ),
     'immagini' => array(
       'operations' => array(
         'index' => array(
@@ -33,7 +26,63 @@ function migrando_d8_default_services_endpoint() {
         ),
       ),
     ),
-    'pagine' => array(
+    'migrando_articoli' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'migrando_autori' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'migrando_canti' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'migrando_commenti' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'migrando_eventi' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'migrando_gruppi' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'migrando_pagine' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'migrando_pagine_libro' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'migrando_traduzioni' => array(
       'operations' => array(
         'index' => array(
           'enabled' => '1',

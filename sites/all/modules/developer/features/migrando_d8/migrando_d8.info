@@ -1,6 +1,7 @@
 name = Migrando D8
 core = 7.x
 package = ilDeposito.org
+dependencies[] = rest_server
 dependencies[] = services
 dependencies[] = services_views
 dependencies[] = views
