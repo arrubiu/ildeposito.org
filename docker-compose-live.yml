@@ -75,7 +75,7 @@ services:
       VARNISH_SECRET: secret
       VARNISH_BACKEND_HOST: nginx
       VARNISH_BACKEND_PORT: 80
-      VARNISH_MEMORY_SIZE: 1024m
+      VARNISH_MEMORY_SIZE: 1024M
     ports:
       - "6081"
 
