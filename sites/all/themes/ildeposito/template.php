@@ -122,7 +122,7 @@ function ildeposito_preprocess_node(&$vars) {
 
     $vars['theme_hook_suggestions'][] = 'node__' . $vars['node']->type . '__full';
 
-    $view = views_get_view('check_relazioni');
+    $view = views_get_view('check_relazioni_nuova');
     $view->set_display('traduzioni');
     $view->set_arguments(array($vars['node']->nid));
     $view->pre_execute();
