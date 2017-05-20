@@ -372,3 +372,8 @@ a > .sf-sub-indicator {
     font-size: 1.7em;
     font-weight: normal;
 }
+
+textarea#edit-field-testo-und-0-value,
+textarea#edit-field-accordi-und-0-value {
+  font-family: monospace !important;
+}
