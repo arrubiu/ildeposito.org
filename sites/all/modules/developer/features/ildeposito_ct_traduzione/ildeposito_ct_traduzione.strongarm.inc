@@ -221,6 +221,9 @@ function ildeposito_ct_traduzione_strongarm() {
         'metatags' => array(
           'weight' => '7',
         ),
+        'rabbit_hole' => array(
+          'weight' => '0',
+        ),
       ),
       'display' => array(
         'ildeposito_extrafields_icontype' => array(

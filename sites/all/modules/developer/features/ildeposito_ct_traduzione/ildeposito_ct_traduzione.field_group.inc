@@ -83,6 +83,7 @@ function ildeposito_ct_traduzione_field_group_info() {
     'weight' => '2',
     'children' => array(
       0 => 'field_old_id',
+      1 => 'field_evento',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

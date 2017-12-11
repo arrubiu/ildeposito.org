@@ -93,7 +93,7 @@ function ildeposito_layout_default_page_manager_pages() {
   $display->title_pane = 'new-fb2ea2a0-7489-44ab-ad1b-b023e60d6e5b';
   $handler->conf['display'] = $display;
   $page->default_handlers[$handler->name] = $handler;
-  $pages[''] = $page;
+  $pages['accesso_negato'] = $page;
 
   return $pages;
 

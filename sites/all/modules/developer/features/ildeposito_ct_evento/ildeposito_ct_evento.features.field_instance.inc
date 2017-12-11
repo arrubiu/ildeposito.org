@@ -1700,7 +1700,7 @@ function ildeposito_ct_evento_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'node_reference_autocomplete',
-      'weight' => 9,
+      'weight' => 4,
     ),
   );
 

@@ -749,7 +749,7 @@ Festeggeremo questo evento con una festa a Milano, al circolo La Scighera, il 3/
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
   $page->default_handlers[$handler->name] = $handler;
-  $pages[''] = $page;
+  $pages['homepage'] = $page;
 
   return $pages;
 
