@@ -938,11 +938,18 @@ function migrando_d8_views_default_views() {
   $handler->display->display_options['fields']['field_informazioni']['table'] = 'field_data_field_informazioni';
   $handler->display->display_options['fields']['field_informazioni']['field'] = 'field_informazioni';
   $handler->display->display_options['fields']['field_informazioni']['label'] = 'informazioni';
-  /* Campo: Contenuto: Descrizione Social */
+  /* Campo: Contenuto: Descrizione social */
   $handler->display->display_options['fields']['field_descrizione_social']['id'] = 'field_descrizione_social';
   $handler->display->display_options['fields']['field_descrizione_social']['table'] = 'field_data_field_descrizione_social';
   $handler->display->display_options['fields']['field_descrizione_social']['field'] = 'field_descrizione_social';
   $handler->display->display_options['fields']['field_descrizione_social']['label'] = 'descrizione_social';
+  $handler->display->display_options['fields']['field_descrizione_social']['type'] = 'services';
+  $handler->display->display_options['fields']['field_descrizione_social']['settings'] = array(
+    'data_element_key' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+    'skip_text_format' => 1,
+  );
   /* Campo: Contenuto: Localizzazioni */
   $handler->display->display_options['fields']['field_localizzazione']['id'] = 'field_localizzazione';
   $handler->display->display_options['fields']['field_localizzazione']['table'] = 'field_data_field_localizzazione';
