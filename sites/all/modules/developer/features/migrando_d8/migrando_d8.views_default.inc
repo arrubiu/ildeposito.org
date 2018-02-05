@@ -938,6 +938,11 @@ function migrando_d8_views_default_views() {
   $handler->display->display_options['fields']['field_informazioni']['table'] = 'field_data_field_informazioni';
   $handler->display->display_options['fields']['field_informazioni']['field'] = 'field_informazioni';
   $handler->display->display_options['fields']['field_informazioni']['label'] = 'informazioni';
+  /* Campo: Contenuto: Descrizione Social */
+  $handler->display->display_options['fields']['field_descrizione_social']['id'] = 'field_descrizione_social';
+  $handler->display->display_options['fields']['field_descrizione_social']['table'] = 'field_data_field_descrizione_social';
+  $handler->display->display_options['fields']['field_descrizione_social']['field'] = 'field_descrizione_social';
+  $handler->display->display_options['fields']['field_descrizione_social']['label'] = 'descrizione_social';
   /* Campo: Contenuto: Localizzazioni */
   $handler->display->display_options['fields']['field_localizzazione']['id'] = 'field_localizzazione';
   $handler->display->display_options['fields']['field_localizzazione']['table'] = 'field_data_field_localizzazione';
